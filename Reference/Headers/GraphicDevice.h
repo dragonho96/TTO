@@ -37,6 +37,13 @@ public:
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV; }
 	ID3D11ShaderResourceView*	GetShaderResourceView() { return m_pShaderResourceView; }
 
+	// Take this to camera later
+public:
+	XMMATRIX					GetViewMatrix() { return g_View; }
+	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
+	XMMATRIX					GetObjectMatrix() { return g_World1; }
+	void						SetObjectMatrix(XMMATRIX pMat) { g_World1 = pMat; }
+
 private:
 	ID3D11Device*				m_pDevice = nullptr;
 	ID3D11DeviceContext*		m_pDeviceContext	= nullptr;

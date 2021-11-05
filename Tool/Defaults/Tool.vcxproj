@@ -27,7 +27,9 @@
     <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\Private\ContentBrowser.cpp" />
+    <ClCompile Include="..\Private\Gizmo.cpp" />
     <ClCompile Include="..\Private\ImGuiWindow.cpp" />
+    <ClCompile Include="..\Private\Inspector.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />
     <ClCompile Include="..\Private\ToolManager.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -40,7 +42,9 @@
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
     <ClInclude Include="..\Public\ContentBrowser.h" />
+    <ClInclude Include="..\Public\Gizmo.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
+    <ClInclude Include="..\Public\Inspector.h" />
     <ClInclude Include="..\Public\Log.h" />
     <ClInclude Include="..\Public\ToolManager.h" />
     <ClInclude Include="Resource.h" />

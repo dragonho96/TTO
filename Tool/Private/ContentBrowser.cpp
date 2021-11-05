@@ -50,8 +50,15 @@ void CContentBrowser::Update()
 	{
 		const auto& path = iter.path();
 		string fileName = path.filename().string();
-		 
-		ImGui::Button(fileName.c_str(), { thumbnailSize, thumbnailSize });
+
+		// make every button unique
+		ImGui::PushID(fileName.c_str());
+
+		// Needs to load Texture2D
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+		ImGui::ImageButton((ImTextureID)m_pEngine->GetShaderResourceView(), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
+
+		//ImGui::Button(fileName.c_str(), { thumbnailSize, thumbnailSize });
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -61,6 +68,10 @@ void CContentBrowser::Update()
 			ImGui::Text("This is a drag and drop source");
 			ImGui::EndDragDropSource();
 		}
+
+		ImGui::PopStyleColor();
+		ImGui::PopID();
+
 
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{

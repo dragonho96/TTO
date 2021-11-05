@@ -1,6 +1,7 @@
 #pragma once
 
 USING(Engine)
+class CImGuiWindow;
 class CToolManager
 {
 public:
@@ -23,6 +24,9 @@ public:
 	void CreateWindows();
 
 	void ContentBrowser();
+
+public:
+	CImGuiWindow* GetWindow(string windowName);
 
 private:
 	HWND					m_hWnd;
