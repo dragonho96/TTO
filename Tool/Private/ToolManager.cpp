@@ -5,6 +5,8 @@
 #pragma region IMGUIWINDOWS
 #include "Log.h"
 #include "ContentBrowser.h"
+#include "Gizmo.h"
+#include "Inspector.h"
 #pragma endregion
 
 CToolManager::CToolManager()
@@ -35,7 +37,7 @@ void CToolManager::Initialize()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
@@ -70,7 +72,7 @@ void CToolManager::Update()
 	ImGui::NewFrame();
 
 	SetDockSpace();
-	SetGizmo();
+	// SetGizmo();
 
 	for (auto& window : m_mapWindows)
 		window.second->Update();
@@ -150,6 +152,7 @@ void CToolManager::SetImGuiStyle()
 	style->FrameBorderSize = 0;
 	style->TabBorderSize = 0;
 	style->GrabMinSize = 0;
+	style->TouchExtraPadding = ImVec2(0, 0);
 }
 
 void CToolManager::SetImGuiColor()
@@ -271,13 +274,13 @@ void CToolManager::SetGizmo()
 {
 	ImGuiWindowFlags window_flags = 0;
 	//window_flags |= ImGuiWindowFlags_NoTitleBar;
-	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	//window_flags |= ImGuiWindowFlags_NoScrollbar;
 	//window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(400, 400));
+	//ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(1280, 720));
 	bool pOpen = true;
-	ImGui::Begin("Gizmo", &pOpen, window_flags);
+	ImGui::Begin("Gizmo", &pOpen, 0);
 
 	if (!ImGui::IsWindowCollapsed())
 	{
@@ -294,10 +297,26 @@ void CToolManager::SetGizmo()
 
 void CToolManager::CreateWindows()
 {
-	CImGuiWindow* pLog = new CLog(this);
-	m_mapWindows["Log"] = pLog;
+	CImGuiWindow* pWindow = new CLog(this);
+	m_mapWindows["Log"] = pWindow;
 
-	CImGuiWindow* pContentBrowser = new CContentBrowser(this);
-	m_mapWindows["ContentBrowser"] = pContentBrowser;
+	pWindow = new CContentBrowser(this);
+	m_mapWindows["ContentBrowser"] = pWindow;
+
+	pWindow = new CGizmo(this);
+	m_mapWindows["Gizmo"] = pWindow;
+
+	pWindow = new CInspector(this);
+	m_mapWindows["Inspector"] = pWindow;
+
+}
+
+CImGuiWindow * CToolManager::GetWindow(string windowName)
+{
+	auto iter_find = m_mapWindows.find(windowName);
+	if (m_mapWindows.end() == iter_find)
+		return nullptr;
+
+	return iter_find->second;
 }
 

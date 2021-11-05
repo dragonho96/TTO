@@ -262,7 +262,7 @@ void CGraphicDevice::Render()
 	t = (dwTimeCur - dwTimeStart) / 1000.0f;
 
 	// 1st Cube: Rotate around the origin
-	g_World1 = XMMatrixRotationY(t);
+	//g_World1 = XMMatrixRotationY(t);
 
 	// 2nd Cube:  Rotate around origin
 	XMMATRIX mSpin = XMMatrixRotationZ(-t);
@@ -270,7 +270,7 @@ void CGraphicDevice::Render()
 	XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
 	XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
 
-	g_World2 = mScale * mSpin * mTranslate * mOrbit;
+	//g_World2 = mScale * mSpin * mTranslate * mOrbit;
 
 	//
 	// Clear the back buffer
@@ -304,11 +304,11 @@ void CGraphicDevice::Render()
 	//
 	// Update variables for the second cube
 	//
-	ConstantBuffer cb2;
-	cb2.mWorld = XMMatrixTranspose(g_World2);
-	cb2.mView = XMMatrixTranspose(g_View);
-	cb2.mProjection = XMMatrixTranspose(g_Projection);
-	m_pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb2, 0, 0);
+	//ConstantBuffer cb2;
+	//cb2.mWorld = XMMatrixTranspose(g_World2);
+	//cb2.mView = XMMatrixTranspose(g_View);
+	//cb2.mProjection = XMMatrixTranspose(g_Projection);
+	//m_pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb2, 0, 0);
 
 	//
 	// Render the second cube
@@ -405,9 +405,9 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 	ID3D11Texture2D*			pBackBufferTexture2 = nullptr;
 	
 	// Look what this is
-	//m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture);
-	//if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
-	//	return E_FAIL;
+	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture);
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
+		return E_FAIL;
 
 
 
@@ -424,9 +424,9 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 	textureDesc.CPUAccessFlags = 0;
 	textureDesc.MiscFlags = 0;
 
-	m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, NULL, &m_pBackBufferRTV)))
-		return E_FAIL;
+	//m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture);
+	//if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, NULL, &m_pBackBufferRTV)))
+	//	return E_FAIL;
 
 	m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture2);
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, &m_pBackBufferRTV2)))

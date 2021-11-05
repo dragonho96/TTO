@@ -25,6 +25,11 @@ public:
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView();
 	ID3D11ShaderResourceView*	GetShaderResourceView();
 
+	XMMATRIX					GetViewMatrix();
+	XMMATRIX					GetProjectionMatrix();
+	XMMATRIX					GetObjectMatrix();
+	void						SetObjectMatrix(XMMATRIX pMat);
+
 	HRESULT ClearBackBufferView(_float4 vColor);
 	HRESULT ClearDepthStencilView(_float fDepth, _uint iStencil);
 

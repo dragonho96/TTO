@@ -65,6 +65,26 @@ ID3D11ShaderResourceView * CEngine::GetShaderResourceView()
 	return m_pGraphicDevice->GetShaderResourceView();
 }
 
+XMMATRIX CEngine::GetViewMatrix()
+{
+	return m_pGraphicDevice->GetViewMatrix();
+}
+
+XMMATRIX CEngine::GetProjectionMatrix()
+{
+	return m_pGraphicDevice->GetProjectionMatrix();
+}
+
+XMMATRIX CEngine::GetObjectMatrix()
+{
+	return m_pGraphicDevice->GetObjectMatrix();
+}
+
+void CEngine::SetObjectMatrix(XMMATRIX pMat)
+{
+	m_pGraphicDevice->SetObjectMatrix(pMat);
+}
+
 HRESULT CEngine::ClearBackBufferView(_float4 vColor)
 {
 	if (nullptr == m_pGraphicDevice)
