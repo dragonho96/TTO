@@ -1,0 +1,35 @@
+#pragma once
+
+USING(Engine)
+class CToolManager
+{
+public:
+	CToolManager();
+	~CToolManager();
+
+public:
+	void Initialize();
+	void Update();
+	void Release();
+
+public:
+	void SetDockSpace();
+	void SetGizmo();
+
+public:
+	void CreateWindows();
+
+	void ContentBrowser();
+
+private:
+	HWND					m_hWnd;
+	CEngine*				m_pEngine;
+	ID3D11Device*			m_pDevice;
+	ID3D11DeviceContext*	m_pDeviceContext;
+	IDXGISwapChain*         m_pSwapChain = NULL;
+	ID3D11RenderTargetView* m_pRenderTargetView = NULL;
+	ID3D11DepthStencilView* m_pDepthStencil = NULL;
+
+	map<string, class CImGuiWindow*>	m_mapWindows;
+};
+

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99.Defaults">
+      <UniqueIdentifier>{b575678c-5c44-43ae-85b0-63d8b7896a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ToolManager">
+      <UniqueIdentifier>{a2484fb0-aacc-4429-bc48-8a1fdcf31218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Defines">
+      <UniqueIdentifier>{64131c9e-e540-4269-94b2-7eec6d30f3f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{d5609aa4-6955-4be1-a311-432960d81726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiWindow">
+      <UniqueIdentifier>{3a02f6d4-c919-443c-9ce4-f6e65eff9b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiWindow\Log">
+      <UniqueIdentifier>{4c1bc84d-4b7a-4d1e-a4f8-1f731e8a1bd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiWindow\ContentBrowser">
+      <UniqueIdentifier>{3a2f80bf-7a2a-4414-9cb5-02466c755b8b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>99.Defaults</Filter>
+    </Image>
+    <Image Include="Tool.ico">
+      <Filter>99.Defaults</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Defaults</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>99.Defaults</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolManager.cpp">
+      <Filter>ToolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImGuiWindow.cpp">
+      <Filter>ImGuiWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Log.cpp">
+      <Filter>ImGuiWindow\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ContentBrowser.cpp">
+      <Filter>ImGuiWindow\ContentBrowser</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool.h">
+      <Filter>99.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolManager.h">
+      <Filter>ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGuiWindow.h">
+      <Filter>ImGuiWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Log.h">
+      <Filter>ImGuiWindow\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ContentBrowser.h">
+      <Filter>ImGuiWindow\ContentBrowser</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tool.rc">
+      <Filter>99.Defaults</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Defaults</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
