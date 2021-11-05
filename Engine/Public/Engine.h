@@ -27,6 +27,8 @@ public:
 
 	HRESULT ClearBackBufferView(_float4 vColor);
 	HRESULT ClearDepthStencilView(_float fDepth, _uint iStencil);
+
+	void Render();
 	HRESULT Present();
 #pragma endregion
 

@@ -81,6 +81,14 @@ HRESULT CEngine::ClearDepthStencilView(_float fDepth, _uint iStencil)
 	return m_pGraphicDevice->Clear_DepthStencilView(fDepth, iStencil);
 }
 
+void CEngine::Render()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->Render();
+}
+
 HRESULT CEngine::Present()
 {
 	if (nullptr == m_pGraphicDevice)

@@ -35,12 +35,8 @@ void CToolManager::Initialize()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -49,6 +45,10 @@ void CToolManager::Initialize()
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
+
+	// Set ImGui Style
+	SetImGuiStyle();
+	SetImGuiColor();
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
@@ -59,7 +59,7 @@ void CToolManager::Initialize()
 	for (auto& window : m_mapWindows)
 		window.second->Initialize();
 
-	m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
+	//m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
 }
 
 void CToolManager::Update()
@@ -70,7 +70,7 @@ void CToolManager::Update()
 	ImGui::NewFrame();
 
 	SetDockSpace();
-	//SetGizmo();
+	SetGizmo();
 
 	for (auto& window : m_mapWindows)
 		window.second->Update();
@@ -102,10 +102,9 @@ void CToolManager::Update()
 
 	// Rendering
 	ImGui::Render();
-	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f));
-	m_pEngine->ClearDepthStencilView(1.f, 0);
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencil);
+	m_pEngine->Render();
+
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -115,7 +114,6 @@ void CToolManager::Update()
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
-
 
 	m_pEngine->Present();
 }
@@ -136,6 +134,82 @@ void CToolManager::Release()
 	SafeRelease(m_pEngine);
 
 	CEngine::ReleaseEngine();
+}
+
+void CToolManager::SetImGuiStyle()
+{
+	ImGui::StyleColorsDark();
+
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->WindowPadding = ImVec2(0, 0);
+	style->WindowRounding = 0.0f;
+	style->FramePadding = ImVec2(0, 0);
+	style->WindowBorderSize = 0;
+	style->ChildBorderSize = 0;
+	style->PopupBorderSize = 0;
+	style->FrameBorderSize = 0;
+	style->TabBorderSize = 0;
+	style->GrabMinSize = 0;
+}
+
+void CToolManager::SetImGuiColor()
+{
+	ImVec4* colors = ImGui::GetStyle().Colors;
+	colors[ImGuiCol_Text] = ImVec4(0.78f, 0.78f, 0.78f, 1.00f);
+	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.00f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+	colors[ImGuiCol_Border] = ImVec4(0.9f, 0.9f, 0.9f, 0.50f);
+	colors[ImGuiCol_BorderShadow] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
+	colors[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.88f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.45f, 0.46f, 0.46f, 0.40f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.35f, 0.36f, 0.37f, 0.67f);
+	colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.34f, 0.34f, 0.34f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.16f, 0.16f, 0.16f, 0.53f);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+	colors[ImGuiCol_CheckMark] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+	colors[ImGuiCol_SliderGrab] = ImVec4(0.60f, 0.61f, 0.62f, 1.00f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.37f, 0.37f, 1.00f);
+	colors[ImGuiCol_Button] = ImVec4(0.49f, 0.51f, 0.52f, 0.40f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.53f, 0.53f, 0.54f, 0.84f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(0.61f, 0.61f, 0.62f, 0.22f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.61f, 0.62f, 0.62f, 0.51f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.61f, 0.62f, 0.62f, 0.83f);
+	colors[ImGuiCol_Separator] = ImVec4(0.44f, 0.44f, 0.44f, 0.50f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.00f, 0.00f, 0.00f, 0.78f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(0.29f, 0.29f, 0.29f, 1.00f);
+	colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.20f);
+	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.61f, 0.61f, 0.61f, 0.67f);
+	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.23f, 0.23f, 0.23f, 0.95f);
+	colors[ImGuiCol_Tab] = ImVec4(0.22f, 0.22f, 0.22f, 0.86f);
+	colors[ImGuiCol_TabHovered] = ImVec4(0.57f, 0.57f, 0.57f, 0.80f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
+	colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.11f, 0.11f, 0.97f);
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.21f, 0.21f, 0.21f, 1.00f);
+	//colors[ImGuiCol_DockingPreview] = ImVec4(0.00f, 0.00f, 0.00f, 0.70f);
+	//colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+	colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+	colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+	colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+	colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
+	colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
+	colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
+	colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+	colors[ImGuiCol_TextSelectedBg] = ImVec4(0.59f, 0.59f, 0.59f, 0.35f);
+	colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_NavHighlight] = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
 void CToolManager::SetDockSpace()
@@ -210,8 +284,9 @@ void CToolManager::SetGizmo()
 		// imgui화면에 랜더링하기
 
 		ImVec2 imageRect = { ImGui::GetWindowSize().x , ImGui::GetWindowSize().y - (ImGui::GetFontSize() * 2) };
+		ImTextureID texture = m_pEngine->GetShaderResourceView();
 
-		ImGui::Image((ImTextureID)m_pEngine->GetShaderResourceView(), imageRect, ImVec2(0, 0), ImVec2(1, 1));
+		ImGui::Image(texture, imageRect, ImVec2(0, 0), ImVec2(1, 1));
 	}
 
 	ImGui::End();

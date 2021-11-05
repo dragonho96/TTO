@@ -13,7 +13,10 @@ public:
 	void Release();
 
 public:
+	void SetImGuiStyle();
+	void SetImGuiColor();
 	void SetDockSpace();
+
 	void SetGizmo();
 
 public:

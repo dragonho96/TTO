@@ -72,6 +72,9 @@
     <ClInclude Include="..\Public\SceneSerializer.h">
       <Filter>Scene\SceneSerializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_Struct.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
