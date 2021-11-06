@@ -4,8 +4,9 @@
 static const FILESYSTEM::path s_AssetPath = "../../Assets";
 
 CContentBrowser::CContentBrowser(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager)
+	: CImGuiWindow(pToolManager), m_FrameCount(0)
 {
+	
 }
 
 void CContentBrowser::Initialize()
@@ -13,21 +14,67 @@ void CContentBrowser::Initialize()
 	m_CurrentDirectory = s_AssetPath;
 }
 
-void CContentBrowser::Update()
+
+void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 {
 
+	if (!FILESYSTEM::is_directory(curPath) || curPath.empty())
+		return;
+
+	for (auto& iter : FILESYSTEM::directory_iterator(curPath))
+	{
+		FILESYSTEM::path filePath = iter.path();
+		string fileName = iter.path().filename().string();
+		if (FILESYSTEM::is_directory(filePath))
+		{
+			ImGui::PushID(fileName.c_str());
+			bool isOpen = ImGui::TreeNode(fileName.c_str());
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				if (FILESYSTEM::is_directory(iter.status()))
+					m_CurrentDirectory = filePath;
+			}
+			if (isOpen)
+			{
+
+				ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+				ImGui::TreePop();
+				SetContentHierarchy(filePath);
+				ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
+			}
+
+			ImGui::PopID();
+		}
+	}
+}
+
+void CContentBrowser::Update()
+{
 	ImGui::Begin("Content Browswer");
 
+	ImGui::Columns(2, "Browser", true);
 
+	if (!m_FrameCount)
+	{
+		ImGui::SetColumnWidth(0, 180.f);
+		++m_FrameCount;
+	}
 
+	ImGui::Text("Assets");
+	ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+	SetContentHierarchy(s_AssetPath);
+	ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
 
+	ImGui::NextColumn();
 	if (m_CurrentDirectory != FILESYSTEM::path(s_AssetPath))
 	{
 		if (ImGui::Button("<-"))
 		{
 			m_CurrentDirectory = m_CurrentDirectory.parent_path();
 		}
+		ImGui::SameLine();
 	}
+	ImGui::Text(m_CurrentDirectory.string().c_str());
 
 	static float padding = 4.f;
 	static float thumbnailSize = 128;
@@ -37,7 +84,6 @@ void CContentBrowser::Update()
 	int columnCount = (int)(panelWidth / cellSize);
 	if (columnCount < 1)
 		columnCount = 1;
-
 
 
 	// Saving room for float slider
@@ -78,30 +124,30 @@ void CContentBrowser::Update()
 			if (FILESYSTEM::is_directory(iter.status()))
 				m_CurrentDirectory /= path.filename();
 		}
-		
+
 		ImGui::Text(fileName.c_str());
 
 		ImGui::NextColumn();
 	}
 	ImGui::Columns(1);
-	
+
 	ImGui::EndChild();
 
 	ImGui::Separator();
-	
+
 	ImGui::BeginChild("Thumbnail Size");
 	ImGui::SliderFloat("", &thumbnailSize, 16, 512);
 	ImGui::SameLine();
 	ImGui::Text("Thumbnail Size");
 	ImGui::EndChild();
-	
 
 
 
+	ImGui::EndColumns();
 	ImGui::End();
-
 }
 
 void CContentBrowser::LateUpdate()
 {
 }
+

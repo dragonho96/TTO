@@ -12,7 +12,11 @@ public:
 	virtual void Update() override;
 	virtual void LateUpdate() override;
 
+public:
+	void SetContentHierarchy(FILESYSTEM::path curPath);
+
 private:
-	FILESYSTEM::path m_CurrentDirectory;
+	FILESYSTEM::path	m_CurrentDirectory;
+	_uint				m_FrameCount;
 };
 
