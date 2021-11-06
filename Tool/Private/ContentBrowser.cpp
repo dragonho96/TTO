@@ -133,9 +133,9 @@ void CContentBrowser::Update()
 
 	ImGui::EndChild();
 
-	ImGui::Separator();
 
 	ImGui::BeginChild("Thumbnail Size");
+	ImGui::Separator();
 	ImGui::SliderFloat("", &thumbnailSize, 16, 512);
 	ImGui::SameLine();
 	ImGui::Text("Thumbnail Size");

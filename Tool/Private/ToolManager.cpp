@@ -66,6 +66,19 @@ void CToolManager::Initialize()
 
 void CToolManager::Update()
 {
+	if (ImGui::IsKeyPressed(82)) // r Kye
+		m_pEngine->ChangeResolution(1920, 1080);
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	//RECT rect;
+	//if (GetWindowRect(g_hWnd, &rect))
+	//{
+	//	int width = rect.right - rect.left;
+	//	int height = rect.bottom - rect.top;
+	//	io.DisplaySize = ImVec2(width, height);
+	//	io.DisplayFramebufferScale = ImVec2(width, height);
+	//}
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -109,7 +122,6 @@ void CToolManager::Update()
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	// Update and Render additional Platform Windows
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
@@ -232,7 +244,7 @@ void CToolManager::SetDockSpace()
 		ImGui::SetNextWindowViewport(viewport->ID);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_NoResize*/ | ImGuiWindowFlags_NoMove;
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	}
 	else
@@ -243,7 +255,10 @@ void CToolManager::SetDockSpace()
 	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
 	// and handle the pass-thru hole, so we ask Begin() to not render a background.
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+	{
 		window_flags |= ImGuiWindowFlags_NoBackground;
+		//window_flags |= ImGuiWindowFlags_NoTitleBar;
+	}
 
 	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
 	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,

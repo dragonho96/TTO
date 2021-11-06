@@ -12,6 +12,7 @@ HWND		g_hWnd;
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+BOOL		g_First = false;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -28,6 +29,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: Place code here.
+
+
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -46,6 +49,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CToolManager* pToolManager = new CToolManager();
 	pToolManager->Initialize();
+
     // Main message loop:
 	while (true)
 	{
@@ -114,7 +118,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-	   CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
+	   0, 0, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -178,6 +182,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+	case WM_SIZE:
+		// Need to resize 
+		if (g_First)
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			CEngine::GetInstance()->ChangeResolution(width, height);
+		}
+
+		g_First = true;
+		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

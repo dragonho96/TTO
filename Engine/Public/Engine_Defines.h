@@ -10,6 +10,8 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
+#include <wrl.h> // ComPtr smartpointer for COM
+#include <wrl\client.h>
 
 using namespace std;
 using namespace DirectX;

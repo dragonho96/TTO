@@ -4,6 +4,9 @@
 namespace Engine
 {
 	template<typename T>
+	using ComRef = Microsoft::WRL::ComPtr<T>;
+
+	template<typename T>
 	void SafeDelete(T& Pointer)
 	{
 		if (nullptr != Pointer)

@@ -28,6 +28,7 @@ public:
 
 public:
 	HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
+	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
 
 public:
 	ID3D11Device*				GetDevice() { return m_pDevice; }
@@ -43,6 +44,8 @@ public:
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
 	XMMATRIX					GetObjectMatrix() { return g_World1; }
 	void						SetObjectMatrix(XMMATRIX pMat) { g_World1 = pMat; }
+
+
 
 private:
 	ID3D11Device*				m_pDevice = nullptr;
@@ -63,11 +66,11 @@ private:
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
-
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);
 	HRESULT ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight);
 	HRESULT ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iHeight);
+	HRESULT ReadyViewport(_uint iWidth, _uint iHeight);
 
 
 public:
