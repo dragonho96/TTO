@@ -117,6 +117,11 @@ HRESULT CEngine::Present()
 	return m_pGraphicDevice->Present();
 }
 
+HRESULT CEngine::ChangeResolution(_uint iWidth, _uint iHeight)
+{
+	return m_pGraphicDevice->ChangeResolution(iWidth, iHeight);
+}
+
 
 HRESULT CEngine::AddTimers(const _tchar * pTimerTag)
 {

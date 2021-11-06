@@ -159,7 +159,7 @@ void CGizmo::LateUpdate()
 			// imgui화면에 랜더링하기
 			ImVec2 imageRect = { ImGui::GetWindowSize().x , ImGui::GetWindowSize().y - (ImGui::GetFontSize() * 2) };
 			ImTextureID texture = m_pEngine->GetShaderResourceView();
-
+			
 			ImGui::Image(texture, imageRect, ImVec2(0, 0), ImVec2(1, 1));
 		}
 

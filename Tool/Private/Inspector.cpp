@@ -14,6 +14,8 @@ void CInspector::Initialize()
 
 void CInspector::Update()
 {
+	bool open = true;
+	//ImGui::Begin("Inspector", &open, ImGuiCond_Once);
 	ImGui::Begin("Inspector");
 	//if (ImGui::CollapsingHeader("Transform", true))
 	//{
