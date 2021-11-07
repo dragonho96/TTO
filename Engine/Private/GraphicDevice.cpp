@@ -16,9 +16,9 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	D3D_FEATURE_LEVEL			Feature_Level;
 
-
 	if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0, D3D11_SDK_VERSION, &m_pDevice, &Feature_Level, &m_pDeviceContext)))
 		return E_FAIL;
+
 
 	/* 멀티샘플링의 지원수준. */
 
@@ -37,7 +37,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	if (FAILED(ReadyViewport(iWidth, iHeight)))
 		return E_FAIL;
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilRTV);
+	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	SetVertexShader();
 	SetPixelShader();
@@ -52,7 +52,7 @@ HRESULT CGraphicDevice::Clear_BackBufferView(_float4 vColor)
 	if (nullptr == m_pBackBufferRTV)
 		return E_FAIL;
 
-	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, (_float*)&vColor);
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), (_float*)&vColor);
 
 	return S_OK;
 }
@@ -62,7 +62,7 @@ HRESULT CGraphicDevice::Clear_DepthStencilView(_float fDepth, _uint iStencil)
 	if (nullptr == m_pDepthStencilRTV)
 		return E_FAIL;
 
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, fDepth, iStencil);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, fDepth, iStencil);
 
 	return S_OK;
 }
@@ -73,7 +73,6 @@ HRESULT CGraphicDevice::Present()
 		return E_FAIL;
 
 	m_pSwapChain->Present(0, 0);
-
 	return S_OK;
 }
 
@@ -114,7 +113,7 @@ HRESULT CGraphicDevice::SetVertexShader()
 		return hr;
 
 	// Set the input layout
-	m_pDeviceContext->IASetInputLayout(g_pVertexLayout);
+	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
 
 	return S_OK;
 }
@@ -133,7 +132,7 @@ HRESULT CGraphicDevice::SetPixelShader()
 	}
 
 	// Create the pixel shader
-	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, g_pPixelShader.GetAddressOf());
 	pPSBlob->Release();
 	if (FAILED(hr))
 		return hr;
@@ -165,14 +164,14 @@ HRESULT CGraphicDevice::SetBuffer()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = vertices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+	hr = m_pDevice->CreateBuffer(&bd, &InitData, g_pVertexBuffer.GetAddressOf());
 	if (FAILED(hr))
 		return hr;
 
 	// Set vertex buffer
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
-	m_pDeviceContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Create index buffer
 	WORD indices[] =
@@ -200,12 +199,12 @@ HRESULT CGraphicDevice::SetBuffer()
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
+	hr = m_pDevice->CreateBuffer(&bd, &InitData, g_pIndexBuffer.GetAddressOf());
 	if (FAILED(hr))
 		return hr;
 
 	// Set index buffer
-	m_pDeviceContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	m_pDeviceContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// Set primitive topology
 	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -215,7 +214,7 @@ HRESULT CGraphicDevice::SetBuffer()
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = m_pDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
+	hr = m_pDevice->CreateBuffer(&bd, NULL, g_pConstantBuffer.GetAddressOf());
 	if (FAILED(hr))
 		return hr;
 
@@ -265,14 +264,14 @@ void CGraphicDevice::Render()
 	//
 	// Clear the back buffer
 	//
-	float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
+	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
 	//
 	// Clear the depth buffer to 1.0 (max depth)
 	//
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV2, m_pDepthStencilRTV);
-	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2, ClearColor);
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
 	//
 	// Update variables for the first cube
@@ -281,14 +280,14 @@ void CGraphicDevice::Render()
 	cb1.mWorld = XMMatrixTranspose(g_World1);
 	cb1.mView = XMMatrixTranspose(g_View);
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
-	m_pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
+	m_pDeviceContext->UpdateSubresource(g_pConstantBuffer.Get(), 0, NULL, &cb1, 0, 0);
 
 	//
 	// Render the first cube
 	//
-	m_pDeviceContext->VSSetShader(g_pVertexShader, NULL, 0);
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	m_pDeviceContext->PSSetShader(g_pPixelShader, NULL, 0);
+	m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 	m_pDeviceContext->DrawIndexed(36, 0, 0);
 
 	//
@@ -303,13 +302,13 @@ void CGraphicDevice::Render()
 	//
 	// Render the second cube
 	//
-	m_pDeviceContext->DrawIndexed(36, 0, 0);
+	//m_pDeviceContext->DrawIndexed(36, 0, 0);
 
 	Present();
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilRTV);
-	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, ClearColor);
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
 
@@ -344,79 +343,84 @@ HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntry
 
 HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 {
-	static UINT currentMode = 0;
-	currentMode++;
-	IDXGIOutput *pOutput;
-	m_pSwapChain->GetContainingOutput(&pOutput);
+	//static UINT currentMode = 0;
+	//currentMode++;
+	//IDXGIOutput *pOutput;
+	//m_pSwapChain->GetContainingOutput(&pOutput);
 
-	DXGI_SWAP_CHAIN_DESC scd;
-	m_pSwapChain->GetDesc(&scd);
+	//DXGI_SWAP_CHAIN_DESC scd;
+	//m_pSwapChain->GetDesc(&scd);
 
-	//// Get all possible resolution in modes[]
-	//UINT numModes = 1024;
-	//DXGI_MODE_DESC modes[1024];
-	//pOutput->GetDisplayModeList(scd.BufferDesc.Format, 0, &numModes, modes);
-	//DXGI_MODE_DESC mode = modes[currentMode];
-	//if (currentMode < numModes) {
+	////// Get all possible resolution in modes[]
+	////UINT numModes = 1024;
+	////DXGI_MODE_DESC modes[1024];
+	////pOutput->GetDisplayModeList(scd.BufferDesc.Format, 0, &numModes, modes);
+	////DXGI_MODE_DESC mode = modes[currentMode];
+	////if (currentMode < numModes) {
 
-	//	TCHAR str[255];
-	//	wsprintf(str, TEXT("Switching to mode: %u / %u, %ux%u@%uHz (%u, %u, %u)\n"),
-	//		currentMode + 1,
-	//		numModes,
-	//		mode.Width,
-	//		mode.Height,
-	//		mode.RefreshRate.Numerator / mode.RefreshRate.Denominator,
-	//		mode.Scaling,
-	//		mode.ScanlineOrdering,
-	//		mode.Format
-	//	);
-	//	OutputDebugString(str);
+	////	TCHAR str[255];
+	////	wsprintf(str, TEXT("Switching to mode: %u / %u, %ux%u@%uHz (%u, %u, %u)\n"),
+	////		currentMode + 1,
+	////		numModes,
+	////		mode.Width,
+	////		mode.Height,
+	////		mode.RefreshRate.Numerator / mode.RefreshRate.Denominator,
+	////		mode.Scaling,
+	////		mode.ScanlineOrdering,
+	////		mode.Format
+	////	);
+	////	OutputDebugString(str);
 
-	//	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
-	//}
+	////	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
+	////}
 
-	DXGI_MODE_DESC mode;
+	//DXGI_MODE_DESC mode;
 
-	mode.Width = iWidth;
-	mode.Height = iHeight;
-	mode.RefreshRate.Numerator = 60;
-	mode.RefreshRate.Denominator = 1;
-	mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	//mode.Width = iWidth;
+	//mode.Height = iHeight;
+	//mode.RefreshRate.Numerator = 60;
+	//mode.RefreshRate.Denominator = 1;
+	//mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	//mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	m_pSwapChain->ResizeTarget(&mode);
+	//m_pSwapChain->ResizeTarget(&mode);
 
-	m_pDeviceContext->ClearState();
-	m_pBackBufferRTV->Release();
-	m_pBackBufferRTV2->Release();
-	m_pShaderResourceView->Release();
-	m_pDepthStencilRTV->Release();
-	if (g_pConstantBuffer) g_pConstantBuffer->Release();
-	if (g_pVertexBuffer) g_pVertexBuffer->Release();
-	if (g_pIndexBuffer) g_pIndexBuffer->Release();
-	if (g_pVertexLayout) g_pVertexLayout->Release();
-	if (g_pVertexShader) g_pVertexShader->Release();
-	if (g_pPixelShader) g_pPixelShader->Release();
+	//m_pDeviceContext->ClearState();
+	//m_pBackBufferRTV->Release();
+	//m_pBackBufferRTV2->Release();
+	//m_pShaderResourceView->Release();
+	//m_pDepthStencilRTV->Release();
+	//if (g_pConstantBuffer) g_pConstantBuffer->Release();
+	//if (g_pVertexBuffer) g_pVertexBuffer->Release();
+	//if (g_pIndexBuffer) g_pIndexBuffer->Release();
+	//if (g_pVertexLayout) g_pVertexLayout->Release();
+	//if (g_pVertexShader) g_pVertexShader->Release();
+	//if (g_pPixelShader) g_pPixelShader->Release();
 
-	m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+	//m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
-	ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
-	ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
-	ReadyViewport(mode.Width, mode.Height);
-	SetVertexShader();
-	SetPixelShader();
-	SetBuffer();
+	//ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
+	//ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
+	//ReadyViewport(mode.Width, mode.Height);
+	//SetVertexShader();
+	//SetPixelShader();
+	//SetBuffer();
 
-	Initialize(mode.Width, mode.Height);
+	//Initialize(mode.Width, mode.Height);
 	return S_OK;
+}
+
+void CGraphicDevice::ChangeProj(_uint iWidth, _uint iHeight)
+{
+	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
 }
 
 
 HRESULT CGraphicDevice::ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight)
 {
-	if (nullptr == m_pDevice)
-		return E_FAIL;
+	//if (nullptr == m_pDevice)
+	//	return E_FAIL;
 
 	IDXGIFactory*			pDXGIFactory = nullptr;
 	IDXGIAdapter*			pDXGIAdapter = nullptr;
@@ -470,7 +474,7 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 
 	// Look what this is
 	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, m_pBackBufferRTV.GetAddressOf())))
 		return E_FAIL;
 
 
@@ -493,7 +497,7 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 	//	return E_FAIL;
 
 	m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture2);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, &m_pBackBufferRTV2)))
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, m_pBackBufferRTV2.GetAddressOf())))
 		return E_FAIL;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -545,6 +549,7 @@ HRESULT CGraphicDevice::ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iH
 	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, &descDSV, &m_pDepthStencilRTV)))
 		return E_FAIL;
 
+	pDepthStencilTexture->Release();
 	return S_OK;
 }
 
@@ -572,23 +577,35 @@ void CGraphicDevice::Free()
 {
 	if (m_pDeviceContext) m_pDeviceContext->ClearState();
 
-	if (g_pConstantBuffer) g_pConstantBuffer->Release();
-	if (g_pVertexBuffer) g_pVertexBuffer->Release();
-	if (g_pIndexBuffer) g_pIndexBuffer->Release();
-	if (g_pVertexLayout) g_pVertexLayout->Release();
-	if (g_pVertexShader) g_pVertexShader->Release();
-	if (g_pPixelShader) g_pPixelShader->Release();
+	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
+	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();
+	//if (g_pIndexBuffer) g_pIndexBuffer.Reset();
+	//if (g_pVertexLayout) g_pVertexLayout.Reset();
+	//if (g_pVertexShader) g_pVertexShader.Reset();
+	//if (g_pPixelShader) g_pPixelShader.Reset();
 
-	SafeRelease(m_pBackBufferRTV);
-	SafeRelease(m_pBackBufferRTV2);
-	SafeRelease(m_pSwapChain);
+	//if (m_pDepthStencilRTV) m_pDepthStencilRTV.Reset();
+	//if (m_pShaderResourceView) m_pShaderResourceView.Reset();
+	//if (m_pBackBufferRTV) m_pBackBufferRTV.Reset();
+	//if (m_pBackBufferRTV2) m_pBackBufferRTV2.Reset();
+	//
+	if (m_pDeviceContext) m_pDeviceContext->Flush();
+
+	//if (m_pSwapChain) m_pSwapChain.Reset();
+	//if (m_pDeviceContext) m_pDeviceContext.Reset();
+	//if (m_pDevice) m_pDevice.Reset();
+
+	//SafeRelease(m_pBackBufferRTV);
+	//SafeRelease(m_pBackBufferRTV2);
+	//SafeRelease(m_pSwapChain);
 	SafeRelease(m_pDeviceContext);
 	SafeRelease(m_pDevice);
+
 }
 
-CGraphicDevice * CGraphicDevice::Create()
-{
-	CGraphicDevice*	pInstance = new CGraphicDevice();
-
-	return pInstance;
-}
+//CGraphicDevice * CGraphicDevice::Create()
+//{
+//	CGraphicDevice*	pInstance = new CGraphicDevice();
+//
+//	return pInstance;
+//}
