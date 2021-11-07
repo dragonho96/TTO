@@ -14,11 +14,11 @@ public:
 	void Release();
 
 public:
+	void SetDone() { m_bDone = true; } // Set m_bDone true when it's over
 	void SetImGuiStyle();
 	void SetImGuiColor();
 	void SetDockSpace();
 
-	void SetGizmo();
 
 public:
 	void CreateWindows();
@@ -38,5 +38,8 @@ private:
 	ID3D11DepthStencilView* m_pDepthStencil = NULL;
 
 	map<string, class CImGuiWindow*>	m_mapWindows;
+
+	_bool					m_bDone = false;
+	class CGizmo*	m_pGizmo;
 };
 

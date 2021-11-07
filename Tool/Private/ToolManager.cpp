@@ -27,13 +27,14 @@ void CToolManager::Initialize()
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
-	m_pSwapChain = m_pEngine->GetSwapChain();
-	m_pRenderTargetView = m_pEngine->GetRenderTargetView();
-	m_pDepthStencil = m_pEngine->GetDepthStencilRenderTargetView();
+	////m_pSwapChain = m_pEngine->GetSwapChain();
+	////m_pRenderTargetView = m_pEngine->GetRenderTargetView();
+	////m_pDepthStencil = m_pEngine->GetDepthStencilRenderTargetView();
 
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	//ImGuizmo::SetImGuiContext(ImGui::CreateContext());
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
@@ -66,8 +67,10 @@ void CToolManager::Initialize()
 
 void CToolManager::Update()
 {
-	if (ImGui::IsKeyPressed(82)) // r Kye
-		m_pEngine->ChangeResolution(1920, 1080);
+	//if (ImGui::IsKeyPressed(82)) // r Kye
+	//	m_pEngine->ChangeResolution(1920, 1080);
+	if (g_Done)
+		return;
 
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -85,7 +88,6 @@ void CToolManager::Update()
 	ImGui::NewFrame();
 
 	SetDockSpace();
-	// SetGizmo();
 
 	for (auto& window : m_mapWindows)
 		window.second->Update();
@@ -115,7 +117,7 @@ void CToolManager::Update()
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
 
-	// Rendering
+	//// Rendering
 	ImGui::Render();
 
 	m_pEngine->Render();
@@ -140,9 +142,10 @@ void CToolManager::Release()
 		SafeDelete(window.second);
 
 	m_mapWindows.clear();
-
+	
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
+
 	ImGui::DestroyContext();
 
 	SafeRelease(m_pEngine);
@@ -282,31 +285,6 @@ void CToolManager::SetDockSpace()
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
-	ImGui::End();
-}
-
-void CToolManager::SetGizmo()
-{
-	ImGuiWindowFlags window_flags = 0;
-	//window_flags |= ImGuiWindowFlags_NoTitleBar;
-	//window_flags |= ImGuiWindowFlags_NoScrollbar;
-	//window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
-
-	//ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(1280, 720));
-	bool pOpen = true;
-	ImGui::Begin("Gizmo", &pOpen, 0);
-
-	if (!ImGui::IsWindowCollapsed())
-	{
-		// imgui화면에 랜더링하기
-
-		ImVec2 imageRect = { ImGui::GetWindowSize().x , ImGui::GetWindowSize().y - (ImGui::GetFontSize() * 2) };
-		ImTextureID texture = m_pEngine->GetShaderResourceView();
-
-		ImGui::Image(texture, imageRect, ImVec2(0, 0), ImVec2(1, 1));
-	}
-
 	ImGui::End();
 }
 

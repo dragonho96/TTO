@@ -102,7 +102,7 @@ void CContentBrowser::Update()
 
 		// Needs to load Texture2D
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-		ImGui::ImageButton((ImTextureID)m_pEngine->GetShaderResourceView(), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
+		ImGui::ImageButton((ImTextureID)(m_pEngine->GetShaderResourceView()), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
 
 		//ImGui::Button(fileName.c_str(), { thumbnailSize, thumbnailSize });
 

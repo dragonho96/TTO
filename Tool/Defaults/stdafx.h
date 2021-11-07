@@ -34,6 +34,7 @@
 
 using namespace std;
 
-extern HWND g_hWnd;
+extern HWND		g_hWnd;
+extern _bool	g_Done;
 
 #define FILESYSTEM std::experimental::filesystem

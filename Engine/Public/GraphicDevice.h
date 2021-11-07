@@ -33,10 +33,10 @@ public:
 public:
 	ID3D11Device*				GetDevice() { return m_pDevice; }
 	ID3D11DeviceContext*		GetDeviceContext() { return m_pDeviceContext; }
-	IDXGISwapChain*				GetSwapChain() { return m_pSwapChain; }
-	ID3D11RenderTargetView*		GetRenderTargetView() { return m_pBackBufferRTV; }
-	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV; }
-	ID3D11ShaderResourceView*	GetShaderResourceView() { return m_pShaderResourceView; }
+	IDXGISwapChain*				GetSwapChain() { return m_pSwapChain.Get(); }
+	ID3D11RenderTargetView*		GetRenderTargetView() { return m_pBackBufferRTV.Get(); }
+	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV.Get(); }
+	ID3D11ShaderResourceView*	GetShaderResourceView() { return m_pShaderResourceView.Get(); }
 
 	// Take this to camera later
 public:
@@ -48,24 +48,26 @@ public:
 
 
 private:
-	ID3D11Device*				m_pDevice = nullptr;
-	ID3D11DeviceContext*		m_pDeviceContext	= nullptr;
-	IDXGISwapChain*				m_pSwapChain = nullptr;
-	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
-	ID3D11RenderTargetView*		m_pBackBufferRTV2 = nullptr;
-	ID3D11DepthStencilView*		m_pDepthStencilRTV = nullptr;
-	ID3D11ShaderResourceView*	m_pShaderResourceView = nullptr;
+	ID3D11Device*						m_pDevice = nullptr;
+	ID3D11DeviceContext*				m_pDeviceContext	= nullptr;
+	ComRef<IDXGISwapChain>				m_pSwapChain = nullptr;
+	ComRef<ID3D11RenderTargetView>		m_pBackBufferRTV = nullptr;
+	ComRef<ID3D11RenderTargetView>		m_pBackBufferRTV2 = nullptr;
+	ComRef<ID3D11DepthStencilView>		m_pDepthStencilRTV = nullptr;
+	ComRef<ID3D11ShaderResourceView>	m_pShaderResourceView = nullptr;
 
-	ID3D11VertexShader*			g_pVertexShader = NULL;
-	ID3D11PixelShader*			g_pPixelShader = NULL;
-	ID3D11InputLayout*			g_pVertexLayout = NULL;
-	ID3D11Buffer*				g_pVertexBuffer = NULL;
-	ID3D11Buffer*				g_pIndexBuffer = NULL;
-	ID3D11Buffer*				g_pConstantBuffer = NULL;
+	ComRef<ID3D11VertexShader>			g_pVertexShader = NULL;
+	ComRef<ID3D11PixelShader>			g_pPixelShader = NULL;
+	ComRef<ID3D11InputLayout>			g_pVertexLayout = NULL;
+	ComRef<ID3D11Buffer>				g_pVertexBuffer = NULL;
+	ComRef<ID3D11Buffer>				g_pIndexBuffer = NULL;
+	ComRef<ID3D11Buffer>				g_pConstantBuffer = NULL;
+
 	XMMATRIX					g_World1;
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
+
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);
 	HRESULT ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight);
@@ -75,7 +77,7 @@ public:
 
 public:
 	virtual void Free() override;
-	static CGraphicDevice* Create();
+	//static CGraphicDevice* Create();
 };
 
 END

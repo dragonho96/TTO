@@ -8,11 +8,13 @@
 #define MAX_LOADSTRING 100
 
 // Global Variables:
+
 HWND		g_hWnd;
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 BOOL		g_First = false;
+_bool		g_Done = false;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -46,6 +48,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TOOL));
 
     MSG msg;
+	msg.message = WM_NULL;
 
 	CToolManager* pToolManager = new CToolManager();
 	pToolManager->Initialize();
@@ -55,20 +58,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (WM_QUIT == msg.message)
-				break;
-
-			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-			{
+			//if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			//{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
+			//}
+
+			if (WM_QUIT == msg.message || WM_DESTROY == msg.message)
+			{
+				pToolManager->SetDone();
+				break;
 			}
 		}
 		pToolManager->Update();
     }
 
 	delete pToolManager;
-
+	pToolManager = nullptr;
     return (int) msg.wParam;
 }
 
@@ -181,6 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
+		g_Done = true;
         break;
 	case WM_SIZE:
 		// Need to resize 

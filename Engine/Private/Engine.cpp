@@ -7,7 +7,7 @@ IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
 	: m_pTimerManager(CTimerManager::GetInstance())
-	, m_pGraphicDevice(CGraphicDevice::Create())
+	, m_pGraphicDevice(CGraphicDevice::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pGraphicDevice);
@@ -60,7 +60,7 @@ ID3D11DepthStencilView * CEngine::GetDepthStencilRenderTargetView()
 	return m_pGraphicDevice->GetDepthStencilRenderTargetView();
 }
 
-ID3D11ShaderResourceView * CEngine::GetShaderResourceView()
+ID3D11ShaderResourceView* CEngine::GetShaderResourceView()
 {
 	return m_pGraphicDevice->GetShaderResourceView();
 }
