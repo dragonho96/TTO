@@ -66,7 +66,6 @@ private:
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
-
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);
 	HRESULT ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight);
