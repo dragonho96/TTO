@@ -36,6 +36,7 @@ public:
 	void Render();
 	HRESULT Present();
 	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
+	void	ChangeProj(_uint iWidth, _uint iHeight);
 #pragma endregion
 
 #pragma region TIMER_MANAGER

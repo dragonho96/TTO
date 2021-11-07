@@ -44,7 +44,7 @@ public:
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
 	XMMATRIX					GetObjectMatrix() { return g_World1; }
 	void						SetObjectMatrix(XMMATRIX pMat) { g_World1 = pMat; }
-
+	void						ChangeProj(_uint iWidth, _uint iHeight);
 
 
 private:

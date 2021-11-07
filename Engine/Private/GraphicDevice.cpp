@@ -411,6 +411,11 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	return S_OK;
 }
 
+void CGraphicDevice::ChangeProj(_uint iWidth, _uint iHeight)
+{
+	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
+}
+
 
 HRESULT CGraphicDevice::ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight)
 {

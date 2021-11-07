@@ -151,16 +151,18 @@ void CGizmo::LateUpdate()
 		ImGuizmo::SetDrawlist();
 		float windowWidth = (float)ImGui::GetWindowWidth();
 		float windowHeight = (float)ImGui::GetWindowHeight();
-		ImGui::SetWindowSize(ImVec2{ windowWidth, windowHeight });
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		ImVec2 imageRect = ImGui::GetContentRegionAvail();
+
+		//ImGui::SetWindowSize(ImVec2{ windowWidth, windowHeight });
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
 
 		if (!ImGui::IsWindowCollapsed())
 		{
+			// TODO: Need To Change Camera proj
 			// imgui화면에 랜더링하기
-			ImVec2 imageRect = { ImGui::GetWindowSize().x , ImGui::GetWindowSize().y - (ImGui::GetFontSize()) };
-			// ID3D11ShaderResourceView* texture = m_pEngine->GetShaderResourceView();
-			//ImTextureID texture = m_pEngine->GetShaderResourceView();
-			
+			ImVec2 textureRect = { imageRect.x, imageRect.y/* - ImGui::GetFontSize() * 2*/ };
+			//imageRect.y -= ImGui::GetFontSize() * 2;
+			m_pEngine->ChangeProj(textureRect.x, textureRect.y);
 			ImGui::Image((ImTextureID)(m_pEngine->GetShaderResourceView()), imageRect, ImVec2(0, 0), ImVec2(1, 1));
 		}
 
