@@ -2,15 +2,18 @@
 #include "TimerManager.h"
 #include "GraphicDevice.h"
 #include "SceneSerializer.h"
+#include "SceneManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
 	: m_pTimerManager(CTimerManager::GetInstance())
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
+	, m_pSceneManager(CSceneManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pGraphicDevice);
+	SafeAddRef(m_pSceneManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -22,6 +25,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CTimerManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CTimer_Manager");
+
+	if (0 != CSceneManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CSceneManager");
 
 	if (0 != CGraphicDevice::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGraphic_Device");
@@ -136,7 +142,7 @@ HRESULT CEngine::AddTimers(const _tchar * pTimerTag)
 	return m_pTimerManager->AddTimers(pTimerTag);
 }
 
-_double CEngine::ComputeTimeDelta(const _tchar * pTimerTag)
+_double CEngine::ComputeDeltaTime(const _tchar * pTimerTag)
 {
 	if (nullptr == m_pTimerManager)
 		return 0.0;
@@ -156,10 +162,35 @@ void CEngine::DeserializeScene(const string & filePath)
 	serializer.Deserialize(filePath);
 }
 
+HRESULT CEngine::SetUpCurrentScene(CScene * pCurrentScene)
+{
+	if (nullptr == m_pSceneManager)
+		return E_FAIL;
+
+	return m_pSceneManager->SetUpCurrentScene(pCurrentScene);
+}
+
+_uint CEngine::UpdateScene(_double DeltaTime)
+{
+	if (nullptr == m_pSceneManager)
+		return -1;
+
+	return m_pSceneManager->UpdateScene(DeltaTime);
+}
+
+HRESULT CEngine::RenderScene()
+{
+	if (nullptr == m_pSceneManager)
+		return E_FAIL;
+
+	return m_pSceneManager->RenderScene();
+}
+
 #pragma endregion
 
 void CEngine::Free()
 {
+	SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pGraphicDevice);
 }

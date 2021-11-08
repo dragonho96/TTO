@@ -34,11 +34,14 @@
     <Filter Include="01.Utility\00.Engine">
       <UniqueIdentifier>{0033eb6a-28f0-4ada-b6b6-a00393bd1cc1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
+    <Filter Include="01.Utility\01.Scene">
       <UniqueIdentifier>{fcf9e04f-24aa-4705-b8e8-8e4ed98c9e61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\SceneSerializer">
+    <Filter Include="01.Utility\01.Scene\SceneSerializer">
       <UniqueIdentifier>{ba0187be-30ae-4099-9084-148d11960797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\01.Scene\Manager">
+      <UniqueIdentifier>{46d0ab9a-95b4-4b58-911e-6255c93a7771}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,10 +73,16 @@
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SceneSerializer.h">
-      <Filter>Scene\SceneSerializer</Filter>
+      <Filter>01.Utility\01.Scene\SceneSerializer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Struct.h">
       <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneManager.h">
+      <Filter>01.Utility\01.Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene.h">
+      <Filter>01.Utility\01.Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +102,13 @@
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SceneSerializer.cpp">
-      <Filter>Scene\SceneSerializer</Filter>
+      <Filter>01.Utility\01.Scene\SceneSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneManager.cpp">
+      <Filter>01.Utility\01.Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene.cpp">
+      <Filter>01.Utility\01.Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

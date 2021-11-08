@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Define.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene_Logo.h">
+      <Filter>01.Scenes\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene_GamePlay.h">
+      <Filter>01.Scenes\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene_Loading.h">
+      <Filter>01.Scenes\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01.Scenes\Loading\Loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_Logo.cpp">
+      <Filter>01.Scenes\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_GamePlay.cpp">
+      <Filter>01.Scenes\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_Loading.cpp">
+      <Filter>01.Scenes\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Scenes\Loading\Loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>99.Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>99.Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{4dfc6b95-4382-4bdb-9f14-6a565e6998f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp">
+      <UniqueIdentifier>{ed1ee828-51c4-4112-88a4-7a2ca1e4e5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Defines">
+      <UniqueIdentifier>{10c71ab4-c4d1-4cfd-b9b9-3c3d53cca1c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes">
+      <UniqueIdentifier>{6ba7644a-db69-4942-9844-9401ea77b364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Logo">
+      <UniqueIdentifier>{d3205a9e-843b-4fb1-9c08-ff7ae7730b4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Loading">
+      <UniqueIdentifier>{3ab6aea0-5ae5-4729-9196-4ca12e48b966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\GamePlay">
+      <UniqueIdentifier>{89b7a558-eac1-4c87-b978-bd6838981b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Loading\Loader">
+      <UniqueIdentifier>{f8c02495-847b-49b8-9d63-5979ba83a25f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>99.Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Default</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
