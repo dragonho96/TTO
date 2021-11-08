@@ -44,6 +44,10 @@ HRESULT CLoader::Initialize(SCENE eScene)
 
 	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr);
 
+	// call TerminateThread to stop thread
+	//TerminateThread(m_hThread, 0);
+	//m_hThread = (HANDLE)_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr);
+
 	if (0 == m_hThread)
 		return E_FAIL;
 
