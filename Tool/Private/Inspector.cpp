@@ -9,7 +9,8 @@ CInspector::CInspector(CToolManager * pToolManager)
 
 void CInspector::Initialize()
 {
-	m_pGizmo = dynamic_cast<CGizmo*>(m_pToolManager->GetWindow("Gizmo"));
+	//m_pGizmo = dynamic_cast<CGizmo*>(m_pToolManager->GetWindow("Gizmo"));
+	m_pGizmo = dynamic_pointer_cast<CGizmo>(m_pToolManager->GetWindow("Gizmo"));
 }
 
 void CInspector::Update()

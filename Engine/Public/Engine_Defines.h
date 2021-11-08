@@ -12,7 +12,6 @@
 #include <d3dcompiler.h>
 #include <wrl.h> // ComPtr smartpointer for COM
 #include <wrl\client.h>
-
 #include <memory> // for smart ptr
 
 using namespace std;
