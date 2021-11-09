@@ -1,7 +1,7 @@
 #pragma once
 
 /* 다음레벨에 대한 리소스 원형, 객체 우넌형을 준비하낟. */
-#include "Client_Define.h"
+#include "Client_Defines.h"
 #include "Base.h"
 
 BEGIN(Client)

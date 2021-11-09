@@ -16,9 +16,6 @@
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00.MainApp</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Define.h">
-      <Filter>98.Defines</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Scene_Logo.h">
       <Filter>01.Scenes\Logo</Filter>
     </ClInclude>
@@ -33,6 +30,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Background.h">
       <Filter>02.GameObjects\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>98.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

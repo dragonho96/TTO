@@ -152,14 +152,14 @@ _double CEngine::ComputeDeltaTime(const _tchar * pTimerTag)
 
 void CEngine::SerializeScene(const string & filePath)
 {
-	CSceneSerializer serializer;
-	serializer.Serialize(filePath);
+	//CSceneSerializer serializer;
+	//serializer.Serialize(filePath);
 }
 
 void CEngine::DeserializeScene(const string & filePath)
 {
-	CSceneSerializer serializer;
-	serializer.Deserialize(filePath);
+	//CSceneSerializer serializer;
+	//serializer.Deserialize(filePath);
 }
 
 HRESULT CEngine::SetUpCurrentScene(CScene * pCurrentScene)

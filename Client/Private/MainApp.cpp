@@ -52,9 +52,10 @@ HRESULT CMainApp::Initialize()
 
 _uint CMainApp::Update(_double dDeltaTime)
 {
+#ifdef _DEBUG
 	m_TimeAcc += dDeltaTime;
 	m_pEngine->UpdateScene(dDeltaTime);
-
+#endif
 	return 0;
 }
 
@@ -67,6 +68,7 @@ HRESULT CMainApp::Render()
 
 	m_pEngine->Present();
 
+#ifdef _DEBUG
 	++m_iNumDraw;
 
 	if (m_TimeAcc >= 1.0)
@@ -77,6 +79,7 @@ HRESULT CMainApp::Render()
 		m_TimeAcc = 0.0;
 		m_iNumDraw = 0;
 	}
+#endif
 
 	return S_OK;
 }

@@ -300,12 +300,12 @@ HRESULT CGraphicDevice::SetSpherePixelShader()
 HRESULT CGraphicDevice::SetSphereBuffer()
 {
 	float range = 1.f;
-	int sliceCount = 36;
-	UINT vertexCount, indexCount;
+	UINT sliceCount = 36;
+	UINT vertexCount;
 	UINT lineCount;
 	_float3* lines;
 
-	float phiStep = 2.0f * 3.14 / (float)sliceCount;
+	float phiStep = 2.0f * 3.14f / (float)sliceCount;
 
 	// Create Vertex
 	{
@@ -732,8 +732,8 @@ HRESULT CGraphicDevice::ReadyViewport(_uint iWidth, _uint iHeight)
 	D3D11_VIEWPORT			ViewPortDesc;
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 
-	ViewPortDesc.Width = iWidth;
-	ViewPortDesc.Height = iHeight;
+	ViewPortDesc.Width = (FLOAT)iWidth;
+	ViewPortDesc.Height = (FLOAT)iHeight;
 	ViewPortDesc.TopLeftX = 0;
 	ViewPortDesc.TopLeftY = 0;
 	ViewPortDesc.MinDepth = 0.0f;

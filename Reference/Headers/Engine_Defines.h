@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4005)
 
 #include <iostream>
 #include <fstream>
@@ -43,7 +44,7 @@ using namespace DirectX::PackedVector;
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
 
-#include "yaml-cpp\yaml.h"
+//#include "yaml-cpp\yaml.h"
 
 
 using namespace Engine;
