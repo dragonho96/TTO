@@ -42,7 +42,7 @@ public:
 #pragma region TIMER_MANAGER
 public:
 	HRESULT AddTimers(const _tchar* pTimerTag);
-	_double ComputeTimeDelta(const _tchar* pTimerTag);
+	_double ComputeDeltaTime(const _tchar* pTimerTag);
 #pragma endregion
 
 #pragma region SCENE
@@ -51,9 +51,17 @@ public:
 	void DeserializeScene(const string& filePath);
 #pragma endregion
 
+#pragma region SCENE_MANAGER
+public:
+	HRESULT SetUpCurrentScene(class CScene* pCurrentScene);
+	_uint UpdateScene(_double DeltaTime);
+	HRESULT RenderScene();
+#pragma endregion
+
 private:
 	class CTimerManager*			m_pTimerManager = nullptr;
 	class CGraphicDevice*			m_pGraphicDevice = nullptr;
+	class CSceneManager*			m_pSceneManager = nullptr;
 	class CObjectManager*			m_pObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
 public:

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <d3d11.h>
 #include <d3dx11.h>
+#include <process.h>
 #include <unordered_map>
 #include <algorithm>
 #include <typeinfo>
@@ -17,6 +18,25 @@
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+
+
+// For Memory Leak
+#ifdef _DEBUG
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifndef DBG_NEW 
+
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
+#define new DBG_NEW 
+
+#endif
+#endif
+
+
+
 
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"
