@@ -457,7 +457,7 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 	// m_pDeviceContext->DrawIndexed(36, 0, 0);
-	m_pDeviceContext->Draw(224, 0);
+	m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
 	//
 	// Update variables for the second cube
@@ -477,7 +477,6 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
 }
 
 HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
