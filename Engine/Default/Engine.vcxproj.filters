@@ -40,13 +40,17 @@
     <Filter Include="01.Utility\01.Scene\SceneSerializer">
       <UniqueIdentifier>{ba0187be-30ae-4099-9084-148d11960797}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="Debug">
       <UniqueIdentifier>{73e22a83-00c3-474b-8272-096a5020941a}</UniqueIdentifier>
- </Filter>
+    </Filter>
     <Filter Include="01.Utility\01.Scene\Manager">
       <UniqueIdentifier>{46d0ab9a-95b4-4b58-911e-6255c93a7771}</UniqueIdentifier>
-
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject">
+      <UniqueIdentifier>{383200ac-16ad-4b30-b537-4ec56721cf5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\Manager">
+      <UniqueIdentifier>{2d77ba4d-7ff7-4f97-a677-d46c947b6a3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +93,12 @@
     <ClInclude Include="..\Public\Scene.h">
       <Filter>01.Utility\01.Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>01.Utility\02.GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObjectManager.h">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -114,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Scene.cpp">
       <Filter>01.Utility\01.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>01.Utility\02.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObjectManager.cpp">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

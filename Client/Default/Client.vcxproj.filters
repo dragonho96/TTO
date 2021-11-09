@@ -31,6 +31,9 @@
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01.Scenes\Loading\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02.GameObjects\Background</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01.Scenes\Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02.GameObjects\Background</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +93,12 @@
     </Filter>
     <Filter Include="01.Scenes\Loading\Loader">
       <UniqueIdentifier>{f8c02495-847b-49b8-9d63-5979ba83a25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects">
+      <UniqueIdentifier>{5ff2851f-39c1-4816-bd3c-252daf4aaed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Background">
+      <UniqueIdentifier>{0e23e1a7-a5ff-4461-83bf-344d3a5a3ebc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
