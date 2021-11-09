@@ -39,9 +39,12 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
-	SetVertexShader();
-	SetPixelShader();
-	SetBuffer();
+	// SetVertexShader();
+	// SetPixelShader();
+	// SetBuffer();
+	SetSphereVertexShader();
+	SetSpherePixelShader();
+	SetSphereBuffer();
 
 	Initialize(iWidth, iHeight);
 	return S_OK;
@@ -132,7 +135,7 @@ HRESULT CGraphicDevice::SetPixelShader()
 	}
 
 	// Create the pixel shader
-	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, g_pPixelShader.GetAddressOf());
+	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
 	pPSBlob->Release();
 	if (FAILED(hr))
 		return hr;
@@ -164,7 +167,7 @@ HRESULT CGraphicDevice::SetBuffer()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = vertices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, g_pVertexBuffer.GetAddressOf());
+	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
 	if (FAILED(hr))
 		return hr;
 
@@ -176,30 +179,37 @@ HRESULT CGraphicDevice::SetBuffer()
 	// Create index buffer
 	WORD indices[] =
 	{
-		3,1,0,
-		2,1,3,
+		//3,1,0,
+		//2,1,3,
 
-		0,5,4,
-		1,5,0,
+		//0,5,4,
+		//1,5,0,
 
-		3,4,7,
-		0,4,3,
+		//3,4,7,
+		//0,4,3,
 
-		1,6,5,
-		2,6,1,
+		//1,6,5,
+		//2,6,1,
 
-		2,7,6,
-		3,7,2,
+		//2,7,6,
+		//3,7,2,
 
-		6,4,5,
-		7,4,6,
+		//6,4,5,
+		//7,4,6,
+
+		// Drawing Debug Cube
+		0, 1, 1, 2, 2, 3, 3, 0,
+		4, 5, 5, 6, 6, 7, 7, 4,
+		0, 4, 1, 5, 2, 6, 3, 7,
 	};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+	//bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+	bd.ByteWidth = sizeof(WORD) * 24;        // 324 vertices needed for 12 lines in a line list
+
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, g_pIndexBuffer.GetAddressOf());
+	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
 	if (FAILED(hr))
 		return hr;
 
@@ -207,17 +217,175 @@ HRESULT CGraphicDevice::SetBuffer()
 	m_pDeviceContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// Set primitive topology
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	// Create the constant buffer
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = m_pDevice->CreateBuffer(&bd, NULL, g_pConstantBuffer.GetAddressOf());
+	hr = m_pDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
 
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::SetSphereVertexShader()
+{
+	// Compile the vertex shader
+	HRESULT hr;
+	ID3DBlob* pVSBlob = NULL;
+	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+		return hr;
+	}
+
+	// Create the vertex shader
+	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
+	if (FAILED(hr))
+	{
+		pVSBlob->Release();
+		return hr;
+	}
+
+	// Define the input layout
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	UINT numElements = ARRAYSIZE(layout);
+
+	// Create the input layout
+	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+		pVSBlob->GetBufferSize(), &g_pVertexLayout);
+	pVSBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
+	// Set the input layout
+	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
+
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::SetSpherePixelShader()
+{
+	HRESULT hr;
+	// Compile the pixel shader
+	ID3DBlob* pPSBlob = NULL;
+	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+		return hr;
+	}
+
+	// Create the pixel shader
+	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+	pPSBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::SetSphereBuffer()
+{
+	float range = 1.f;
+	int sliceCount = 36;
+	UINT vertexCount, indexCount;
+	UINT lineCount;
+	_float3* lines;
+
+	float phiStep = 2.0f * 3.14 / (float)sliceCount;
+
+	// Create Vertex
+	{
+		int vertexCount = sliceCount * 3;
+		_float3* vertices = new _float3[vertexCount];
+
+		UINT index = 0;
+		// x = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3(0, (range * cosf(phi)), (range * sinf(phi)));
+			index++;
+		}
+		// y = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3((range * cosf(phi)), 0, (range * sinf(phi)));
+			index++;
+		}
+		// z = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3((range * cosf(phi)), (range * sinf(phi)), 0);
+			index++;
+		}
+
+
+		lineCount = sliceCount * 3;
+		lines = new _float3[lineCount * 2];
+
+		index = 0;
+		for (UINT i = 0; i < sliceCount; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount - 1 ? vertices[0] : vertices[i + 1];
+		}
+		for (UINT i = sliceCount; i < sliceCount * 2; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount * 2 - 1 ? vertices[sliceCount] : vertices[i + 1];
+		}
+		for (UINT i = sliceCount * 2; i < sliceCount * 3; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount * 3 - 1 ? vertices[sliceCount * 2] : vertices[i + 1];
+		}
+
+		SafeDeleteArray(vertices);
+	}
+
+	vertexCount = lineCount * 2;
+
+	SimpleVertex* vertices = new SimpleVertex[vertexCount];
+
+	for (UINT i = 0; i < vertexCount; i++) {
+		vertices[i].Pos = lines[i];
+		vertices[i].Color = { 0, 0, 1.f, 1.f };
+	}
+
+	D3D11_BUFFER_DESC desc = { 0 };
+	desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
+	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // 정점 버퍼에 들어갈 데이터의 크기
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
+	data.pSysMem = vertices; // 쓸 데이터의 주소
+
+	HRESULT hr = m_pDevice->CreateBuffer(
+		&desc, &data, &g_pVertexBuffer);
+	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+
+	UINT stride = sizeof(SimpleVertex);
+	UINT offset = 0;
+	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(ConstantBuffer);
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.CPUAccessFlags = 0;
+	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
+	if (FAILED(hr))
+		return hr;
 	return S_OK;
 }
 
@@ -288,7 +456,8 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
-	m_pDeviceContext->DrawIndexed(36, 0, 0);
+	// m_pDeviceContext->DrawIndexed(36, 0, 0);
+	m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
 	//
 	// Update variables for the second cube
@@ -303,13 +472,11 @@ void CGraphicDevice::Render()
 	// Render the second cube
 	//
 	//m_pDeviceContext->DrawIndexed(36, 0, 0);
-
 	Present();
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
 }
 
 HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
@@ -345,69 +512,71 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 {
 	//static UINT currentMode = 0;
 	//currentMode++;
+	// Needs to delete pOutput
 	//IDXGIOutput *pOutput;
 	//m_pSwapChain->GetContainingOutput(&pOutput);
 
 	//DXGI_SWAP_CHAIN_DESC scd;
 	//m_pSwapChain->GetDesc(&scd);
 
-	////// Get all possible resolution in modes[]
-	////UINT numModes = 1024;
-	////DXGI_MODE_DESC modes[1024];
-	////pOutput->GetDisplayModeList(scd.BufferDesc.Format, 0, &numModes, modes);
-	////DXGI_MODE_DESC mode = modes[currentMode];
-	////if (currentMode < numModes) {
+	//// Get all possible resolution in modes[]
+	//UINT numModes = 1024;
+	//DXGI_MODE_DESC modes[1024];
+	//pOutput->GetDisplayModeList(scd.BufferDesc.Format, 0, &numModes, modes);
+	//DXGI_MODE_DESC mode = modes[currentMode];
+	//if (currentMode < numModes) {
 
-	////	TCHAR str[255];
-	////	wsprintf(str, TEXT("Switching to mode: %u / %u, %ux%u@%uHz (%u, %u, %u)\n"),
-	////		currentMode + 1,
-	////		numModes,
-	////		mode.Width,
-	////		mode.Height,
-	////		mode.RefreshRate.Numerator / mode.RefreshRate.Denominator,
-	////		mode.Scaling,
-	////		mode.ScanlineOrdering,
-	////		mode.Format
-	////	);
-	////	OutputDebugString(str);
+	//	TCHAR str[255];
+	//	wsprintf(str, TEXT("Switching to mode: %u / %u, %ux%u@%uHz (%u, %u, %u)\n"),
+	//		currentMode + 1,
+	//		numModes,
+	//		mode.Width,
+	//		mode.Height,
+	//		mode.RefreshRate.Numerator / mode.RefreshRate.Denominator,
+	//		mode.Scaling,
+	//		mode.ScanlineOrdering,
+	//		mode.Format
+	//	);
+	//	OutputDebugString(str);
 
-	////	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
-	////}
+	//	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
+	//}
 
-	//DXGI_MODE_DESC mode;
+	DXGI_MODE_DESC mode;
 
-	//mode.Width = iWidth;
-	//mode.Height = iHeight;
-	//mode.RefreshRate.Numerator = 60;
-	//mode.RefreshRate.Denominator = 1;
-	//mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	//mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	mode.Width = iWidth;
+	mode.Height = iHeight;
+	mode.RefreshRate.Numerator = 60;
+	mode.RefreshRate.Denominator = 1;
+	mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	//m_pSwapChain->ResizeTarget(&mode);
+	m_pSwapChain->ResizeTarget(&mode);
 
-	//m_pDeviceContext->ClearState();
-	//m_pBackBufferRTV->Release();
-	//m_pBackBufferRTV2->Release();
-	//m_pShaderResourceView->Release();
-	//m_pDepthStencilRTV->Release();
-	//if (g_pConstantBuffer) g_pConstantBuffer->Release();
-	//if (g_pVertexBuffer) g_pVertexBuffer->Release();
-	//if (g_pIndexBuffer) g_pIndexBuffer->Release();
-	//if (g_pVertexLayout) g_pVertexLayout->Release();
-	//if (g_pVertexShader) g_pVertexShader->Release();
-	//if (g_pPixelShader) g_pPixelShader->Release();
+	m_pDeviceContext->ClearState();
+	m_pBackBufferRTV.Reset();
+	m_pBackBufferRTV2.Reset();
+	m_pShaderResourceView.Reset();
+	m_pDepthStencilRTV.Reset();
+	if (g_pConstantBuffer) g_pConstantBuffer.Reset();
+	if (g_pVertexBuffer) g_pVertexBuffer.Reset();
+	if (g_pIndexBuffer) g_pIndexBuffer.Reset();
+	if (g_pVertexLayout) g_pVertexLayout.Reset();
+	if (g_pVertexShader) g_pVertexShader.Reset();
+	if (g_pPixelShader) g_pPixelShader.Reset();
+	m_pDeviceContext->Flush();
 
-	//m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+	m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
-	//ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
-	//ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
-	//ReadyViewport(mode.Width, mode.Height);
-	//SetVertexShader();
-	//SetPixelShader();
-	//SetBuffer();
+	ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
+	ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
+	ReadyViewport(mode.Width, mode.Height);
+	SetVertexShader();
+	SetPixelShader();
+	SetBuffer();
 
-	//Initialize(mode.Width, mode.Height);
+	Initialize(mode.Width, mode.Height);
 	return S_OK;
 }
 
@@ -426,7 +595,7 @@ HRESULT CGraphicDevice::ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight)
 	IDXGIAdapter*			pDXGIAdapter = nullptr;
 	IDXGIDevice*			pDXGIDevice = nullptr;
 
-	if (FAILED(m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice)))
+	if (FAILED(m_pDevice.Get()->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice)))
 		return E_FAIL;
 	if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pDXGIAdapter)))
 		return E_FAIL;
@@ -454,7 +623,7 @@ HRESULT CGraphicDevice::ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight)
 	SwapChainDesc.Windowed = TRUE;
 	SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	if (FAILED(pDXGIFactory->CreateSwapChain(m_pDevice, &SwapChainDesc, &m_pSwapChain)))
+	if (FAILED(pDXGIFactory->CreateSwapChain(m_pDevice.Get(), &SwapChainDesc, &m_pSwapChain)))
 		return E_FAIL;
 
 	/*pDXGIFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);*/
@@ -474,7 +643,7 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 
 	// Look what this is
 	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, m_pBackBufferRTV.GetAddressOf())))
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
 		return E_FAIL;
 
 
@@ -497,7 +666,7 @@ HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHei
 	//	return E_FAIL;
 
 	m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture2);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, m_pBackBufferRTV2.GetAddressOf())))
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, &m_pBackBufferRTV2)))
 		return E_FAIL;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -575,32 +744,8 @@ HRESULT CGraphicDevice::ReadyViewport(_uint iWidth, _uint iHeight)
 
 void CGraphicDevice::Free()
 {
-	if (m_pDeviceContext) m_pDeviceContext->ClearState();
-
-	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
-	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();
-	//if (g_pIndexBuffer) g_pIndexBuffer.Reset();
-	//if (g_pVertexLayout) g_pVertexLayout.Reset();
-	//if (g_pVertexShader) g_pVertexShader.Reset();
-	//if (g_pPixelShader) g_pPixelShader.Reset();
-
-	//if (m_pDepthStencilRTV) m_pDepthStencilRTV.Reset();
-	//if (m_pShaderResourceView) m_pShaderResourceView.Reset();
-	//if (m_pBackBufferRTV) m_pBackBufferRTV.Reset();
-	//if (m_pBackBufferRTV2) m_pBackBufferRTV2.Reset();
-	//
-	if (m_pDeviceContext) m_pDeviceContext->Flush();
-
-	//if (m_pSwapChain) m_pSwapChain.Reset();
-	//if (m_pDeviceContext) m_pDeviceContext.Reset();
-	//if (m_pDevice) m_pDevice.Reset();
-
-	//SafeRelease(m_pBackBufferRTV);
-	//SafeRelease(m_pBackBufferRTV2);
-	//SafeRelease(m_pSwapChain);
-	SafeRelease(m_pDeviceContext);
-	SafeRelease(m_pDevice);
-
+	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
+	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }
 
 //CGraphicDevice * CGraphicDevice::Create()

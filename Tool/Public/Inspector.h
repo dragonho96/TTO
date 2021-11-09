@@ -2,9 +2,6 @@
 #include "ImGuiWindow.h"
 #include "Gizmo.h"
 
-
-
-
 class CInspector : public CImGuiWindow
 {
 public:
@@ -20,5 +17,5 @@ public:
 	void DrawVec3(const string& label, _float3& values);
 
 private:
-	CGizmo*		m_pGizmo;
+	std::shared_ptr<CGizmo>		m_pGizmo;
 };

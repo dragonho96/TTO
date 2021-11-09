@@ -27,9 +27,7 @@ void CToolManager::Initialize()
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
-	////m_pSwapChain = m_pEngine->GetSwapChain();
-	////m_pRenderTargetView = m_pEngine->GetRenderTargetView();
-	////m_pDepthStencil = m_pEngine->GetDepthStencilRenderTargetView();
+
 
 
 	IMGUI_CHECKVERSION();
@@ -138,10 +136,10 @@ void CToolManager::Update()
 
 void CToolManager::Release()
 {
-	for (auto& window : m_mapWindows)
-		SafeDelete(window.second);
+	//for (auto& window : m_mapWindows)
+	//	SafeDelete(window.second);
 
-	m_mapWindows.clear();
+	//m_mapWindows.clear();
 	
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -290,21 +288,29 @@ void CToolManager::SetDockSpace()
 
 void CToolManager::CreateWindows()
 {
-	CImGuiWindow* pWindow = new CLog(this);
+	std::shared_ptr<CImGuiWindow> pWindow = std::make_shared<CLog>(this);
 	m_mapWindows["Log"] = pWindow;
 
-	pWindow = new CContentBrowser(this);
+	pWindow = std::make_shared<CContentBrowser>(this);
 	m_mapWindows["ContentBrowser"] = pWindow;
 
-	pWindow = new CGizmo(this);
+	pWindow = std::make_shared<CGizmo>(this);
 	m_mapWindows["Gizmo"] = pWindow;
 
-	pWindow = new CInspector(this);
+	pWindow = std::make_shared<CInspector>(this);
 	m_mapWindows["Inspector"] = pWindow;
+	//pWindow = new CContentBrowser(this);
+	//m_mapWindows["ContentBrowser"] = pWindow;
+
+	//pWindow = new CGizmo(this);
+	//m_mapWindows["Gizmo"] = pWindow;
+
+	//pWindow = new CInspector(this);
+	//m_mapWindows["Inspector"] = pWindow;
 
 }
 
-CImGuiWindow * CToolManager::GetWindow(string windowName)
+std::shared_ptr<CImGuiWindow> CToolManager::GetWindow(string windowName)
 {
 	auto iter_find = m_mapWindows.find(windowName);
 	if (m_mapWindows.end() == iter_find)

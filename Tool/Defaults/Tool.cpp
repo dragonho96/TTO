@@ -58,15 +58,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			//if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-			//{
+			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
-			//}
+			}
 
 			if (WM_QUIT == msg.message || WM_DESTROY == msg.message)
 			{
-				pToolManager->SetDone();
 				break;
 			}
 		}
@@ -197,7 +196,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			UINT height = HIWORD(lParam);
 			CEngine::GetInstance()->ChangeResolution(width, height);
 		}
-
 		g_First = true;
 		break;
     default:

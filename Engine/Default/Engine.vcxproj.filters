@@ -40,8 +40,13 @@
     <Filter Include="01.Utility\01.Scene\SceneSerializer">
       <UniqueIdentifier>{ba0187be-30ae-4099-9084-148d11960797}</UniqueIdentifier>
     </Filter>
+
+    <Filter Include="Debug">
+      <UniqueIdentifier>{73e22a83-00c3-474b-8272-096a5020941a}</UniqueIdentifier>
+ </Filter>
     <Filter Include="01.Utility\01.Scene\Manager">
       <UniqueIdentifier>{46d0ab9a-95b4-4b58-911e-6255c93a7771}</UniqueIdentifier>
+
     </Filter>
   </ItemGroup>
   <ItemGroup>

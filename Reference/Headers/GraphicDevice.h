@@ -21,6 +21,10 @@ public:
 	HRESULT SetPixelShader();
 	HRESULT SetBuffer();
 
+	HRESULT SetSphereVertexShader();
+	HRESULT SetSpherePixelShader();
+	HRESULT SetSphereBuffer();
+
 public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
@@ -31,8 +35,8 @@ public:
 	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
 
 public:
-	ID3D11Device*				GetDevice() { return m_pDevice; }
-	ID3D11DeviceContext*		GetDeviceContext() { return m_pDeviceContext; }
+	ID3D11Device*				GetDevice() { return m_pDevice.Get(); }
+	ID3D11DeviceContext*		GetDeviceContext() { return m_pDeviceContext.Get(); }
 	IDXGISwapChain*				GetSwapChain() { return m_pSwapChain.Get(); }
 	ID3D11RenderTargetView*		GetRenderTargetView() { return m_pBackBufferRTV.Get(); }
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV.Get(); }
@@ -48,8 +52,8 @@ public:
 
 
 private:
-	ID3D11Device*						m_pDevice = nullptr;
-	ID3D11DeviceContext*				m_pDeviceContext	= nullptr;
+	ComRef<ID3D11Device>				m_pDevice = nullptr;
+	ComRef<ID3D11DeviceContext>			m_pDeviceContext	= nullptr;
 	ComRef<IDXGISwapChain>				m_pSwapChain = nullptr;
 	ComRef<ID3D11RenderTargetView>		m_pBackBufferRTV = nullptr;
 	ComRef<ID3D11RenderTargetView>		m_pBackBufferRTV2 = nullptr;
