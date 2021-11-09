@@ -386,6 +386,11 @@ HRESULT CGraphicDevice::SetSphereBuffer()
 	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
+
+	// Delete vertices
+	SafeDeleteArray(vertices);
+	SafeDeleteArray(lines);
+
 	return S_OK;
 }
 

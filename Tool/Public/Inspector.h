@@ -17,5 +17,6 @@ public:
 	void DrawVec3(const string& label, _float3& values);
 
 private:
-	std::shared_ptr<CGizmo>		m_pGizmo;
+	//std::shared_ptr<CGizmo>		m_pGizmo;
+	CGizmo*		m_pGizmo;
 };
