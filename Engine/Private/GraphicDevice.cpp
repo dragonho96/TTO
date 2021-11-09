@@ -39,9 +39,12 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
-	SetVertexShader();
-	SetPixelShader();
-	SetBuffer();
+	// SetVertexShader();
+	// SetPixelShader();
+	// SetBuffer();
+	SetSphereVertexShader();
+	SetSpherePixelShader();
+	SetSphereBuffer();
 
 	Initialize(iWidth, iHeight);
 	return S_OK;
@@ -229,6 +232,163 @@ HRESULT CGraphicDevice::SetBuffer()
 	return S_OK;
 }
 
+HRESULT CGraphicDevice::SetSphereVertexShader()
+{
+	// Compile the vertex shader
+	HRESULT hr;
+	ID3DBlob* pVSBlob = NULL;
+	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+		return hr;
+	}
+
+	// Create the vertex shader
+	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
+	if (FAILED(hr))
+	{
+		pVSBlob->Release();
+		return hr;
+	}
+
+	// Define the input layout
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	UINT numElements = ARRAYSIZE(layout);
+
+	// Create the input layout
+	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+		pVSBlob->GetBufferSize(), &g_pVertexLayout);
+	pVSBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
+	// Set the input layout
+	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
+
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::SetSpherePixelShader()
+{
+	HRESULT hr;
+	// Compile the pixel shader
+	ID3DBlob* pPSBlob = NULL;
+	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+		return hr;
+	}
+
+	// Create the pixel shader
+	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+	pPSBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::SetSphereBuffer()
+{
+	float range = 1.f;
+	int sliceCount = 36;
+	UINT vertexCount, indexCount;
+	UINT lineCount;
+	_float3* lines;
+
+	float phiStep = 2.0f * 3.14 / (float)sliceCount;
+
+	// Create Vertex
+	{
+		int vertexCount = sliceCount * 3;
+		_float3* vertices = new _float3[vertexCount];
+
+		UINT index = 0;
+		// x = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3(0, (range * cosf(phi)), (range * sinf(phi)));
+			index++;
+		}
+		// y = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3((range * cosf(phi)), 0, (range * sinf(phi)));
+			index++;
+		}
+		// z = 0
+		for (UINT i = 0; i < sliceCount; i++) {
+			float phi = i * phiStep;
+			vertices[index] = _float3((range * cosf(phi)), (range * sinf(phi)), 0);
+			index++;
+		}
+
+
+		lineCount = sliceCount * 3;
+		lines = new _float3[lineCount * 2];
+
+		index = 0;
+		for (UINT i = 0; i < sliceCount; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount - 1 ? vertices[0] : vertices[i + 1];
+		}
+		for (UINT i = sliceCount; i < sliceCount * 2; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount * 2 - 1 ? vertices[sliceCount] : vertices[i + 1];
+		}
+		for (UINT i = sliceCount * 2; i < sliceCount * 3; i++) {
+			lines[index++] = vertices[i];
+			lines[index++] = i == sliceCount * 3 - 1 ? vertices[sliceCount * 2] : vertices[i + 1];
+		}
+
+		SafeDeleteArray(vertices);
+	}
+
+	vertexCount = lineCount * 2;
+
+	SimpleVertex* vertices = new SimpleVertex[vertexCount];
+
+	for (UINT i = 0; i < vertexCount; i++) {
+		vertices[i].Pos = lines[i];
+		vertices[i].Color = { 0, 0, 1.f, 1.f };
+	}
+
+	D3D11_BUFFER_DESC desc = { 0 };
+	desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
+	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // 정점 버퍼에 들어갈 데이터의 크기
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
+	data.pSysMem = vertices; // 쓸 데이터의 주소
+
+	HRESULT hr = m_pDevice->CreateBuffer(
+		&desc, &data, &g_pVertexBuffer);
+	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+
+	UINT stride = sizeof(SimpleVertex);
+	UINT offset = 0;
+	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(ConstantBuffer);
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.CPUAccessFlags = 0;
+	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
+	if (FAILED(hr))
+		return hr;
+	return S_OK;
+}
+
 HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 {
 	// Initialize the world matrix
@@ -296,7 +456,8 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
-	m_pDeviceContext->DrawIndexed(36, 0, 0);
+	// m_pDeviceContext->DrawIndexed(36, 0, 0);
+	m_pDeviceContext->Draw(224, 0);
 
 	//
 	// Update variables for the second cube
@@ -311,7 +472,6 @@ void CGraphicDevice::Render()
 	// Render the second cube
 	//
 	//m_pDeviceContext->DrawIndexed(36, 0, 0);
-
 	Present();
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());

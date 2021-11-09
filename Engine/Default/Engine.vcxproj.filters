@@ -40,6 +40,9 @@
     <Filter Include="Scene\SceneSerializer">
       <UniqueIdentifier>{ba0187be-30ae-4099-9084-148d11960797}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{73e22a83-00c3-474b-8272-096a5020941a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">

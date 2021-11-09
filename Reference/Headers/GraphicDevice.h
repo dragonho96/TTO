@@ -21,6 +21,10 @@ public:
 	HRESULT SetPixelShader();
 	HRESULT SetBuffer();
 
+	HRESULT SetSphereVertexShader();
+	HRESULT SetSpherePixelShader();
+	HRESULT SetSphereBuffer();
+
 public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
