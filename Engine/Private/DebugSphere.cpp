@@ -12,6 +12,7 @@ CDebugSphere::CDebugSphere(float radius, int sliceCount)
 
 CDebugSphere::~CDebugSphere()
 {
+	SafeDeleteArray(lines);
 }
 
 void CDebugSphere::Render()
@@ -50,7 +51,6 @@ void CDebugSphere::CreateVertex()
 			vertices[index] = _float3((range * cosf(phi)), (range * sinf(phi)), 0);
 			index++;
 		}
-
 
 		lineCount = sliceCount * 3;
 		lines = new _float3[lineCount * 2];

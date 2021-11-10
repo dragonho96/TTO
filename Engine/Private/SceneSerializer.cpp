@@ -52,4 +52,6 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 	//		string value = entity["GameObject"].as<string>();
 	//	}
 	//}
+
+	return true;
 }

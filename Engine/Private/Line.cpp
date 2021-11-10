@@ -12,12 +12,13 @@ CLine::CLine()
 
 CLine::~CLine()
 {
+	SafeDeleteArray(m_pVertices);
 }
 
 void CLine::Initialize(_float3* lines, UINT lineCount)
 {
 	// Create Shader
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Debug.hlsl");
+	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Tutorial05.fx");
 
 	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 
@@ -27,7 +28,7 @@ void CLine::Initialize(_float3* lines, UINT lineCount)
 	// Set vertextCount in child
 	// vertexCount = lineCount;
 
-	m_pVertices = make_unique<SimpleVertex[]>(vertexCount);
+	m_pVertices = new SimpleVertex[vertexCount];
 
 	for (UINT i = 0; i < vertexCount; i++) {
 		m_pVertices[i].Pos = lines[i];
@@ -42,7 +43,7 @@ void CLine::Initialize(_float3* lines, UINT lineCount)
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
-	data.pSysMem = m_pVertices.get(); // 쓸 데이터의 주소
+	data.pSysMem = m_pVertices; // 쓸 데이터의 주소
 
 	HRESULT hr = CEngine::GetInstance()->GetDevice()->CreateBuffer(
 		&desc, &data, &vertexBuffer);
@@ -58,10 +59,11 @@ void CLine::Render()
 	cb1.mWorld = XMMatrixTranspose(world);
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
+
 	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
 		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
-	CEngine::GetInstance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	CEngine::GetInstance()->GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 	CEngine::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(m_eTopology);
 	m_pShader->Render();
 	// 실제로 그리는 거

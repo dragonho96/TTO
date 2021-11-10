@@ -88,6 +88,9 @@ HRESULT CShader::CreatePixelShader()
 		NULL,
 		&m_PS
 	);
+	if (FAILED(hr))
+		return hr;
+
 	return S_OK;
 }
 

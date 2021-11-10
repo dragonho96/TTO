@@ -1,9 +1,9 @@
 #include "..\public\GraphicDevice.h"
-//#include "Line.h"
-//#include "DebugSphere.h"
+#include "Line.h"
+#include "DebugSphere.h"
 
 IMPLEMENT_SINGLETON(CGraphicDevice)
-//CLine* debugSphere = nullptr;
+CLine* debugSphere = nullptr;
 CGraphicDevice::CGraphicDevice()
 {
 }
@@ -53,7 +53,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	Initialize(iWidth, iHeight);
 
-	//debugSphere = new CDebugSphere(float(1.f));
+	debugSphere = new CDebugSphere(float(1.f));
 
 	return S_OK;
 }
@@ -319,7 +319,6 @@ HRESULT CGraphicDevice::SetSphereBuffer()
 	{
 		int vertexCount = sliceCount * 3;
 		_float3* vertices = new _float3[vertexCount];
-
 		UINT index = 0;
 		// x = 0
 		for (UINT i = 0; i < sliceCount; i++) {
@@ -460,13 +459,13 @@ void CGraphicDevice::Render()
 	//// Render the first cube
 	////
 	//m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
-	//m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	////m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	//m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 	//// m_pDeviceContext->DrawIndexed(36, 0, 0);
 	//m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
 
-	//debugSphere->Render();
+	debugSphere->Render();
 	Present();
 
 	// IMGUI용 버퍼 따로 생성해서 Set
@@ -755,6 +754,7 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 
 void CGraphicDevice::Free()
 {
+	SafeDelete(debugSphere);
 	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
 	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }

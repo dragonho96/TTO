@@ -47,6 +47,9 @@ public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
 	XMMATRIX					GetObjectMatrix() { return g_World1; }
+	ID3D11Buffer*				GetConstantBuffer() { return g_pConstantBuffer.Get(); }
+
+
 	void						SetObjectMatrix(XMMATRIX pMat) { g_World1 = pMat; }
 	void						ChangeProj(_uint iWidth, _uint iHeight);
 
@@ -77,6 +80,7 @@ public:
 	HRESULT ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight);
 	HRESULT ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iHeight);
 	HRESULT ReadyViewport(_uint iWidth, _uint iHeight);
+	HRESULT ReadyConstantBuffer();
 
 
 public:
