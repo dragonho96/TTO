@@ -20,7 +20,6 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-
 // For Memory Leak
 #ifndef _TOOL
 #ifdef _DEBUG
@@ -36,16 +35,13 @@ using namespace DirectX::PackedVector;
 #endif
 #endif
 
-
-
-
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
 
+#include "Engine.h"
 //#include "yaml-cpp\yaml.h"
-
 
 using namespace Engine;
 

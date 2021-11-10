@@ -52,6 +52,15 @@
     <Filter Include="01.Utility\02.GameObject\Manager">
       <UniqueIdentifier>{2d77ba4d-7ff7-4f97-a677-d46c947b6a3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lines">
+      <UniqueIdentifier>{a4d74e7c-eb26-4425-aef5-e76acf746fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{efa66a33-7616-4ff7-96c6-d109a7e392f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lines\DebugSphere">
+      <UniqueIdentifier>{a261b405-49cf-4a23-9fb8-f645bcb629cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -99,6 +108,13 @@
     <ClInclude Include="..\Public\GameObjectManager.h">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Line.h">
+      <Filter>Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -131,5 +147,12 @@
     <ClCompile Include="..\Private\GameObjectManager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Line.cpp">
+      <Filter>Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugSphere.cpp" />
   </ItemGroup>
 </Project>

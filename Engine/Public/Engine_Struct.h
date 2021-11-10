@@ -13,3 +13,11 @@ struct ConstantBuffer
 	XMMATRIX mView;
 	XMMATRIX mProjection;
 };
+
+//struct Vertex
+//{
+//	Vertex()
+//		: Position(0.f, 0.f, 0.f) {}
+//
+//	_float3 Position;
+//};

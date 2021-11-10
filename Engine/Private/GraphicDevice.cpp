@@ -1,7 +1,9 @@
 #include "..\public\GraphicDevice.h"
+//#include "Line.h"
+//#include "DebugSphere.h"
 
 IMPLEMENT_SINGLETON(CGraphicDevice)
-
+//CLine* debugSphere = nullptr;
 CGraphicDevice::CGraphicDevice()
 {
 }
@@ -37,16 +39,22 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	if (FAILED(ReadyViewport(iWidth, iHeight)))
 		return E_FAIL;
 
+	if (FAILED(ReadyConstantBuffer()))
+		return E_FAIL;
+
 	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	// SetVertexShader();
 	// SetPixelShader();
 	// SetBuffer();
-	SetSphereVertexShader();
-	SetSpherePixelShader();
-	SetSphereBuffer();
+	//SetSphereVertexShader();
+	//SetSpherePixelShader();
+	//SetSphereBuffer();
 
 	Initialize(iWidth, iHeight);
+
+	//debugSphere = new CDebugSphere(float(1.f));
+
 	return S_OK;
 }
 
@@ -379,10 +387,10 @@ HRESULT CGraphicDevice::SetSphereBuffer()
 	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
 	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.Usage = D3D11_USAGE_DEFAULT; // can be dynamic
 	desc.ByteWidth = sizeof(ConstantBuffer);
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = 0;
+	desc.CPUAccessFlags = 0; // Change to D3D11_CUP_ACCESS for USAGE_DYNAMIC
 	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
@@ -423,17 +431,6 @@ void CGraphicDevice::Render()
 		dwTimeStart = dwTimeCur;
 	t = (dwTimeCur - dwTimeStart) / 1000.0f;
 
-	// 1st Cube: Rotate around the origin
-	//g_World1 = XMMatrixRotationY(t);
-
-	// 2nd Cube:  Rotate around origin
-	XMMATRIX mSpin = XMMatrixRotationZ(-t);
-	XMMATRIX mOrbit = XMMatrixRotationY(-t * 2.0f);
-	XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
-	XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
-
-	//g_World2 = mScale * mSpin * mTranslate * mOrbit;
-
 	//
 	// Clear the back buffer
 	//
@@ -446,39 +443,33 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
-	//
-	// Update variables for the first cube
-	//
-	ConstantBuffer cb1;
-	cb1.mWorld = XMMatrixTranspose(g_World1);
-	cb1.mView = XMMatrixTranspose(g_View);
-	cb1.mProjection = XMMatrixTranspose(g_Projection);
-	m_pDeviceContext->UpdateSubresource(g_pConstantBuffer.Get(), 0, NULL, &cb1, 0, 0);
 
-	//
-	// Render the first cube
-	//
-	m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
-	m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
-	// m_pDeviceContext->DrawIndexed(36, 0, 0);
-	m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
-	//
-	// Update variables for the second cube
-	//
-	//ConstantBuffer cb2;
-	//cb2.mWorld = XMMatrixTranspose(g_World2);
-	//cb2.mView = XMMatrixTranspose(g_View);
-	//cb2.mProjection = XMMatrixTranspose(g_Projection);
-	//m_pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb2, 0, 0);
 
-	//
-	// Render the second cube
-	//
-	//m_pDeviceContext->DrawIndexed(36, 0, 0);
+	////
+	//// Update variables for the first cube
+	////
+	//ConstantBuffer cb1;
+	//cb1.mWorld = XMMatrixTranspose(g_World1);
+	//cb1.mView = XMMatrixTranspose(g_View);
+	//cb1.mProjection = XMMatrixTranspose(g_Projection);
+	//m_pDeviceContext->UpdateSubresource(g_pConstantBuffer.Get(), 0, NULL, &cb1, 0, 0);
+
+	////
+	//// Render the first cube
+	////
+	//m_pDeviceContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
+	//m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	//m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
+	//// m_pDeviceContext->DrawIndexed(36, 0, 0);
+	//m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
+
+
+	//debugSphere->Render();
 	Present();
 
+	// IMGUI용 버퍼 따로 생성해서 Set
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -740,6 +731,21 @@ HRESULT CGraphicDevice::ReadyViewport(_uint iWidth, _uint iHeight)
 	ViewPortDesc.MaxDepth = 1.f;
 
 	m_pDeviceContext->RSSetViewports(1, &ViewPortDesc);
+
+	return S_OK;
+}
+
+HRESULT CGraphicDevice::ReadyConstantBuffer()
+{
+	HRESULT hr;
+	D3D11_BUFFER_DESC desc = { 0 };
+	desc.Usage = D3D11_USAGE_DEFAULT; // can be dynamic
+	desc.ByteWidth = sizeof(ConstantBuffer);
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.CPUAccessFlags = 0; // Change to D3D11_CUP_ACCESS for USAGE_DYNAMIC
+	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
+	if (FAILED(hr))
+		return hr;
 
 	return S_OK;
 }

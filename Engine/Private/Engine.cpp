@@ -9,11 +9,11 @@ IMPLEMENT_SINGLETON(CEngine)
 CEngine::CEngine()
 	: m_pTimerManager(CTimerManager::GetInstance())
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
-	, m_pSceneManager(CSceneManager::GetInstance())
+	//, m_pSceneManager(CSceneManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pGraphicDevice);
-	SafeAddRef(m_pSceneManager);
+	//SafeAddRef(m_pSceneManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -69,6 +69,11 @@ ID3D11DepthStencilView * CEngine::GetDepthStencilRenderTargetView()
 ID3D11ShaderResourceView* CEngine::GetShaderResourceView()
 {
 	return m_pGraphicDevice->GetShaderResourceView();
+}
+
+ID3D11Buffer * CEngine::GetConstantBuffer()
+{
+	return m_pGraphicDevice->GetConstantBuffer();
 }
 
 XMMATRIX CEngine::GetViewMatrix()
@@ -190,7 +195,7 @@ HRESULT CEngine::RenderScene()
 
 void CEngine::Free()
 {
-	SafeRelease(m_pSceneManager);
+	//SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pGraphicDevice);
 }
