@@ -1,9 +1,11 @@
 #include "..\public\GraphicDevice.h"
 #include "Line.h"
 #include "DebugSphere.h"
+#include "DebugBox.h"
+#include "DebugCapsule.h"
 
 IMPLEMENT_SINGLETON(CGraphicDevice)
-CLine* debugSphere = nullptr;
+CLine* debug = nullptr;
 CGraphicDevice::CGraphicDevice()
 {
 }
@@ -53,7 +55,9 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	Initialize(iWidth, iHeight);
 
-	debugSphere = new CDebugSphere(float(1.f));
+	//debug = new CDebugSphere(float(0.5f));
+	//debug = new CDebugBox({1.f, 1.f, 1.f});
+	debug = new CDebugCapsule(1.f, 2.f);
 
 	return S_OK;
 }
@@ -408,8 +412,8 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
+	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
 
@@ -465,7 +469,7 @@ void CGraphicDevice::Render()
 	//m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
 
-	debugSphere->Render();
+	debug->Render();
 	Present();
 
 	// IMGUI용 버퍼 따로 생성해서 Set
@@ -754,7 +758,7 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 
 void CGraphicDevice::Free()
 {
-	SafeDelete(debugSphere);
+	SafeDelete(debug);
 	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
 	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }

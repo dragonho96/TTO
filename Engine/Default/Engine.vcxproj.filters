@@ -61,6 +61,12 @@
     <Filter Include="Lines\DebugSphere">
       <UniqueIdentifier>{a261b405-49cf-4a23-9fb8-f645bcb629cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lines\DebugBox">
+      <UniqueIdentifier>{2baf0ec6-1258-4666-a234-0e2de9e25b9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lines\DebugCapsule">
+      <UniqueIdentifier>{619e51fe-4301-4d58-a4d6-3b9be5bdae90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -117,6 +123,10 @@
     <ClInclude Include="..\Public\DebugSphere.h">
       <Filter>Lines\DebugSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DebugBox.h">
+      <Filter>Lines\DebugBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugCapsule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -158,5 +168,9 @@
     <ClCompile Include="..\Private\DebugSphere.cpp">
       <Filter>Lines\DebugSphere</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\DebugBox.cpp">
+      <Filter>Lines\DebugBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugCapsule.cpp" />
   </ItemGroup>
 </Project>

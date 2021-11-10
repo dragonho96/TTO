@@ -166,6 +166,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\Public\DebugBox.h" />
+    <ClInclude Include="..\Public\DebugCapsule.h" />
     <ClInclude Include="..\Public\DebugSphere.h" />
     <ClInclude Include="..\Public\Engine.h" />
     <ClInclude Include="..\public\Engine_Defines.h" />
@@ -186,6 +188,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\Private\DebugBox.cpp" />
+    <ClCompile Include="..\Private\DebugCapsule.cpp" />
     <ClCompile Include="..\Private\DebugSphere.cpp" />
     <ClCompile Include="..\Private\Engine.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />

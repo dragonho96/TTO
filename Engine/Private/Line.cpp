@@ -20,7 +20,10 @@ void CLine::Initialize(_float3* lines, UINT lineCount)
 	// Create Shader
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Tutorial05.fx");
 
-	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	if (m_eTopology == D3D11_PRIMITIVE_TOPOLOGY_LINELIST)
+		vertexCount = lineCount * 2;
+	else if (m_eTopology == D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP)
+		vertexCount = lineCount + 1;
 
 
 	// Create Vertex Data
