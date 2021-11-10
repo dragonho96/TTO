@@ -114,7 +114,9 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\DebugSphere.h" />
+    <ClInclude Include="..\Public\DebugSphere.h">
+      <Filter>Lines\DebugSphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -153,6 +155,8 @@
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\DebugSphere.cpp" />
+    <ClCompile Include="..\Private\DebugSphere.cpp">
+      <Filter>Lines\DebugSphere</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
