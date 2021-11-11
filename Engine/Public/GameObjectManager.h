@@ -22,8 +22,8 @@ private:
 	unordered_map<const _tchar*, class CGameObject*>			m_Prototypes;
 
 
-	//typedef unordered_map<const _tchar*, class CLayer*>		GAMEOBJECTS;
-	//GAMEOBJECTS*		m_pGameObjects = nullptr;
+	typedef unordered_map<const _tchar*, class CLayer*>		GAMEOBJECTS;
+	GAMEOBJECTS*		m_pGameObjects = nullptr;
 
 public:
 	virtual void Free() override;

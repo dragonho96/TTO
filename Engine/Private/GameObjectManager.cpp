@@ -8,10 +8,10 @@ CGameObjectManager::CGameObjectManager()
 
 HRESULT CGameObjectManager::ReserveManager(_uint iNumLevels)
 {
-	//if (nullptr != m_pGameObjects)
-	//	return E_FAIL;
+	if (nullptr != m_pGameObjects)
+		return E_FAIL;
 
-	//m_pGameObjects = new GAMEOBJECTS[iNumLevels];
+	m_pGameObjects = new GAMEOBJECTS[iNumLevels];
 
 	m_iNumLevels = iNumLevels;
 
@@ -20,13 +20,13 @@ HRESULT CGameObjectManager::ReserveManager(_uint iNumLevels)
 
 void CGameObjectManager::Free()
 {
-	//for (_uint i = 0; i < m_iNumLevels; ++i)
-	//{
-	//	for (auto& Pair : m_pGameObjects[i])
-	//		SafeRelease(Pair.second);
+	for (_uint i = 0; i < m_iNumLevels; ++i)
+	{
+		for (auto& Pair : m_pGameObjects[i])
+			SafeRelease(Pair.second);
 
-	//	m_pGameObjects[i].clear();
-	//}
+		m_pGameObjects[i].clear();
+	}
 
-	//SafeDeleteArray(m_pGameObjects);
+	SafeDeleteArray(m_pGameObjects);
 }
