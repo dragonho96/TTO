@@ -198,6 +198,11 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
+void CEngine::UpdatePx(_double dDeltaTime)
+{
+	m_pPxManager->Update(dDeltaTime);
+}
+
 PxPhysics * CEngine::GetPhysics()
 {
 	return m_pPxManager->GetPhysics();

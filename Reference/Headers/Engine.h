@@ -56,6 +56,7 @@ public:
 #pragma endregion
 
 #pragma region PHYSX
+	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
