@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "SceneSerializer.h"
 #include "SceneManager.h"
+#include "PxManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
 
@@ -10,10 +11,12 @@ CEngine::CEngine()
 	: m_pTimerManager(CTimerManager::GetInstance())
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
 	//, m_pSceneManager(CSceneManager::GetInstance())
+	, m_pPxManager(CPxManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pGraphicDevice);
 	//SafeAddRef(m_pSceneManager);
+	SafeAddRef(m_pPxManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -22,6 +25,9 @@ void CEngine::ReleaseEngine()
 {
 	if (0 != CEngine::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CEngine");
+
+	if (0 != CPxManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CPhysX");
 
 	if (0 != CTimerManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CTimer_Manager");
@@ -38,6 +44,7 @@ void CEngine::ReleaseEngine()
 HRESULT CEngine::ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight)
 {
 	m_pGraphicDevice->ReadyGraphicDevice(hWnd, iWidth, iHeight);
+	m_pPxManager->Initialize();
 	return S_OK;
 }
 
@@ -191,6 +198,21 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
+PxPhysics * CEngine::GetPhysics()
+{
+	return m_pPxManager->GetPhysics();
+}
+
+PxMaterial * CEngine::GetMaterial()
+{
+	return m_pPxManager->GetMaterial();
+}
+
+PxControllerManager * CEngine::GetControllerManager()
+{
+	return m_pPxManager->GetControllerManager();
+}
+
 #pragma endregion
 
 void CEngine::Free()
@@ -198,4 +220,5 @@ void CEngine::Free()
 	//SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pGraphicDevice);
+	SafeRelease(m_pPxManager);
 }

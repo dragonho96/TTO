@@ -17,13 +17,14 @@ public:
 
 #pragma region DEVICE_MANAGER
 public:
-	HRESULT ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight);
+	HRESULT						ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight);
 	ID3D11Device*				GetDevice();
 	ID3D11DeviceContext*		GetDeviceContext();
 	IDXGISwapChain*				GetSwapChain();
 	ID3D11RenderTargetView*		GetRenderTargetView();
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView();
 	ID3D11ShaderResourceView*	GetShaderResourceView();
+	ID3D11Buffer*				GetConstantBuffer();
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();
@@ -33,7 +34,7 @@ public:
 	HRESULT ClearBackBufferView(_float4 vColor);
 	HRESULT ClearDepthStencilView(_float fDepth, _uint iStencil);
 
-	void Render();
+	void	Render();
 	HRESULT Present();
 	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
 	void	ChangeProj(_uint iWidth, _uint iHeight);
@@ -47,15 +48,17 @@ public:
 
 #pragma region SCENE
 public:
-	void SerializeScene(const string& filePath);
-	void DeserializeScene(const string& filePath);
+	void		SerializeScene(const string& filePath);
+	void		DeserializeScene(const string& filePath);
+	HRESULT		SetUpCurrentScene(class CScene* pCurrentScene);
+	_uint		UpdateScene(_double DeltaTime);
+	HRESULT		RenderScene();
 #pragma endregion
 
-#pragma region SCENE_MANAGER
-public:
-	HRESULT SetUpCurrentScene(class CScene* pCurrentScene);
-	_uint UpdateScene(_double DeltaTime);
-	HRESULT RenderScene();
+#pragma region PHYSX
+	PxPhysics*				GetPhysics();
+	PxMaterial*				GetMaterial();
+	PxControllerManager*	GetControllerManager();
 #pragma endregion
 
 private:
@@ -64,6 +67,8 @@ private:
 	class CSceneManager*			m_pSceneManager = nullptr;
 	class CObjectManager*			m_pObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
+	
+	class CPxManager*				m_pPxManager = nullptr;
 public:
 	virtual void Free() override;
 };

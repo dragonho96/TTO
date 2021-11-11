@@ -9,17 +9,20 @@
 #include <unordered_map>
 #include <algorithm>
 #include <typeinfo>
+#include <memory> // for smart ptr
+using namespace std;
+
+
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
 #include <wrl.h> // ComPtr smartpointer for COM
 #include <wrl\client.h>
-#include <memory> // for smart ptr
-
-using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
+#include "PxPhysicsAPI.h"
+using namespace physx;
 
 // For Memory Leak
 #ifndef _TOOL
@@ -36,16 +39,13 @@ using namespace DirectX::PackedVector;
 #endif
 #endif
 
-
-
-
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
 
+//#include "Engine.h"
 //#include "yaml-cpp\yaml.h"
-
 
 using namespace Engine;
 

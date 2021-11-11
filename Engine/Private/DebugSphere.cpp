@@ -4,7 +4,9 @@ CDebugSphere::CDebugSphere(float radius, int sliceCount)
 {
 	this->sliceCount = sliceCount;
 	this->range = radius;
-	lines = NULL;
+	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	lines = nullptr;
+
 	CreateVertex();
 
 	__super::Initialize(lines, lineCount);
@@ -12,6 +14,7 @@ CDebugSphere::CDebugSphere(float radius, int sliceCount)
 
 CDebugSphere::~CDebugSphere()
 {
+	SafeDeleteArray(lines);
 }
 
 void CDebugSphere::Render()
@@ -21,7 +24,7 @@ void CDebugSphere::Render()
 
 void CDebugSphere::CreateVertex()
 {
-	if (lines != NULL)
+	if (lines != nullptr)
 		SafeDeleteArray(lines);
 
 	float phiStep = 2.0f * 3.14f / (float)sliceCount;
@@ -51,7 +54,6 @@ void CDebugSphere::CreateVertex()
 			index++;
 		}
 
-
 		lineCount = sliceCount * 3;
 		lines = new _float3[lineCount * 2];
 
@@ -72,5 +74,5 @@ void CDebugSphere::CreateVertex()
 		SafeDeleteArray(vertices);
 	}
 
-	this->vertexCount = lineCount * 2;
+	// this->vertexCount = lineCount * 2;
 }
