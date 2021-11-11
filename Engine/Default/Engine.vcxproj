@@ -178,6 +178,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\GameObjectManager.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
+    <ClInclude Include="..\Public\Layer.h" />
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\Scene.h" />
@@ -196,6 +197,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
     <ClCompile Include="..\Private\GraphicDevice.cpp" />
+    <ClCompile Include="..\Private\Layer.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\Scene.cpp" />

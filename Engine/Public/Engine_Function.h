@@ -82,4 +82,26 @@ namespace Engine
 		const wchar_t*	m_pTargetTag;
 
 	};
+
+	class STagFinder
+	{
+	public:
+		explicit STagFinder(const string pTag)
+			: m_pTargetTag(pTag) {		}
+		~STagFinder() {}
+
+	public:
+		template<typename T>
+		_bool		operator()(const T& Pair)
+		{
+			if (m_pTargetTag == Pair.first)
+				return true;
+
+			return false;
+		}
+
+	private:
+		const string	m_pTargetTag;
+
+	};
 }

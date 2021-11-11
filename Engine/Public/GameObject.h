@@ -13,7 +13,8 @@ protected:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual _uint Update(_double dDeltaTime);
+	virtual _uint	Update(_double dDeltaTime);
+	virtual _uint	LateUpdate(_double dDeltaTime);
 	virtual HRESULT Render();
 protected:
 	ID3D11Device*			m_pDevice = nullptr;

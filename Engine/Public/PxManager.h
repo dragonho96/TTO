@@ -28,7 +28,7 @@ private:
 	PxDefaultCpuDispatcher*	m_pDispatcher = NULL;
 	PxScene*				m_pScene = NULL;
 	PxMaterial*				m_pMaterial = NULL;
-	PxPvd*                  m_pPvd = NULL;
+	//PxPvd*                  m_pPvd = NULL;
 	PxCooking*				m_pCooking = NULL;
 	PxControllerManager*	m_pControllerManager = NULL;
 

@@ -4,22 +4,42 @@
 #include "SceneSerializer.h"
 #include "SceneManager.h"
 #include "PxManager.h"
+#include "GameObjectManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
 	: m_pTimerManager(CTimerManager::GetInstance())
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
-	//, m_pSceneManager(CSceneManager::GetInstance())
+	, m_pSceneManager(CSceneManager::GetInstance())
+	, m_pGameObjectManager(CGameObjectManager::GetInstance())
 	, m_pPxManager(CPxManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pGraphicDevice);
-	//SafeAddRef(m_pSceneManager);
+	SafeAddRef(m_pSceneManager);
 	SafeAddRef(m_pPxManager);
+	SafeAddRef(m_pGameObjectManager);
 }
 
 #pragma region TIMER_MANAGER
+
+HRESULT CEngine::Initialize(_uint iNumScenes)
+{
+	if (nullptr == m_pGameObjectManager)
+		return E_FAIL;
+
+	/* 엔진에 초기화가 필요한 처리를 수앻낟. */
+	if (FAILED(m_pGameObjectManager->ReserveManager(iNumScenes)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+_uint CEngine::Update(_double dTimeDelta)
+{
+	return _uint();
+}
 
 void CEngine::ReleaseEngine()
 {
@@ -198,6 +218,32 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
+HRESULT CEngine::AddPrototype(const string sPrototypeTag, CGameObject * pPrototype)
+{
+	if (nullptr == m_pGameObjectManager)
+		return E_FAIL;
+
+	return m_pGameObjectManager->AddPrototype(sPrototypeTag, pPrototype);
+
+}
+
+HRESULT CEngine::AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void * pArg)
+{
+	if (nullptr == m_pGameObjectManager)
+		return E_FAIL;
+
+	return m_pGameObjectManager->AddGameObject(iSceneIndex, sPrototypeTag, sLayerTag, pArg);
+
+}
+
+void CEngine::Clear(_uint iSceneIndex)
+{
+	if (nullptr == m_pGameObjectManager)
+		return;
+
+	m_pGameObjectManager->Clear(iSceneIndex);
+}
+
 PxPhysics * CEngine::GetPhysics()
 {
 	return m_pPxManager->GetPhysics();
@@ -221,4 +267,5 @@ void CEngine::Free()
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
+	SafeRelease(m_pGameObjectManager);
 }

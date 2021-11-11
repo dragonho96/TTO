@@ -31,6 +31,11 @@ _uint CGameObject::Update(_double TimeDelta)
 	return _uint();
 }
 
+_uint CGameObject::LateUpdate(_double dDeltaTime)
+{
+	return _uint();
+}
+
 HRESULT CGameObject::Render()
 {
 	return S_OK;

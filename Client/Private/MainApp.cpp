@@ -42,6 +42,9 @@ HRESULT CMainApp::Initialize()
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 
+	if (FAILED(m_pGameInstance->Initialize(SCENE_END)))
+		return E_FAIL;
+
 	if (FAILED(OpenScene(SCENE_GAMEPLAY)))
 		return E_FAIL;
 

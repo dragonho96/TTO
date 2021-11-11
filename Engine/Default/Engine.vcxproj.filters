@@ -70,6 +70,9 @@
     <Filter Include="PhysX">
       <UniqueIdentifier>{063bb5a0-c15e-4bc9-8bfe-0b5f41511834}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\Manager\Layer">
+      <UniqueIdentifier>{2e85e0ba-bda9-40b9-a3cf-3dacdc975b24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -135,6 +138,9 @@
     <ClInclude Include="..\Public\PxManager.h">
       <Filter>PhysX</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -184,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PxManager.cpp">
       <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

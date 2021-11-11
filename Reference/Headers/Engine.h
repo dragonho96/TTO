@@ -65,7 +65,7 @@ private:
 	class CTimerManager*			m_pTimerManager = nullptr;
 	class CGraphicDevice*			m_pGraphicDevice = nullptr;
 	class CSceneManager*			m_pSceneManager = nullptr;
-	class CObjectManager*			m_pObjectManager = nullptr;
+	class CGameObjectManager*		m_pGameObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
 	
 	class CPxManager*				m_pPxManager = nullptr;
