@@ -12,8 +12,16 @@ public:
 	~CDebugCapsule();
 
 public:
+	void InitializePxController();
+	void Update();
+
+public:
+	void SetPosition(_float3 pos);
+	void UpdateWorldMatrix();
+
+public:
+	void CreateVertexFilled();
 	void CreateVertex();
-	void CreateAlternate();
 	void Render();
 
 private:
@@ -26,5 +34,8 @@ private:
 
 	UINT m_iLineCount;
 	_float3* m_pLines;
+
+	PxController* controller;
+	_bool m_bInit = false;
 };
 

@@ -67,6 +67,9 @@
     <Filter Include="Lines\DebugCapsule">
       <UniqueIdentifier>{619e51fe-4301-4d58-a4d6-3b9be5bdae90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PhysX">
+      <UniqueIdentifier>{063bb5a0-c15e-4bc9-8bfe-0b5f41511834}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -126,7 +129,12 @@
     <ClInclude Include="..\Public\DebugBox.h">
       <Filter>Lines\DebugBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\DebugCapsule.h" />
+    <ClInclude Include="..\Public\DebugCapsule.h">
+      <Filter>Lines\DebugCapsule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PxManager.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -171,6 +179,11 @@
     <ClCompile Include="..\Private\DebugBox.cpp">
       <Filter>Lines\DebugBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\DebugCapsule.cpp" />
+    <ClCompile Include="..\Private\DebugCapsule.cpp">
+      <Filter>Lines\DebugCapsule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PxManager.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -22,6 +22,89 @@ CDebugCapsule::~CDebugCapsule()
 	SafeDeleteArray(m_pLines);
 }
 
+void CDebugCapsule::InitializePxController()
+{
+	PxCapsuleControllerDesc desc;
+	desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
+	desc.radius = 0.25f;
+	desc.height = 0.5f;
+	desc.slopeLimit = 0.f/*cosf(D3DXToRadian(45.f))*/;
+	//desc.stepOffset = 0.2f;
+	desc.upDirection = PxVec3(0.0, 1.0, 0.0);
+	desc.material = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f);
+	desc.position = PxExtendedVec3(0.f, 0.f, 0.f);
+	desc.contactOffset = 0.001f;
+	//desc.behaviorCallback = 
+	//desc.reportCallback = &m_callback;
+	//CE_ASSERT(desc.isValid(), "Capsule is not valid");
+
+	controller = CEngine::GetInstance()->GetControllerManager()->createController(desc);
+}
+
+void CDebugCapsule::Update()
+{
+	if (!m_bInit)
+	{
+		InitializePxController();
+		m_bInit = true;
+	}
+
+	PxControllerFilters cFilter;
+	PxControllerCollisionFlags collisionFlags;
+	//cFilter.mFilterData = 
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		collisionFlags = controller->move(PxVec3{ 0.f, 0.f, 0.1f }, 0.f, 0.1f, PxControllerFilters{});
+	}
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		controller->move(PxVec3{ 0.f, 0.f, -0.1f }, 0.f, 0.1f, PxControllerFilters{});
+
+	}
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	{
+		controller->move(PxVec3{ -0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+
+	}
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		controller->move(PxVec3{ 0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+	}
+
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		//controller->move(PxVec3{ 0.f, 0.5f, 0.f }, 0.f, fDeltaTime, PxControllerFilters{});
+		controller->setFootPosition({ 0.f, 0.f, 0.f });
+	}
+	// Gravity
+	controller->move(PxVec3{ 0.f, -0.3f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+
+	PxExtendedVec3 pos = controller->getPosition();
+	_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
+
+	SetPosition(newPos);
+
+	// Collisionflag
+	if (collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+		int i = 0;
+}
+
+void CDebugCapsule::SetPosition(_float3 pos)
+{
+	position = pos;
+	UpdateWorldMatrix();
+}
+
+void CDebugCapsule::UpdateWorldMatrix()
+{
+	XMMATRIX S, R, T;
+	S = XMMatrixScaling(scale.x, scale.y, scale.z);
+	R = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	T = XMMatrixTranslation(position.x, position.y, position.z);
+
+	world = S * R * T;
+}
+
 void CDebugCapsule::CreateVertexFilled()
 {
 	if (m_pLines != NULL)
@@ -213,19 +296,19 @@ void CDebugCapsule::CreateVertex()
 	// x = 0
 	for (UINT i = 0; i < sliceCount / 2; i++) {
 		phi = i * phiStep;
-		vertices[index] = _float3(0, (m_fRadius * cosf(phi)) + m_fHeight / 2.f, (m_fRadius * sinf(phi)));
+		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) + m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
 	}
-	vertices[index] = _float3(0, (m_fRadius * cosf(phi)) - m_fHeight / 2.f, (m_fRadius * sinf(phi)));
+	vertices[index] = _float3(0, (m_fRadius * sinf(phi)) - m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 	index++;
 	// x = 0
 	phi = 0.f;
 	for (UINT i = sliceCount / 2; i < sliceCount; i++) {
 		phi = i * phiStep;
-		vertices[index] = _float3(0, (m_fRadius * cosf(phi)) - m_fHeight / 2.f, (m_fRadius * sinf(phi)));
+		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) - m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
 	}
-	vertices[index] = _float3(0, (m_fRadius * cosf(phi)) + m_fHeight / 2.f, (m_fRadius * sinf(phi)));
+	vertices[index] = _float3(0, (m_fRadius * sinf(phi)) + m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 	index++;
 
 
@@ -291,5 +374,7 @@ void CDebugCapsule::CreateVertex()
 
 void CDebugCapsule::Render()
 {
+	Update();
+
 	__super::Render();
 }

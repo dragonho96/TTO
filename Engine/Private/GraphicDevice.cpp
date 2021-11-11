@@ -5,7 +5,7 @@
 #include "DebugCapsule.h"
 
 IMPLEMENT_SINGLETON(CGraphicDevice)
-CLine* debug = nullptr;
+CDebugCapsule* debug = nullptr;
 CGraphicDevice::CGraphicDevice()
 {
 }
