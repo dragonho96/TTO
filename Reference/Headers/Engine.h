@@ -13,7 +13,9 @@ private:
 	virtual ~CEngine() = default; 
 
 public:
-	static void ReleaseEngine();
+	HRESULT			Initialize(_uint iNumScenes);
+	_uint			Update(_double dTimeDelta);
+	static void		ReleaseEngine();
 
 #pragma region DEVICE_MANAGER
 public:
@@ -55,6 +57,12 @@ public:
 	HRESULT		RenderScene();
 #pragma endregion
 
+#pragma region GAMEOBJECT_MANAGER
+public:
+	HRESULT AddPrototype(const string sPrototypeTag, class CGameObject* pPrototype);
+	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void* pArg = nullptr);
+	void	Clear(_uint iSceneIndex);
+
 #pragma region INPUT
 	void InitializeInput();
 	void UpdateInput();
@@ -71,6 +79,7 @@ public:
 
 	void InputProc(const HWND hWnd, const UINT message,
 		const WPARAM wParam, const LPARAM lParam);
+
 #pragma endregion
 
 #pragma region PHYSX
@@ -84,7 +93,7 @@ private:
 	class CTimerManager*			m_pTimerManager = nullptr;
 	class CGraphicDevice*			m_pGraphicDevice = nullptr;
 	class CSceneManager*			m_pSceneManager = nullptr;
-	class CObjectManager*			m_pObjectManager = nullptr;
+	class CGameObjectManager*		m_pGameObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
 	class CInputManager*			m_pInputManager = nullptr;
 	

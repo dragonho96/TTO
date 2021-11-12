@@ -9,3 +9,6 @@ extern HWND		g_hWnd;
 
 namespace Client {}
 using namespace Client;
+
+#define NO_EVENT 0
+#define CHANGE	 0

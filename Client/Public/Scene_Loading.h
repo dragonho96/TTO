@@ -8,7 +8,7 @@ BEGIN(Client)
 class CScene_Loading final : public CScene
 {
 private:
-	explicit CScene_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CScene_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, _uint iLevelIndex);
 	virtual ~CScene_Loading() = default;
 public:
 	virtual HRESULT Initialize(SCENE eScene);
@@ -20,7 +20,7 @@ private:
 private:
 	SCENE					m_eNextSCENE;
 public:
-	static CScene_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SCENE eScene);
+	static CScene_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SCENE eScene, _uint iLevelIndex);
 	virtual void Free() override;
 };
 

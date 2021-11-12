@@ -25,8 +25,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	SafeRelease(m_pDeviceContext);
-	SafeRelease(m_pDevice);
+	//SafeRelease(m_pDeviceContext);
+	//SafeRelease(m_pDevice);
 
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
@@ -42,7 +42,10 @@ HRESULT CMainApp::Initialize()
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 
-	if (FAILED(OpenScene(SCENE_GAMEPLAY)))
+	if (FAILED(m_pEngine->Initialize(SCENE_END)))
+		return E_FAIL;
+
+	if (FAILED(OpenScene(SCENE_LOGO)))
 		return E_FAIL;
 
 
@@ -54,6 +57,7 @@ _uint CMainApp::Update(_double dDeltaTime)
 {
 #ifdef _DEBUG
 	m_TimeAcc += dDeltaTime;
+	m_pEngine->Update(dDeltaTime);
 	m_pEngine->UpdateScene(dDeltaTime);
 #endif
 	return 0;
@@ -91,10 +95,10 @@ HRESULT CMainApp::OpenScene(SCENE eScene)
 	switch (eScene)
 	{
 	case SCENE_LOGO:
-		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext);
+		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext, eScene);
 		break;
 	case SCENE_GAMEPLAY:
-		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene);
+		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene, SCENE_LOADING);
 		break;
 	}
 

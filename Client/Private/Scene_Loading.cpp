@@ -5,8 +5,8 @@
 #include "Loader.h"
 #include "Scene_GamePlay.h"
 
-CScene_Loading::CScene_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	: CScene(pDevice, pDeviceContext)
+CScene_Loading::CScene_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
+	: CScene(pDevice, pDeviceContext, iLevelIndex)
 {
 
 }
@@ -40,7 +40,7 @@ _uint CScene_Loading::Update(_double TimeDelta)
 			switch (m_eNextSCENE)
 			{
 			case SCENE_GAMEPLAY:
-				pScene = CScene_GamePlay::Create(m_pDevice, m_pDeviceContext);
+				pScene = CScene_GamePlay::Create(m_pDevice, m_pDeviceContext, SCENE_GAMEPLAY);
 				break;
 
 				/*case SCENE_GAMEPLAY1:
@@ -63,11 +63,11 @@ HRESULT CScene_Loading::Render()
 	return S_OK;
 }
 
-CScene_Loading * CScene_Loading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, SCENE eScene)
+CScene_Loading * CScene_Loading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, SCENE eNextScene, _uint iLevelIndex)
 {
-	CScene_Loading*		pInstance = new CScene_Loading(pDevice, pDeviceContext);
+	CScene_Loading*		pInstance = new CScene_Loading(pDevice, pDeviceContext, iLevelIndex);
 
-	if (FAILED(pInstance->Initialize(eScene)))
+	if (FAILED(pInstance->Initialize(eNextScene)))
 	{
 		MSG_BOX("Failed to Creating CScene_Loading");
 		SafeRelease(pInstance);
@@ -80,4 +80,5 @@ void CScene_Loading::Free()
 {
 	__super::Free();
 
+	SafeRelease(m_pLoader);
 }

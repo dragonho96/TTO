@@ -16,12 +16,12 @@ void CPxManager::Free()
 	PX_RELEASE(m_pScene);
 	PX_RELEASE(m_pDispatcher);
 	PX_RELEASE(m_pPhysics);
-	if (m_pPvd)
-	{
-		PxPvdTransport* transport = m_pPvd->getTransport();
-		m_pPvd->release();	m_pPvd = NULL;
-		PX_RELEASE(transport);
-	}
+	//if (m_pPvd)
+	//{
+	//	PxPvdTransport* transport = m_pPvd->getTransport();
+	//	m_pPvd->release();	m_pPvd = NULL;
+	//	PX_RELEASE(transport);
+	//}
 	PX_RELEASE(m_pFoundation);
 }
 
@@ -29,15 +29,16 @@ HRESULT CPxManager::Initialize()
 {
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 
-	m_pPvd = PxCreatePvd(*m_pFoundation);
-	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
-	m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	//m_pPvd = PxCreatePvd(*m_pFoundation);
+	//PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	//m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
 	PxTolerancesScale scale;
 	scale.length = 1000;        // typical length of an object
 	scale.speed = 9.81f;         // typical speed of an object, gravity*1s is a reasonable choice
 
-	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, m_pPvd);
+	//m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, m_pPvd);
+	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true);
 
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(scale));
 	//if (!mCooking)

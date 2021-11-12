@@ -17,9 +17,9 @@ public:
 	virtual ~CSceneManager() = default;
 
 public:
-	HRESULT SetUpCurrentScene(CScene* pCurrentScene);
-	_uint UpdateScene(_double TimeDelta);
-	HRESULT RenderScene();
+	HRESULT		SetUpCurrentScene(CScene* pCurrentScene);
+	_uint		UpdateScene(_double TimeDelta);
+	HRESULT		RenderScene();
 
 private:
 	CScene*				m_pCurrentScene = nullptr;

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Scene_GamePlay.h"
 
-CScene_GamePlay::CScene_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	: CScene(pDevice, pDeviceContext)
+CScene_GamePlay::CScene_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
+	: CScene(pDevice, pDeviceContext, iLevelIndex)
 {
 
 }
@@ -29,9 +29,9 @@ HRESULT CScene_GamePlay::Render()
 	return S_OK;
 }
 
-CScene_GamePlay * CScene_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CScene_GamePlay * CScene_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
 {
-	CScene_GamePlay*		pInstance = new CScene_GamePlay(pDevice, pDeviceContext);
+	CScene_GamePlay*		pInstance = new CScene_GamePlay(pDevice, pDeviceContext, iLevelIndex);
 
 	if (FAILED(pInstance->Initialize()))
 	{
