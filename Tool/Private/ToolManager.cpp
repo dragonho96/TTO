@@ -116,6 +116,21 @@ void CToolManager::Update()
 	ImGui::ShowDemoWindow(&show_demo_window);
 
 	// m_pEngine->UpdatePx(0.1f);
+	if (m_pEngine->IsMouseDown(0))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->IsMouseDown(1))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->IsMouseDown(2))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->GetMouseMoveValue().z > 0)
+		int i = m_pEngine->GetMouseMoveValue().z;
+
 	//// Rendering
 	ImGui::Render();
 

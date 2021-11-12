@@ -55,6 +55,24 @@ public:
 	HRESULT		RenderScene();
 #pragma endregion
 
+#pragma region INPUT
+	void InitializeInput();
+	void UpdateInput();
+
+	bool IsKeyUp(_uint key);
+	bool IsKeyDown(_uint key);
+	bool IsKeyPressed(_uint key);
+	bool IsKeyToggled(_uint key);
+	bool IsMouseUp(DWORD mouse);
+	bool IsMouseDown(DWORD mouse);
+	bool IsMousePressed(DWORD mouse);
+
+	_float3 GetMouseMoveValue();
+
+	void InputProc(const HWND hWnd, const UINT message,
+		const WPARAM wParam, const LPARAM lParam);
+#pragma endregion
+
 #pragma region PHYSX
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
@@ -68,6 +86,7 @@ private:
 	class CSceneManager*			m_pSceneManager = nullptr;
 	class CObjectManager*			m_pObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
+	class CInputManager*			m_pInputManager = nullptr;
 	
 	class CPxManager*				m_pPxManager = nullptr;
 public:

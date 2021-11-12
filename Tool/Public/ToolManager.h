@@ -24,6 +24,9 @@ public:
 public:
 	CImGuiWindow* GetWindow(string windowName);
 
+public:
+	void AddLog();
+
 private:
 	HWND					m_hWnd;
 	CEngine*				m_pEngine;

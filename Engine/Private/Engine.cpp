@@ -4,6 +4,7 @@
 #include "SceneSerializer.h"
 #include "SceneManager.h"
 #include "PxManager.h"
+#include "InputManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
 
@@ -12,8 +13,10 @@ CEngine::CEngine()
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
 	//, m_pSceneManager(CSceneManager::GetInstance())
 	, m_pPxManager(CPxManager::GetInstance())
+	, m_pInputManager(CInputManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
+	SafeAddRef(m_pInputManager);
 	SafeAddRef(m_pGraphicDevice);
 	//SafeAddRef(m_pSceneManager);
 	SafeAddRef(m_pPxManager);
@@ -28,6 +31,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CPxManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CPhysX");
+
+	if (0 != CInputManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CInputManager");
 
 	if (0 != CTimerManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CTimer_Manager");
@@ -198,6 +204,61 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
+void CEngine::InitializeInput()
+{
+	m_pInputManager->Initialize();
+}
+
+void CEngine::UpdateInput()
+{
+	m_pInputManager->Update();
+}
+
+bool CEngine::IsKeyUp(_uint key)
+{
+	return m_pInputManager->IsKeyUp(key);
+}
+
+bool CEngine::IsKeyDown(_uint key)
+{
+	return m_pInputManager->IsKeyDown(key);
+}
+
+bool CEngine::IsKeyPressed(_uint key)
+{
+	return m_pInputManager->IsKeyPressed(key);
+}
+
+bool CEngine::IsKeyToggled(_uint key)
+{
+	return m_pInputManager->IsKeyToggled(key);
+}
+
+bool CEngine::IsMouseUp(DWORD mouse)
+{
+	return m_pInputManager->IsMouseUp(mouse);
+}
+
+bool CEngine::IsMouseDown(DWORD mouse)
+{
+	return m_pInputManager->IsMouseDown(mouse);
+}
+
+bool CEngine::IsMousePressed(DWORD mouse)
+{
+	return m_pInputManager->IsMousePressed(mouse);
+}
+
+_float3 CEngine::GetMouseMoveValue()
+{
+	return m_pInputManager->GetMouseMoveValue();
+}
+
+void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam)
+{
+	m_pInputManager->InputProc(hWnd, message, wParam, lParam);
+}
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -224,6 +285,7 @@ void CEngine::Free()
 {
 	//SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
+	SafeRelease(m_pInputManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
 }
