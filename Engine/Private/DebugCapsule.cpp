@@ -119,8 +119,8 @@ void CDebugCapsule::CreateVertexFilled()
 		int vertexCount = 2 + (m_iSliceCount + 1) * (m_iStackCount - 1);
 		_float3* vertices = new _float3[vertexCount];
 
-		UINT index = 0;
-		for (UINT i = 0; i <= m_iStackCount; i++) {
+		_int index = 0;
+		for (_int i = 0; i <= m_iStackCount; i++) {
 
 			switch (m_eAxis)
 			{
@@ -136,7 +136,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else if (i <= m_iStackCount / 2) {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * cosf(phi) + 0.5f * m_fHeight),
@@ -148,7 +148,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * cosf(phi) - 0.5f * m_fHeight),
@@ -172,7 +172,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else if (i <= m_iStackCount / 2) {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * sinf(phi) * cosf(theta)),
@@ -184,7 +184,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * sinf(phi) * cosf(theta)),
@@ -208,7 +208,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else if (i <= m_iStackCount / 2) {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * sinf(phi) * cosf(theta)),
@@ -220,7 +220,7 @@ void CDebugCapsule::CreateVertexFilled()
 				}
 				else {
 					float phi = i * phiStep;
-					for (UINT j = 0; j <= m_iSliceCount; j++) {
+					for (_int j = 0; j <= m_iSliceCount; j++) {
 						float theta = j * thetaStep;
 						vertices[index] = _float3(
 							(m_fRadius * sinf(phi) * cosf(theta)),
@@ -242,18 +242,18 @@ void CDebugCapsule::CreateVertexFilled()
 
 		index = 0;
 		// 윗면
-		for (UINT i = 1; i <= m_iSliceCount; i++) {
+		for (_int i = 1; i <= m_iSliceCount; i++) {
 			m_pLines[index++] = vertices[0];
 			m_pLines[index++] = vertices[i];
 		}
 
 		// 옆면
-		UINT baseIndex = 1; // 위 꼭지점 빼려고
-		UINT ringVertexCount = m_iSliceCount + 1;
+		_int baseIndex = 1; // 위 꼭지점 빼려고
+		_int ringVertexCount = m_iSliceCount + 1;
 		// m_iStackCount - 2 인 이유 정점 4개 써서 위 꼭지 아래꼭지 빼고 -1 해줘야함
-		for (UINT i = 0; i < m_iStackCount - 1; i++) {
+		for (_int i = 0; i < m_iStackCount - 1; i++) {
 
-			for (UINT j = 0; j < m_iSliceCount; j++) {
+			for (_int j = 0; j < m_iSliceCount; j++) {
 				// 세로줄
 				if (i < m_iStackCount - 2)
 				{
@@ -268,9 +268,9 @@ void CDebugCapsule::CreateVertexFilled()
 		}
 
 		// 아랫면
-		UINT southPoleIndex = vertexCount - 1;
+		_int southPoleIndex = vertexCount - 1;
 		baseIndex = southPoleIndex - ringVertexCount;
-		for (UINT i = 0; i < m_iSliceCount; i++) {
+		for (_int i = 0; i < m_iSliceCount; i++) {
 			m_pLines[index++] = vertices[southPoleIndex];
 			m_pLines[index++] = vertices[baseIndex + i];
 		}
@@ -291,10 +291,10 @@ void CDebugCapsule::CreateVertex()
 	int vertexCount = sliceCount * 4 + 4;
 	_float3* vertices = new _float3[vertexCount];
 
-	UINT index = 0;
+	_int index = 0;
 	float phi = 0.f;
 	// x = 0
-	for (UINT i = 0; i < sliceCount / 2; i++) {
+	for (_int i = 0; i < sliceCount / 2; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) + m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
@@ -303,7 +303,7 @@ void CDebugCapsule::CreateVertex()
 	index++;
 	// x = 0
 	phi = 0.f;
-	for (UINT i = sliceCount / 2; i < sliceCount; i++) {
+	for (_int i = sliceCount / 2; i < sliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) - m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
@@ -314,14 +314,14 @@ void CDebugCapsule::CreateVertex()
 
 	// y = 0
 	phi = 0.f;
-	for (UINT i = 0; i < sliceCount; i++) {
+	for (_int i = 0; i < sliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), m_fHeight / 2.f, (m_fRadius * sinf(phi)));
 		index++;
 	}
 	// y = 0
 	phi = 0.f;
-	for (UINT i = 0; i < sliceCount; i++) {
+	for (_int i = 0; i < sliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), -m_fHeight / 2.f, (m_fRadius * sinf(phi)));
 		index++;
@@ -329,7 +329,7 @@ void CDebugCapsule::CreateVertex()
 
 	// z = 0
 	 phi = 0.f;
-	for (UINT i = 0; i < sliceCount / 2; i++) {
+	for (_int i = 0; i < sliceCount / 2; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), (m_fRadius * sinf(phi)) + m_fHeight / 2.f, 0);
 		index++;
@@ -338,7 +338,7 @@ void CDebugCapsule::CreateVertex()
 	index++;
 	// z = 0
 	 phi = 0.f;
-	for (UINT i = sliceCount / 2; i < sliceCount; i++) {
+	for (_int i = sliceCount / 2; i < sliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), (m_fRadius * sinf(phi)) - m_fHeight / 2.f, 0);
 		index++;
@@ -349,22 +349,22 @@ void CDebugCapsule::CreateVertex()
 	m_iLineCount = vertexCount;
 	m_pLines = new _float3[vertexCount * 2];
 	index = 0;
-	for (UINT i = 0; i < sliceCount + 2; i++) {
+	for (_int i = 0; i < sliceCount + 2; i++) {
 		m_pLines[index++] = vertices[i];
 		m_pLines[index++] = i == (sliceCount + 2) - 1 ? vertices[0] : vertices[i + 1];
 	}
 
-	for (UINT i = sliceCount + 2; i < sliceCount * 2 + 2; i++) {
+	for (_int i = sliceCount + 2; i < sliceCount * 2 + 2; i++) {
 		m_pLines[index++] = vertices[i];
 		m_pLines[index++] = i == (sliceCount * 2 + 2) - 1 ? vertices[sliceCount + 2] : vertices[i + 1];
 	}
 
-	for (UINT i = sliceCount * 2 + 2; i < sliceCount * 3 + 2; i++) {
+	for (_int i = sliceCount * 2 + 2; i < sliceCount * 3 + 2; i++) {
 		m_pLines[index++] = vertices[i];
 		m_pLines[index++] = i == (sliceCount * 3 + 2) - 1 ? vertices[sliceCount * 2 + 2] : vertices[i + 1];
 	}
 
-	for (UINT i = sliceCount * 3 + 2; i < sliceCount * 4 + 4; i++) {
+	for (_int i = sliceCount * 3 + 2; i < sliceCount * 4 + 4; i++) {
 		m_pLines[index++] = vertices[i];
 		m_pLines[index++] = i == (sliceCount * 4 + 4) - 1 ? vertices[sliceCount * 3 + 2] : vertices[i + 1];
 	}

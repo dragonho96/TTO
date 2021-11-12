@@ -6,8 +6,6 @@ CScene::CScene(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _ui
 	, m_pDeviceContext(pDeviceContext)
 	, m_iLevelIndex(iLevelIndex)
 {
-	//SafeAddRef(m_pDeviceContext);
-	//SafeAddRef(m_pDevice);
 }
 
 HRESULT CScene::Initialize()
@@ -36,6 +34,5 @@ void CScene::Clear()
 
 void CScene::Free()
 {
-	//SafeRelease(m_pDeviceContext);
-	//SafeRelease(m_pDevice);
+
 }

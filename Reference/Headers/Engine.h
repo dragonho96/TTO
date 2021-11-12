@@ -62,7 +62,6 @@ public:
 	HRESULT AddPrototype(const string sPrototypeTag, class CGameObject* pPrototype);
 	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void* pArg = nullptr);
 	void	Clear(_uint iSceneIndex);
-
 #pragma region INPUT
 	void InitializeInput();
 	void UpdateInput();
@@ -79,7 +78,6 @@ public:
 
 	void InputProc(const HWND hWnd, const UINT message,
 		const WPARAM wParam, const LPARAM lParam);
-
 #pragma endregion
 
 #pragma region PHYSX

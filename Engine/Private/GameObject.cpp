@@ -39,6 +39,5 @@ HRESULT CGameObject::Render()
 
 void CGameObject::Free()
 {
-	//SafeRelease(m_pDeviceContext);
-	//SafeRelease(m_pDevice);
+
 }

@@ -1,5 +1,6 @@
 #pragma once
 #pragma warning(disable: 4005)
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <fstream>
@@ -11,6 +12,7 @@
 #include <typeinfo>
 #include <memory> // for smart ptr
 #include <bitset>
+
 using namespace std;
 
 
