@@ -16,7 +16,7 @@ HRESULT CBackground::InitializePrototype()
 	if (FAILED(__super::InitializePrototype()))
 		return E_FAIL;
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CBackground::Initialize(void * pArg)
@@ -24,15 +24,23 @@ HRESULT CBackground::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 _uint CBackground::Update(_double TimeDelta)
 {
-	if (0 > __super::Update(TimeDelta))
+	if (NO_EVENT != __super::Update(TimeDelta))
+		return CHANGE;
+
+	return NO_EVENT;
+}
+
+_uint CBackground::LateUpdate(_double TimeDelta)
+{
+	if (NO_EVENT != __super::LateUpdate(TimeDelta))
 		return -1;
 
-	return _uint();
+	return NO_EVENT;
 }
 
 HRESULT CBackground::Render()

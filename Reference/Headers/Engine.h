@@ -13,7 +13,9 @@ private:
 	virtual ~CEngine() = default; 
 
 public:
-	static void ReleaseEngine();
+	HRESULT			Initialize(_uint iNumScenes);
+	_uint			Update(_double dTimeDelta);
+	static void		ReleaseEngine();
 
 #pragma region DEVICE_MANAGER
 public:
@@ -53,6 +55,13 @@ public:
 	HRESULT		SetUpCurrentScene(class CScene* pCurrentScene);
 	_uint		UpdateScene(_double DeltaTime);
 	HRESULT		RenderScene();
+#pragma endregion
+
+#pragma region GAMEOBJECT_MANAGER
+public:
+	HRESULT AddPrototype(const string sPrototypeTag, class CGameObject* pPrototype);
+	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void* pArg = nullptr);
+	void	Clear(_uint iSceneIndex);
 #pragma endregion
 
 #pragma region PHYSX

@@ -42,10 +42,10 @@ HRESULT CMainApp::Initialize()
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 
-	if (FAILED(m_pGameInstance->Initialize(SCENE_END)))
+	if (FAILED(m_pEngine->Initialize(SCENE_END)))
 		return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_GAMEPLAY)))
+	if (FAILED(OpenScene(SCENE_LOGO)))
 		return E_FAIL;
 
 
@@ -57,6 +57,7 @@ _uint CMainApp::Update(_double dDeltaTime)
 {
 #ifdef _DEBUG
 	m_TimeAcc += dDeltaTime;
+	m_pEngine->Update(dDeltaTime);
 	m_pEngine->UpdateScene(dDeltaTime);
 #endif
 	return 0;

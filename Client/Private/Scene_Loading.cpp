@@ -80,4 +80,5 @@ void CScene_Loading::Free()
 {
 	__super::Free();
 
+	SafeRelease(m_pLoader);
 }
