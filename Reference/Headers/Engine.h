@@ -62,9 +62,28 @@ public:
 	HRESULT AddPrototype(const string sPrototypeTag, class CGameObject* pPrototype);
 	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void* pArg = nullptr);
 	void	Clear(_uint iSceneIndex);
+
+#pragma region INPUT
+	void InitializeInput();
+	void UpdateInput();
+
+	bool IsKeyUp(_uint key);
+	bool IsKeyDown(_uint key);
+	bool IsKeyPressed(_uint key);
+	bool IsKeyToggled(_uint key);
+	bool IsMouseUp(DWORD mouse);
+	bool IsMouseDown(DWORD mouse);
+	bool IsMousePressed(DWORD mouse);
+
+	_float3 GetMouseMoveValue();
+
+	void InputProc(const HWND hWnd, const UINT message,
+		const WPARAM wParam, const LPARAM lParam);
+
 #pragma endregion
 
 #pragma region PHYSX
+	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
@@ -76,6 +95,7 @@ private:
 	class CSceneManager*			m_pSceneManager = nullptr;
 	class CGameObjectManager*		m_pGameObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
+	class CInputManager*			m_pInputManager = nullptr;
 	
 	class CPxManager*				m_pPxManager = nullptr;
 public:

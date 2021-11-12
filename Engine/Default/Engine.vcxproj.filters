@@ -140,6 +140,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
+ </ClInclude>
+    <ClInclude Include="..\Public\InputManager.h">
+      <Filter>00.System\01.Device\Input</Filter>
+
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,8 +195,13 @@
     <ClCompile Include="..\Private\PxManager.cpp">
       <Filter>PhysX</Filter>
     </ClCompile>
+
     <ClCompile Include="..\Private\Layer.cpp">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
+</ClCompile>
+    <ClCompile Include="..\Private\InputManager.cpp">
+      <Filter>00.System\01.Device\Input</Filter>
+
     </ClCompile>
   </ItemGroup>
 </Project>

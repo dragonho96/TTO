@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <typeinfo>
 #include <memory> // for smart ptr
+#include <bitset>
 using namespace std;
 
 

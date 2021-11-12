@@ -115,6 +115,42 @@ void CToolManager::Update()
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
 
+	// m_pEngine->UpdatePx(0.1f);
+	if (m_pEngine->IsMouseDown(0))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->IsMouseDown(1))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->IsMouseDown(2))
+	{
+		int i = -0;
+	}
+	if (m_pEngine->GetMouseMoveValue().z > 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
+		AddLog(i.c_str());
+	}
+	if (m_pEngine->GetMouseMoveValue().z < 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
+		AddLog(i.c_str());
+	}
+
+	if (m_pEngine->GetMouseMoveValue().y > 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
+		AddLog(i.c_str());
+	}
+	if (m_pEngine->GetMouseMoveValue().y < 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
+		AddLog(i.c_str());
+	}
+
+
 	//// Rendering
 	ImGui::Render();
 
@@ -322,5 +358,10 @@ CImGuiWindow* CToolManager::GetWindow(string windowName)
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CToolManager::AddLog(const char * log)
+{
+	dynamic_cast<CLog*>(m_mapWindows["Log"])->AddLog(log);
 }
 

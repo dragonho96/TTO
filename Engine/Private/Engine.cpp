@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "PxManager.h"
 #include "GameObjectManager.h"
+#include "InputManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
 
@@ -14,8 +15,10 @@ CEngine::CEngine()
 	, m_pSceneManager(CSceneManager::GetInstance())
 	, m_pGameObjectManager(CGameObjectManager::GetInstance())
 	, m_pPxManager(CPxManager::GetInstance())
+	, m_pInputManager(CInputManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
+	SafeAddRef(m_pInputManager);
 	SafeAddRef(m_pGraphicDevice);
 	SafeAddRef(m_pSceneManager);
 	SafeAddRef(m_pPxManager);
@@ -29,7 +32,7 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	/* ¿£Áø¿¡ ÃÊ±âÈ­°¡ ÇÊ¿äÇÑ Ã³¸®¸¦ ¼öî³®. */
+	/* ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î³®. */
 	if (FAILED(m_pGameObjectManager->ReserveManager(iNumScenes)))
 		return E_FAIL;
 
@@ -48,6 +51,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CPxManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CPhysX");
+
+	if (0 != CInputManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CInputManager");
 
 	if (0 != CTimerManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CTimer_Manager");
@@ -244,6 +250,66 @@ void CEngine::Clear(_uint iSceneIndex)
 	m_pGameObjectManager->Clear(iSceneIndex);
 }
 
+void CEngine::InitializeInput()
+{
+	m_pInputManager->Initialize();
+}
+
+void CEngine::UpdateInput()
+{
+	m_pInputManager->Update();
+}
+
+bool CEngine::IsKeyUp(_uint key)
+{
+	return m_pInputManager->IsKeyUp(key);
+}
+
+bool CEngine::IsKeyDown(_uint key)
+{
+	return m_pInputManager->IsKeyDown(key);
+}
+
+bool CEngine::IsKeyPressed(_uint key)
+{
+	return m_pInputManager->IsKeyPressed(key);
+}
+
+bool CEngine::IsKeyToggled(_uint key)
+{
+	return m_pInputManager->IsKeyToggled(key);
+}
+
+bool CEngine::IsMouseUp(DWORD mouse)
+{
+	return m_pInputManager->IsMouseUp(mouse);
+}
+
+bool CEngine::IsMouseDown(DWORD mouse)
+{
+	return m_pInputManager->IsMouseDown(mouse);
+}
+
+bool CEngine::IsMousePressed(DWORD mouse)
+{
+	return m_pInputManager->IsMousePressed(mouse);
+}
+
+_float3 CEngine::GetMouseMoveValue()
+{
+	return m_pInputManager->GetMouseMoveValue();
+}
+
+void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam)
+{
+	m_pInputManager->InputProc(hWnd, message, wParam, lParam);
+}
+
+void CEngine::UpdatePx(_double dDeltaTime)
+{
+	m_pPxManager->Update(dDeltaTime);
+}
+
 PxPhysics * CEngine::GetPhysics()
 {
 	return m_pPxManager->GetPhysics();
@@ -266,6 +332,7 @@ void CEngine::Free()
 	SafeRelease(m_pGameObjectManager);
 	SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
+	SafeRelease(m_pInputManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
 }
