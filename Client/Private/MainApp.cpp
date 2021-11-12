@@ -25,8 +25,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	SafeRelease(m_pDeviceContext);
-	SafeRelease(m_pDevice);
+	//SafeRelease(m_pDeviceContext);
+	//SafeRelease(m_pDevice);
 
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
@@ -95,10 +95,10 @@ HRESULT CMainApp::OpenScene(SCENE eScene)
 	switch (eScene)
 	{
 	case SCENE_LOGO:
-		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext);
+		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext, eScene);
 		break;
 	case SCENE_GAMEPLAY:
-		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene);
+		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene, SCENE_LOADING);
 		break;
 	}
 

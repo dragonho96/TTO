@@ -263,9 +263,9 @@ PxControllerManager * CEngine::GetControllerManager()
 
 void CEngine::Free()
 {
-	//SafeRelease(m_pSceneManager);
+	SafeRelease(m_pGameObjectManager);
+	SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
-	SafeRelease(m_pGameObjectManager);
 }

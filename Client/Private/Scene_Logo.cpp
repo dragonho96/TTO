@@ -5,8 +5,8 @@
 #include "Background.h"
 #include "Scene_Loading.h"
 
-CScene_Logo::CScene_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	: CScene(pDevice, pDeviceContext)
+CScene_Logo::CScene_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
+	: CScene(pDevice, pDeviceContext, iLevelIndex)
 {
 
 }
@@ -34,7 +34,7 @@ _uint CScene_Logo::Update(_double TimeDelta)
 	{
 		pEngine->Clear(SCENE_LOGO);
 
-		if (FAILED(pEngine->SetUpCurrentScene(CScene_Loading::Create(m_pDevice, m_pDeviceContext, SCENE_GAMEPLAY))))
+		if (FAILED(pEngine->SetUpCurrentScene(CScene_Loading::Create(m_pDevice, m_pDeviceContext, SCENE_GAMEPLAY, SCENE_LOADING))))
 			return E_FAIL;
 	}
 
@@ -76,9 +76,9 @@ HRESULT CScene_Logo::ReadyLayerBackGround(const string sLayerTag)
 	return S_OK;
 }
 
-CScene_Logo * CScene_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CScene_Logo * CScene_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
 {
-	CScene_Logo*		pInstance = new CScene_Logo(pDevice, pDeviceContext);
+	CScene_Logo*		pInstance = new CScene_Logo(pDevice, pDeviceContext, iLevelIndex);
 
 	if (FAILED(pInstance->Initialize()))
 	{
