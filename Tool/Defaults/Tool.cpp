@@ -52,6 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 	msg.message = WM_NULL;
 
+	CEngine::GetInstance()->InitializeInput();
 	CToolManager* pToolManager = new CToolManager();
 	pToolManager->Initialize();
 
@@ -71,6 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				break;
 			}
 		}
+		CEngine::GetInstance()->UpdateInput();
 		pToolManager->Update();
     }
 
@@ -158,6 +160,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
+
+	CEngine::GetInstance()->InputProc(hWnd, message, wParam, lParam);
 
     switch (message)
     {

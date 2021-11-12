@@ -135,6 +135,9 @@
     <ClInclude Include="..\Public\PxManager.h">
       <Filter>PhysX</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\InputManager.h">
+      <Filter>00.System\01.Device\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PxManager.cpp">
       <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InputManager.cpp">
+      <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
