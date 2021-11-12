@@ -23,7 +23,7 @@ void CLog::Initialize()
 	Commands.push_back("HISTORY");
 	Commands.push_back("CLEAR");
 	Commands.push_back("CLASSIFY");
-	AutoScroll = true;
+	AutoScroll = false;
 	ScrollToBottom = false;
 	AddLog("Welcome to Dear ImGui!");
 }

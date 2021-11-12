@@ -25,7 +25,7 @@ public:
 	CImGuiWindow* GetWindow(string windowName);
 
 public:
-	void AddLog();
+	void AddLog(const char* log);
 
 private:
 	HWND					m_hWnd;

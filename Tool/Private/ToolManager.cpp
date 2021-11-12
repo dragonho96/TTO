@@ -129,7 +129,27 @@ void CToolManager::Update()
 		int i = -0;
 	}
 	if (m_pEngine->GetMouseMoveValue().z > 0)
-		int i = m_pEngine->GetMouseMoveValue().z;
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
+		AddLog(i.c_str());
+	}
+	if (m_pEngine->GetMouseMoveValue().z < 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
+		AddLog(i.c_str());
+	}
+
+	if (m_pEngine->GetMouseMoveValue().y > 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
+		AddLog(i.c_str());
+	}
+	if (m_pEngine->GetMouseMoveValue().y < 0)
+	{
+		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
+		AddLog(i.c_str());
+	}
+
 
 	//// Rendering
 	ImGui::Render();
@@ -338,5 +358,10 @@ CImGuiWindow* CToolManager::GetWindow(string windowName)
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CToolManager::AddLog(const char * log)
+{
+	dynamic_cast<CLog*>(m_mapWindows["Log"])->AddLog(log);
 }
 
