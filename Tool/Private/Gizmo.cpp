@@ -46,6 +46,9 @@ void CGizmo::Initialize()
 
 void CGizmo::Update()
 {
+	m_pToolManager->SetImGuizmoStyle();
+	m_pToolManager->SetImGuiColor();
+
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::BeginFrame();
 	ImGuizmo::Enable(true);
@@ -221,6 +224,8 @@ void CGizmo::LateUpdate()
 
 	//ImGuizmo::IsUsing();
 
+	m_pToolManager->SetImGuiStyle();
+	m_pToolManager->SetImGuiColor();
 }
 
 

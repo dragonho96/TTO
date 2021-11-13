@@ -15,6 +15,7 @@ public:
 
 public:
 	void SetImGuiStyle();
+	void SetImGuizmoStyle();
 	void SetImGuiColor();
 	void SetDockSpace();
 

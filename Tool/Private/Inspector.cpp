@@ -15,12 +15,34 @@ void CInspector::Initialize()
 
 void CInspector::Update()
 {
+	/* Check if it has focused object*/
 	bool open = true;
-	//ImGui::Begin("Inspector", &open, ImGuiCond_Once);
 	ImGui::Begin("Inspector");
-	//if (ImGui::CollapsingHeader("Transform", true))
-	//{
-	ImGui::Text("GameObject Name");
+	ImGui::Separator();
+
+	/* Get GameObject Name and Change */
+	char buf[64];
+	sprintf(buf, "GameObject");
+	ImGui::InputText("##Name", buf, IM_ARRAYSIZE(buf));
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Add Component"))
+		ImGui::OpenPopup("AddComponent");
+	if (ImGui::BeginPopup("AddComponent"))
+	{
+
+		if (ImGui::MenuItem("Renderer"))
+		{
+
+		}
+		else if (ImGui::MenuItem("Collider"))
+		{
+
+		}
+		ImGui::EndPopup();
+	}
+
 
 	ImGui::Separator();
 

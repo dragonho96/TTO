@@ -3300,7 +3300,7 @@ static void ShowDemoWindowPopups()
             }
             ImGui::EndPopup();
         }
-
+		
         // Call the more complete ShowExampleMenuFile which we use in various places of this demo
         if (ImGui::Button("File Menu.."))
             ImGui::OpenPopup("my_file_popup");

@@ -7,6 +7,7 @@
 #include "ContentBrowser.h"
 #include "Gizmo.h"
 #include "Inspector.h"
+#include "Hierarchy.h"
 #pragma endregion
 
 CToolManager::CToolManager()
@@ -27,8 +28,6 @@ void CToolManager::Initialize()
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
-
-
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -65,11 +64,11 @@ void CToolManager::Initialize()
 
 void CToolManager::Update()
 {
-	//if (ImGui::IsKeyPressed(82)) // r Kye
-	//	m_pEngine->ChangeResolution(1920, 1080);
+	
+
 	if (g_Done)
 		return;
-
+	SetImGuiColor();
 	ImGuiIO& io = ImGui::GetIO();
 
 	//RECT rect;
@@ -115,42 +114,6 @@ void CToolManager::Update()
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
 
-	// m_pEngine->UpdatePx(0.1f);
-	if (m_pEngine->IsMouseDown(0))
-	{
-		int i = -0;
-	}
-	if (m_pEngine->IsMouseDown(1))
-	{
-		int i = -0;
-	}
-	if (m_pEngine->IsMouseDown(2))
-	{
-		int i = -0;
-	}
-	if (m_pEngine->GetMouseMoveValue().z > 0)
-	{
-		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
-		AddLog(i.c_str());
-	}
-	if (m_pEngine->GetMouseMoveValue().z < 0)
-	{
-		string i = "" + to_string(m_pEngine->GetMouseMoveValue().z);
-		AddLog(i.c_str());
-	}
-
-	if (m_pEngine->GetMouseMoveValue().y > 0)
-	{
-		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
-		AddLog(i.c_str());
-	}
-	if (m_pEngine->GetMouseMoveValue().y < 0)
-	{
-		string i = "" + to_string(m_pEngine->GetMouseMoveValue().y);
-		AddLog(i.c_str());
-	}
-
-
 	//// Rendering
 	ImGui::Render();
 
@@ -167,8 +130,6 @@ void CToolManager::Update()
 
 	m_pEngine->Present();
 }
-
-
 
 void CToolManager::Release()
 {
@@ -189,6 +150,22 @@ void CToolManager::Release()
 }
 
 void CToolManager::SetImGuiStyle()
+{
+	ImGui::StyleColorsDark();
+
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->WindowPadding = ImVec2(2, 2);
+	style->WindowRounding = 2.0f;
+	style->FramePadding = ImVec2(2, 2);
+	style->WindowBorderSize = 2;
+	style->ChildBorderSize = 2;
+	style->PopupBorderSize = 2;
+	style->FrameBorderSize = 2;
+	style->TabBorderSize = 2;
+	style->GrabMinSize = 2;
+}
+
+void CToolManager::SetImGuizmoStyle()
 {
 	ImGui::StyleColorsDark();
 
@@ -349,6 +326,8 @@ void CToolManager::CreateWindows()
 	pWindow = new CInspector(this);
 	m_mapWindows["Inspector"] = pWindow;
 
+	pWindow = new CHierarchy(this);
+	m_mapWindows["Hierarchy"] = pWindow;
 }
 
 CImGuiWindow* CToolManager::GetWindow(string windowName)
