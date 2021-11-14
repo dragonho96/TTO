@@ -1,10 +1,10 @@
 #include "..\Public\Scene.h"
 #include "Engine.h"
 
-CScene::CScene(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
+CScene::CScene(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
-	, m_iLevelIndex(iLevelIndex)
+	, m_iSceneIndex(iSceneIndex)
 {
 }
 
@@ -27,7 +27,8 @@ void CScene::Clear()
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	pEngine->Clear(m_iLevelIndex);
+	pEngine->ClearGameObjectManager(m_iSceneIndex);
+	pEngine->ClearComponentManager(m_iSceneIndex);
 
 	RELEASE_INSTANCE(CEngine);
 }

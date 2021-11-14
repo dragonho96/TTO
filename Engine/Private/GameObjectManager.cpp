@@ -54,20 +54,20 @@ _int CGameObjectManager::LateUpdate(_double dDeltaTime)
 	return S_OK;
 }
 
-HRESULT CGameObjectManager::AddPrototype(const string sPrototypeTag, CGameObject * pPrototype)
+HRESULT CGameObjectManager::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == pPrototype ||
-		nullptr != FindPrototype(sPrototypeTag))
+		nullptr != FindPrototype(pPrototypeTag))
 		return E_FAIL;
 
-	m_pPrototypes.emplace(sPrototypeTag, pPrototype);
+	m_pPrototypes.emplace(pPrototypeTag, pPrototype);
 
 	return S_OK;
 }
 
-HRESULT CGameObjectManager::AddGameObject(_uint iLevelIndex, const string sPrototypeTag, const string pLayerTag, void * pArg)
+HRESULT CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
 {
-	CGameObject*	pPrototype = FindPrototype(sPrototypeTag);
+	CGameObject*	pPrototype = FindPrototype(pPrototypeTag);
 	if (nullptr == pPrototype)
 		return E_FAIL;
 
@@ -75,7 +75,7 @@ HRESULT CGameObjectManager::AddGameObject(_uint iLevelIndex, const string sProto
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	CLayer*		pLayer = FindLayer(iLevelIndex, pLayerTag);
+	CLayer*		pLayer = FindLayer(iSceneIndex, pLayerTag);
 
 	if (nullptr == pLayer)
 	{
@@ -85,7 +85,7 @@ HRESULT CGameObjectManager::AddGameObject(_uint iLevelIndex, const string sProto
 
 		pNewLayer->AddGameObjectInLayer(pGameObject);
 
-		m_pGameObjects[iLevelIndex].emplace(pLayerTag, pNewLayer);
+		m_pGameObjects[iSceneIndex].emplace(pLayerTag, pNewLayer);
 	}
 	else
 		pLayer->AddGameObjectInLayer(pGameObject);
@@ -94,9 +94,9 @@ HRESULT CGameObjectManager::AddGameObject(_uint iLevelIndex, const string sProto
 	return S_OK;
 }
 
-CGameObject * CGameObjectManager::FindPrototype(const string sPrototypeTag)
+CGameObject * CGameObjectManager::FindPrototype(const _tchar* pPrototypeTag)
 {
-	auto iter = find_if(m_pPrototypes.begin(), m_pPrototypes.end(), STagFinder(sPrototypeTag));
+	auto iter = find_if(m_pPrototypes.begin(), m_pPrototypes.end(), CTagFinder(pPrototypeTag));
 	
 	if (iter == m_pPrototypes.end())
 		return nullptr;
@@ -104,9 +104,9 @@ CGameObject * CGameObjectManager::FindPrototype(const string sPrototypeTag)
 	return iter->second;
 }
 
-CLayer * CGameObjectManager::FindLayer(_uint iSceneIndex, const string sLayerTag)
+CLayer * CGameObjectManager::FindLayer(_uint iSceneIndex, const _tchar* pLayerTag)
 {
-	auto iter = find_if(m_pGameObjects[iSceneIndex].begin(), m_pGameObjects[iSceneIndex].end(), STagFinder(sLayerTag));
+	auto iter = find_if(m_pGameObjects[iSceneIndex].begin(), m_pGameObjects[iSceneIndex].end(), CTagFinder(pLayerTag));
 
 	if (iter == m_pGameObjects[iSceneIndex].end())
 		return nullptr;

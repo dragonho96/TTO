@@ -2,9 +2,7 @@
 #include "TimerManager.h"
 #include "GraphicDevice.h"
 #include "SceneSerializer.h"
-#include "SceneManager.h"
 #include "PxManager.h"
-#include "GameObjectManager.h"
 #include "InputManager.h"
 
 IMPLEMENT_SINGLETON(CEngine)
@@ -16,6 +14,7 @@ CEngine::CEngine()
 	, m_pGameObjectManager(CGameObjectManager::GetInstance())
 	, m_pPxManager(CPxManager::GetInstance())
 	, m_pInputManager(CInputManager::GetInstance())
+	, m_pComponentManager(CComponentManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
@@ -23,6 +22,7 @@ CEngine::CEngine()
 	SafeAddRef(m_pSceneManager);
 	SafeAddRef(m_pPxManager);
 	SafeAddRef(m_pGameObjectManager);
+	SafeAddRef(m_pComponentManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -32,8 +32,10 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	/* ���� �ʱ�ȭ�� �ʿ��� ó���� ��. */
 	if (FAILED(m_pGameObjectManager->ReserveManager(iNumScenes)))
+		return E_FAIL;
+
+	if (FAILED(m_pComponentManager->ReserveManager(iNumScenes)))
 		return E_FAIL;
 
 	return S_OK;
@@ -60,6 +62,12 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CSceneManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CSceneManager");
+
+	if (0 != CGameObjectManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CGameObjectManager");
+
+	if (0 != CComponentManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CComponentManager");
 
 	if (0 != CGraphicDevice::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGraphic_Device");
@@ -224,25 +232,25 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
-HRESULT CEngine::AddPrototype(const string sPrototypeTag, CGameObject * pPrototype)
+HRESULT CEngine::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	return m_pGameObjectManager->AddPrototype(sPrototypeTag, pPrototype);
+	return m_pGameObjectManager->AddPrototype(pPrototypeTag, pPrototype);
 
 }
 
-HRESULT CEngine::AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void * pArg)
+HRESULT CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
 {
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	return m_pGameObjectManager->AddGameObject(iSceneIndex, sPrototypeTag, sLayerTag, pArg);
+	return m_pGameObjectManager->AddGameObject(iSceneIndex, pPrototypeTag, pLayerTag, pArg);
 
 }
 
-void CEngine::Clear(_uint iSceneIndex)
+void CEngine::ClearGameObjectManager(_uint iSceneIndex)
 {
 	if (nullptr == m_pGameObjectManager)
 		return;
@@ -305,6 +313,30 @@ void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam
 	m_pInputManager->InputProc(hWnd, message, wParam, lParam);
 }
 
+HRESULT CEngine::AddPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
+{
+	if (nullptr == m_pComponentManager)
+		return E_FAIL;
+
+	return m_pComponentManager->AddPrototype(iSceneIndex, pPrototypeTag, pPrototype);
+}
+
+CComponent * CEngine::CloneComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, void * pArg)
+{
+	if (nullptr == m_pComponentManager)
+		return nullptr;
+
+	return m_pComponentManager->CloneComponent(iSceneIndex, pPrototypeTag, pArg);
+}
+
+void CEngine::ClearComponentManager(_uint iSceneIndex)
+{
+	if (nullptr == m_pComponentManager)
+		return;
+
+	m_pComponentManager->Clear(iSceneIndex);
+}
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -329,6 +361,7 @@ PxControllerManager * CEngine::GetControllerManager()
 
 void CEngine::Free()
 {
+	SafeRelease(m_pComponentManager);
 	SafeRelease(m_pGameObjectManager);
 	SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);

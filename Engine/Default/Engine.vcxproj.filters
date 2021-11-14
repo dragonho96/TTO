@@ -40,9 +40,6 @@
     <Filter Include="01.Utility\01.Scene\SceneSerializer">
       <UniqueIdentifier>{ba0187be-30ae-4099-9084-148d11960797}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug">
-      <UniqueIdentifier>{73e22a83-00c3-474b-8272-096a5020941a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\01.Scene\Manager">
       <UniqueIdentifier>{46d0ab9a-95b4-4b58-911e-6255c93a7771}</UniqueIdentifier>
     </Filter>
@@ -52,26 +49,41 @@
     <Filter Include="01.Utility\02.GameObject\Manager">
       <UniqueIdentifier>{2d77ba4d-7ff7-4f97-a677-d46c947b6a3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lines">
-      <UniqueIdentifier>{a4d74e7c-eb26-4425-aef5-e76acf746fea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{efa66a33-7616-4ff7-96c6-d109a7e392f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lines\DebugSphere">
-      <UniqueIdentifier>{a261b405-49cf-4a23-9fb8-f645bcb629cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lines\DebugBox">
-      <UniqueIdentifier>{2baf0ec6-1258-4666-a234-0e2de9e25b9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lines\DebugCapsule">
-      <UniqueIdentifier>{619e51fe-4301-4d58-a4d6-3b9be5bdae90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PhysX">
-      <UniqueIdentifier>{063bb5a0-c15e-4bc9-8bfe-0b5f41511834}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\02.GameObject\Manager\Layer">
       <UniqueIdentifier>{2e85e0ba-bda9-40b9-a3cf-3dacdc975b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components">
+      <UniqueIdentifier>{95cb760b-4fcc-482f-916e-da621757770f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Manager">
+      <UniqueIdentifier>{b6d16ade-ce09-4650-9d8c-81a28091aeb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Renderer">
+      <UniqueIdentifier>{ab1bd81c-4e1c-4ff0-b8fb-753af0ec19a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Transform">
+      <UniqueIdentifier>{bf850393-b2dd-45f6-a5b4-33c8e64a5007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others">
+      <UniqueIdentifier>{590b45dd-08e2-47fd-b811-502ba5b3d273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\Lines">
+      <UniqueIdentifier>{a4d74e7c-eb26-4425-aef5-e76acf746fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\Lines\DebugSphere">
+      <UniqueIdentifier>{a261b405-49cf-4a23-9fb8-f645bcb629cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\Lines\DebugBox">
+      <UniqueIdentifier>{2baf0ec6-1258-4666-a234-0e2de9e25b9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\Lines\DebugCapsule">
+      <UniqueIdentifier>{619e51fe-4301-4d58-a4d6-3b9be5bdae90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\PhysX">
+      <UniqueIdentifier>{063bb5a0-c15e-4bc9-8bfe-0b5f41511834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others\Shader">
+      <UniqueIdentifier>{efa66a33-7616-4ff7-96c6-d109a7e392f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,30 +133,36 @@
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Line.h">
-      <Filter>Lines</Filter>
+      <Filter>Others\Lines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
-      <Filter>Shader</Filter>
+      <Filter>Others\Shader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DebugSphere.h">
-      <Filter>Lines\DebugSphere</Filter>
+      <Filter>Others\Lines\DebugSphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DebugBox.h">
-      <Filter>Lines\DebugBox</Filter>
+      <Filter>Others\Lines\DebugBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DebugCapsule.h">
-      <Filter>Lines\DebugCapsule</Filter>
+      <Filter>Others\Lines\DebugCapsule</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PxManager.h">
-      <Filter>PhysX</Filter>
+      <Filter>Others\PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
- </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\InputManager.h">
       <Filter>00.System\01.Device\Input</Filter>
-
     </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>01.Utility\03.Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ComponentManager.h">
+      <Filter>01.Utility\03.Components\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -178,30 +196,37 @@
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Line.cpp">
-      <Filter>Lines</Filter>
+      <Filter>Others\Lines</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp">
-      <Filter>Shader</Filter>
+      <Filter>Others\Shader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DebugSphere.cpp">
-      <Filter>Lines\DebugSphere</Filter>
+      <Filter>Others\Lines\DebugSphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DebugBox.cpp">
-      <Filter>Lines\DebugBox</Filter>
+      <Filter>Others\Lines\DebugBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DebugCapsule.cpp">
-      <Filter>Lines\DebugCapsule</Filter>
+      <Filter>Others\Lines\DebugCapsule</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PxManager.cpp">
-      <Filter>PhysX</Filter>
+      <Filter>Others\PhysX</Filter>
     </ClCompile>
-
     <ClCompile Include="..\Private\Layer.cpp">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
-</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\InputManager.cpp">
       <Filter>00.System\01.Device\Input</Filter>
-
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>01.Utility\03.Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ComponentManager.cpp">
+      <Filter>01.Utility\03.Components\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer.cpp">
+      <Filter>01.Utility\03.Components\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Base.h"
-
+#include "SceneManager.h"
+#include "GameObjectManager.h"
+#include "ComponentManager.h"
 
 BEGIN(Engine)
 
@@ -59,9 +60,9 @@ public:
 
 #pragma region GAMEOBJECT_MANAGER
 public:
-	HRESULT AddPrototype(const string sPrototypeTag, class CGameObject* pPrototype);
-	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void* pArg = nullptr);
-	void	Clear(_uint iSceneIndex);
+	HRESULT AddPrototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
+	HRESULT AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
+	void	ClearGameObjectManager(_uint iSceneIndex);
 #pragma region INPUT
 	void InitializeInput();
 	void UpdateInput();
@@ -78,6 +79,12 @@ public:
 
 	void InputProc(const HWND hWnd, const UINT message,
 		const WPARAM wParam, const LPARAM lParam);
+#pragma endregion
+
+#pragma region COMPONENT
+	HRESULT AddPrototype(_uint iSceneIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
+	class CComponent* CloneComponent(_uint iSceneIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	void ClearComponentManager(_uint iSceneIndex);
 #pragma endregion
 
 #pragma region PHYSX
