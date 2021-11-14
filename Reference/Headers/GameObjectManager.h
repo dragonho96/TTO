@@ -23,20 +23,20 @@ public:
 public:
 	// allocate the size of list
 	HRESULT ReserveManager(_uint iNumScenes);
-	HRESULT	AddPrototype(const string sPrototypeTag, CGameObject* pPrototype);
-	HRESULT AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string pLayerTag, void* pArg);
+	HRESULT	AddPrototype(const _tchar* sPrototypeTag, CGameObject* pPrototype);
+	HRESULT AddGameObject(_uint iSceneIndex, const _tchar* sPrototypeTag, const _tchar* pLayerTag, void* pArg);
 
 public:
-	CGameObject*	FindPrototype(const string sPrototypeTag);
-	CLayer*			FindLayer(_uint iSceneIndex, const string sLayerTag);
+	CGameObject*	FindPrototype(const _tchar* pPrototypeTag);
+	CLayer*			FindLayer(_uint iSceneIndex, const _tchar* pLayerTag);
 
 private:
 	_uint		m_iNumScenes = 0;
 
 private:
-	unordered_map<string, CGameObject*>			m_pPrototypes;
+	unordered_map<const _tchar*, CGameObject*>			m_pPrototypes;
 
-	typedef unordered_map<string, CLayer*>		GAMEOBJECTS;
+	typedef unordered_map<const _tchar*, CLayer*>		GAMEOBJECTS;
 	GAMEOBJECTS*								m_pGameObjects = nullptr;
 };
 

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CEngine;
+class CRenderer;
 END
 
 BEGIN(Client)
@@ -24,11 +25,13 @@ public:
 
 private:
 	HRESULT OpenScene(SCENE eScene);
+	HRESULT ReadyPrototypeComponent();
 
 private:
 	CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+	CRenderer*				m_pRenderer = nullptr;
 
 #ifdef _DEBUG
 private:
