@@ -4,8 +4,12 @@
 #include "DebugBox.h"
 #include "DebugCapsule.h"
 
+
+#include "Texture.h"
 IMPLEMENT_SINGLETON(CGraphicDevice)
 CDebugCapsule* debug = nullptr;
+CTexture* texture = nullptr;
+
 CGraphicDevice::CGraphicDevice()
 {
 }
@@ -57,8 +61,8 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	//debug = new CDebugSphere(float(0.5f));
 	//debug = new CDebugBox({1.f, 1.f, 1.f});
-	debug = new CDebugCapsule(1.f, 2.f);
-
+	//debug = new CDebugCapsule(1.f, 2.f);
+	texture = new CTexture();
 	return S_OK;
 }
 
@@ -412,7 +416,7 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -1.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
@@ -420,6 +424,13 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	// Initialize the projection matrix
 	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
 
+
+	ConstantBuffer cb1;
+
+	cb1.mView = XMMatrixTranspose(g_View);
+	cb1.mProjection = XMMatrixTranspose(g_Projection);
+	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 	return S_OK;
 }
 
@@ -447,8 +458,17 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
 
+	// UpdateSubresource is intended to be called once
+	//ConstantBuffer cb1;
+	//cb1.mView = XMMatrixTranspose(g_View);
+	//cb1.mProjection = XMMatrixTranspose(g_Projection);
+	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
+
+	//m_pDeviceContext->PSSetSamplers(0, 1, &m_sampleState);
 
 	////
 	//// Update variables for the first cube
@@ -469,7 +489,8 @@ void CGraphicDevice::Render()
 	//m_pDeviceContext->Draw(224, 0); // Vertex count만큼 그린다
 
 
-	debug->Render();
+	//debug->Render();
+	texture->Render();
 	Present();
 
 	// IMGUI용 버퍼 따로 생성해서 Set
@@ -749,6 +770,29 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
+	
+	D3D11_SAMPLER_DESC samplerDesc = { };
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	hr = m_pDevice->CreateSamplerState(&samplerDesc, &m_sampleState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
 
 	return S_OK;
 }
@@ -758,7 +802,8 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 
 void CGraphicDevice::Free()
 {
-	SafeDelete(debug);
+	SafeDelete(texture);
+	//SafeDelete(debug);
 	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
 	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }

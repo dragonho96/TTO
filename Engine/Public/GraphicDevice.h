@@ -69,6 +69,7 @@ private:
 	ComRef<ID3D11Buffer>				g_pVertexBuffer = NULL;
 	ComRef<ID3D11Buffer>				g_pIndexBuffer = NULL;
 	ComRef<ID3D11Buffer>				g_pConstantBuffer = NULL;
+	ComRef<ID3D11SamplerState>			m_sampleState = NULL;
 
 	XMMATRIX					g_World1;
 	XMMATRIX					g_World2;

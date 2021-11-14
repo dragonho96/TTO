@@ -51,7 +51,7 @@ HRESULT CShader::CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryP
 HRESULT CShader::CreateVertexShader()
 {
 	HRESULT hr;
-	hr = CompileShaderFromFile(shaderFile.c_str(), "VS", "vs_4_0", &m_VSBlob);
+	hr = CompileShaderFromFile(shaderFile.c_str(), "VS", "vs_5_0", &m_VSBlob);
 	if (FAILED(hr))
 	{
 		MessageBox(NULL,
@@ -74,7 +74,7 @@ HRESULT CShader::CreateVertexShader()
 HRESULT CShader::CreatePixelShader()
 {
 	HRESULT hr;
-	hr = CompileShaderFromFile(shaderFile.c_str(), "PS", "ps_4_0", &m_PSBlob);
+	hr = CompileShaderFromFile(shaderFile.c_str(), "PS", "ps_5_0", &m_PSBlob);
 	if (FAILED(hr))
 	{
 		MessageBox(NULL,
@@ -98,21 +98,83 @@ HRESULT CShader::CreatePixelShader()
 HRESULT CShader::CreateInputLayout()
 {
 	HRESULT hr;
-	D3D11_INPUT_ELEMENT_DESC layout[] =
+	hr = D3DReflect
+	(
+		m_VSBlob->GetBufferPointer()
+		, m_VSBlob->GetBufferSize()
+		, IID_ID3D11ShaderReflection
+		, (void**)&m_Reflection
+	);
+	assert(SUCCEEDED(hr));
+
+	D3D11_SHADER_DESC shaderDesc;
+	m_Reflection->GetDesc(&shaderDesc);
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+	for (UINT i = 0; i< shaderDesc.InputParameters; i++)
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT numElements = ARRAYSIZE(layout);
+		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+		m_Reflection->GetInputParameterDesc(i, &paramDesc);
 
-	// Create the input layout
-	hr = CEngine::GetInstance()->GetDevice()->CreateInputLayout(layout, numElements, m_VSBlob->GetBufferPointer(),
-		m_VSBlob->GetBufferSize(), &m_InputLayout);
-	if (FAILED(hr))
-		return hr;
+		D3D11_INPUT_ELEMENT_DESC elementDesc;
+		elementDesc.SemanticName = paramDesc.SemanticName;
+		elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+		elementDesc.InputSlot = 0;
+		elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		elementDesc.InstanceDataStepRate = 0;
 
-	// Set the input layout
-	CEngine::GetInstance()->GetDeviceContext()->IASetInputLayout(m_InputLayout.Get());
+		if (paramDesc.Mask == 1)
+		{
+			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+				elementDesc.Format = DXGI_FORMAT_R32_UINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+				elementDesc.Format = DXGI_FORMAT_R32_SINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+				elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		}
+		else if (paramDesc.Mask <= 3)
+		{
+			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+		}
+		else if (paramDesc.Mask <= 7)
+		{
+			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		}
+		else if (paramDesc.Mask <= 15)
+		{
+			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		}
 
+		string temp = paramDesc.SemanticName;
+		if (temp == "POSITION")
+			elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+
+		inputLayoutDesc.push_back(elementDesc);
+	}
+
+	hr = CEngine::GetInstance()->GetDevice()->CreateInputLayout
+	(
+		&inputLayoutDesc[0]
+		, inputLayoutDesc.size()
+		, m_VSBlob->GetBufferPointer()
+		, m_VSBlob->GetBufferSize()
+		, &m_InputLayout
+	);
 	return S_OK;
 }

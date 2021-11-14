@@ -59,7 +59,7 @@ void CLine::Render()
 	UINT offset = 0;
 
 	ConstantBuffer cb1;
-	cb1.mWorld = XMMatrixTranspose(world);
+	//cb1.mWorld = XMMatrixTranspose(world);
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
 

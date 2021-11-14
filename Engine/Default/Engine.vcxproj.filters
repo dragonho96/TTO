@@ -73,6 +73,15 @@
     <Filter Include="01.Utility\02.GameObject\Manager\Layer">
       <UniqueIdentifier>{2e85e0ba-bda9-40b9-a3cf-3dacdc975b24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{70dbd42c-de2e-450b-adbe-11a22ce9f581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\hlsl">
+      <UniqueIdentifier>{2830a08f-4860-4f4a-bca3-6c35f8786bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffers">
+      <UniqueIdentifier>{2604c2cf-2cbf-4544-93b1-0beb5a2fda68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -140,10 +149,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
- </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\InputManager.h">
       <Filter>00.System\01.Device\Input</Filter>
-
+    </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GlobalBuffers.h">
+      <Filter>Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ShaderBuffer.h">
+      <Filter>Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -195,13 +212,14 @@
     <ClCompile Include="..\Private\PxManager.cpp">
       <Filter>PhysX</Filter>
     </ClCompile>
-
     <ClCompile Include="..\Private\Layer.cpp">
       <Filter>01.Utility\02.GameObject\Manager\Layer</Filter>
-</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\InputManager.cpp">
       <Filter>00.System\01.Device\Input</Filter>
-
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

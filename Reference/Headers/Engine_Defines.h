@@ -4,8 +4,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <d3d11.h>
-#include <d3dx11.h>
 #include <process.h>
 #include <unordered_map>
 #include <algorithm>
@@ -13,12 +11,14 @@
 #include <memory> // for smart ptr
 #include <bitset>
 
+#include <d3d11.h>
+#include <D3DX11.h>
+#include <D3DCompiler.h>
 using namespace std;
 
 
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
-#include <d3dcompiler.h>
 #include <wrl.h> // ComPtr smartpointer for COM
 #include <wrl\client.h>
 using namespace DirectX;

@@ -6,10 +6,19 @@ struct SimpleVertex
 	XMFLOAT4 Color;
 };
 
+struct VertexTexture
+{
+	VertexTexture()
+		: Position(0, 0, 0)
+		, Uv(0, 0) {}
+
+	XMFLOAT3	Position;
+	XMFLOAT2	Uv;
+};
 
 struct ConstantBuffer
 {
-	XMMATRIX mWorld;
+	//XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
 };
