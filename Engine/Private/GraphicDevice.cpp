@@ -541,41 +541,41 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	//	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
 	//}
 
-	DXGI_MODE_DESC mode;
+	//DXGI_MODE_DESC mode;
 
-	mode.Width = iWidth;
-	mode.Height = iHeight;
-	mode.RefreshRate.Numerator = 60;
-	mode.RefreshRate.Denominator = 1;
-	mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	//mode.Width = iWidth;
+	//mode.Height = iHeight;
+	//mode.RefreshRate.Numerator = 60;
+	//mode.RefreshRate.Denominator = 1;
+	//mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	//mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	m_pSwapChain->ResizeTarget(&mode);
+	//m_pSwapChain->ResizeTarget(&mode);
 
-	m_pDeviceContext->ClearState();
-	m_pBackBufferRTV.Reset();
-	m_pBackBufferRTV2.Reset();
-	m_pShaderResourceView.Reset();
-	m_pDepthStencilRTV.Reset();
-	if (g_pConstantBuffer) g_pConstantBuffer.Reset();
-	if (g_pVertexBuffer) g_pVertexBuffer.Reset();
-	if (g_pIndexBuffer) g_pIndexBuffer.Reset();
-	if (g_pVertexLayout) g_pVertexLayout.Reset();
-	if (g_pVertexShader) g_pVertexShader.Reset();
-	if (g_pPixelShader) g_pPixelShader.Reset();
-	m_pDeviceContext->Flush();
+	//m_pDeviceContext->ClearState();
+	//m_pBackBufferRTV.Reset();
+	//m_pBackBufferRTV2.Reset();
+	//m_pShaderResourceView.Reset();
+	//m_pDepthStencilRTV.Reset();
+	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
+	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();
+	//if (g_pIndexBuffer) g_pIndexBuffer.Reset();
+	//if (g_pVertexLayout) g_pVertexLayout.Reset();
+	//if (g_pVertexShader) g_pVertexShader.Reset();
+	//if (g_pPixelShader) g_pPixelShader.Reset();
+	//m_pDeviceContext->Flush();
 
-	m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+	//m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
-	ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
-	ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
-	ReadyViewport(mode.Width, mode.Height);
-	SetVertexShader();
-	SetPixelShader();
-	SetBuffer();
+	//ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
+	//ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
+	//ReadyViewport(mode.Width, mode.Height);
+	//SetVertexShader();
+	//SetPixelShader();
+	//SetBuffer();
 
-	Initialize(mode.Width, mode.Height);
+	//Initialize(mode.Width, mode.Height);
 	return S_OK;
 }
 

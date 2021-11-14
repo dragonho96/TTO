@@ -9,7 +9,7 @@
 #include "Inspector.h"
 #include "Hierarchy.h"
 #pragma endregion
-
+USING(Tool)
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())
 {
@@ -31,6 +31,8 @@ void CToolManager::Initialize()
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+
 	//ImGuizmo::SetImGuiContext(ImGui::CreateContext());
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
@@ -46,26 +48,20 @@ void CToolManager::Initialize()
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
+	ImGui_ImplWin32_Init(g_hWnd);
+	ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
+
 	// Set ImGui Style
 	SetImGuiStyle();
 	SetImGuiColor();
 
-	// Setup Platform/Renderer backends
-	ImGui_ImplWin32_Init(g_hWnd);
-	ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
-
 	CreateWindows();
-
-	for (auto& window : m_mapWindows)
-		window.second->Initialize();
 
 	//m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
 }
 
 void CToolManager::Update()
 {
-	
-
 	if (g_Done)
 		return;
 	SetImGuiColor();
@@ -84,12 +80,8 @@ void CToolManager::Update()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetDockSpace();
 
-	for (auto& window : m_mapWindows)
-		window.second->Update();
-	for (auto& window : m_mapWindows)
-		window.second->LateUpdate();
+	SetDockSpace();
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -113,11 +105,10 @@ void CToolManager::Update()
 
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
-
+	m_pEngine->Render();
+	m_pEngine->UpdateImGui();
 	//// Rendering
 	ImGui::Render();
-
-	m_pEngine->Render();
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -133,19 +124,12 @@ void CToolManager::Update()
 
 void CToolManager::Release()
 {
-	dynamic_cast<CLog*>(m_mapWindows["Log"])->ClearLog();
-	for (auto& window : m_mapWindows)
-		SafeDelete(window.second);
-
-	m_mapWindows.clear();
-	
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 
 	ImGui::DestroyContext();
 
 	SafeRelease(m_pEngine);
-
 	CEngine::ReleaseEngine();
 }
 
@@ -314,33 +298,25 @@ void CToolManager::CreateWindows()
 	//pWindow = std::make_shared<CInspector>(this);
 	//m_mapWindows["Inspector"] = pWindow;
 
-	CImGuiWindow* pWindow = new CContentBrowser(this);
-	m_mapWindows["ContentBrowser"] = pWindow;
+	CImGuiWindow* pWindow = new CContentBrowser();
+	m_pEngine->AddWindow("ContentBrowser", pWindow);
 
-	pWindow = new CLog(this);
-	m_mapWindows["Log"] = pWindow;
+	pWindow = new CLog();
+	m_pEngine->AddWindow("Log", pWindow);
 
-	pWindow = new CGizmo(this);
-	m_mapWindows["Gizmo"] = pWindow;
+	pWindow = new CGizmo();
+	m_pEngine->AddWindow("Gizmo", pWindow);
 
-	pWindow = new CInspector(this);
-	m_mapWindows["Inspector"] = pWindow;
+	pWindow = new CInspector();
+	m_pEngine->AddWindow("Inspector", pWindow);
 
-	pWindow = new CHierarchy(this);
-	m_mapWindows["Hierarchy"] = pWindow;
-}
+	pWindow = new CHierarchy();
+	m_pEngine->AddWindow("Hierarchy", pWindow);
 
-CImGuiWindow* CToolManager::GetWindow(string windowName)
-{
-	auto iter_find = m_mapWindows.find(windowName);
-	if (m_mapWindows.end() == iter_find)
-		return nullptr;
-
-	return iter_find->second;
 }
 
 void CToolManager::AddLog(const char * log)
 {
-	dynamic_cast<CLog*>(m_mapWindows["Log"])->AddLog(log);
+	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(log);
 }
 

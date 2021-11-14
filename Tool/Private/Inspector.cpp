@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "..\Public\Inspector.h"
 
-
-CInspector::CInspector(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager)
+USING(Tool)
+CInspector::CInspector()
 {
+	Initialize();
 }
 
 void CInspector::Initialize()
 {
-	m_pGizmo = dynamic_cast<CGizmo*>(m_pToolManager->GetWindow("Gizmo"));
+	m_pGizmo = dynamic_cast<CGizmo*>(CEngine::GetInstance()->GetWindow("Gizmo"));
 	//m_pGizmo = dynamic_pointer_cast<CGizmo>(m_pToolManager->GetWindow("Gizmo"));
 }
 
@@ -147,4 +147,8 @@ void CInspector::DrawVec3(const string & label, _float3 & values)
 	ImGui::Columns(1);
 
 	ImGui::PopID();
+}
+
+void CInspector::Free()
+{
 }

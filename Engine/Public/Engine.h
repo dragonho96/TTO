@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "GameObjectManager.h"
 #include "ComponentManager.h"
+#include "ImGuiManager.h"
 
 BEGIN(Engine)
 
@@ -87,6 +88,13 @@ public:
 	void ClearComponentManager(_uint iSceneIndex);
 #pragma endregion
 
+#pragma region IMGUI
+	void InitializeImGui(HWND hWnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	void UpdateImGui();
+	void AddWindow(string name, class CImGuiWindow* window);
+	CImGuiWindow* GetWindow(string name);
+#pragma endregion
+
 #pragma region PHYSX
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
@@ -103,6 +111,7 @@ private:
 	class CInputManager*			m_pInputManager = nullptr;
 	
 	class CPxManager*				m_pPxManager = nullptr;
+	class CImGuiManager*			m_pImGuiManager = nullptr;
 public:
 	virtual void Free() override;
 };

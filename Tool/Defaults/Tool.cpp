@@ -4,10 +4,10 @@
 #include "stdafx.h"
 #include "Tool.h"
 #include "ToolManager.h"
-
 #define MAX_LOADSTRING 100
 
 // Global Variables:
+USING(Tool)
 
 HWND		g_hWnd;
 HINSTANCE hInst;                                // current instance

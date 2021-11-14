@@ -1,10 +1,12 @@
 #pragma once
 #include "ImGuiWindow.h"
+BEGIN(Tool)
 class CContentBrowser : public CImGuiWindow
 {
 public:
-	explicit CContentBrowser(CToolManager* pToolManager);
+	explicit CContentBrowser();
 	virtual ~CContentBrowser() = default;
+	virtual void Free() override;
 
 public:
 	// Inherited via CImGuiWindow
@@ -18,5 +20,9 @@ public:
 private:
 	FILESYSTEM::path	m_CurrentDirectory;
 	_uint				m_FrameCount;
+
+	// Inherited via CImGuiWindow
+
 };
 
+END

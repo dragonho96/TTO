@@ -15,6 +15,7 @@ CEngine::CEngine()
 	, m_pPxManager(CPxManager::GetInstance())
 	, m_pInputManager(CInputManager::GetInstance())
 	, m_pComponentManager(CComponentManager::GetInstance())
+	, m_pImGuiManager(CImGuiManager::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
@@ -23,6 +24,7 @@ CEngine::CEngine()
 	SafeAddRef(m_pPxManager);
 	SafeAddRef(m_pGameObjectManager);
 	SafeAddRef(m_pComponentManager);
+	SafeAddRef(m_pImGuiManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -51,6 +53,9 @@ void CEngine::ReleaseEngine()
 	if (0 != CEngine::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CEngine");
 
+	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CImGuiManager");
+
 	if (0 != CPxManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CPhysX");
 
@@ -72,6 +77,7 @@ void CEngine::ReleaseEngine()
 	if (0 != CGraphicDevice::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGraphic_Device");
 
+
 	
 }
 
@@ -79,6 +85,7 @@ HRESULT CEngine::ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight)
 {
 	m_pGraphicDevice->ReadyGraphicDevice(hWnd, iWidth, iHeight);
 	m_pPxManager->Initialize();
+	InitializeImGui(hWnd, GetDevice(), GetDeviceContext());
 	return S_OK;
 }
 
@@ -337,6 +344,26 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 	m_pComponentManager->Clear(iSceneIndex);
 }
 
+void CEngine::InitializeImGui(HWND hWnd, ID3D11Device * device, ID3D11DeviceContext * deviceContext)
+{
+	m_pImGuiManager->Initialize(hWnd, device, deviceContext);
+}
+
+void CEngine::UpdateImGui()
+{
+	m_pImGuiManager->Update();
+}
+
+void CEngine::AddWindow(string name, CImGuiWindow * window)
+{
+	m_pImGuiManager->AddWindow(name, window);
+}
+
+CImGuiWindow * CEngine::GetWindow(string name)
+{
+	return m_pImGuiManager->GetWindow(name);
+}
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -368,4 +395,5 @@ void CEngine::Free()
 	SafeRelease(m_pInputManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
+	SafeRelease(m_pImGuiManager);
 }

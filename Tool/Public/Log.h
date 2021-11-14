@@ -1,10 +1,13 @@
 #pragma once
 #include "ImGuiWindow.h"
+
+BEGIN(Tool)
 class CLog : public CImGuiWindow
 {
 public:
-	explicit CLog(CToolManager* pToolManager);
+	explicit CLog();
 	virtual ~CLog() = default;
+	virtual void Free() override;
 
 public:
 	virtual void Initialize() override;
@@ -26,4 +29,4 @@ private:
 	bool                  AutoScroll;
 	bool                  ScrollToBottom;
 };
-
+END
