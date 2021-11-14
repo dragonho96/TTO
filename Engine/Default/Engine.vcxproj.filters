@@ -85,6 +85,15 @@
     <Filter Include="Others\Shader">
       <UniqueIdentifier>{efa66a33-7616-4ff7-96c6-d109a7e392f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{04bb6cd2-2b6f-4dc6-ae56-e4c08fbb34ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ImGuiWindow">
+      <UniqueIdentifier>{44901f16-0a1b-4330-8c6e-c91a5bce3aa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Manager">
+      <UniqueIdentifier>{d120267c-b496-494c-a29a-5f06fa47c738}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -162,7 +171,21 @@
     <ClInclude Include="..\Public\ComponentManager.h">
       <Filter>01.Utility\03.Components\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\03.Components\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGuiWindow.h">
+      <Filter>ImGui\ImGuiWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGuiManager.h">
+      <Filter>ImGui\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -227,6 +250,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
       <Filter>01.Utility\03.Components\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImGuiWindow.cpp">
+      <Filter>ImGui\ImGuiWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImGuiManager.cpp">
+      <Filter>ImGui\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,9 +10,6 @@
     <Filter Include="98.Defines">
       <UniqueIdentifier>{64131c9e-e540-4269-94b2-7eec6d30f3f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{d5609aa4-6955-4be1-a311-432960d81726}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGuiWindow">
       <UniqueIdentifier>{3a02f6d4-c919-443c-9ce4-f6e65eff9b90}</UniqueIdentifier>
     </Filter>
@@ -30,6 +27,9 @@
     </Filter>
     <Filter Include="ImGuiWindow\Hierarchy">
       <UniqueIdentifier>{20f1acdd-54fa-4c03-b50b-9e965db4e6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{e6c2b097-4117-4bc7-89a7-497da963fb36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,18 +50,6 @@
     <ClCompile Include="..\Private\ToolManager.cpp">
       <Filter>ToolManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Backends\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ImGuiWindow.cpp">
-      <Filter>ImGuiWindow</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Log.cpp">
       <Filter>ImGuiWindow\Log</Filter>
     </ClCompile>
@@ -76,6 +64,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Hierarchy.cpp">
       <Filter>ImGuiWindow\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,15 +91,6 @@
     <ClInclude Include="..\Public\ToolManager.h">
       <Filter>ToolManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGuiWindow.h">
-      <Filter>ImGuiWindow</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Log.h">
       <Filter>ImGuiWindow\Log</Filter>
     </ClInclude>
@@ -117,6 +105,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Hierarchy.h">
       <Filter>ImGuiWindow\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

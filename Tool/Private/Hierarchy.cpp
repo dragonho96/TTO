@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "..\Public\Hierarchy.h"
 
-
-CHierarchy::CHierarchy(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager)
+USING(Tool)
+CHierarchy::CHierarchy()
 {
+	Initialize();
 }
 
 void CHierarchy::Initialize()
@@ -61,5 +61,9 @@ void CHierarchy::Update()
 }
 
 void CHierarchy::LateUpdate()
+{
+}
+
+void CHierarchy::Free()
 {
 }

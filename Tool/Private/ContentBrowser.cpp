@@ -2,11 +2,12 @@
 #include "..\Public\ContentBrowser.h"
 
 static const FILESYSTEM::path s_AssetPath = "../../Assets";
+USING(Tool)
 
-CContentBrowser::CContentBrowser(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager), m_FrameCount(0)
+CContentBrowser::CContentBrowser()
+	:m_FrameCount(0)
 {
-	
+	Initialize();
 }
 
 void CContentBrowser::Initialize()
@@ -46,6 +47,10 @@ void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 			ImGui::PopID();
 		}
 	}
+}
+
+void CContentBrowser::Free()
+{
 }
 
 void CContentBrowser::Update()
@@ -102,7 +107,7 @@ void CContentBrowser::Update()
 
 		// Needs to load Texture2D
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-		ImGui::ImageButton((ImTextureID)(m_pEngine->GetShaderResourceView()), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
+		ImGui::ImageButton((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView()), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
 
 		//ImGui::Button(fileName.c_str(), { thumbnailSize, thumbnailSize });
 

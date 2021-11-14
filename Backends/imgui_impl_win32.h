@@ -13,7 +13,7 @@
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
-#pragma once
+
 #include "imgui.h"      // IMGUI_IMPL_API
 
 IMGUI_IMPL_API bool     ImGui_ImplWin32_Init(void* hwnd);

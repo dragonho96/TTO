@@ -6,11 +6,18 @@ static int   Strnicmp(const char* s1, const char* s2, int n) { int d = 0; while 
 static char* Strdup(const char* s) { IM_ASSERT(s); size_t len = strlen(s) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }
 static void  Strtrim(char* s) { char* str_end = s + strlen(s); while (str_end > s && str_end[-1] == ' ') str_end--; *str_end = 0; }
 
+USING(Tool)
 
-CLog::CLog(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager)
+CLog::CLog()
 {
+	Initialize();
 }
+
+void CLog::Free()
+{
+	ClearLog();
+}
+
 
 void CLog::Initialize()
 {
@@ -244,3 +251,4 @@ void CLog::AddLog(const char * fmt, ...)
 	va_end(args);
 	Items.push_back(Strdup(buf));
 }
+

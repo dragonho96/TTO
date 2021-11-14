@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning(disable: 4005)
+#pragma warning (disable : 4005)
 #pragma warning(disable: 4251)
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -13,6 +13,7 @@
 #include <typeinfo>
 #include <memory> // for smart ptr
 #include <bitset>
+#include <map>
 
 using namespace std;
 
@@ -27,6 +28,14 @@ using namespace DirectX::PackedVector;
 
 #include "PxPhysicsAPI.h"
 using namespace physx;
+
+
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+#include "ImGuizmo.h"
+
 
 // For Memory Leak
 #ifndef _TOOL
@@ -47,6 +56,8 @@ using namespace physx;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
+
+
 
 //#include "Engine.h"
 //#include "yaml-cpp\yaml.h"
