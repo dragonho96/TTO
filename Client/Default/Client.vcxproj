@@ -167,6 +167,7 @@
     <ClInclude Include="..\Public\Scene_GamePlay.h" />
     <ClInclude Include="..\Public\Scene_Loading.h" />
     <ClInclude Include="..\Public\Scene_Logo.h" />
+    <ClInclude Include="..\Public\Scene_Test.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="..\Private\Scene_GamePlay.cpp" />
     <ClCompile Include="..\Private\Scene_Loading.cpp" />
     <ClCompile Include="..\Private\Scene_Logo.cpp" />
+    <ClCompile Include="..\Private\Scene_Test.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -43,6 +43,9 @@
     <ClInclude Include="..\Public\Log.h">
       <Filter>ImGui\Log</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Scene_Test.h">
+      <Filter>01.Scenes\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Log.cpp">
       <Filter>ImGui\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_Test.cpp">
+      <Filter>01.Scenes\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +132,9 @@
     </Filter>
     <Filter Include="ImGui\Log">
       <UniqueIdentifier>{98d89a91-70fd-4522-987c-b32469311c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Test">
+      <UniqueIdentifier>{4258d464-ef75-47e6-8d6b-1bae8b80a25b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

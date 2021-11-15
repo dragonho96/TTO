@@ -1,7 +1,5 @@
 #pragma once
-
 #include "Base.h"
-
 BEGIN(Engine)
 
 class ENGINE_DLL CScene abstract : public CBase
@@ -16,10 +14,11 @@ public:
 public:
 	void Clear();
 private:
-	_uint					m_iSceneIndex = 0;
+	_uint						m_iSceneIndex = 0;
 protected:
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+	ID3D11Device*				m_pDevice = nullptr;
+	ID3D11DeviceContext*		m_pDeviceContext = nullptr;
+	class CEngine*				m_pEngine = nullptr;
 public:
 	virtual void Free() override;
 };

@@ -20,7 +20,7 @@ private:
 private:
 	SCENE					m_eNextSCENE;
 public:
-	static CScene_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SCENE eScene, _uint iLevelIndex);
+	static CScene_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SCENE eScene, _uint iSceneIndex);
 	virtual void Free() override;
 };
 

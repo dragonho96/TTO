@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Scene_Logo.h"
 #include "Scene_Loading.h"
+#include "Scene_Test.h"
 
 #include "Log.h"
 
@@ -54,7 +55,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_LOGO)))
+	if (FAILED(OpenScene(SCENE_TEST)))
 		return E_FAIL;
 
 	ImGuiInitialize();
@@ -161,9 +162,13 @@ HRESULT CMainApp::OpenScene(SCENE eScene)
 	case SCENE_LOGO:
 		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext, SCENE_LOGO);
 		break;
+	case SCENE_TEST:
+		pScene = CScene_Test::Create(m_pDevice, m_pDeviceContext, SCENE_TEST);
+		break;
 	case SCENE_GAMEPLAY:
 		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene, SCENE_LOADING);
 		break;
+
 	}
 
 	if (nullptr == pScene)

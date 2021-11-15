@@ -3,7 +3,7 @@
 static const unsigned int g_iWinCX = 1280;
 static const unsigned int g_iWinCY = 720;
 
-enum SCENE { SCENE_STATIC, SCENE_LOGO, SCENE_LOADING, SCENE_GAMEPLAY, SCENE_END };
+enum SCENE { SCENE_STATIC, SCENE_LOGO, SCENE_LOADING, SCENE_GAMEPLAY, SCENE_TEST, SCENE_END };
 
 extern HWND		g_hWnd;
 extern BOOL		g_Done;
