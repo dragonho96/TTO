@@ -63,9 +63,9 @@ HRESULT CScene_Loading::Render()
 	return S_OK;
 }
 
-CScene_Loading * CScene_Loading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, SCENE eNextScene, _uint iLevelIndex)
+CScene_Loading * CScene_Loading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, SCENE eNextScene, _uint iSceneIndex)
 {
-	CScene_Loading*		pInstance = new CScene_Loading(pDevice, pDeviceContext, iLevelIndex);
+	CScene_Loading*		pInstance = new CScene_Loading(pDevice, pDeviceContext, iSceneIndex);
 
 	if (FAILED(pInstance->Initialize(eNextScene)))
 	{

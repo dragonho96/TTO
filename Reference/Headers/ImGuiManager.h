@@ -9,6 +9,7 @@ class CImGuiManager : public CBase
 private:
 	CImGuiManager();
 	virtual ~CImGuiManager() = default;
+public:
 	virtual void Free() override;
 
 public:

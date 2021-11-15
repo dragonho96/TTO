@@ -36,6 +36,11 @@ using namespace physx;
 #include "imgui_impl_win32.h"
 #include "ImGuizmo.h"
 
+#include <fmod.h>
+
+#include <experimental\filesystem>
+
+#define FILESYSTEM std::experimental::filesystem
 
 // For Memory Leak
 #ifndef _TOOL

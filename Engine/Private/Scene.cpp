@@ -5,6 +5,7 @@ CScene::CScene(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _ui
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
 	, m_iSceneIndex(iSceneIndex)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 

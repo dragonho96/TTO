@@ -186,6 +186,9 @@
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Sound.h">
+      <Filter>00.System\01.Device\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Backends\imgui_demo.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound.cpp">
+      <Filter>00.System\01.Device\Sound</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

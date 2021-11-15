@@ -4,6 +4,7 @@
 #include "GameObjectManager.h"
 #include "ComponentManager.h"
 #include "ImGuiManager.h"
+#include "Sound.h"
 
 BEGIN(Engine)
 
@@ -35,13 +36,14 @@ public:
 	XMMATRIX					GetObjectMatrix();
 	void						SetObjectMatrix(XMMATRIX pMat);
 
-	HRESULT ClearBackBufferView(_float4 vColor);
-	HRESULT ClearDepthStencilView(_float fDepth, _uint iStencil);
+	HRESULT						ClearBackBufferView(_float4 vColor);
+	HRESULT						ClearDepthStencilView(_float fDepth, _uint iStencil);
 
-	void	Render();
-	HRESULT Present();
-	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
-	void	ChangeProj(_uint iWidth, _uint iHeight);
+	void						Render();
+	void						RenderClient();
+	HRESULT						Present();
+	HRESULT						ChangeResolution(_uint iWidth, _uint iHeight);
+	void						ChangeProj(_uint iWidth, _uint iHeight);
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -64,6 +66,8 @@ public:
 	HRESULT AddPrototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 	void	ClearGameObjectManager(_uint iSceneIndex);
+#pragma endregion
+
 #pragma region INPUT
 	void InitializeInput();
 	void UpdateInput();
@@ -95,6 +99,13 @@ public:
 	CImGuiWindow* GetWindow(string name);
 #pragma endregion
 
+#pragma region SOUND
+	void PlaySoundW(string pSoundKey, CHANNELID eID);
+	void PlayBGM(string pSoundKey);
+	void StopSound(CHANNELID eID);
+	void StopAll();
+#pragma endregion
+
 #pragma region PHYSX
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
@@ -109,9 +120,9 @@ private:
 	class CGameObjectManager*		m_pGameObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
 	class CInputManager*			m_pInputManager = nullptr;
-	
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;
+	class CSound*					m_pSoundManager = nullptr;
 public:
 	virtual void Free() override;
 };

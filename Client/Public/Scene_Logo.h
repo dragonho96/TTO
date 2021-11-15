@@ -7,7 +7,7 @@ BEGIN(Client)
 class CScene_Logo final : public CScene
 {
 private:
-	explicit CScene_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, _uint iLevelIndex);
+	explicit CScene_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, _uint iSceneIndex);
 	virtual ~CScene_Logo() = default;
 public:
 	virtual HRESULT Initialize() override;

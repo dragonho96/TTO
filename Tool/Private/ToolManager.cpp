@@ -24,7 +24,7 @@ CToolManager::~CToolManager()
 
 void CToolManager::Initialize()
 {
-	m_pEngine->ReadyDevice(g_hWnd, 1280, 800);
+	m_pEngine->ReadyDevice(g_hWnd, WINCX, WINCY);
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
@@ -124,6 +124,8 @@ void CToolManager::Update()
 
 void CToolManager::Release()
 {
+	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->ClearLog();
+
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 

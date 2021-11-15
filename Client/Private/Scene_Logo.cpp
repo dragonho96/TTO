@@ -5,8 +5,8 @@
 #include "Background.h"
 #include "Scene_Loading.h"
 
-CScene_Logo::CScene_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
-	: CScene(pDevice, pDeviceContext, iLevelIndex)
+CScene_Logo::CScene_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
+	: CScene(pDevice, pDeviceContext, iSceneIndex)
 {
 
 }

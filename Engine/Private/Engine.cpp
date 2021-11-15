@@ -5,6 +5,7 @@
 #include "PxManager.h"
 #include "InputManager.h"
 
+
 IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
@@ -16,6 +17,7 @@ CEngine::CEngine()
 	, m_pInputManager(CInputManager::GetInstance())
 	, m_pComponentManager(CComponentManager::GetInstance())
 	, m_pImGuiManager(CImGuiManager::GetInstance())
+	, m_pSoundManager(CSound::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
@@ -25,6 +27,7 @@ CEngine::CEngine()
 	SafeAddRef(m_pGameObjectManager);
 	SafeAddRef(m_pComponentManager);
 	SafeAddRef(m_pImGuiManager);
+	SafeAddRef(m_pSoundManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -52,6 +55,9 @@ void CEngine::ReleaseEngine()
 {
 	if (0 != CEngine::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CEngine");
+
+	if (0 != CSound::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CSound");
 
 	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CImGuiManager");
@@ -166,6 +172,14 @@ void CEngine::Render()
 		return;
 
 	return m_pGraphicDevice->Render();
+}
+
+void CEngine::RenderClient()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->RenderClient();
 }
 
 HRESULT CEngine::Present()
@@ -364,6 +378,27 @@ CImGuiWindow * CEngine::GetWindow(string name)
 	return m_pImGuiManager->GetWindow(name);
 }
 
+void CEngine::PlaySoundW(string pSoundKey, CHANNELID eID)
+{
+	m_pSoundManager->PlaySound(pSoundKey, eID);
+}
+
+void CEngine::PlayBGM(string pSoundKey)
+{
+	m_pSoundManager->PlayBGM(pSoundKey);
+}
+
+void CEngine::StopSound(CHANNELID eID)
+{
+	m_pSoundManager->StopSound(eID);
+}
+
+void CEngine::StopAll()
+{
+	m_pSoundManager->StopAll();
+}
+
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -396,4 +431,5 @@ void CEngine::Free()
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
 	SafeRelease(m_pImGuiManager);
+	SafeRelease(m_pSoundManager);
 }
