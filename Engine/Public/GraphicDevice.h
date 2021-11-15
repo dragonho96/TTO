@@ -28,6 +28,7 @@ public:
 public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
+	void RenderClient();
 	HRESULT Present();
 
 public:

@@ -38,4 +38,6 @@ using namespace std;
 extern HWND		g_hWnd;
 extern _bool	g_Done;
 
+#define WINCX	1280
+#define WINCY	720
 #define FILESYSTEM std::experimental::filesystem

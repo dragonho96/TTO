@@ -168,6 +168,14 @@ void CEngine::Render()
 	return m_pGraphicDevice->Render();
 }
 
+void CEngine::RenderClient()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->RenderClient();
+}
+
 HRESULT CEngine::Present()
 {
 	if (nullptr == m_pGraphicDevice)
@@ -363,6 +371,7 @@ CImGuiWindow * CEngine::GetWindow(string name)
 {
 	return m_pImGuiManager->GetWindow(name);
 }
+
 
 void CEngine::UpdatePx(_double dDeltaTime)
 {

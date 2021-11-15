@@ -34,6 +34,15 @@
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>98.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Backends\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Log.h">
+      <Filter>ImGui\Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -59,6 +68,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02.GameObjects\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Backends\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Log.cpp">
+      <Filter>ImGui\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +120,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Background">
       <UniqueIdentifier>{0e23e1a7-a5ff-4461-83bf-344d3a5a3ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{8132b200-b6bb-4f35-8fc8-d212490cb612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Log">
+      <UniqueIdentifier>{98d89a91-70fd-4522-987c-b32469311c5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

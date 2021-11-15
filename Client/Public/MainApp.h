@@ -16,12 +16,12 @@ private:
 	CMainApp();
 	virtual ~CMainApp() = default;
 
-
-
 public:
 	HRESULT Initialize();
 	_uint	Update(_double dDeltaTime);
 	HRESULT Render();
+public:
+	void ImGuiInitialize();
 
 private:
 	HRESULT OpenScene(SCENE eScene);
@@ -39,7 +39,8 @@ private:
 	_uint		m_iNumDraw = 0;
 	_double		m_TimeAcc = 0.0;
 #endif
-
+private:
+	string		m_sLog;
 public:
 	static CMainApp* Create();
 	virtual void Free() override;
