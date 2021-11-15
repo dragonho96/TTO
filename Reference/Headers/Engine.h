@@ -4,6 +4,7 @@
 #include "GameObjectManager.h"
 #include "ComponentManager.h"
 #include "ImGuiManager.h"
+#include "Sound.h"
 
 BEGIN(Engine)
 
@@ -98,6 +99,13 @@ public:
 	CImGuiWindow* GetWindow(string name);
 #pragma endregion
 
+#pragma region SOUND
+	void PlaySoundW(string pSoundKey, CHANNELID eID);
+	void PlayBGM(string pSoundKey);
+	void StopSound(CHANNELID eID);
+	void StopAll();
+#pragma endregion
+
 #pragma region PHYSX
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
@@ -114,6 +122,7 @@ private:
 	class CInputManager*			m_pInputManager = nullptr;
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;
+	class CSound*					m_pSoundManager = nullptr;
 public:
 	virtual void Free() override;
 };

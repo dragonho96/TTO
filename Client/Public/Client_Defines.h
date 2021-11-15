@@ -20,6 +20,7 @@ using namespace Client;
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
+
 #define	ADDLOG(log)																	\
 	if (CEngine::GetInstance()->GetWindow("Log"))									\
 	{																				\

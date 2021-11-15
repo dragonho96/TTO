@@ -32,7 +32,7 @@ void CScene_Test::Free()
 HRESULT CScene_Test::Initialize()
 {
 	__super::Initialize();
-
+	m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
 	return S_OK;
 }
 
