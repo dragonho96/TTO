@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CShader;
+class CTransform;
 class CLine
 {
 public:
@@ -14,6 +15,7 @@ public:
 	void Initialize(_float3* lines, UINT lineCount);
 	void Render();
 
+	CTransform* GetTransform() { return m_pTransform; }
 
 protected:
 	XMMATRIX world;
@@ -21,7 +23,8 @@ protected:
 	_float3 rotation;
 	_float3 scale;
 
-	// 
+	CTransform*		m_pTransform;
+
 	Scope<CShader>	m_pShader;
 
 	ComRef<ID3D11Buffer> vertexBuffer;
