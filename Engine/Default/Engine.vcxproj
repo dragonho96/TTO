@@ -202,6 +202,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Sound.h" />
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\Public\TimerManager.h" />
+    <ClInclude Include="..\Public\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Backends\imgui_demo.cpp" />
@@ -232,6 +233,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\Sound.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\Private\TimerManager.cpp" />
+    <ClCompile Include="..\Private\Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

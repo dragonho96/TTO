@@ -1,5 +1,6 @@
 #include "..\Public\Line.h"
 #include "Shader.h"
+#include "Transform.h"
 
 CLine::CLine()
 	: m_pVertices(nullptr)
@@ -12,6 +13,7 @@ CLine::CLine()
 
 CLine::~CLine()
 {
+	SafeRelease(m_pTransform);
 	SafeDeleteArray(m_pVertices);
 }
 
@@ -19,6 +21,7 @@ void CLine::Initialize(_float3* lines, UINT lineCount)
 {
 	// Create Shader
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Tutorial05.fx");
+	m_pTransform = CTransform::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext());
 
 	if (m_eTopology == D3D11_PRIMITIVE_TOPOLOGY_LINELIST)
 		vertexCount = lineCount * 2;
@@ -59,7 +62,9 @@ void CLine::Render()
 	UINT offset = 0;
 
 	ConstantBuffer cb1;
-	//cb1.mWorld = XMMatrixTranspose(world);
+	_float4x4 matrix = m_pTransform->GetMatrix();
+	//cb1.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&matrix));
+
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
 

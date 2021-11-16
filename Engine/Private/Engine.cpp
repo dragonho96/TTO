@@ -140,12 +140,12 @@ XMMATRIX CEngine::GetProjectionMatrix()
 	return m_pGraphicDevice->GetProjectionMatrix();
 }
 
-XMMATRIX CEngine::GetObjectMatrix()
+_float4x4 CEngine::GetObjectMatrix()
 {
 	return m_pGraphicDevice->GetObjectMatrix();
 }
 
-void CEngine::SetObjectMatrix(XMMATRIX pMat)
+void CEngine::SetObjectMatrix(_float4x4 pMat)
 {
 	m_pGraphicDevice->SetObjectMatrix(pMat);
 }

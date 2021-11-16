@@ -56,65 +56,17 @@ void CGizmo::Update()
 	XMMATRIX viewMatrix = CEngine::GetInstance()->GetViewMatrix();
 	XMFLOAT4X4 fView;
 	XMStoreFloat4x4(&fView, viewMatrix);
-	_view[0] = fView._11;
-	_view[1] = fView._12;
-	_view[2] = fView._13;
-	_view[3] = fView._14;
-	_view[4] = fView._21;
-	_view[5] = fView._22;
-	_view[6] = fView._23;
-	_view[7] = fView._24;
-	_view[8] = fView._31;
-	_view[9] = fView._32;
-	_view[10] = fView._33;
-	_view[11] = fView._34;
-	_view[12] = fView._41;
-	_view[13] = fView._42;
-	_view[14] = fView._43;
-	_view[15] = fView._44;
+	memcpy(_view, &fView, sizeof(XMFLOAT4X4));
 
 	XMMATRIX projMatrix = CEngine::GetInstance()->GetProjectionMatrix();
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
-	_projection[0] = projection._11;
-	_projection[1] = projection._12;
-	_projection[2] = projection._13;
-	_projection[3] = projection._14;
-	_projection[4] = projection._21;
-	_projection[5] = projection._22;
-	_projection[6] = projection._23;
-	_projection[7] = projection._24;
-	_projection[8] = projection._31;
-	_projection[9] = projection._32;
-	_projection[10] = projection._33;
-	_projection[11] = projection._34;
-	_projection[12] = projection._41;
-	_projection[13] = projection._42;
-	_projection[14] = projection._43;
-	_projection[15] = projection._44;
+	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
 
-	XMMATRIX objMatrix = CEngine::GetInstance()->GetObjectMatrix();
-	XMFLOAT4X4 objMat;
-	XMStoreFloat4x4(&objMat, objMatrix);
-	_objMat[0] = objMat._11;
-	_objMat[1] = objMat._12;
-	_objMat[2] = objMat._13;
-	_objMat[3] = objMat._14;
-	_objMat[4] = objMat._21;
-	_objMat[5] = objMat._22;
-	_objMat[6] = objMat._23;
-	_objMat[7] = objMat._24;
-	_objMat[8] = objMat._31;
-	_objMat[9] = objMat._32;
-	_objMat[10] = objMat._33;
-	_objMat[11] = objMat._34;
-	_objMat[12] = objMat._41;
-	_objMat[13] = objMat._42;
-	_objMat[14] = objMat._43;
-	_objMat[15] = objMat._44;
+	XMFLOAT4X4 objMat = CEngine::GetInstance()->GetObjectMatrix();
+	memcpy(_objMat, &objMat, sizeof(XMFLOAT4X4));
 
 	ImGuizmo::SetID(0);
-	//EditTransform(_view, _projection, _objMat, true);
 
 	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
@@ -184,24 +136,25 @@ void CGizmo::LateUpdate()
 	//ImGuizmo::DrawGrid(_view, _projection, identityMatrix, 100.f);
 	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 	XMFLOAT4X4 objMat;
-	objMat._11 = _objMat[0];
-	objMat._12 = _objMat[1];
-	objMat._13 = _objMat[2];
-	objMat._14 = _objMat[3];
-	objMat._21 = _objMat[4];
-	objMat._22 = _objMat[5];
-	objMat._23 = _objMat[6];
-	objMat._24 = _objMat[7];
-	objMat._31 = _objMat[8];
-	objMat._32 = _objMat[9];
-	objMat._33 = _objMat[10];
-	objMat._34 = _objMat[11];
-	objMat._41 = _objMat[12];
-	objMat._42 = _objMat[13];
-	objMat._43 = _objMat[14];
-	objMat._44 = _objMat[15];
+	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
+	//objMat._11 = _objMat[0];
+	//objMat._12 = _objMat[1];
+	//objMat._13 = _objMat[2];
+	//objMat._14 = _objMat[3];
+	//objMat._21 = _objMat[4];
+	//objMat._22 = _objMat[5];
+	//objMat._23 = _objMat[6];
+	//objMat._24 = _objMat[7];
+	//objMat._31 = _objMat[8];
+	//objMat._32 = _objMat[9];
+	//objMat._33 = _objMat[10];
+	//objMat._34 = _objMat[11];
+	//objMat._41 = _objMat[12];
+	//objMat._42 = _objMat[13];
+	//objMat._43 = _objMat[14];
+	//objMat._44 = _objMat[15];
 	
-	CEngine::GetInstance()->SetObjectMatrix(XMLoadFloat4x4(&objMat));
+	CEngine::GetInstance()->SetObjectMatrix(objMat);
 
 	//if (ImGui::BeginDragDropTarget())
 	//{

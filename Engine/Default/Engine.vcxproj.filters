@@ -207,6 +207,9 @@
     <ClInclude Include="..\Public\Sound.h">
       <Filter>00.System\01.Device\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Transform.h">
+      <Filter>01.Utility\03.Components\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -293,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sound.cpp">
       <Filter>00.System\01.Device\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform.cpp">
+      <Filter>01.Utility\03.Components\Transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

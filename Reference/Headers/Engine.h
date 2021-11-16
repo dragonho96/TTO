@@ -33,8 +33,8 @@ public:
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();
-	XMMATRIX					GetObjectMatrix();
-	void						SetObjectMatrix(XMMATRIX pMat);
+	_float4x4					GetObjectMatrix();
+	void						SetObjectMatrix(_float4x4 pMat);
 
 	HRESULT						ClearBackBufferView(_float4 vColor);
 	HRESULT						ClearDepthStencilView(_float fDepth, _uint iStencil);

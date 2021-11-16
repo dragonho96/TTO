@@ -43,50 +43,50 @@ void CDebugCapsule::InitializePxController()
 
 void CDebugCapsule::Update()
 {
-	if (!m_bInit)
-	{
-		InitializePxController();
-		m_bInit = true;
-	}
+	//if (!m_bInit)
+	//{
+	//	InitializePxController();
+	//	m_bInit = true;
+	//}
 
-	PxControllerFilters cFilter;
-	PxControllerCollisionFlags collisionFlags;
-	//cFilter.mFilterData = 
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
-	{
-		collisionFlags = controller->move(PxVec3{ 0.f, 0.f, 0.1f }, 0.f, 0.1f, PxControllerFilters{});
-	}
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		controller->move(PxVec3{ 0.f, 0.f, -0.1f }, 0.f, 0.1f, PxControllerFilters{});
+	//PxControllerFilters cFilter;
+	//PxControllerCollisionFlags collisionFlags;
+	////cFilter.mFilterData = 
+	//if (GetAsyncKeyState(VK_UP) & 0x8000)
+	//{
+	//	collisionFlags = controller->move(PxVec3{ 0.f, 0.f, 0.1f }, 0.f, 0.1f, PxControllerFilters{});
+	//}
+	//if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	//{
+	//	controller->move(PxVec3{ 0.f, 0.f, -0.1f }, 0.f, 0.1f, PxControllerFilters{});
 
-	}
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{
-		controller->move(PxVec3{ -0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+	//}
+	//if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	//{
+	//	controller->move(PxVec3{ -0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
 
-	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	{
-		controller->move(PxVec3{ 0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
-	}
+	//}
+	//if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	//{
+	//	controller->move(PxVec3{ 0.1f, 0.f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+	//}
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		//controller->move(PxVec3{ 0.f, 0.5f, 0.f }, 0.f, fDeltaTime, PxControllerFilters{});
-		controller->setFootPosition({ 0.f, 0.f, 0.f });
-	}
-	// Gravity
-	controller->move(PxVec3{ 0.f, -0.3f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
+	//if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	//{
+	//	//controller->move(PxVec3{ 0.f, 0.5f, 0.f }, 0.f, fDeltaTime, PxControllerFilters{});
+	//	controller->setFootPosition({ 0.f, 0.f, 0.f });
+	//}
+	//// Gravity
+	//controller->move(PxVec3{ 0.f, -0.3f, 0.f }, 0.f, 0.1f, PxControllerFilters{});
 
-	PxExtendedVec3 pos = controller->getPosition();
-	_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
+	//PxExtendedVec3 pos = controller->getPosition();
+	//_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
+	//
+	//SetPosition(newPos);
 
-	SetPosition(newPos);
-
-	// Collisionflag
-	if (collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
-		int i = 0;
+	//// Collisionflag
+	//if (collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	//	int i = 0;
 }
 
 void CDebugCapsule::SetPosition(_float3 pos)

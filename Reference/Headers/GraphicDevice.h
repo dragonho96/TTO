@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Base.h"
+#include "Transform.h"
+#include "Line.h"
 
 BEGIN(Engine)
 
@@ -47,11 +49,11 @@ public:
 public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
-	XMMATRIX					GetObjectMatrix() { return g_World1; }
+	_float4x4					GetObjectMatrix() { return debugTransform->GetMatrix(); }
 	ID3D11Buffer*				GetConstantBuffer() { return g_pConstantBuffer.Get(); }
 
 
-	void						SetObjectMatrix(XMMATRIX pMat) { g_World1 = pMat; }
+	void						SetObjectMatrix(_float4x4 pMat) { debugTransform->SetMatrix(pMat); }
 	void						ChangeProj(_uint iWidth, _uint iHeight);
 
 
@@ -77,6 +79,8 @@ private:
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
+	CTransform*					debugTransform = nullptr;
+
 
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);
