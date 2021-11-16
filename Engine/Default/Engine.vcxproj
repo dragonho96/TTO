@@ -112,7 +112,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>fmod_vc.lib;d3d11.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+
+      <AdditionalDependencies>d3dcompiler.lib;fmod_vc.lib;d3d11.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../Backends/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -155,7 +156,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>fmod_vc.lib;d3d11.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+
+      <AdditionalDependencies>d3dcompiler.lib;fmod_vc.lib;d3d11.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../Backends/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -182,6 +184,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\public\Engine_Typedef.h" />
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\GameObjectManager.h" />
+    <ClInclude Include="..\Public\GlobalBuffers.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
     <ClInclude Include="..\Public\ImGuiManager.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
@@ -194,6 +197,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\SceneManager.h" />
     <ClInclude Include="..\Public\SceneSerializer.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\ShaderBuffer.h" />
+    <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Sound.h" />
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\Public\TimerManager.h" />
@@ -223,6 +228,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\SceneManager.cpp" />
     <ClCompile Include="..\Private\SceneSerializer.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Sound.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\Private\TimerManager.cpp" />

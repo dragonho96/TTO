@@ -31,6 +31,9 @@ private:
 
 	ComRef<ID3DBlob> m_VSBlob;
 	ComRef<ID3DBlob> m_PSBlob;
+
+	//ComRef<ID3D11ShaderReflection> m_Reflection;
+	ID3D11ShaderReflection* m_Reflection;
 };
 
 END
