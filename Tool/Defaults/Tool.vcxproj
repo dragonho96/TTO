@@ -40,6 +40,7 @@
     <ClCompile Include="..\Private\Hierarchy.cpp" />
     <ClCompile Include="..\Private\Inspector.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />
+    <ClCompile Include="..\Private\Scene_Tool.cpp" />
     <ClCompile Include="..\Private\ToolManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -55,6 +56,7 @@
     <ClInclude Include="..\Public\Hierarchy.h" />
     <ClInclude Include="..\Public\Inspector.h" />
     <ClInclude Include="..\Public\Log.h" />
+    <ClInclude Include="..\Public\Scene_Tool.h" />
     <ClInclude Include="..\Public\ToolManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

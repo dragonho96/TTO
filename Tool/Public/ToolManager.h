@@ -3,16 +3,23 @@
 BEGIN(Tool)
 class CToolManager
 {
+	enum SCENE { SCENE_TOOL, SCENE_END };
 public:
-	CToolManager();
-	~CToolManager();
+	explicit CToolManager();
+	virtual ~CToolManager();
 
 public:
-	void Initialize();
-	void Update();
+	HRESULT Initialize();
+	void Update(_double dDeltaTime);
+	void Render();
 	void Release();
 
+private:
+	HRESULT OpenScene(SCENE eScene);
+	HRESULT ReadyPrototypeComponent();
+
 public:
+	void InitializeImGui();
 	static void SetImGuiStyle();
 	static void SetImGuizmoStyle();
 	static void SetImGuiColor();
@@ -29,6 +36,7 @@ private:
 	CEngine*				m_pEngine;
 	ID3D11Device*			m_pDevice;
 	ID3D11DeviceContext*	m_pDeviceContext;
+	CRenderer*				m_pRenderer = nullptr;
 };
 
 END

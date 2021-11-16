@@ -73,7 +73,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 		CEngine::GetInstance()->UpdateInput();
-		pToolManager->Update();
+		pToolManager->Update(1.f/60.f);
+		pToolManager->Render();
     }
 
 	delete pToolManager;

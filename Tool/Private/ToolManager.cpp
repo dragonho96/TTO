@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\ToolManager.h"
 #include "ImGuiWindow.h"
+#include "Scene_Tool.h"
 
 #pragma region IMGUIWINDOWS
 #include "Log.h"
@@ -22,64 +23,45 @@ CToolManager::~CToolManager()
 	Release();
 }
 
-void CToolManager::Initialize()
+HRESULT CToolManager::Initialize()
 {
-	m_pEngine->ReadyDevice(g_hWnd, WINCX, WINCY);
+	if (nullptr == m_pEngine)
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->ReadyDevice(g_hWnd, WINCX, WINCY)))
+		return E_FAIL;
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
+	m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext);
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	if (FAILED(m_pEngine->Initialize(SCENE_END)))
+		return E_FAIL;
+	if (FAILED(ReadyPrototypeComponent()))
+		return E_FAIL;
 
+	if (FAILED(OpenScene(SCENE_TOOL)))
+		return E_FAIL;
 
-	//ImGuizmo::SetImGuiContext(ImGui::CreateContext());
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	InitializeImGui();
 
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
-
-	ImGui_ImplWin32_Init(g_hWnd);
-	ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
-
-	// Set ImGui Style
-	SetImGuiStyle();
-	SetImGuiColor();
-
-	CreateWindows();
-
+	return S_OK;
 	//m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
 }
 
-void CToolManager::Update()
+void CToolManager::Update(_double dDeltaTime)
 {
 	if (g_Done)
 		return;
+
+	m_pEngine->Update(dDeltaTime);
+	m_pEngine->UpdateScene(dDeltaTime);
+
+
 	SetImGuiColor();
-	ImGuiIO& io = ImGui::GetIO();
-
-	//RECT rect;
-	//if (GetWindowRect(g_hWnd, &rect))
-	//{
-	//	int width = rect.right - rect.left;
-	//	int height = rect.bottom - rect.top;
-	//	io.DisplaySize = ImVec2(width, height);
-	//	io.DisplayFramebufferScale = ImVec2(width, height);
-	//}
-
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
 
 	SetDockSpace();
 
@@ -105,13 +87,21 @@ void CToolManager::Update()
 
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
-	m_pEngine->Render();
+
 	m_pEngine->UpdateImGui();
+}
+
+void CToolManager::Render()
+{
+	if (g_Done)
+		return;
+
+	m_pRenderer->DrawRenderGroup();
+	m_pEngine->Render();
 	//// Rendering
 	ImGui::Render();
-
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
+	ImGuiIO& io = ImGui::GetIO();
 	// Update and Render additional Platform Windows
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
@@ -120,6 +110,8 @@ void CToolManager::Update()
 	}
 
 	m_pEngine->Present();
+
+	return;
 }
 
 void CToolManager::Release()
@@ -128,11 +120,62 @@ void CToolManager::Release()
 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
-
 	ImGui::DestroyContext();
 
+	SafeRelease(m_pRenderer);
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
+}
+
+HRESULT CToolManager::OpenScene(SCENE eScene)
+{
+	CScene*			pScene = nullptr;
+
+	pScene = CScene_Tool::Create(m_pDevice, m_pDeviceContext, SCENE_TOOL);
+
+	if (nullptr == pScene)
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->SetUpCurrentScene(pScene)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CToolManager::ReadyPrototypeComponent()
+{
+	return S_OK;
+}
+
+void CToolManager::InitializeImGui()
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+
+	//ImGuizmo::SetImGuiContext(ImGui::CreateContext());
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+																// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	ImGui_ImplWin32_Init(g_hWnd);
+	ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
+
+	// Set ImGui Style
+	SetImGuiStyle();
+	SetImGuiColor();
+
+	CreateWindows();
 }
 
 void CToolManager::SetImGuiStyle()

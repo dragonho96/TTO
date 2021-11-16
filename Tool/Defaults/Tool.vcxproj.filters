@@ -31,6 +31,9 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{e6c2b097-4117-4bc7-89a7-497da963fb36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{e17f5b08-e647-4a79-856a-ba2eb6b7f890}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -74,6 +77,9 @@
     <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Scene_Tool.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -111,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h">
       <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene_Tool.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
