@@ -53,6 +53,8 @@ void CLine::Initialize(_float3* lines, UINT lineCount)
 
 	HRESULT hr = CEngine::GetInstance()->GetDevice()->CreateBuffer(
 		&desc, &data, &vertexBuffer);
+
+	SafeDeleteArray(m_pVertices);
 	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
 }
 
@@ -63,7 +65,7 @@ void CLine::Render()
 
 	ConstantBuffer cb1;
 	_float4x4 matrix = m_pTransform->GetMatrix();
-	//cb1.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&matrix));
+	cb1.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&matrix));
 
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());

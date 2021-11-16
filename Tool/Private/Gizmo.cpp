@@ -137,22 +137,7 @@ void CGizmo::LateUpdate()
 	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 	XMFLOAT4X4 objMat;
 	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
-	//objMat._11 = _objMat[0];
-	//objMat._12 = _objMat[1];
-	//objMat._13 = _objMat[2];
-	//objMat._14 = _objMat[3];
-	//objMat._21 = _objMat[4];
-	//objMat._22 = _objMat[5];
-	//objMat._23 = _objMat[6];
-	//objMat._24 = _objMat[7];
-	//objMat._31 = _objMat[8];
-	//objMat._32 = _objMat[9];
-	//objMat._33 = _objMat[10];
-	//objMat._34 = _objMat[11];
-	//objMat._41 = _objMat[12];
-	//objMat._42 = _objMat[13];
-	//objMat._43 = _objMat[14];
-	//objMat._44 = _objMat[15];
+
 	
 	CEngine::GetInstance()->SetObjectMatrix(objMat);
 
