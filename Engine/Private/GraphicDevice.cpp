@@ -57,6 +57,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	//SetSpherePixelShader();
 	//SetSphereBuffer();
 
+
 	Initialize(iWidth, iHeight);
 
 	//debug = new CDebugSphere(float(0.5f));
@@ -416,7 +417,7 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -1.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
@@ -431,6 +432,13 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
 	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
 		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+
+	LightBufferType lb;
+	lb.diffuseColor = { 1.f, 1.f, 1.f, 1.f };
+	lb.lightDirection = { 0.f, 0.f, 1.f };
+	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+		g_pLightBuffer.Get(), 0, NULL, &lb, 0, 0);
+
 	return S_OK;
 }
 
@@ -466,9 +474,7 @@ void CGraphicDevice::Render()
 	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
-
-
-	//m_pDeviceContext->PSSetSamplers(0, 1, &m_sampleState);
+	
 
 	////
 	//// Update variables for the first cube
@@ -490,7 +496,12 @@ void CGraphicDevice::Render()
 
 
 	//debug->Render();
+	texture->Set();
+	m_pDeviceContext->PSSetConstantBuffers(0, 1, g_pLightBuffer.GetAddressOf());
+	m_pDeviceContext->PSSetSamplers(0, 1, m_sampleState.GetAddressOf());
+
 	texture->Render();
+
 	Present();
 
 	// IMGUI용 버퍼 따로 생성해서 Set
@@ -793,8 +804,25 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 		return false;
 	}
 
+	D3D11_BUFFER_DESC lightBufferDesc;
+	ZeroMemory(&lightBufferDesc, sizeof(lightBufferDesc));
+	lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.CPUAccessFlags = 0;
+	//D3D11_SUBRESOURCE_DATA InitData;
+	//ZeroMemory(&InitData, sizeof(InitData));
+	//InitData.pSysMem = vertices;
+	hr = m_pDevice->CreateBuffer(&lightBufferDesc, NULL, &g_pLightBuffer);
+	if (FAILED(hr))
+		return hr;
+
 
 	return S_OK;
+}
+
+void CGraphicDevice::SetLightBuffer()
+{
 }
 
 

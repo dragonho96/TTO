@@ -4,7 +4,7 @@ CTexture::CTexture()
 {
 	vertexCount = 4;
 	indexCount = 6;
-	shader = new CShader(L"../../Assets/Shader/Texture.hlsl");
+	shader = new CShader(L"../../Assets/Shader/TextureTest.hlsl");
 	worldBuffer = new WorldBuffer();
 	colorBuffer = new ColorBuffer;
 	vertices = new VertexTexture[vertexCount];
@@ -17,6 +17,11 @@ CTexture::CTexture()
 	vertices[1].Uv = _float2(0, 0);
 	vertices[2].Uv = _float2(1, 1);
 	vertices[3].Uv = _float2(1, 0);
+
+	vertices[0].Normal = _float3(0, 0, -1);
+	vertices[1].Normal = _float3(0, 0, -1);
+	vertices[2].Normal = _float3(0, 0, -1);
+	vertices[3].Normal = _float3(0, 0, -1);
 
 	indices = new UINT[indexCount]{ 0, 1, 2, 2, 1, 3 };
 
@@ -69,6 +74,29 @@ CTexture::~CTexture()
 {
 }
 
+void CTexture::Set()
+{
+	static float t = 0.0f;
+	t += 0.0001f;
+	XMMATRIX newMat = XMMatrixRotationX(t);
+
+	//XMMATRIX mSpin = XMMatrixRotationX(-t);
+	//XMMATRIX mTranslate = XMMatrixTranslation(5.0f,-5.0f, 0.0f);
+	//XMMATRIX mScale = XMMatrixScaling(0.1f, 0.1f, 0.1f);
+
+	//newMat = mScale * mSpin * mTranslate;
+
+	worldBuffer->SetMatrix(newMat);
+	//colorBuffer->SetPSBuffer(0);
+	worldBuffer->SetVSBuffer(1);
+	shader->Render();
+
+	CEngine::GetInstance()->GetDeviceContext()->PSSetShaderResources(
+		0, // 0번
+		1, // 갯수 
+		&srv);
+}
+
 void CTexture::Render()
 {
 	UINT stride = sizeof(VertexTexture); // 그릴 크기
@@ -81,14 +109,6 @@ void CTexture::Render()
 	// 그릴 방식 설정
 	CEngine::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	colorBuffer->SetPSBuffer(0);
-	worldBuffer->SetVSBuffer(1);
-	shader->Render();
-
-	CEngine::GetInstance()->GetDeviceContext()->PSSetShaderResources(
-		0, // 0번
-		1, // 갯수 
-		&srv);
 
 	// 실제로 그리는 거
 	CEngine::GetInstance()->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);

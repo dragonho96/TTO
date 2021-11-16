@@ -10,10 +10,12 @@ struct VertexTexture
 {
 	VertexTexture()
 		: Position(0, 0, 0)
-		, Uv(0, 0) {}
+		, Uv(0, 0)
+		, Normal(0, 0, 0) {}
 
 	XMFLOAT3	Position;
 	XMFLOAT2	Uv;
+	XMFLOAT3	Normal;
 };
 
 struct ConstantBuffer
@@ -21,6 +23,12 @@ struct ConstantBuffer
 	//XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
+};
+
+struct LightBufferType {
+	XMFLOAT4 diffuseColor;
+	XMFLOAT3 lightDirection;
+	float padding; 
 };
 
 //struct Vertex

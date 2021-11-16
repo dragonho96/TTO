@@ -15,6 +15,7 @@ public:
 	~CTexture();
 
 public:
+	void Set();
 	void Render();
 
 private:

@@ -1,11 +1,22 @@
 /////////////
 // GLOBALS //
 /////////////
-cbuffer MatrixBuffer : register( b0 )
+cbuffer VS_ViewProjection : register(b0) // register buffer 0번 쓰겠다는거
 {
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	matrix _view;
+	matrix _projection;
+}
+
+cbuffer VS_World : register(b1)
+{
+	matrix _world;
+}
+
+cbuffer PS_LightBuffer : register(b0)
+{
+	float4 diffuseColor;
+	float3 lightDirection;
+	float padding;
 };
 
 //////////////
@@ -14,23 +25,25 @@ cbuffer MatrixBuffer : register( b0 )
 struct VertexInputType
 {
 	float4 position : POSITION;
-	float2 tex : TEXCOORD0;
+    float2 uv : TEXCOORD0;
+	float3 normal : NORMAL;
 };
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD0;
+    float2 uv : TEXCOORD0;
+	float3 normal : NORMAL;
 };
 /////////////
 // GLOBALS //
 /////////////
-Texture2D shaderTexture;
-SamplerState SampleType;
+SamplerState SampleType  : register(s0);
+Texture2D shaderTexture : register(t0);
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-PixelInputType TextureVertexShader(VertexInputType input)
+PixelInputType VS(VertexInputType input)
 {
 	PixelInputType output;
 
@@ -38,23 +51,31 @@ PixelInputType TextureVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(input.position, _world);
+	output.position = mul(output.position, _view);
+	output.position = mul(output.position, _projection);
 
-		// Store the texture coordinates for the pixel shader.
-		output.tex = input.tex;
+	// Store the texture coordinates for the pixel shader.
+    output.uv = input.uv;
+	output.normal = mul(input.normal, (float3x3)_world);
+	output.normal = normalize(output.normal);
 
 	return output;
 }
 
-
-
-float4 TexturePixelShader(PixelInputType input) : SV_TARGET
+float4 PS(PixelInputType input) : SV_TARGET
 {
 	float4 textureColor;
-	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
-	textureColor = shaderTexture.Sample(SampleType, input.tex);
+	float3 lightDir;
+	float lightIntensity;
+	float4 color;
 
-return textureColor;
+	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
+	textureColor = shaderTexture.Sample(SampleType, input.uv);
+	lightDir = -lightDirection;
+	lightIntensity = saturate(dot(input.normal, lightDir));
+	color = saturate(diffuseColor * lightIntensity);
+	color = color * textureColor;
+
+	return color;
 }
