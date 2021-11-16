@@ -58,7 +58,7 @@ HRESULT CLoader::Initialize(SCENE eScene)
 
 HRESULT CLoader::GamePlayLoader()
 {
-	for (_uint i = 0; i < 3999999999; ++i)
+	for (_uint i = 0; i < 399; ++i)
 	{
 		_uint iData = 10;
 	}

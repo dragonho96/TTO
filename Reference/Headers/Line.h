@@ -27,9 +27,8 @@ protected:
 	ComRef<ID3D11Buffer> vertexBuffer;
 	UINT vertexCount, indexCount;
 
-	SimpleVertex*		m_pVertices;
+	SimpleVertex*					m_pVertices;
 	D3D11_PRIMITIVE_TOPOLOGY		m_eTopology;
-
 };
 
 END

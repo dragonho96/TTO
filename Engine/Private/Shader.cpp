@@ -107,6 +107,7 @@ HRESULT CShader::CreateInputLayout()
 	);
 	assert(SUCCEEDED(hr));
 
+
 	D3D11_SHADER_DESC shaderDesc;
 	m_Reflection->GetDesc(&shaderDesc);
 

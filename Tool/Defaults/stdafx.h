@@ -27,7 +27,6 @@
 
 // TODO: reference additional headers your program requires here
 #include "Engine.h"
-
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "imgui_impl_dx11.h"
@@ -39,4 +38,6 @@ using namespace std;
 extern HWND		g_hWnd;
 extern _bool	g_Done;
 
+#define WINCX	1280
+#define WINCY	720
 #define FILESYSTEM std::experimental::filesystem

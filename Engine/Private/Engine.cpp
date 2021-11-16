@@ -2,10 +2,9 @@
 #include "TimerManager.h"
 #include "GraphicDevice.h"
 #include "SceneSerializer.h"
-#include "SceneManager.h"
 #include "PxManager.h"
-#include "GameObjectManager.h"
 #include "InputManager.h"
+
 
 IMPLEMENT_SINGLETON(CEngine)
 
@@ -16,6 +15,9 @@ CEngine::CEngine()
 	, m_pGameObjectManager(CGameObjectManager::GetInstance())
 	, m_pPxManager(CPxManager::GetInstance())
 	, m_pInputManager(CInputManager::GetInstance())
+	, m_pComponentManager(CComponentManager::GetInstance())
+	, m_pImGuiManager(CImGuiManager::GetInstance())
+	, m_pSoundManager(CSound::GetInstance())
 {
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
@@ -23,6 +25,9 @@ CEngine::CEngine()
 	SafeAddRef(m_pSceneManager);
 	SafeAddRef(m_pPxManager);
 	SafeAddRef(m_pGameObjectManager);
+	SafeAddRef(m_pComponentManager);
+	SafeAddRef(m_pImGuiManager);
+	SafeAddRef(m_pSoundManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -32,8 +37,10 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	/* ���� �ʱ�ȭ�� �ʿ��� ó���� ��. */
 	if (FAILED(m_pGameObjectManager->ReserveManager(iNumScenes)))
+		return E_FAIL;
+
+	if (FAILED(m_pComponentManager->ReserveManager(iNumScenes)))
 		return E_FAIL;
 
 	return S_OK;
@@ -49,6 +56,12 @@ void CEngine::ReleaseEngine()
 	if (0 != CEngine::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CEngine");
 
+	if (0 != CSound::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CSound");
+
+	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CImGuiManager");
+
 	if (0 != CPxManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CPhysX");
 
@@ -61,8 +74,15 @@ void CEngine::ReleaseEngine()
 	if (0 != CSceneManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CSceneManager");
 
+	if (0 != CGameObjectManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CGameObjectManager");
+
+	if (0 != CComponentManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CComponentManager");
+
 	if (0 != CGraphicDevice::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGraphic_Device");
+
 
 	
 }
@@ -71,6 +91,7 @@ HRESULT CEngine::ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight)
 {
 	m_pGraphicDevice->ReadyGraphicDevice(hWnd, iWidth, iHeight);
 	m_pPxManager->Initialize();
+	InitializeImGui(hWnd, GetDevice(), GetDeviceContext());
 	return S_OK;
 }
 
@@ -153,6 +174,14 @@ void CEngine::Render()
 	return m_pGraphicDevice->Render();
 }
 
+void CEngine::RenderClient()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->RenderClient();
+}
+
 HRESULT CEngine::Present()
 {
 	if (nullptr == m_pGraphicDevice)
@@ -224,25 +253,25 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
-HRESULT CEngine::AddPrototype(const string sPrototypeTag, CGameObject * pPrototype)
+HRESULT CEngine::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	return m_pGameObjectManager->AddPrototype(sPrototypeTag, pPrototype);
+	return m_pGameObjectManager->AddPrototype(pPrototypeTag, pPrototype);
 
 }
 
-HRESULT CEngine::AddGameObject(_uint iSceneIndex, const string sPrototypeTag, const string sLayerTag, void * pArg)
+HRESULT CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
 {
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
 
-	return m_pGameObjectManager->AddGameObject(iSceneIndex, sPrototypeTag, sLayerTag, pArg);
+	return m_pGameObjectManager->AddGameObject(iSceneIndex, pPrototypeTag, pLayerTag, pArg);
 
 }
 
-void CEngine::Clear(_uint iSceneIndex)
+void CEngine::ClearGameObjectManager(_uint iSceneIndex)
 {
 	if (nullptr == m_pGameObjectManager)
 		return;
@@ -305,6 +334,71 @@ void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam
 	m_pInputManager->InputProc(hWnd, message, wParam, lParam);
 }
 
+HRESULT CEngine::AddPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
+{
+	if (nullptr == m_pComponentManager)
+		return E_FAIL;
+
+	return m_pComponentManager->AddPrototype(iSceneIndex, pPrototypeTag, pPrototype);
+}
+
+CComponent * CEngine::CloneComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, void * pArg)
+{
+	if (nullptr == m_pComponentManager)
+		return nullptr;
+
+	return m_pComponentManager->CloneComponent(iSceneIndex, pPrototypeTag, pArg);
+}
+
+void CEngine::ClearComponentManager(_uint iSceneIndex)
+{
+	if (nullptr == m_pComponentManager)
+		return;
+
+	m_pComponentManager->Clear(iSceneIndex);
+}
+
+void CEngine::InitializeImGui(HWND hWnd, ID3D11Device * device, ID3D11DeviceContext * deviceContext)
+{
+	m_pImGuiManager->Initialize(hWnd, device, deviceContext);
+}
+
+void CEngine::UpdateImGui()
+{
+	m_pImGuiManager->Update();
+}
+
+void CEngine::AddWindow(string name, CImGuiWindow * window)
+{
+	m_pImGuiManager->AddWindow(name, window);
+}
+
+CImGuiWindow * CEngine::GetWindow(string name)
+{
+	return m_pImGuiManager->GetWindow(name);
+}
+
+void CEngine::PlaySoundW(string pSoundKey, CHANNELID eID)
+{
+	m_pSoundManager->PlaySound(pSoundKey, eID);
+}
+
+void CEngine::PlayBGM(string pSoundKey)
+{
+	m_pSoundManager->PlayBGM(pSoundKey);
+}
+
+void CEngine::StopSound(CHANNELID eID)
+{
+	m_pSoundManager->StopSound(eID);
+}
+
+void CEngine::StopAll()
+{
+	m_pSoundManager->StopAll();
+}
+
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -329,10 +423,13 @@ PxControllerManager * CEngine::GetControllerManager()
 
 void CEngine::Free()
 {
+	SafeRelease(m_pComponentManager);
 	SafeRelease(m_pGameObjectManager);
 	SafeRelease(m_pSceneManager);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pInputManager);
 	SafeRelease(m_pGraphicDevice);
 	SafeRelease(m_pPxManager);
+	SafeRelease(m_pImGuiManager);
+	SafeRelease(m_pSoundManager);
 }

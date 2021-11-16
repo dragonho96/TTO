@@ -71,11 +71,13 @@ Index of this file:
 // [SECTION] Example App: Documents Handling / ShowExampleAppDocuments()
 
 */
-#include "stdafx.h"
+
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+
+
 
 #include "imgui.h"
 #ifndef IMGUI_DISABLE
@@ -3300,7 +3302,7 @@ static void ShowDemoWindowPopups()
             }
             ImGui::EndPopup();
         }
-
+		
         // Call the more complete ShowExampleMenuFile which we use in various places of this demo
         if (ImGui::Button("File Menu.."))
             ImGui::OpenPopup("my_file_popup");

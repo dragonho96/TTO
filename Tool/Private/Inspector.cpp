@@ -1,26 +1,48 @@
 #include "stdafx.h"
 #include "..\Public\Inspector.h"
 
-
-CInspector::CInspector(CToolManager * pToolManager)
-	: CImGuiWindow(pToolManager)
+USING(Tool)
+CInspector::CInspector()
 {
+	Initialize();
 }
 
 void CInspector::Initialize()
 {
-	m_pGizmo = dynamic_cast<CGizmo*>(m_pToolManager->GetWindow("Gizmo"));
+	m_pGizmo = dynamic_cast<CGizmo*>(CEngine::GetInstance()->GetWindow("Gizmo"));
 	//m_pGizmo = dynamic_pointer_cast<CGizmo>(m_pToolManager->GetWindow("Gizmo"));
 }
 
 void CInspector::Update()
 {
+	/* Check if it has focused object*/
 	bool open = true;
-	//ImGui::Begin("Inspector", &open, ImGuiCond_Once);
 	ImGui::Begin("Inspector");
-	//if (ImGui::CollapsingHeader("Transform", true))
-	//{
-	ImGui::Text("GameObject Name");
+	ImGui::Separator();
+
+	/* Get GameObject Name and Change */
+	char buf[64];
+	sprintf(buf, "GameObject");
+	ImGui::InputText("##Name", buf, IM_ARRAYSIZE(buf));
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Add Component"))
+		ImGui::OpenPopup("AddComponent");
+	if (ImGui::BeginPopup("AddComponent"))
+	{
+
+		if (ImGui::MenuItem("Renderer"))
+		{
+
+		}
+		else if (ImGui::MenuItem("Collider"))
+		{
+
+		}
+		ImGui::EndPopup();
+	}
+
 
 	ImGui::Separator();
 
@@ -125,4 +147,8 @@ void CInspector::DrawVec3(const string & label, _float3 & values)
 	ImGui::Columns(1);
 
 	ImGui::PopID();
+}
+
+void CInspector::Free()
+{
 }

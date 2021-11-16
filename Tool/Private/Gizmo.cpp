@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Gizmo.h"
+#include "ToolManager.h"
 static ImGuizmo::OPERATION m_CurrentGizmoOperation(ImGuizmo::TRANSLATE);
 static const float identityMatrix[16] =
 { 1.f, 0.f, 0.f, 0.f,
@@ -28,10 +29,10 @@ float objectMatrix[4][16] = {
 	0.f, 0.f, 1.f, 0.f,
 	0.f, 0.f, 2.f, 1.f }
 };
-
-CGizmo::CGizmo(CToolManager* pToolManager)
-	: CImGuiWindow(pToolManager)
+USING(Tool)
+CGizmo::CGizmo()
 {
+	Initialize();
 }
 
 void CGizmo::Initialize()
@@ -46,10 +47,13 @@ void CGizmo::Initialize()
 
 void CGizmo::Update()
 {
+	CToolManager::SetImGuizmoStyle();
+	CToolManager::SetImGuiColor();
+
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::BeginFrame();
 	ImGuizmo::Enable(true);
-	XMMATRIX viewMatrix = m_pEngine->GetViewMatrix();
+	XMMATRIX viewMatrix = CEngine::GetInstance()->GetViewMatrix();
 	XMFLOAT4X4 fView;
 	XMStoreFloat4x4(&fView, viewMatrix);
 	_view[0] = fView._11;
@@ -69,7 +73,7 @@ void CGizmo::Update()
 	_view[14] = fView._43;
 	_view[15] = fView._44;
 
-	XMMATRIX projMatrix = m_pEngine->GetProjectionMatrix();
+	XMMATRIX projMatrix = CEngine::GetInstance()->GetProjectionMatrix();
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
 	_projection[0] = projection._11;
@@ -89,7 +93,7 @@ void CGizmo::Update()
 	_projection[14] = projection._43;
 	_projection[15] = projection._44;
 
-	XMMATRIX objMatrix = m_pEngine->GetObjectMatrix();
+	XMMATRIX objMatrix = CEngine::GetInstance()->GetObjectMatrix();
 	XMFLOAT4X4 objMat;
 	XMStoreFloat4x4(&objMat, objMatrix);
 	_objMat[0] = objMat._11;
@@ -162,8 +166,9 @@ void CGizmo::LateUpdate()
 			// imgui화면에 랜더링하기
 			ImVec2 textureRect = { imageRect.x, imageRect.y/* - ImGui::GetFontSize() * 2*/ };
 			//imageRect.y -= ImGui::GetFontSize() * 2;
-			m_pEngine->ChangeProj(textureRect.x, textureRect.y);
-			ImGui::Image((ImTextureID)(m_pEngine->GetShaderResourceView()), imageRect, ImVec2(0, 0), ImVec2(1, 1));
+			CEngine::GetInstance()->ChangeProj(textureRect.x, textureRect.y);
+			ImGui::Image((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView()),
+				imageRect, ImVec2(0, 0), ImVec2(1, 1));
 		}
 
 		//if (ImGui::IsWindowFocused())
@@ -196,7 +201,7 @@ void CGizmo::LateUpdate()
 	objMat._43 = _objMat[14];
 	objMat._44 = _objMat[15];
 	
-	m_pEngine->SetObjectMatrix(XMLoadFloat4x4(&objMat));
+	CEngine::GetInstance()->SetObjectMatrix(XMLoadFloat4x4(&objMat));
 
 	//if (ImGui::BeginDragDropTarget())
 	//{
@@ -221,6 +226,8 @@ void CGizmo::LateUpdate()
 
 	//ImGuizmo::IsUsing();
 
+	CToolManager::SetImGuiStyle();
+	CToolManager::SetImGuiColor();
 }
 
 
@@ -228,5 +235,9 @@ void CGizmo::LateUpdate()
 void CGizmo::SetNewGizmoMatrix(const GIZMOMATRIX & tMat)
 {
 	m_tNewGizmoMatrix = tMat;
+}
+
+void CGizmo::Free()
+{
 }
 

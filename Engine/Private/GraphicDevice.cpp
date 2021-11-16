@@ -28,17 +28,17 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 		return E_FAIL;
 
 
-	/* ¸ÖÆ¼»ùÇÃ¸µÀÇ Áö¿ø¼öÁØ. */
+	/* ë©€í‹°ìƒ˜í”Œë§ì˜ ì§€ì›ìˆ˜ì¤€. */
 
-	/* ½º¿ÒÃ¼ÀÎ »ý¼º. */
+	/* ìŠ¤ì™‘ì²´ì¸ ìƒì„±. */
 	if (FAILED(ReadySwapChain(hWnd, iWidth, iHeight)))
 		return E_FAIL;
 
-	/* ¹é¹öÆÛ¿¡ ´ëÇÑ ·»´õÅ¸°Ù ºä¸¦ »ý¼ºÇÑ´Ù. */
+	/* ë°±ë²„í¼ì— ëŒ€í•œ ë Œë”íƒ€ê²Ÿ ë·°ë¥¼ ìƒì„±í•œë‹¤. */
 	if (FAILED(ReadyBackBufferRenderTargetView(iWidth, iHeight)))
 		return E_FAIL;
 
-	/* µª½º½ºÅÙ½Ç ¹öÆÛ¸¦ »ý¼ºÇÑ´Ù. + ·»´õÅ¸°Ù ºä»ý¼º. */
+	/* ëŽìŠ¤ìŠ¤í…ì‹¤ ë²„í¼ë¥¼ ìƒì„±í•œë‹¤. + ë Œë”íƒ€ê²Ÿ ë·°ìƒì„±. */
 	if (FAILED(ReadyDepthStencilRenderTargetView(iWidth, iHeight)))
 		return E_FAIL;
 
@@ -379,16 +379,16 @@ HRESULT CGraphicDevice::SetSphereBuffer()
 	}
 
 	D3D11_BUFFER_DESC desc = { 0 };
-	desc.Usage = D3D11_USAGE_DEFAULT; // ¾î¶»°Ô ÀúÀåµÉÁö¿¡ ´ëÇÑ Á¤º¸
-	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // Á¤Á¡ ¹öÆÛ¿¡ µé¾î°¥ µ¥ÀÌÅÍÀÇ Å©±â
+	desc.Usage = D3D11_USAGE_DEFAULT; // ì–´ë–»ê²Œ ì €ìž¥ë ì§€ì— ëŒ€í•œ ì •ë³´
+	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // ì •ì  ë²„í¼ì— ë“¤ì–´ê°ˆ ë°ì´í„°ì˜ í¬ê¸°
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-	D3D11_SUBRESOURCE_DATA  data = { 0 }; // ¾ê¸¦ ÅëÇØ¼­ °ªÀÌ µé¾î°¨ lock ´ë½Å
-	data.pSysMem = vertices; // ¾µ µ¥ÀÌÅÍÀÇ ÁÖ¼Ò
+	D3D11_SUBRESOURCE_DATA  data = { 0 }; // ì–˜ë¥¼ í†µí•´ì„œ ê°’ì´ ë“¤ì–´ê° lock ëŒ€ì‹ 
+	data.pSysMem = vertices; // ì“¸ ë°ì´í„°ì˜ ì£¼ì†Œ
 
 	HRESULT hr = m_pDevice->CreateBuffer(
 		&desc, &data, &g_pVertexBuffer);
-	assert(SUCCEEDED(hr)); // ¼º°øµÇ¸é hr 0º¸´Ù Å« °ª ³Ñ¾î¿È
+	assert(SUCCEEDED(hr)); // ì„±ê³µë˜ë©´ hr 0ë³´ë‹¤ í° ê°’ ë„˜ì–´ì˜´
 
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
@@ -444,37 +444,14 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 
 void CGraphicDevice::Render()
 {
-	// Update our time
-	static float t = 0.0f;
-
-	static DWORD dwTimeStart = 0;
-	DWORD dwTimeCur = GetTickCount();
-	if (dwTimeStart == 0)
-		dwTimeStart = dwTimeCur;
-	t = (dwTimeCur - dwTimeStart) / 1000.0f;
-
-	//
-	// Clear the back buffer
-	//
 	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
-	//
-	// Clear the depth buffer to 1.0 (max depth)
-	//
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
 
-	// UpdateSubresource is intended to be called once
-	//ConstantBuffer cb1;
-	//cb1.mView = XMMatrixTranspose(g_View);
-	//cb1.mProjection = XMMatrixTranspose(g_Projection);
-	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
-
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
-	
 
 	////
 	//// Update variables for the first cube
@@ -492,7 +469,7 @@ void CGraphicDevice::Render()
 	////m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	//m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 	//// m_pDeviceContext->DrawIndexed(36, 0, 0);
-	//m_pDeviceContext->Draw(224, 0); // Vertex count¸¸Å­ ±×¸°´Ù
+	//m_pDeviceContext->Draw(224, 0); // Vertex countë§Œí¼ ê·¸ë¦°ë‹¤
 
 
 	//debug->Render();
@@ -503,11 +480,25 @@ void CGraphicDevice::Render()
 	texture->Render();
 
 	Present();
+	//debug->Render();
 
-	// IMGUI¿ë ¹öÆÛ µû·Î »ý¼ºÇØ¼­ Set
+	Present();
+	// IMGUIìš© ë²„í¼ ë”°ë¡œ ìƒì„±í•´ì„œ Set
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void CGraphicDevice::RenderClient()
+{
+	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+
+	debug->Render();
 }
 
 HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
@@ -573,41 +564,41 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	//	m_pSwapChain->ResizeTarget(&(modes[currentMode]));
 	//}
 
-	DXGI_MODE_DESC mode;
+	//DXGI_MODE_DESC mode;
 
-	mode.Width = iWidth;
-	mode.Height = iHeight;
-	mode.RefreshRate.Numerator = 60;
-	mode.RefreshRate.Denominator = 1;
-	mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	//mode.Width = iWidth;
+	//mode.Height = iHeight;
+	//mode.RefreshRate.Numerator = 60;
+	//mode.RefreshRate.Denominator = 1;
+	//mode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	//mode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	m_pSwapChain->ResizeTarget(&mode);
+	//m_pSwapChain->ResizeTarget(&mode);
 
-	m_pDeviceContext->ClearState();
-	m_pBackBufferRTV.Reset();
-	m_pBackBufferRTV2.Reset();
-	m_pShaderResourceView.Reset();
-	m_pDepthStencilRTV.Reset();
-	if (g_pConstantBuffer) g_pConstantBuffer.Reset();
-	if (g_pVertexBuffer) g_pVertexBuffer.Reset();
-	if (g_pIndexBuffer) g_pIndexBuffer.Reset();
-	if (g_pVertexLayout) g_pVertexLayout.Reset();
-	if (g_pVertexShader) g_pVertexShader.Reset();
-	if (g_pPixelShader) g_pPixelShader.Reset();
-	m_pDeviceContext->Flush();
+	//m_pDeviceContext->ClearState();
+	//m_pBackBufferRTV.Reset();
+	//m_pBackBufferRTV2.Reset();
+	//m_pShaderResourceView.Reset();
+	//m_pDepthStencilRTV.Reset();
+	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
+	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();
+	//if (g_pIndexBuffer) g_pIndexBuffer.Reset();
+	//if (g_pVertexLayout) g_pVertexLayout.Reset();
+	//if (g_pVertexShader) g_pVertexShader.Reset();
+	//if (g_pPixelShader) g_pPixelShader.Reset();
+	//m_pDeviceContext->Flush();
 
-	m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+	//m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
-	ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
-	ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
-	ReadyViewport(mode.Width, mode.Height);
-	SetVertexShader();
-	SetPixelShader();
-	SetBuffer();
+	//ReadyBackBufferRenderTargetView(mode.Width, mode.Height);
+	//ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
+	//ReadyViewport(mode.Width, mode.Height);
+	//SetVertexShader();
+	//SetPixelShader();
+	//SetBuffer();
 
-	Initialize(mode.Width, mode.Height);
+	//Initialize(mode.Width, mode.Height);
 	return S_OK;
 }
 

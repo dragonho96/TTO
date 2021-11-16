@@ -1,12 +1,13 @@
 #pragma once
 #include "ImGuiWindow.h"
 #include "Gizmo.h"
-
+BEGIN(Tool)
 class CInspector : public CImGuiWindow
 {
 public:
-	CInspector(CToolManager* pToolManager);
+	explicit CInspector();
 	virtual ~CInspector() = default;
+	virtual void Free() override;
 
 public:
 	virtual void Initialize() override;
@@ -19,4 +20,6 @@ public:
 private:
 	//std::shared_ptr<CGizmo>		m_pGizmo;
 	CGizmo*		m_pGizmo;
+
 };
+END

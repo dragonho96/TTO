@@ -1,6 +1,7 @@
 #pragma once
 #include "ImGuiWindow.h"
 
+BEGIN(Tool)
 typedef struct tGizmoMatrix
 {
 	float matTranslation[3];
@@ -11,8 +12,9 @@ typedef struct tGizmoMatrix
 class CGizmo : public CImGuiWindow
 {
 public:
-	CGizmo(CToolManager* pToolManager);
+	explicit CGizmo();
 	virtual ~CGizmo() = default;
+	virtual void Free() override;
 
 public:
 	virtual void Initialize() override;
@@ -34,6 +36,6 @@ private:
 	float _view[16];
 	float _projection[16];
 	float _objMat[16];	// Selected Obj Mat
-
 };
 
+END

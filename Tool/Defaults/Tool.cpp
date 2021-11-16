@@ -4,10 +4,10 @@
 #include "stdafx.h"
 #include "Tool.h"
 #include "ToolManager.h"
-
 #define MAX_LOADSTRING 100
 
 // Global Variables:
+USING(Tool)
 
 HWND		g_hWnd;
 HINSTANCE hInst;                                // current instance
@@ -123,7 +123,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   RECT rc = { 0, 0, 1280, 800 };
+   RECT rc = { 0, 0, WINCX, WINCY};
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,

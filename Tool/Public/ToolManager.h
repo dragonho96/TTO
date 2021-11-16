@@ -1,7 +1,6 @@
 #pragma once
 
-USING(Engine)
-class CImGuiWindow;
+BEGIN(Tool)
 class CToolManager
 {
 public:
@@ -14,15 +13,13 @@ public:
 	void Release();
 
 public:
-	void SetImGuiStyle();
-	void SetImGuiColor();
+	static void SetImGuiStyle();
+	static void SetImGuizmoStyle();
+	static void SetImGuiColor();
 	void SetDockSpace();
 
 public:
 	void CreateWindows();
-
-public:
-	CImGuiWindow* GetWindow(string windowName);
 
 public:
 	void AddLog(const char* log);
@@ -32,8 +29,6 @@ private:
 	CEngine*				m_pEngine;
 	ID3D11Device*			m_pDevice;
 	ID3D11DeviceContext*	m_pDeviceContext;
-
-	//map<string, std::shared_ptr<CImGuiWindow>>	m_mapWindows;
-	map<string, CImGuiWindow*>	m_mapWindows;
 };
 
+END

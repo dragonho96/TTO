@@ -10,6 +10,8 @@
 
 // Global Variables:
 HWND	g_hWnd;
+BOOL		g_First = false;
+BOOL		g_Done = false;
 HINSTANCE g_hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -63,14 +65,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (WM_QUIT == msg.message)
-				break;
+			
 
 			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
+
+			if (WM_QUIT == msg.message || WM_DESTROY == msg.message)
+				break;
 		}
 
 		TimeAcc += pEngine->ComputeDeltaTime(TEXT("Timer_Default"));
@@ -78,10 +82,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		if (TimeAcc > 1.0 / 144.0)
 		{
 			pMainApp->Update(TimeAcc);
-			TimeAcc = 0.0;
 			//pMainApp->Tick(pGameInstance->Compute_TimeDelta(TEXT("Timer_40")));
 			pMainApp->Render();
-
+			TimeAcc = 0.0;
 		}
 	}
 
@@ -113,7 +116,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_CLIENT);
+	wcex.lpszMenuName = NULL;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -134,18 +137,22 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	g_hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+	RECT rc = { 0, 0, WINCX, WINCY };
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+	HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		0, 0, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
+
 
    if (!hWnd)
    {
       return FALSE;
    }
+   g_hWnd = hWnd;
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
-   g_hWnd = hWnd;
 
    return TRUE;
 }
@@ -160,8 +167,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - post a quit message and return
 //
 //
+
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+
+	CEngine::GetInstance()->InputProc(hWnd, message, wParam, lParam);
+
+
     switch (message)
     {
     case WM_COMMAND:
@@ -191,7 +208,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
+		g_Done = true;
         break;
+	case WM_SIZE:
+		// Need to resize 
+		if (g_First)
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			CEngine::GetInstance()->ChangeResolution(width, height);
+		}
+		g_First = true;
+		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
