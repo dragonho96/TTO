@@ -97,11 +97,11 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{70dbd42c-de2e-450b-adbe-11a22ce9f581}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\hlsl">
-      <UniqueIdentifier>{2830a08f-4860-4f4a-bca3-6c35f8786bcc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Buffers">
       <UniqueIdentifier>{2604c2cf-2cbf-4544-93b1-0beb5a2fda68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rect">
+      <UniqueIdentifier>{b92b6501-6094-457d-ae84-e8b5b3e42bee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -182,7 +182,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\ShaderBuffer.h">
       <Filter>Buffers</Filter>
-       </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Component.h">
       <Filter>01.Utility\03.Components</Filter>
     </ClInclude>
@@ -210,6 +210,7 @@
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="RectTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -269,7 +270,6 @@
     <ClCompile Include="..\Private\Texture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-
     <ClCompile Include="..\Private\Component.cpp">
       <Filter>01.Utility\03.Components</Filter>
     </ClCompile>
@@ -300,5 +300,6 @@
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClCompile>
+    <ClCompile Include="RectTest.cpp" />
   </ItemGroup>
 </Project>

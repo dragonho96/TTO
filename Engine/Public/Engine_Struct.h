@@ -20,7 +20,7 @@ struct VertexTexture
 
 struct ConstantBuffer
 {
-	//XMMATRIX mWorld;
+	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
 };
