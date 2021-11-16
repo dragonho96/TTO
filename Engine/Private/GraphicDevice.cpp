@@ -62,13 +62,10 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	//debug = new CDebugSphere(float(0.5f));
 	//debug = new CDebugBox({1.f, 1.f, 1.f});
-<<<<<<< HEAD
-	debug = new CDebugCapsule(1.f, 2.f);
-	debugTransform = debug->GetTransform();
-=======
+	//debug = new CDebugCapsule(1.f, 2.f);
+	//debugTransform = debug->GetTransform();
 	//debug = new CDebugCapsule(1.f, 2.f);
 	texture = new CTexture();
->>>>>>> main
 	return S_OK;
 }
 
