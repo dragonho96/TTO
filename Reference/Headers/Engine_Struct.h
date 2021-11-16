@@ -1,5 +1,25 @@
 #pragma once
 
+namespace Engine
+{
+	typedef struct tagVertex_TextureUV
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vTexUV;
+	}VTXTEX;
+
+	typedef struct tagPolygonIndices16
+	{
+		unsigned short	_0, _1, _2;
+	}POLYGONINDICES16;
+
+	typedef struct tagPolygonIndices32
+	{
+		unsigned long	_0, _1, _2;
+	}POLYGONINDICES32;
+}
+
+
 struct SimpleVertex
 {
 	XMFLOAT3 Pos;
