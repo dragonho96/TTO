@@ -4,8 +4,12 @@
 #include "DebugBox.h"
 #include "DebugCapsule.h"
 
+
+#include "Texture.h"
 IMPLEMENT_SINGLETON(CGraphicDevice)
 CDebugCapsule* debug = nullptr;
+CTexture* texture = nullptr;
+
 CGraphicDevice::CGraphicDevice()
 {
 }
@@ -24,17 +28,17 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 		return E_FAIL;
 
 
-	/* ¸ÖÆ¼»ùÇÃ¸µÀÇ Áö¿ø¼öÁØ. */
+	/* ë©€í‹°ìƒ˜í”Œë§ì˜ ì§€ì›ìˆ˜ì¤€. */
 
-	/* ½º¿ÒÃ¼ÀÎ »ı¼º. */
+	/* ìŠ¤ì™‘ì²´ì¸ ìƒì„±. */
 	if (FAILED(ReadySwapChain(hWnd, iWidth, iHeight)))
 		return E_FAIL;
 
-	/* ¹é¹öÆÛ¿¡ ´ëÇÑ ·»´õÅ¸°Ù ºä¸¦ »ı¼ºÇÑ´Ù. */
+	/* ë°±ë²„í¼ì— ëŒ€í•œ ë Œë”íƒ€ê²Ÿ ë·°ë¥¼ ìƒì„±í•œë‹¤. */
 	if (FAILED(ReadyBackBufferRenderTargetView(iWidth, iHeight)))
 		return E_FAIL;
 
-	/* µª½º½ºÅÙ½Ç ¹öÆÛ¸¦ »ı¼ºÇÑ´Ù. + ·»´õÅ¸°Ù ºä»ı¼º. */
+	/* ëìŠ¤ìŠ¤í…ì‹¤ ë²„í¼ë¥¼ ìƒì„±í•œë‹¤. + ë Œë”íƒ€ê²Ÿ ë·°ìƒì„±. */
 	if (FAILED(ReadyDepthStencilRenderTargetView(iWidth, iHeight)))
 		return E_FAIL;
 
@@ -53,12 +57,18 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	//SetSpherePixelShader();
 	//SetSphereBuffer();
 
+
 	Initialize(iWidth, iHeight);
 
 	//debug = new CDebugSphere(float(0.5f));
 	//debug = new CDebugBox({1.f, 1.f, 1.f});
+<<<<<<< HEAD
 	debug = new CDebugCapsule(1.f, 2.f);
 	debugTransform = debug->GetTransform();
+=======
+	//debug = new CDebugCapsule(1.f, 2.f);
+	texture = new CTexture();
+>>>>>>> main
 	return S_OK;
 }
 
@@ -374,16 +384,16 @@ HRESULT CGraphicDevice::SetSphereBuffer()
 	}
 
 	D3D11_BUFFER_DESC desc = { 0 };
-	desc.Usage = D3D11_USAGE_DEFAULT; // ¾î¶»°Ô ÀúÀåµÉÁö¿¡ ´ëÇÑ Á¤º¸
-	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // Á¤Á¡ ¹öÆÛ¿¡ µé¾î°¥ µ¥ÀÌÅÍÀÇ Å©±â
+	desc.Usage = D3D11_USAGE_DEFAULT; // ì–´ë–»ê²Œ ì €ì¥ë ì§€ì— ëŒ€í•œ ì •ë³´
+	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // ì •ì  ë²„í¼ì— ë“¤ì–´ê°ˆ ë°ì´í„°ì˜ í¬ê¸°
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-	D3D11_SUBRESOURCE_DATA  data = { 0 }; // ¾ê¸¦ ÅëÇØ¼­ °ªÀÌ µé¾î°¨ lock ´ë½Å
-	data.pSysMem = vertices; // ¾µ µ¥ÀÌÅÍÀÇ ÁÖ¼Ò
+	D3D11_SUBRESOURCE_DATA  data = { 0 }; // ì–˜ë¥¼ í†µí•´ì„œ ê°’ì´ ë“¤ì–´ê° lock ëŒ€ì‹ 
+	data.pSysMem = vertices; // ì“¸ ë°ì´í„°ì˜ ì£¼ì†Œ
 
 	HRESULT hr = m_pDevice->CreateBuffer(
 		&desc, &data, &g_pVertexBuffer);
-	assert(SUCCEEDED(hr)); // ¼º°øµÇ¸é hr 0º¸´Ù Å« °ª ³Ñ¾î¿È
+	assert(SUCCEEDED(hr)); // ì„±ê³µë˜ë©´ hr 0ë³´ë‹¤ í° ê°’ ë„˜ì–´ì˜´
 
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
@@ -412,13 +422,27 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
 
 	// Initialize the projection matrix
 	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
+
+
+	ConstantBuffer cb1;
+
+	cb1.mView = XMMatrixTranspose(g_View);
+	cb1.mProjection = XMMatrixTranspose(g_Projection);
+	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+
+	LightBufferType lb;
+	lb.diffuseColor = { 1.f, 1.f, 1.f, 1.f };
+	lb.lightDirection = { 0.f, 0.f, 1.f };
+	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+		g_pLightBuffer.Get(), 0, NULL, &lb, 0, 0);
 
 	return S_OK;
 }
@@ -430,6 +454,7 @@ void CGraphicDevice::Render()
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
+
 
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
@@ -449,13 +474,21 @@ void CGraphicDevice::Render()
 	////m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 	//m_pDeviceContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 	//// m_pDeviceContext->DrawIndexed(36, 0, 0);
-	//m_pDeviceContext->Draw(224, 0); // Vertex count¸¸Å­ ±×¸°´Ù
+	//m_pDeviceContext->Draw(224, 0); // Vertex countë§Œí¼ ê·¸ë¦°ë‹¤
 
 
-	debug->Render();
+	//debug->Render();
+	texture->Set();
+	m_pDeviceContext->PSSetConstantBuffers(0, 1, g_pLightBuffer.GetAddressOf());
+	m_pDeviceContext->PSSetSamplers(0, 1, m_sampleState.GetAddressOf());
+
+	texture->Render();
 
 	Present();
-	// IMGUI¿ë ¹öÆÛ µû·Î »ı¼ºÇØ¼­ Set
+	//debug->Render();
+
+	Present();
+	// IMGUIìš© ë²„í¼ ë”°ë¡œ ìƒì„±í•´ì„œ Set
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -744,8 +777,48 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
+	
+	D3D11_SAMPLER_DESC samplerDesc = { };
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	hr = m_pDevice->CreateSamplerState(&samplerDesc, &m_sampleState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	D3D11_BUFFER_DESC lightBufferDesc;
+	ZeroMemory(&lightBufferDesc, sizeof(lightBufferDesc));
+	lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.CPUAccessFlags = 0;
+	//D3D11_SUBRESOURCE_DATA InitData;
+	//ZeroMemory(&InitData, sizeof(InitData));
+	//InitData.pSysMem = vertices;
+	hr = m_pDevice->CreateBuffer(&lightBufferDesc, NULL, &g_pLightBuffer);
+	if (FAILED(hr))
+		return hr;
+
 
 	return S_OK;
+}
+
+void CGraphicDevice::SetLightBuffer()
+{
 }
 
 
@@ -753,7 +826,8 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 
 void CGraphicDevice::Free()
 {
-	SafeDelete(debug);
+	SafeDelete(texture);
+	//SafeDelete(debug);
 	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
 	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }
