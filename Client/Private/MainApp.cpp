@@ -88,20 +88,18 @@ HRESULT CMainApp::Render()
 	if (g_Done)
 		return _uint();
 
-	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
 	m_pEngine->ClearDepthStencilView(1.f, 0);
-
+	m_pEngine->RenderClient();
 	/* 필요한 객체들을 백버퍼에 그린다. */
 	m_pRenderer->DrawRenderGroup();
 	m_pEngine->RenderScene();
-
-	//m_pEngine->RenderClient();
 	
 	// ImGui
 	m_pEngine->UpdateImGui();
 
 
-
+	// ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
@@ -189,6 +187,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	SafeAddRef(m_pRenderer);
+
+
 
 	return S_OK;
 }

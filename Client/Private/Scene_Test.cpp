@@ -3,6 +3,8 @@
 
 #include "Engine.h"
 #include "Background.h"
+#include "VIBuffer.h"
+#include "VIBuffer_LineCircle.h"
 
 USING(Client)
 
@@ -32,7 +34,13 @@ void CScene_Test::Free()
 HRESULT CScene_Test::Initialize()
 {
 	__super::Initialize();
-	m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
+	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
+
+	if (FAILED(ReadyPrototypeGameObject()))
+		return E_FAIL;
+
+	if (FAILED(ReadyLayerLineCircle(TEXT("LAYER_LINE"))))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -54,16 +62,25 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 {
 
 	/* Prototype_BackGround */
-	//if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_BackGround"), CBackground::Create(m_pDevice, m_pDeviceContext))))
-	//	return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_LineCircle"), CBackground::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineCircle"), CVIBuffer_LineCircle::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CScene_Test::ReadyLayerBackGround(const _tchar * pLayerTag)
+HRESULT CScene_Test::ReadyLayerLineCircle(const _tchar * pLayerTag)
 {
-	// Add GameObject
+	CEngine*	pEngine = GET_INSTANCE(CEngine);
+
+	/* For.GameObject_BackGround */
+	if (FAILED(pEngine->AddGameObject(SCENE_TEST, TEXT("Prototype_LineCircle"), pLayerTag)))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
+
 	return S_OK;
 }
 
