@@ -17,7 +17,8 @@ public:
 	virtual HRESULT Render();
 
 protected: /* For.Vertex Buffer */
-	ID3D11Buffer*				m_pVB = nullptr;
+	//ID3D11Buffer*				m_pVB = nullptr;
+	ComRef<ID3D11Buffer>		m_pVB = nullptr;
 	D3D11_BUFFER_DESC			m_VBDesc;	
 	D3D11_SUBRESOURCE_DATA		m_VBSubResourceData;
 	_uint						m_iStride; /* 정점하나의 바이트 크기. */
@@ -26,7 +27,8 @@ protected: /* For.Vertex Buffer */
 
 
 protected: /* For.Index Buffer */
-	ID3D11Buffer*				m_pIB = nullptr;
+	//ID3D11Buffer*				m_pIB = nullptr;
+	ComRef<ID3D11Buffer>		m_pIB = nullptr;
 	D3D11_BUFFER_DESC			m_IBDesc;
 	D3D11_SUBRESOURCE_DATA		m_IBSubResourceData;
 	_uint						m_iNumPrimitive = 0;

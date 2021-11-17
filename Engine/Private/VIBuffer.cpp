@@ -20,8 +20,8 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_ePrimitive(rhs.m_ePrimitive)
 	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
 {
-	SafeAddRef(m_pIB);
-	SafeAddRef(m_pVB);
+	//SafeAddRef(m_pIB);
+	//SafeAddRef(m_pVB);
 }
 
 HRESULT CVIBuffer::InitializePrototype()
@@ -60,10 +60,12 @@ HRESULT CVIBuffer::Render()
 	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
 		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
-	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
+	//m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
+	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	
 	if (m_IBSubResourceData.pSysMem)
-		m_pDeviceContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+		//m_pDeviceContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
 
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 	// m_pDeviceContext->IASetInputLayout();
@@ -99,6 +101,6 @@ void CVIBuffer::Free()
 		SafeDeleteArray(m_pVertices);
 
 
-	SafeRelease(m_pIB);
-	SafeRelease(m_pVB);
+	//SafeRelease(m_pIB);
+	//SafeRelease(m_pVB);
 }
