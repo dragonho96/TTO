@@ -5,18 +5,20 @@
 #include "GlobalBuffers.h"
 
 BEGIN(Engine)
-class CTexture
+class ENGINE_DLL CTexture
 {
 private:
 	class ColorBuffer; 
 
 public:
 	CTexture();
+	CTexture(const _tchar* filePath);
 	~CTexture();
 
 public:
 	void Set();
 	void Render();
+	ID3D11ShaderResourceView* GetResourceView() { return m_ResourceView.Get(); }
 
 private:
 	CShader* shader;
@@ -33,7 +35,7 @@ private:
 
 	//ColorBuffer * colorBuffer;
 
-	ID3D11ShaderResourceView * srv;
+	ComRef<ID3D11ShaderResourceView> m_ResourceView;
 
 private:
 	class ColorBuffer : public ShaderBuffer

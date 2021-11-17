@@ -62,11 +62,24 @@ CTexture::CTexture()
 			(L"../../Assets/Texture/Isu.png")/*.c_str()*/,
 			NULL, // 읽어드릴때 설정값 NULL이면 기본값
 			NULL,
-			&srv,
+			&m_ResourceView,
 			NULL // 여기서 hr 리턴 받아도됨
 		);
 		assert(SUCCEEDED(hr));
 	}
+}
+
+CTexture::CTexture(const _tchar* filePath)
+{
+	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(
+		CEngine::GetInstance()->GetDevice(),
+		(filePath)/*.c_str()*/,
+		NULL, // 읽어드릴때 설정값 NULL이면 기본값
+		NULL,
+		&m_ResourceView,
+		NULL // 여기서 hr 리턴 받아도됨
+	);
+	assert(SUCCEEDED(hr));
 }
 
 
@@ -94,7 +107,7 @@ void CTexture::Set()
 	CEngine::GetInstance()->GetDeviceContext()->PSSetShaderResources(
 		0, // 0번
 		1, // 갯수 
-		&srv);
+		&m_ResourceView);
 }
 
 void CTexture::Render()

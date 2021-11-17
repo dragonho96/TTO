@@ -63,6 +63,7 @@ void CGizmo::Update()
 	XMStoreFloat4x4(&projection, projMatrix);
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
 
+	/* NEED TO BE FIXED */
 	XMFLOAT4X4 objMat = CEngine::GetInstance()->GetObjectMatrix();
 	memcpy(_objMat, &objMat, sizeof(XMFLOAT4X4));
 
