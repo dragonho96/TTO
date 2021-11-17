@@ -10,6 +10,9 @@
 #include "Inspector.h"
 #include "Hierarchy.h"
 #pragma endregion
+
+#include "Renderer.h"
+
 USING(Tool)
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())
@@ -33,10 +36,11 @@ HRESULT CToolManager::Initialize()
 
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
-	m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext);
+
 
 	if (FAILED(m_pEngine->Initialize(SCENE_END)))
 		return E_FAIL;
+
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
@@ -144,6 +148,10 @@ HRESULT CToolManager::OpenScene(SCENE eScene)
 
 HRESULT CToolManager::ReadyPrototypeComponent()
 {
+	/* Prepare Renderer */
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -198,11 +206,11 @@ void CToolManager::CreateWindows()
 	pWindow = new CLog();
 	m_pEngine->AddWindow("Log", pWindow);
 
-	//pWindow = new CGizmo();
-	//m_pEngine->AddWindow("Gizmo", pWindow);
+	pWindow = new CGizmo();
+	m_pEngine->AddWindow("Gizmo", pWindow);
 
-	//pWindow = new CInspector();
-	//m_pEngine->AddWindow("Inspector", pWindow);
+	pWindow = new CInspector();
+	m_pEngine->AddWindow("Inspector", pWindow);
 
 	pWindow = new CHierarchy();
 	m_pEngine->AddWindow("Hierarchy", pWindow);

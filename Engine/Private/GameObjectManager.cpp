@@ -65,15 +65,15 @@ HRESULT CGameObjectManager::AddPrototype(const _tchar* pPrototypeTag, CGameObjec
 	return S_OK;
 }
 
-HRESULT CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
+CGameObject* CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
 {
 	CGameObject*	pPrototype = FindPrototype(pPrototypeTag);
 	if (nullptr == pPrototype)
-		return E_FAIL;
+		return nullptr;
 
 	CGameObject*	pGameObject = pPrototype->Clone(pArg);
 	if (nullptr == pGameObject)
-		return E_FAIL;
+		return nullptr;
 
 	CLayer*		pLayer = FindLayer(iSceneIndex, pLayerTag);
 
@@ -81,7 +81,7 @@ HRESULT CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pProt
 	{
 		CLayer*		pNewLayer = CLayer::Create();
 		if (nullptr == pNewLayer)
-			return E_FAIL;
+			return nullptr;
 
 		pNewLayer->AddGameObjectInLayer(pGameObject);
 
@@ -91,7 +91,19 @@ HRESULT CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pProt
 		pLayer->AddGameObjectInLayer(pGameObject);
 
 
-	return S_OK;
+	return pGameObject;
+}
+
+list<class CGameObject*> CGameObjectManager::GetGameObjectInLayer(_uint iSceneIndex, const _tchar * pLayerTag)
+{
+	CLayer* pLayer = FindLayer(iSceneIndex, pLayerTag);
+	if (nullptr == pLayer)
+	{
+		//MSG_BOX("Failed to GetGameObjectInLayer");
+		return list<class CGameObject*>();
+	}
+
+	return pLayer->GetGameObjectList();
 }
 
 CGameObject * CGameObjectManager::FindPrototype(const _tchar* pPrototypeTag)

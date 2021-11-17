@@ -33,8 +33,6 @@ public:
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();
-	_float4x4					GetObjectMatrix();
-	void						SetObjectMatrix(_float4x4 pMat);
 
 	HRESULT						ClearBackBufferView(_float4 vColor);
 	HRESULT						ClearDepthStencilView(_float fDepth, _uint iStencil);
@@ -64,8 +62,9 @@ public:
 #pragma region GAMEOBJECT_MANAGER
 public:
 	HRESULT AddPrototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
-	HRESULT AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
+	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 	void	ClearGameObjectManager(_uint iSceneIndex);
+	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
 #pragma endregion
 
 #pragma region INPUT

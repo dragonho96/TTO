@@ -14,6 +14,8 @@ public:
 	virtual void Update() override;
 	virtual void LateUpdate() override;
 
+private:
+	CEngine* m_pEngine;
 };
 
 END

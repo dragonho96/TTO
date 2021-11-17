@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Scene_Tool.h"
+#include "EmptyGameObject.h"
+#include "Transform.h"
+#include "Renderer.h"
 
 USING(Tool)
 
@@ -38,21 +41,23 @@ HRESULT CScene_Tool::Render()
 
 HRESULT CScene_Tool::ReadyPrototypeGameObject()
 {
-	//CEngine*	pEngine = GET_INSTANCE(CEngine);
+	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
-	///* Prototype_BackGround */
-	//if (FAILED(pEngine->AddPrototype(TEXT("Prototype_BackGround"), CBackground::Create(m_pDevice, m_pDeviceContext))))
-	//	return E_FAIL;
+	/* Component Prototype  */
+	if (FAILED(pEngine->AddPrototype(0, TEXT("Prototype_Transform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
-	//RELEASE_INSTANCE(CEngine);
+
+	/* Gameobject Prototype */
+	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_EmptyGameObject"), CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }
 
-HRESULT CScene_Tool::ReadyLayerBackGround(const _tchar * pLayerTag)
-{
-	return S_OK;
-}
+
 
 CScene_Tool * CScene_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
 {

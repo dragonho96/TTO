@@ -15,7 +15,10 @@ void CInspector::Initialize()
 
 void CInspector::Update()
 {
-	/* Check if it has focused object*/
+	if (nullptr == g_pObjFocused)
+		return;
+
+		/* Check if it has focused object*/
 	bool open = true;
 	ImGui::Begin("Inspector");
 	ImGui::Separator();
