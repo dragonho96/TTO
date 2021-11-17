@@ -142,15 +142,6 @@ XMMATRIX CEngine::GetProjectionMatrix()
 	return m_pGraphicDevice->GetProjectionMatrix();
 }
 
-_float4x4 CEngine::GetObjectMatrix()
-{
-	return m_pGraphicDevice->GetObjectMatrix();
-}
-
-void CEngine::SetObjectMatrix(_float4x4 pMat)
-{
-	m_pGraphicDevice->SetObjectMatrix(pMat);
-}
 
 HRESULT CEngine::ClearBackBufferView(_float4 vColor)
 {
@@ -264,10 +255,11 @@ HRESULT CEngine::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pProtot
 
 }
 
-HRESULT CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
+CGameObject* CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
 {
 	if (nullptr == m_pGameObjectManager)
-		return E_FAIL;
+		return nullptr;
+
 
 	return m_pGameObjectManager->AddGameObject(iSceneIndex, pPrototypeTag, pLayerTag, pArg);
 
@@ -279,6 +271,11 @@ void CEngine::ClearGameObjectManager(_uint iSceneIndex)
 		return;
 
 	m_pGameObjectManager->Clear(iSceneIndex);
+}
+
+list<class CGameObject*> CEngine::GetGameObjectInLayer(_uint iSceneIndex, const _tchar * pLayerTag)
+{
+	return m_pGameObjectManager->GetGameObjectInLayer(iSceneIndex, pLayerTag);
 }
 
 void CEngine::InitializeInput()

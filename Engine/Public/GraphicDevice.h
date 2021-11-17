@@ -49,11 +49,9 @@ public:
 public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
-	_float4x4					GetObjectMatrix() { return debugTransform->GetMatrix(); }
 	ID3D11Buffer*				GetConstantBuffer() { return g_pConstantBuffer.Get(); }
 
 
-	void						SetObjectMatrix(_float4x4 pMat) { debugTransform->SetMatrix(pMat); }
 	void						ChangeProj(_uint iWidth, _uint iHeight);
 
 
@@ -79,7 +77,6 @@ private:
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
-	CTransform*					debugTransform = nullptr;
 
 
 public:

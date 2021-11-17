@@ -24,7 +24,8 @@ public:
 	// allocate the size of list
 	HRESULT ReserveManager(_uint iNumScenes);
 	HRESULT	AddPrototype(const _tchar* sPrototypeTag, CGameObject* pPrototype);
-	HRESULT AddGameObject(_uint iSceneIndex, const _tchar* sPrototypeTag, const _tchar* pLayerTag, void* pArg);
+	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* sPrototypeTag, const _tchar* pLayerTag, void* pArg);
+	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
 
 public:
 	CGameObject*	FindPrototype(const _tchar* pPrototypeTag);

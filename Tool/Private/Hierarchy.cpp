@@ -3,6 +3,7 @@
 
 USING(Tool)
 CHierarchy::CHierarchy()
+	: m_pEngine(CEngine::GetInstance())
 {
 	Initialize();
 }
@@ -15,46 +16,62 @@ void CHierarchy::Update()
 {
 	ImGui::Begin("Hierarchy");
 
+	if (ImGui::Button("Add Empty GameObject"))
+	{
+		//Add GameObject 
+		CGameObject* pObj = m_pEngine->AddGameObject(0,
+			TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
+		g_pObjFocused = pObj;
+
+	}
+
 	// 여기서 리스트 순회하면서 추가
 	static bool selected = false;
 	static bool openPopup = false;
-
-	ImGui::Selectable("selectable", selected);
-
-	if (ImGui::IsItemHovered())
+	list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
+	
+	int iCount = 0;
+	for (auto& pObj : pObjList)
 	{
-		if (ImGui::IsMouseClicked(0))
+		ImGui::PushID(iCount++);
+		ImGui::Selectable("selectable", selected);
+
+		if (ImGui::IsItemHovered())
 		{
-			/* Set Focused Game Object*/
-			selected = !selected;
+			if (ImGui::IsMouseClicked(0))
+			{
+				/* Set Focused Game Object*/
+				selected = !selected;
+			}
+			else if (ImGui::IsMouseClicked(1))
+				openPopup = !openPopup;
 		}
-		else if (ImGui::IsMouseClicked(1))
-			openPopup = !openPopup;
-	}
-	if (openPopup)
-	{
-		
-		ImGui::OpenPopup("my_select_popup");
-
-		if (ImGui::BeginPopup("my_select_popup"))
+		if (openPopup)
 		{
-			if (ImGui::MenuItem("Delete"))
+			ImGui::OpenPopup("my_select_popup");
+
+			if (ImGui::BeginPopup("my_select_popup"))
 			{
-				/* Delete Object*/
+				if (ImGui::MenuItem("Delete"))
+				{
+					/* Delete Object*/
 
-				openPopup = !openPopup;
+					openPopup = !openPopup;
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Close"))
+				{
+					/* Close Popup*/
+					openPopup = !openPopup;
+				}
+
+				ImGui::EndPopup();
 			}
-			
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Close"))
-			{
-				/* Close Popup*/
-				openPopup = !openPopup;
-			}
-
-			ImGui::EndPopup();
 		}
+		ImGui::PopID();
+
 	}
 
 	ImGui::End();

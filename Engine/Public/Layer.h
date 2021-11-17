@@ -17,6 +17,9 @@ public:
 	_uint	Update(_double dDeltaTime);
 	_uint	LateUpdate(_double dDeltaTime);
 
+public:
+	list<class CGameObject*> GetGameObjectList() { return m_ObjectList; }
+
 private:
 	typedef list<class CGameObject*>	OBJECTLIST;
 	OBJECTLIST							m_ObjectList;

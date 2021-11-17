@@ -4,12 +4,14 @@
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 
 CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pDeviceContext(rhs.m_pDeviceContext)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 
@@ -35,6 +37,7 @@ _uint CGameObject::LateUpdate(_double dDeltaTime)
 
 HRESULT CGameObject::Render()
 {
+
 	return S_OK;
 }
 
@@ -59,6 +62,31 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 
 	return S_OK;
 }
+
+HRESULT CGameObject::AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg)
+{
+	CComponent*		pComponent = m_pEngine->CloneComponent(iSceneIndex, pPrototypeTag, pArg);
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	if (nullptr == GetComponent(pComponentTag))
+		m_Components.emplace(pComponentTag, pComponent);
+	else
+		return E_FAIL;
+
+	return S_OK;
+}
+
+CComponent* CGameObject::GetComponent(const _tchar * pComponentTag)
+{
+	auto& iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));
+	if (m_Components.end() == iter)
+		return nullptr;
+	else
+		return (*iter).second;
+}
+
+
 
 void CGameObject::Free()
 {
