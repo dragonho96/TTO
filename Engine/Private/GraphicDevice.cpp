@@ -62,8 +62,8 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	//debug = new CDebugSphere(float(0.5f));
 	//debug = new CDebugBox({1.f, 1.f, 1.f});
-	debug = new CDebugCapsule(1.f, 2.f);
-	debugTransform = debug->GetTransform();
+	//debug = new CDebugCapsule(1.f, 2.f);
+	//debugTransform = debug->GetTransform();
 	//debug = new CDebugCapsule(1.f, 2.f);
 	//texture = new CTexture();
 	return S_OK;
@@ -428,18 +428,20 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
 
 
-	ConstantBuffer cb1;
+	//ConstantBuffer cb1;
 
-	cb1.mView = XMMatrixTranspose(g_View);
-	cb1.mProjection = XMMatrixTranspose(g_Projection);
-	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+	//cb1.mView = XMMatrixTranspose(g_View);
+	//cb1.mProjection = XMMatrixTranspose(g_Projection);
+	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
-	LightBufferType lb;
-	lb.diffuseColor = { 1.f, 1.f, 1.f, 1.f };
-	lb.lightDirection = { 0.f, 0.f, 1.f };
-	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-		g_pLightBuffer.Get(), 0, NULL, &lb, 0, 0);
+	//LightBufferType lb;
+	//lb.diffuseColor = { 1.f, 1.f, 1.f, 1.f };
+	//lb.lightDirection = { 0.f, 0.f, 1.f };
+	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+	//	g_pLightBuffer.Get(), 0, NULL, &lb, 0, 0);
+
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
 	return S_OK;
 }
@@ -473,14 +475,8 @@ void CGraphicDevice::Render()
 
 void CGraphicDevice::RenderClient()
 {
-	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
-	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
-
-	debug->Render();
 }
 
 HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
@@ -755,40 +751,40 @@ HRESULT CGraphicDevice::ReadyConstantBuffer()
 	if (FAILED(hr))
 		return hr;
 	
-	D3D11_SAMPLER_DESC samplerDesc = { };
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	//D3D11_SAMPLER_DESC samplerDesc = { };
+	//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	//samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.MipLODBias = 0.0f;
+	//samplerDesc.MaxAnisotropy = 1;
+	//samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	//samplerDesc.BorderColor[0] = 0;
+	//samplerDesc.BorderColor[1] = 0;
+	//samplerDesc.BorderColor[2] = 0;
+	//samplerDesc.BorderColor[3] = 0;
+	//samplerDesc.MinLOD = 0;
+	//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	// Create the texture sampler state.
-	hr = m_pDevice->CreateSamplerState(&samplerDesc, &m_sampleState);
-	if (FAILED(hr))
-	{
-		return false;
-	}
+	//// Create the texture sampler state.
+	//hr = m_pDevice->CreateSamplerState(&samplerDesc, &m_sampleState);
+	//if (FAILED(hr))
+	//{
+	//	return false;
+	//}
 
-	D3D11_BUFFER_DESC lightBufferDesc;
-	ZeroMemory(&lightBufferDesc, sizeof(lightBufferDesc));
-	lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
-	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	lightBufferDesc.CPUAccessFlags = 0;
-	//D3D11_SUBRESOURCE_DATA InitData;
-	//ZeroMemory(&InitData, sizeof(InitData));
-	//InitData.pSysMem = vertices;
-	hr = m_pDevice->CreateBuffer(&lightBufferDesc, NULL, &g_pLightBuffer);
-	if (FAILED(hr))
-		return hr;
+	//D3D11_BUFFER_DESC lightBufferDesc;
+	//ZeroMemory(&lightBufferDesc, sizeof(lightBufferDesc));
+	//lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	//lightBufferDesc.ByteWidth = sizeof(LightBufferType);
+	//lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//lightBufferDesc.CPUAccessFlags = 0;
+	////D3D11_SUBRESOURCE_DATA InitData;
+	////ZeroMemory(&InitData, sizeof(InitData));
+	////InitData.pSysMem = vertices;
+	//hr = m_pDevice->CreateBuffer(&lightBufferDesc, NULL, &g_pLightBuffer);
+	//if (FAILED(hr))
+	//	return hr;
 
 
 	return S_OK;
@@ -804,7 +800,7 @@ void CGraphicDevice::SetLightBuffer()
 void CGraphicDevice::Free()
 {
 	//SafeDelete(texture);
-	SafeDelete(debug);
+	//SafeDelete(debug);
 	//if (m_pDeviceContext) m_pDeviceContext->ClearState();
 	//if (m_pDeviceContext) m_pDeviceContext->Flush();
 }

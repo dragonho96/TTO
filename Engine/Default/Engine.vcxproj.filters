@@ -109,6 +109,9 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\Rect">
       <UniqueIdentifier>{2ea9e81b-1bb3-4e95-88b4-077aeeb4e5ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\Line">
+      <UniqueIdentifier>{e4ee138d-0fc5-433e-8a14-634e04d74f98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -223,6 +226,9 @@
     <ClInclude Include="..\Public\VIBuffer_Rect.h">
       <Filter>01.Utility\03.Components\VIBuffer\Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LineCircle.h">
+      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -318,6 +324,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LineCircle.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

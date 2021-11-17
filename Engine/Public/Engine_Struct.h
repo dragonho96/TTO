@@ -8,6 +8,12 @@ namespace Engine
 		XMFLOAT2		vTexUV;
 	}VTXTEX;
 
+	typedef struct tagVertex_Color
+	{
+		XMFLOAT3		vPos;
+		XMFLOAT4		vColor;
+	}VTXCOLOR;
+
 	typedef struct tagPolygonIndices16
 	{
 		unsigned short	_0, _1, _2;

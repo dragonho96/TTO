@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Shader.h"
 
 BEGIN(Engine)
 
@@ -31,6 +32,7 @@ protected: /* For.Index Buffer */
 	_uint						m_iNumPrimitive = 0;
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitive;
+	Scope<CShader>	m_pShader;
 
 protected:
 	void*				m_pVertices = nullptr;

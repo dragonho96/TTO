@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Background.h"
 #include "Engine.h"
+#include "VIBuffer.h"
 
 CBackground::CBackground(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
@@ -58,6 +59,7 @@ HRESULT CBackground::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+	m_pVIBuffer->Render();
 	return S_OK;
 }
 
@@ -65,6 +67,9 @@ HRESULT CBackground::SetUpComponents()
 {
 	/* For.Renderer */
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineCircle"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
 	return S_OK;

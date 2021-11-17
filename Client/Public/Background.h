@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CRenderer;
+class CVIBuffer;
 END
 
 BEGIN(Client)
@@ -32,7 +33,7 @@ private:
 
 private:
 	CRenderer*		m_pRendererCom = nullptr;
-
+	CVIBuffer*		m_pVIBuffer = nullptr;
 
 };
 

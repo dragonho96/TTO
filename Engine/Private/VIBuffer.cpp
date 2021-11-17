@@ -17,6 +17,8 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_iNumVertices(rhs.m_iNumVertices)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
 	, m_pVertices(rhs.m_pVertices)
+	, m_ePrimitive(rhs.m_ePrimitive)
+	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
 {
 	SafeAddRef(m_pIB);
 	SafeAddRef(m_pVB);
@@ -51,11 +53,23 @@ HRESULT CVIBuffer::Render()
 
 	_uint		iOffset = 0;
 
+	ConstantBuffer cb1;
+	cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
+	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
+	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
+	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
-	m_pDeviceContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	
+	if (m_IBSubResourceData.pSysMem)
+		m_pDeviceContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 	// m_pDeviceContext->IASetInputLayout();
 
+	m_pShader->Render();
+	CEngine::GetInstance()->GetDeviceContext()->Draw(m_iNumVertices, 0);
 	return S_OK;
 }
 
@@ -67,8 +81,11 @@ HRESULT CVIBuffer::Create_Buffers()
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData, &m_pIB)))
-		return E_FAIL;
+	if (m_IBSubResourceData.pSysMem) 
+	{
+		if (FAILED(m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData, &m_pIB)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 
@@ -78,8 +95,9 @@ void CVIBuffer::Free()
 {
 	__super::Free();
 
-	if (false == m_isCloned)	
-		SafeDeleteArray(m_pVertices);	
+	if (false == m_isCloned)
+		SafeDeleteArray(m_pVertices);
+
 
 	SafeRelease(m_pIB);
 	SafeRelease(m_pVB);
