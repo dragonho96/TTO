@@ -178,6 +178,42 @@ void CToolManager::InitializeImGui()
 	CreateWindows();
 }
 
+void CToolManager::CreateWindows()
+{
+	//std::shared_ptr<CImGuiWindow> pWindow = std::make_shared<CLog>(this);
+	//m_mapWindows["Log"] = pWindow;
+
+	//pWindow = std::make_shared<CContentBrowser>(this);
+	//m_mapWindows["ContentBrowser"] = pWindow;
+
+	//pWindow = std::make_shared<CGizmo>(this);
+	//m_mapWindows["Gizmo"] = pWindow;
+
+	//pWindow = std::make_shared<CInspector>(this);
+	//m_mapWindows["Inspector"] = pWindow;
+
+	CImGuiWindow* pWindow = new CContentBrowser();
+	m_pEngine->AddWindow("ContentBrowser", pWindow);
+
+	pWindow = new CLog();
+	m_pEngine->AddWindow("Log", pWindow);
+
+	//pWindow = new CGizmo();
+	//m_pEngine->AddWindow("Gizmo", pWindow);
+
+	//pWindow = new CInspector();
+	//m_pEngine->AddWindow("Inspector", pWindow);
+
+	pWindow = new CHierarchy();
+	m_pEngine->AddWindow("Hierarchy", pWindow);
+
+}
+
+void CToolManager::AddLog(const char * log)
+{
+	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(log);
+}
+
 void CToolManager::SetImGuiStyle()
 {
 	ImGui::StyleColorsDark();
@@ -329,39 +365,5 @@ void CToolManager::SetDockSpace()
 	ImGui::End();
 }
 
-void CToolManager::CreateWindows()
-{
-	//std::shared_ptr<CImGuiWindow> pWindow = std::make_shared<CLog>(this);
-	//m_mapWindows["Log"] = pWindow;
 
-	//pWindow = std::make_shared<CContentBrowser>(this);
-	//m_mapWindows["ContentBrowser"] = pWindow;
-
-	//pWindow = std::make_shared<CGizmo>(this);
-	//m_mapWindows["Gizmo"] = pWindow;
-
-	//pWindow = std::make_shared<CInspector>(this);
-	//m_mapWindows["Inspector"] = pWindow;
-
-	CImGuiWindow* pWindow = new CContentBrowser();
-	m_pEngine->AddWindow("ContentBrowser", pWindow);
-
-	pWindow = new CLog();
-	m_pEngine->AddWindow("Log", pWindow);
-
-	pWindow = new CGizmo();
-	m_pEngine->AddWindow("Gizmo", pWindow);
-
-	pWindow = new CInspector();
-	m_pEngine->AddWindow("Inspector", pWindow);
-
-	pWindow = new CHierarchy();
-	m_pEngine->AddWindow("Hierarchy", pWindow);
-
-}
-
-void CToolManager::AddLog(const char * log)
-{
-	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(log);
-}
 

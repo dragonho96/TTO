@@ -464,7 +464,7 @@ void CGraphicDevice::Render()
 
 	//texture->Render();
 
-	debug->Render();
+	//debug->Render();
 
 	Present();
 	// IMGUI용 버퍼 따로 생성해서 Set

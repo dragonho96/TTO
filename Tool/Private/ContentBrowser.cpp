@@ -13,6 +13,10 @@ CContentBrowser::CContentBrowser()
 void CContentBrowser::Initialize()
 {
 	m_CurrentDirectory = s_AssetPath;
+
+	m_pTexFolder = new CTexture(L"../../Assets/Texture/Folder.png");
+	m_pTexFile = new CTexture(L"../../Assets/Texture/File.png");
+	m_pTexImage = new CTexture(L"../../Assets/Texture/Image.png");
 }
 
 
@@ -51,6 +55,9 @@ void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 
 void CContentBrowser::Free()
 {
+	SafeDelete(m_pTexFolder);
+	SafeDelete(m_pTexFile);
+	SafeDelete(m_pTexImage);
 }
 
 void CContentBrowser::Update()
@@ -81,8 +88,8 @@ void CContentBrowser::Update()
 	}
 	ImGui::Text(m_CurrentDirectory.string().c_str());
 
-	static float padding = 4.f;
-	static float thumbnailSize = 128;
+	static float padding = 8.f;
+	static float thumbnailSize = 80;
 	float cellSize = thumbnailSize + padding;
 
 	float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -101,13 +108,24 @@ void CContentBrowser::Update()
 	{
 		const auto& path = iter.path();
 		string fileName = path.filename().string();
-
+		
 		// make every button unique
 		ImGui::PushID(fileName.c_str());
 
 		// Needs to load Texture2D
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-		ImGui::ImageButton((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView()), { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
+		ImTextureID texImage;
+		if (FILESYSTEM::is_directory(iter.status()))
+			texImage = (ImTextureID)m_pTexFolder->GetResourceView();
+		else
+		{
+			if (path.extension().string() == ".png")
+				texImage = (ImTextureID)m_pTexImage->GetResourceView();
+			else
+				texImage = (ImTextureID)m_pTexFile->GetResourceView();
+		}
+
+		ImGui::ImageButton(texImage, { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
 
 		//ImGui::Button(fileName.c_str(), { thumbnailSize, thumbnailSize });
 
