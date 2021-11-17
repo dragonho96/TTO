@@ -52,7 +52,7 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 	{
 		m_Components.emplace(pComponentTag, pComponent);
 		*pOut = pComponent;
-		SafeAddRef(pComponent);
+		//SafeAddRef(pComponent);
 	}
 
 	RELEASE_INSTANCE(CEngine);
