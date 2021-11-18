@@ -85,6 +85,10 @@ HRESULT CEmptyGameObject::Render()
 	if (buffer)
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
 		
+	CComponent* collider = GetComponent(TEXT("Com_Collider"));
+	if (collider)
+		dynamic_cast<CSphereCollider*>(collider)->Render();
+
 	return S_OK;
 }
 

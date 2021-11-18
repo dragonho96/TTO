@@ -4,7 +4,7 @@
 #include "Engine.h"
 #include "Background.h"
 #include "VIBuffer.h"
-#include "VIBuffer_LineCircle.h"
+#include "VIBuffer_LineSphere.h"
 
 USING(Client)
 
@@ -65,7 +65,7 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_LineCircle"), CBackground::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineCircle"), CVIBuffer_LineCircle::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;

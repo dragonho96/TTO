@@ -43,6 +43,8 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pObjTransform = (CTransform*)pArg;
+
 	return S_OK;
 }
 
@@ -54,7 +56,8 @@ HRESULT CVIBuffer::Render()
 	_uint		iOffset = 0;
 
 	ConstantBuffer cb1;
-	cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
+	//cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
+	cb1.mWorld = XMMatrixTranspose( XMLoadFloat4x4( &m_pObjTransform->GetMatrix() ) );
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
 	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(

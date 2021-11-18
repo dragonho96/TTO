@@ -115,6 +115,15 @@
     <Filter Include="01.Utility\02.GameObject\EmptyObject">
       <UniqueIdentifier>{701f2559-62f0-4a9b-b037-41d2daec9b6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\Line\Circle">
+      <UniqueIdentifier>{f366b6e2-55cb-4b4b-9a19-4491f441da65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider">
+      <UniqueIdentifier>{c5b03e99-1a15-48e0-aba3-2663e021ae10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\SphereCollider">
+      <UniqueIdentifier>{cc8e8ca0-b595-4b06-ace2-8f3514cb7db7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -229,11 +238,17 @@
     <ClInclude Include="..\Public\VIBuffer_Rect.h">
       <Filter>01.Utility\03.Components\VIBuffer\Rect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_LineCircle.h">
-      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\EmptyGameObject.h">
       <Filter>01.Utility\02.GameObject\EmptyObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SphereCollider.h">
+      <Filter>01.Utility\03.Components\Collider\SphereCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LineSphere.h">
+      <Filter>01.Utility\03.Components\VIBuffer\Line\Circle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -331,11 +346,17 @@
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\Rect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_LineCircle.cpp">
-      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\EmptyGameObject.cpp">
       <Filter>01.Utility\02.GameObject\EmptyObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SphereCollider.cpp">
+      <Filter>01.Utility\03.Components\Collider\SphereCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\Line\Circle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

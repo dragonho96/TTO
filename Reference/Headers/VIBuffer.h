@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Shader.h"
+#include "Transform.h"
 
 BEGIN(Engine)
 
@@ -38,7 +39,7 @@ protected: /* For.Index Buffer */
 
 protected:
 	void*				m_pVertices = nullptr;
-
+	CTransform*			m_pObjTransform = nullptr;
 protected:
 	HRESULT Create_Buffers();
 

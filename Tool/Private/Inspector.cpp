@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Inspector.h"
+#include "GameObject.h"
+#include "VIBuffer_LineSphere.h"
+#include "SphereCollider.h"
 
 USING(Tool)
 CInspector::CInspector()
@@ -35,14 +38,13 @@ void CInspector::Update()
 	if (ImGui::BeginPopup("AddComponent"))
 	{
 
-		if (ImGui::MenuItem("Renderer"))
+		if (ImGui::MenuItem("Collider"))
 		{
-
+			/* Add Collider */
+			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_SphereCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+				MSG_BOX("Failed to AddComponent");
 		}
-		else if (ImGui::MenuItem("Collider"))
-		{
 
-		}
 		ImGui::EndPopup();
 	}
 
@@ -57,9 +59,6 @@ void CInspector::Update()
 
 	if (ImGui::TreeNodeEx("Transform"))
 	{
-		//ImGui::InputFloat3("Tr", mat.matTranslation);
-		//ImGui::InputFloat3("Rt", mat.matRotation);
-		//ImGui::InputFloat3("Sc", mat.matScale);
 		DrawVec3("Transform", tr);
 		DrawVec3("Rotation", rt);
 		DrawVec3("Scale", sc);
@@ -81,7 +80,13 @@ void CInspector::Update()
 
 	ImGui::Separator();
 
-	//}
+	CComponent* pComponent;
+	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_Collider")))
+		if (ImGui::TreeNodeEx("Collider"))
+		{
+			dynamic_cast<CSphereCollider*>(pComponent)->SetRadius(1.f);
+			ImGui::TreePop();
+		}
 
 	ImGui::End();
 }

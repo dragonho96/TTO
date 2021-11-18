@@ -11,7 +11,11 @@
 #include "Hierarchy.h"
 #pragma endregion
 
+#pragma region COMPONENTS
 #include "Renderer.h"
+#include "SphereCollider.h"
+#include "VIBuffer_LineSphere.h"
+#pragma endregion 
 
 USING(Tool)
 CToolManager::CToolManager()
@@ -100,9 +104,14 @@ void CToolManager::Render()
 	if (g_Done)
 		return;
 
+	//m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
+	//m_pEngine->ClearDepthStencilView(1.f, 0);
+	m_pEngine->SetRTV2();
 	m_pRenderer->DrawRenderGroup();
-	m_pEngine->Render();
-	//// Rendering
+	m_pEngine->Present();
+
+	//// IMGUI Rendering
+	m_pEngine->SetRTV();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO();
@@ -150,6 +159,14 @@ HRESULT CToolManager::ReadyPrototypeComponent()
 {
 	/* Prepare Renderer */
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* Prepare Collider*/
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_SphereCollider"), CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* Prepare DebugLine */
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;
