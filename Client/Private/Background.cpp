@@ -69,7 +69,7 @@ HRESULT CBackground::SetUpComponents()
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineCircle"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
 	return S_OK;

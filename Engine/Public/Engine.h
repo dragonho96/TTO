@@ -37,6 +37,8 @@ public:
 	HRESULT						ClearBackBufferView(_float4 vColor);
 	HRESULT						ClearDepthStencilView(_float fDepth, _uint iStencil);
 
+	void						SetRTV();
+	void						SetRTV2();
 	void						Render();
 	void						RenderClient();
 	HRESULT						Present();
@@ -110,6 +112,7 @@ public:
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
+	void					AddActor(PxRigidDynamic* pActor);
 #pragma endregion
 
 private:

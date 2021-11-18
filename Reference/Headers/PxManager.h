@@ -19,6 +19,7 @@ public:
 	PxPhysics*				GetPhysics() { return m_pPhysics; }
 	PxMaterial*				GetMaterial() { return m_pMaterial; }
 	PxControllerManager*	GetControllerManager() { return m_pControllerManager; }
+	void					AddActor(PxRigidDynamic* pActor);
 
 private:
 	PxDefaultAllocator		m_Allocator;

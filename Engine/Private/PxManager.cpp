@@ -81,3 +81,14 @@ void CPxManager::Update(_double DeltaTime)
 		m_pScene->fetchResults(true);
 	}
 }
+
+void CPxManager::AddActor(PxRigidDynamic * pActor)
+{
+	if (nullptr == pActor)
+	{
+		MSG_BOX("Failed To Creating CSphereCollider");
+		return;
+	}
+
+	m_pScene->addActor(*pActor);
+}

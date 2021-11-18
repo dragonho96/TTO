@@ -450,11 +450,9 @@ void CGraphicDevice::Render()
 {
 	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
-
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
 	//debug->Render();
@@ -477,6 +475,24 @@ void CGraphicDevice::RenderClient()
 {
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+}
+
+void CGraphicDevice::SetRTV2()
+{
+	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
+
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+}
+
+void CGraphicDevice::SetRTV()
+{
+	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f }; //red, green, blue, alpha
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)

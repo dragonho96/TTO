@@ -169,6 +169,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\ComponentManager.h" />
     <ClInclude Include="..\Public\DebugBox.h" />
@@ -197,13 +198,14 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\SceneSerializer.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\ShaderBuffer.h" />
+    <ClInclude Include="..\Public\SphereCollider.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Sound.h" />
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\Public\TimerManager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
-    <ClInclude Include="..\Public\VIBuffer_LineCircle.h" />
+    <ClInclude Include="..\Public\VIBuffer_LineSphere.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="RectTest.h" />
   </ItemGroup>
@@ -212,6 +214,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\ComponentManager.cpp" />
     <ClCompile Include="..\Private\DebugBox.cpp" />
@@ -233,13 +236,14 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\SceneManager.cpp" />
     <ClCompile Include="..\Private\SceneSerializer.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\SphereCollider.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Sound.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\Private\TimerManager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
-    <ClCompile Include="..\Private\VIBuffer_LineCircle.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="RectTest.cpp" />
   </ItemGroup>

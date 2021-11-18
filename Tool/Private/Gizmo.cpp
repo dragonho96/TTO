@@ -77,6 +77,7 @@ void CGizmo::Update()
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::BeginFrame();
 	ImGuizmo::Enable(true);
+
 	XMMATRIX viewMatrix = CEngine::GetInstance()->GetViewMatrix();
 	XMFLOAT4X4 fView;
 	XMStoreFloat4x4(&fView, viewMatrix);

@@ -159,6 +159,16 @@ HRESULT CEngine::ClearDepthStencilView(_float fDepth, _uint iStencil)
 	return m_pGraphicDevice->Clear_DepthStencilView(fDepth, iStencil);
 }
 
+void CEngine::SetRTV()
+{
+	return m_pGraphicDevice->SetRTV();
+}
+
+void CEngine::SetRTV2()
+{
+	return m_pGraphicDevice->SetRTV2();
+}
+
 void CEngine::Render()
 {
 	if (nullptr == m_pGraphicDevice)
@@ -416,6 +426,11 @@ PxMaterial * CEngine::GetMaterial()
 PxControllerManager * CEngine::GetControllerManager()
 {
 	return m_pPxManager->GetControllerManager();
+}
+
+void CEngine::AddActor(PxRigidDynamic * pActor)
+{
+	m_pPxManager->AddActor(pActor);
 }
 
 #pragma endregion
