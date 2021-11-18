@@ -50,22 +50,10 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
-	// SetVertexShader();
-	// SetPixelShader();
-	// SetBuffer();
-	//SetSphereVertexShader();
-	//SetSpherePixelShader();
-	//SetSphereBuffer();
 
 
 	Initialize(iWidth, iHeight);
 
-	//debug = new CDebugSphere(float(0.5f));
-	//debug = new CDebugBox({1.f, 1.f, 1.f});
-	//debug = new CDebugCapsule(1.f, 2.f);
-	//debugTransform = debug->GetTransform();
-	//debug = new CDebugCapsule(1.f, 2.f);
-	//texture = new CTexture();
 	return S_OK;
 }
 
@@ -98,319 +86,7 @@ HRESULT CGraphicDevice::Present()
 	return S_OK;
 }
 
-HRESULT CGraphicDevice::SetVertexShader()
-{
-	// Compile the vertex shader
-	HRESULT hr;
-	ID3DBlob* pVSBlob = NULL;
-	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL,
-			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
-		return hr;
-	}
-
-	// Create the vertex shader
-	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
-	if (FAILED(hr))
-	{
-		pVSBlob->Release();
-		return hr;
-	}
-
-	// Define the input layout
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT numElements = ARRAYSIZE(layout);
-
-	// Create the input layout
-	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-		pVSBlob->GetBufferSize(), &g_pVertexLayout);
-	pVSBlob->Release();
-	if (FAILED(hr))
-		return hr;
-
-	// Set the input layout
-	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
-
-	return S_OK;
-}
-
-HRESULT CGraphicDevice::SetPixelShader()
-{
-	HRESULT hr;
-	// Compile the pixel shader
-	ID3DBlob* pPSBlob = NULL;
-	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL,
-			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
-		return hr;
-	}
-
-	// Create the pixel shader
-	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
-	pPSBlob->Release();
-	if (FAILED(hr))
-		return hr;
-
-	return S_OK;
-}
-
-HRESULT CGraphicDevice::SetBuffer()
-{
-	HRESULT hr;
-	// Create vertex buffer
-	SimpleVertex vertices[] =
-	{
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-	};
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(SimpleVertex) * 8;
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	D3D11_SUBRESOURCE_DATA InitData;
-	ZeroMemory(&InitData, sizeof(InitData));
-	InitData.pSysMem = vertices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
-	if (FAILED(hr))
-		return hr;
-
-	// Set vertex buffer
-	UINT stride = sizeof(SimpleVertex);
-	UINT offset = 0;
-	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
-
-	// Create index buffer
-	WORD indices[] =
-	{
-		//3,1,0,
-		//2,1,3,
-
-		//0,5,4,
-		//1,5,0,
-
-		//3,4,7,
-		//0,4,3,
-
-		//1,6,5,
-		//2,6,1,
-
-		//2,7,6,
-		//3,7,2,
-
-		//6,4,5,
-		//7,4,6,
-
-		// Drawing Debug Cube
-		0, 1, 1, 2, 2, 3, 3, 0,
-		4, 5, 5, 6, 6, 7, 7, 4,
-		0, 4, 1, 5, 2, 6, 3, 7,
-	};
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	//bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
-	bd.ByteWidth = sizeof(WORD) * 24;        // 324 vertices needed for 12 lines in a line list
-
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	InitData.pSysMem = indices;
-	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
-	if (FAILED(hr))
-		return hr;
-
-	// Set index buffer
-	m_pDeviceContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-
-	// Set primitive topology
-	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
-	// Create the constant buffer
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(ConstantBuffer);
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
-	hr = m_pDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
-	if (FAILED(hr))
-		return hr;
-
-	return S_OK;
-}
-
-HRESULT CGraphicDevice::SetSphereVertexShader()
-{
-	// Compile the vertex shader
-	HRESULT hr;
-	ID3DBlob* pVSBlob = NULL;
-	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL,
-			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
-		return hr;
-	}
-
-	// Create the vertex shader
-	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
-	if (FAILED(hr))
-	{
-		pVSBlob->Release();
-		return hr;
-	}
-
-	// Define the input layout
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT numElements = ARRAYSIZE(layout);
-
-	// Create the input layout
-	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-		pVSBlob->GetBufferSize(), &g_pVertexLayout);
-	pVSBlob->Release();
-	if (FAILED(hr))
-		return hr;
-
-	// Set the input layout
-	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
-
-	return S_OK;
-}
-
-HRESULT CGraphicDevice::SetSpherePixelShader()
-{
-	HRESULT hr;
-	// Compile the pixel shader
-	ID3DBlob* pPSBlob = NULL;
-	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL,
-			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
-		return hr;
-	}
-
-	// Create the pixel shader
-	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
-	pPSBlob->Release();
-	if (FAILED(hr))
-		return hr;
-
-	return S_OK;
-}
-
-HRESULT CGraphicDevice::SetSphereBuffer()
-{
-	float range = 1.f;
-	UINT sliceCount = 36;
-	UINT vertexCount;
-	UINT lineCount;
-	_float3* lines;
-
-	float phiStep = 2.0f * 3.14f / (float)sliceCount;
-
-	// Create Vertex
-	{
-		int vertexCount = sliceCount * 3;
-		_float3* vertices = new _float3[vertexCount];
-		UINT index = 0;
-		// x = 0
-		for (UINT i = 0; i < sliceCount; i++) {
-			float phi = i * phiStep;
-			vertices[index] = _float3(0, (range * cosf(phi)), (range * sinf(phi)));
-			index++;
-		}
-		// y = 0
-		for (UINT i = 0; i < sliceCount; i++) {
-			float phi = i * phiStep;
-			vertices[index] = _float3((range * cosf(phi)), 0, (range * sinf(phi)));
-			index++;
-		}
-		// z = 0
-		for (UINT i = 0; i < sliceCount; i++) {
-			float phi = i * phiStep;
-			vertices[index] = _float3((range * cosf(phi)), (range * sinf(phi)), 0);
-			index++;
-		}
-
-
-		lineCount = sliceCount * 3;
-		lines = new _float3[lineCount * 2];
-
-		index = 0;
-		for (UINT i = 0; i < sliceCount; i++) {
-			lines[index++] = vertices[i];
-			lines[index++] = i == sliceCount - 1 ? vertices[0] : vertices[i + 1];
-		}
-		for (UINT i = sliceCount; i < sliceCount * 2; i++) {
-			lines[index++] = vertices[i];
-			lines[index++] = i == sliceCount * 2 - 1 ? vertices[sliceCount] : vertices[i + 1];
-		}
-		for (UINT i = sliceCount * 2; i < sliceCount * 3; i++) {
-			lines[index++] = vertices[i];
-			lines[index++] = i == sliceCount * 3 - 1 ? vertices[sliceCount * 2] : vertices[i + 1];
-		}
-
-		SafeDeleteArray(vertices);
-	}
-
-	vertexCount = lineCount * 2;
-
-	SimpleVertex* vertices = new SimpleVertex[vertexCount];
-
-	for (UINT i = 0; i < vertexCount; i++) {
-		vertices[i].Pos = lines[i];
-		vertices[i].Color = { 0, 0, 1.f, 1.f };
-	}
-
-	D3D11_BUFFER_DESC desc = { 0 };
-	desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
-	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // 정점 버퍼에 들어갈 데이터의 크기
-	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
-	data.pSysMem = vertices; // 쓸 데이터의 주소
-
-	HRESULT hr = m_pDevice->CreateBuffer(
-		&desc, &data, &g_pVertexBuffer);
-	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
-
-	UINT stride = sizeof(SimpleVertex);
-	UINT offset = 0;
-	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
-	desc.Usage = D3D11_USAGE_DEFAULT; // can be dynamic
-	desc.ByteWidth = sizeof(ConstantBuffer);
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = 0; // Change to D3D11_CUP_ACCESS for USAGE_DYNAMIC
-	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
-	if (FAILED(hr))
-		return hr;
-
-	// Delete vertices
-	SafeDeleteArray(vertices);
-	SafeDeleteArray(lines);
-
-	return S_OK;
-}
+//
 
 HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 {
@@ -495,33 +171,7 @@ void CGraphicDevice::SetRTV()
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-HRESULT CGraphicDevice::CompileShaderFromFile(WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
-{
-	HRESULT hr = S_OK;
 
-	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-	// Setting this flag improves the shader debugging experience, but still allows 
-	// the shaders to be optimized and to run exactly the way they will run in 
-	// the release configuration of this program.
-	dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-
-	ID3DBlob* pErrorBlob;
-	hr = D3DX11CompileFromFileW(szFileName, NULL, NULL, szEntryPoint, szShaderModel,
-		dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
-	if (FAILED(hr))
-	{
-		if (pErrorBlob != NULL)
-			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-		if (pErrorBlob) pErrorBlob->Release();
-		return hr;
-	}
-	if (pErrorBlob) pErrorBlob->Release();
-
-	return S_OK;
-}
 
 
 HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
@@ -827,3 +477,319 @@ void CGraphicDevice::Free()
 //
 //	return pInstance;
 //}
+
+#pragma region NOTE
+//HRESULT CGraphicDevice::SetVertexShader()
+//{
+//	// Compile the vertex shader
+//	HRESULT hr;
+//	ID3DBlob* pVSBlob = NULL;
+//	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
+//	if (FAILED(hr))
+//	{
+//		MessageBox(NULL,
+//			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+//		return hr;
+//	}
+//
+//	// Create the vertex shader
+//	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
+//	if (FAILED(hr))
+//	{
+//		pVSBlob->Release();
+//		return hr;
+//	}
+//
+//	// Define the input layout
+//	D3D11_INPUT_ELEMENT_DESC layout[] =
+//	{
+//		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	};
+//	UINT numElements = ARRAYSIZE(layout);
+//
+//	// Create the input layout
+//	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+//		pVSBlob->GetBufferSize(), &g_pVertexLayout);
+//	pVSBlob->Release();
+//	if (FAILED(hr))
+//		return hr;
+//
+//	// Set the input layout
+//	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
+//
+//	return S_OK;
+//}
+//
+//HRESULT CGraphicDevice::SetPixelShader()
+//{
+//	HRESULT hr;
+//	// Compile the pixel shader
+//	ID3DBlob* pPSBlob = NULL;
+//	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
+//	if (FAILED(hr))
+//	{
+//		MessageBox(NULL,
+//			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+//		return hr;
+//	}
+//
+//	// Create the pixel shader
+//	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+//	pPSBlob->Release();
+//	if (FAILED(hr))
+//		return hr;
+//
+//	return S_OK;
+//}
+//
+//HRESULT CGraphicDevice::SetBuffer()
+//{
+//	HRESULT hr;
+//	// Create vertex buffer
+//	SimpleVertex vertices[] =
+//	{
+//		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+//		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+//		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
+//		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+//		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+//		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+//		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+//		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+//	};
+//	D3D11_BUFFER_DESC bd;
+//	ZeroMemory(&bd, sizeof(bd));
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	bd.ByteWidth = sizeof(SimpleVertex) * 8;
+//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	bd.CPUAccessFlags = 0;
+//	D3D11_SUBRESOURCE_DATA InitData;
+//	ZeroMemory(&InitData, sizeof(InitData));
+//	InitData.pSysMem = vertices;
+//	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+//	if (FAILED(hr))
+//		return hr;
+//
+//	// Set vertex buffer
+//	UINT stride = sizeof(SimpleVertex);
+//	UINT offset = 0;
+//	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
+//
+//	// Create index buffer
+//	WORD indices[] =
+//	{
+//		//3,1,0,
+//		//2,1,3,
+//
+//		//0,5,4,
+//		//1,5,0,
+//
+//		//3,4,7,
+//		//0,4,3,
+//
+//		//1,6,5,
+//		//2,6,1,
+//
+//		//2,7,6,
+//		//3,7,2,
+//
+//		//6,4,5,
+//		//7,4,6,
+//
+//		// Drawing Debug Cube
+//		0, 1, 1, 2, 2, 3, 3, 0,
+//		4, 5, 5, 6, 6, 7, 7, 4,
+//		0, 4, 1, 5, 2, 6, 3, 7,
+//	};
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	//bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+//	bd.ByteWidth = sizeof(WORD) * 24;        // 324 vertices needed for 12 lines in a line list
+//
+//	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	bd.CPUAccessFlags = 0;
+//	InitData.pSysMem = indices;
+//	hr = m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
+//	if (FAILED(hr))
+//		return hr;
+//
+//	// Set index buffer
+//	m_pDeviceContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+//
+//	// Set primitive topology
+//	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+//	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+//
+//	// Create the constant buffer
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	bd.ByteWidth = sizeof(ConstantBuffer);
+//	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+//	bd.CPUAccessFlags = 0;
+//	hr = m_pDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
+//	if (FAILED(hr))
+//		return hr;
+//
+//	return S_OK;
+//}
+//
+//HRESULT CGraphicDevice::SetSphereVertexShader()
+//{
+//	// Compile the vertex shader
+//	HRESULT hr;
+//	ID3DBlob* pVSBlob = NULL;
+//	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "VS", "vs_4_0", &pVSBlob);
+//	if (FAILED(hr))
+//	{
+//		MessageBox(NULL,
+//			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+//		return hr;
+//	}
+//
+//	// Create the vertex shader
+//	hr = m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
+//	if (FAILED(hr))
+//	{
+//		pVSBlob->Release();
+//		return hr;
+//	}
+//
+//	// Define the input layout
+//	D3D11_INPUT_ELEMENT_DESC layout[] =
+//	{
+//		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	};
+//	UINT numElements = ARRAYSIZE(layout);
+//
+//	// Create the input layout
+//	hr = m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+//		pVSBlob->GetBufferSize(), &g_pVertexLayout);
+//	pVSBlob->Release();
+//	if (FAILED(hr))
+//		return hr;
+//
+//	// Set the input layout
+//	m_pDeviceContext->IASetInputLayout(g_pVertexLayout.Get());
+//
+//	return S_OK;
+//}
+//
+//HRESULT CGraphicDevice::SetSpherePixelShader()
+//{
+//	HRESULT hr;
+//	// Compile the pixel shader
+//	ID3DBlob* pPSBlob = NULL;
+//	hr = CompileShaderFromFile(L"../../Assets/Shader/Tutorial05.fx", "PS", "ps_4_0", &pPSBlob);
+//
+//	if (FAILED(hr))
+//	{
+//		MessageBox(NULL,
+//			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+//		return hr;
+//	}
+//
+//	// Create the pixel shader
+//	hr = m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+//	pPSBlob->Release();
+//	if (FAILED(hr))
+//		return hr;
+//
+//	return S_OK;
+//}
+//
+//HRESULT CGraphicDevice::SetSphereBuffer()
+//{
+//	float range = 1.f;
+//	UINT sliceCount = 36;
+//	UINT vertexCount;
+//	UINT lineCount;
+//	_float3* lines;
+//
+//	float phiStep = 2.0f * 3.14f / (float)sliceCount;
+//
+//	// Create Vertex
+//	{
+//		int vertexCount = sliceCount * 3;
+//		_float3* vertices = new _float3[vertexCount];
+//		UINT index = 0;
+//		// x = 0
+//		for (UINT i = 0; i < sliceCount; i++) {
+//			float phi = i * phiStep;
+//			vertices[index] = _float3(0, (range * cosf(phi)), (range * sinf(phi)));
+//			index++;
+//		}
+//		// y = 0
+//		for (UINT i = 0; i < sliceCount; i++) {
+//			float phi = i * phiStep;
+//			vertices[index] = _float3((range * cosf(phi)), 0, (range * sinf(phi)));
+//			index++;
+//		}
+//		// z = 0
+//		for (UINT i = 0; i < sliceCount; i++) {
+//			float phi = i * phiStep;
+//			vertices[index] = _float3((range * cosf(phi)), (range * sinf(phi)), 0);
+//			index++;
+//		}
+//
+//
+//		lineCount = sliceCount * 3;
+//		lines = new _float3[lineCount * 2];
+//
+//		index = 0;
+//		for (UINT i = 0; i < sliceCount; i++) {
+//			lines[index++] = vertices[i];
+//			lines[index++] = i == sliceCount - 1 ? vertices[0] : vertices[i + 1];
+//		}
+//		for (UINT i = sliceCount; i < sliceCount * 2; i++) {
+//			lines[index++] = vertices[i];
+//			lines[index++] = i == sliceCount * 2 - 1 ? vertices[sliceCount] : vertices[i + 1];
+//		}
+//		for (UINT i = sliceCount * 2; i < sliceCount * 3; i++) {
+//			lines[index++] = vertices[i];
+//			lines[index++] = i == sliceCount * 3 - 1 ? vertices[sliceCount * 2] : vertices[i + 1];
+//		}
+//
+//		SafeDeleteArray(vertices);
+//	}
+//
+//	vertexCount = lineCount * 2;
+//
+//	SimpleVertex* vertices = new SimpleVertex[vertexCount];
+//
+//	for (UINT i = 0; i < vertexCount; i++) {
+//		vertices[i].Pos = lines[i];
+//		vertices[i].Color = { 0, 0, 1.f, 1.f };
+//	}
+//
+//	D3D11_BUFFER_DESC desc = { 0 };
+//	desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
+//	desc.ByteWidth = sizeof(SimpleVertex) * vertexCount; // 정점 버퍼에 들어갈 데이터의 크기
+//	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//
+//	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
+//	data.pSysMem = vertices; // 쓸 데이터의 주소
+//
+//	HRESULT hr = m_pDevice->CreateBuffer(
+//		&desc, &data, &g_pVertexBuffer);
+//	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+//
+//	UINT stride = sizeof(SimpleVertex);
+//	UINT offset = 0;
+//	m_pDeviceContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
+//	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+//
+//	desc.Usage = D3D11_USAGE_DEFAULT; // can be dynamic
+//	desc.ByteWidth = sizeof(ConstantBuffer);
+//	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+//	desc.CPUAccessFlags = 0; // Change to D3D11_CUP_ACCESS for USAGE_DYNAMIC
+//	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
+//	if (FAILED(hr))
+//		return hr;
+//
+//	// Delete vertices
+//	SafeDeleteArray(vertices);
+//	SafeDeleteArray(lines);
+//
+//	return S_OK;
+//}
+#pragma endregion 

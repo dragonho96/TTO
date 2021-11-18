@@ -20,13 +20,15 @@ public:
 	void SetContentHierarchy(FILESYSTEM::path curPath);
 
 private:
+	CEngine*				m_pEngine = nullptr;
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+
 	FILESYSTEM::path	m_CurrentDirectory;
 	_uint				m_FrameCount;
 	CTexture*			m_pTexFolder;
 	CTexture*			m_pTexFile;
 	CTexture*			m_pTexImage;
-	// Inherited via CImGuiWindow
-
 };
 
 END

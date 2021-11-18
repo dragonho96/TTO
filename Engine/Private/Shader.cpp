@@ -36,8 +36,12 @@ HRESULT CShader::CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryP
 #endif
 
 	ComRef<ID3DBlob> pErrorBlob;
-	hr = D3DX11CompileFromFileW(szFileName, NULL, NULL, szEntryPoint, szShaderModel,
-		dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
+	if (FAILED(D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob)))
+		return E_FAIL;
+
+	//hr = D3DCompileFromFile(szFileName, NULL, NULL, szEntryPoint, szShaderModel,
+	//	dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
+
 	if (FAILED(hr))
 	{
 		if (pErrorBlob != NULL)
