@@ -19,15 +19,6 @@ public:
 	HRESULT Clear_DepthStencilView(_float fDepth, _uint iStencil);
 
 public:
-	HRESULT SetVertexShader();
-	HRESULT SetPixelShader();
-	HRESULT SetBuffer();
-
-	HRESULT SetSphereVertexShader();
-	HRESULT SetSpherePixelShader();
-	HRESULT SetSphereBuffer();
-
-public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
 	void RenderClient();
@@ -36,7 +27,6 @@ public:
 	HRESULT Present();
 
 public:
-	HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 	HRESULT ChangeResolution(_uint iWidth, _uint iHeight);
 
 public:

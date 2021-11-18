@@ -63,17 +63,18 @@ HRESULT CVIBuffer::Render()
 	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
 		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
-	//m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	
 	if (m_IBSubResourceData.pSysMem)
-		//m_pDeviceContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
 
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 	// m_pDeviceContext->IASetInputLayout();
 
 	m_pShader->Render();
+
+	//if (m_IBSubResourceData.pSysMem)
+	//	m_pDeviceContext->DrawIndexed();
 	CEngine::GetInstance()->GetDeviceContext()->Draw(m_iNumVertices, 0);
 	return S_OK;
 }
@@ -94,6 +95,49 @@ HRESULT CVIBuffer::Create_Buffers()
 
 	return S_OK;
 
+}
+
+HRESULT CVIBuffer::Compile_Shader(const _tchar* pShaderFilePath, _uint iTechniqueIndex)
+{
+	_uint		iFlag = 0;
+
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+	iFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+#endif
+	
+	ID3DBlob*		pCompileShader = nullptr;
+	ID3DBlob*		pCompileShaderErrorMessage = nullptr;
+	if (FAILED(D3DCompileFromFile(pShaderFilePath, nullptr, nullptr, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMessage)))
+		return E_FAIL;
+
+	if (FAILED(D3DX11CreateEffectFromMemory(pCompileShader->GetBufferPointer(), pCompileShader->GetBufferSize(), 0, m_pDevice, &m_pEffect)))
+		return E_FAIL;
+
+	ID3DX11EffectTechnique*		pTechnique = m_pEffect->GetTechniqueByIndex(iTechniqueIndex);
+	if (nullptr == pTechnique)
+		return E_FAIL;
+
+	D3DX11_TECHNIQUE_DESC		TechniqueDesc;
+	ZeroMemory(&TechniqueDesc, sizeof(D3DX11_TECHNIQUE_DESC));
+
+	pTechnique->GetDesc(&TechniqueDesc);
+
+	//for (_uint i = 0; i < TechniqueDesc.Passes; ++i)
+	//{
+	//	D3DX11_PASS_DESC			PassDesc;
+	//	m_pDevice->CreateInputLayout();
+
+
+	//}
+
+
+
+
+
+
+	return S_OK;
 }
 
 void CVIBuffer::Free()

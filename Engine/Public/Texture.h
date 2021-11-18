@@ -1,62 +1,42 @@
 #pragma once
-#include "Engine_Defines.h"
-#include "Shader.h"
-#include "ShaderBuffer.h"
-#include "GlobalBuffers.h"
+
+#include "Component.h"
 
 BEGIN(Engine)
-class ENGINE_DLL CTexture
+
+class ENGINE_DLL CTexture final : public CComponent
 {
+public:
+	enum TEXTURETYPE { TYPE_DDS, TYPE_TGA, TYPE_WIC, TYPE_END };
 private:
-	class ColorBuffer; 
+	explicit CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	explicit CTexture(const CTexture& rhs);
+	virtual ~CTexture() = default;
+
+public: /* Getter */
+	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex = 0) {
+		return m_Textures[iIndex];
+	}
+
 
 public:
-	CTexture();
-	CTexture(const _tchar* filePath);
-	~CTexture();
+	virtual HRESULT InitializePrototype(TEXTURETYPE eType, const _tchar* pTextureFilePath, _int iNumTextures);
+	virtual HRESULT Initialize(void* pArg) override;
+
+private:
+	vector<ID3D11ShaderResourceView*>			m_Textures;
+	typedef vector<ID3D11ShaderResourceView*>	TEXTURES;
+
+private:
+	_uint			m_iNumTextures = 0;
+
 
 public:
-	void Set();
-	void Render();
-	ID3D11ShaderResourceView* GetResourceView() { return m_ResourceView.Get(); }
+	/* 원형생성. */
+	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, TEXTURETYPE eType, const _tchar* pTextureFilePath, _int iNumTextures = 1);
 
-private:
-	CShader* shader;
-	
-	WorldBuffer*	 worldBuffer;
-	ColorBuffer*	colorBuffer;
-	ID3D11Buffer * vertexBuffer;
-	ID3D11Buffer * indexBuffer;
-
-	UINT vertexCount, indexCount;
-
-	VertexTexture * vertices;
-	UINT * indices;
-
-	//ColorBuffer * colorBuffer;
-
-	ComRef<ID3D11ShaderResourceView> m_ResourceView;
-
-private:
-	class ColorBuffer : public ShaderBuffer
-	{
-	public:
-		ColorBuffer()
-			: ShaderBuffer(&Data, sizeof(Data))
-		{
-			Data.Color = _float4(1, 1, 1, 1);
-		}
-
-		~ColorBuffer()
-		{
-
-		}
-
-		struct Struct
-		{
-			_float4 Color;
-		} Data;
-	};
+	/* 복사본생성. */
+	virtual CComponent* Clone(void* pArg) override;
+	virtual void Free();
 };
-
 END

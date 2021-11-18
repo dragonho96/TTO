@@ -35,6 +35,12 @@ protected: /* For.Index Buffer */
 	_uint						m_iNumPrimitive = 0;
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitive;
+
+protected:
+	ID3D11InputLayout*			m_pInputLayOut = nullptr;
+	ID3DX11Effect*				m_pEffect = nullptr;
+
+protected:
 	Scope<CShader>	m_pShader;
 
 protected:
@@ -42,7 +48,7 @@ protected:
 	CTransform*			m_pObjTransform = nullptr;
 protected:
 	HRESULT Create_Buffers();
-
+	HRESULT Compile_Shader(const _tchar* pShaderFilePath, _uint iTechniqueIndex = 0);
 public:
 	virtual CComponent* Clone(void* pArg) = 0;
 	virtual void Free() override;

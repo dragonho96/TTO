@@ -1,128 +1,117 @@
-#include "..\Public\Texture.h"
+#include "..\public\Texture.h"
 
-CTexture::CTexture()
+USING(Engine)
+CTexture::CTexture(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CComponent(pDevice, pDevice_Context)
 {
-	vertexCount = 4;
-	indexCount = 6;
-	shader = new CShader(L"../../Assets/Shader/TextureTest.hlsl");
-	worldBuffer = new WorldBuffer();
-	colorBuffer = new ColorBuffer;
-	vertices = new VertexTexture[vertexCount];
-	vertices[0].Position = _float3(0, 0, 0);
-	vertices[1].Position = _float3(0, 1, 0);
-	vertices[2].Position = _float3(1, 0, 0);
-	vertices[3].Position = _float3(1, 1, 0);
 
-	vertices[0].Uv = _float2(0, 1);
-	vertices[1].Uv = _float2(0, 0);
-	vertices[2].Uv = _float2(1, 1);
-	vertices[3].Uv = _float2(1, 0);
+}
 
-	vertices[0].Normal = _float3(0, 0, -1);
-	vertices[1].Normal = _float3(0, 0, -1);
-	vertices[2].Normal = _float3(0, 0, -1);
-	vertices[3].Normal = _float3(0, 0, -1);
+CTexture::CTexture(const CTexture & rhs)
+	: CComponent(rhs)
+	, m_Textures(rhs.m_Textures)
+	, m_iNumTextures(rhs.m_iNumTextures)
+{
+	for (auto& pShaderResourceView : m_Textures)
+		SafeAddRef(pShaderResourceView);
 
-	indices = new UINT[indexCount]{ 0, 1, 2, 2, 1, 3 };
+}
 
-	// CreateVertexBuffer
+HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTextureFilePath, _int iNumTextures)
+{
+	CComponent::InitializePrototype();
+
+	if (nullptr == m_pDevice)
+		return E_FAIL;
+
+	//if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED)))
+	//	return E_FAIL;
+
+	m_iNumTextures = iNumTextures;
+
+	_tchar			szTextureFileName[MAX_PATH] = L"";
+
+	for (_int i = 0; i < iNumTextures; ++i)
 	{
-		D3D11_BUFFER_DESC desc = { 0 };
-		desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
-		desc.ByteWidth = sizeof(VertexTexture) * vertexCount; // 정점 버퍼에 들어갈 데이터의 크기
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		ID3D11ShaderResourceView*			pShaderResourceView = nullptr;
 
-		D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
-		data.pSysMem = vertices; // 쓸 데이터의 주소
+		wsprintf(szTextureFileName, pTextureFilePath, i);
 
-		HRESULT hr = CEngine::GetInstance()->GetDevice()->CreateBuffer(
-			&desc, &data, &vertexBuffer);
-		assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+		DirectX::ScratchImage				Image;
+
+		HRESULT hr = 0;
+
+		switch (eType)
+		{
+		case TYPE_DDS:
+			hr = DirectX::LoadFromDDSFile(szTextureFileName, DirectX::DDS_FLAGS_NONE, nullptr, Image);
+			break;
+		case TYPE_TGA:
+			hr = DirectX::LoadFromTGAFile(szTextureFileName, nullptr, Image);
+			break;
+		case TYPE_WIC:
+			hr = DirectX::LoadFromWICFile(szTextureFileName, DirectX::WIC_FLAGS_NONE, nullptr, Image);
+			break;
+		}
+
+		if (FAILED(hr))
+			return E_FAIL;
+
+		ID3D11Resource*			pResource = nullptr;
+
+		if (FAILED(DirectX::CreateTexture(m_pDevice, Image.GetImages(), Image.GetImageCount(), Image.GetMetadata(), &pResource)))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(pResource, nullptr, &pShaderResourceView)))
+			return E_FAIL;
+
+		SafeRelease(pResource);
+
+		m_Textures.push_back(pShaderResourceView);
 	}
 
-	// CreateIndexBuffer
+	return S_OK;
+}
+
+HRESULT CTexture::Initialize(void * pArg)
+{
+	CComponent::Initialize(pArg);
+
+	return S_OK;
+}
+
+CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, TEXTURETYPE eType, const _tchar * pTextureFilePath, _int iNumTextures)
+{
+	CTexture*		pInstance = new CTexture(pDevice, pDevice_Context);
+
+	if (FAILED(pInstance->InitializePrototype(eType, pTextureFilePath, iNumTextures)))
 	{
-		D3D11_BUFFER_DESC desc = { 0 };
-		desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
-		desc.ByteWidth = sizeof(UINT) * indexCount; // 정점 버퍼에 들어갈 데이터의 크기
-		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
-		data.pSysMem = indices; // 쓸 데이터의 주소
-
-		HRESULT hr = CEngine::GetInstance()->GetDevice()->CreateBuffer(
-			&desc, &data, &indexBuffer);
-		assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+		MSG_BOX("Failed to Creating Instance (CTextures) ");
+		SafeRelease(pInstance);
 	}
 
-	// Load SRV
+	return pInstance;
+}
+
+CComponent * CTexture::Clone(void * pArg)
+{
+	CTexture*		pInstance = new CTexture(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		HRESULT hr = D3DX11CreateShaderResourceViewFromFile(
-			CEngine::GetInstance()->GetDevice(),
-			(L"../../Assets/Texture/Isu.png")/*.c_str()*/,
-			NULL, // 읽어드릴때 설정값 NULL이면 기본값
-			NULL,
-			&m_ResourceView,
-			NULL // 여기서 hr 리턴 받아도됨
-		);
-		assert(SUCCEEDED(hr));
+		MSG_BOX("Failed to Cloned Instance (CTextures) ");
+		SafeRelease(pInstance);
 	}
+
+	return pInstance;
 }
 
-CTexture::CTexture(const _tchar* filePath)
+void CTexture::Free()
 {
-	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(
-		CEngine::GetInstance()->GetDevice(),
-		(filePath)/*.c_str()*/,
-		NULL, // 읽어드릴때 설정값 NULL이면 기본값
-		NULL,
-		&m_ResourceView,
-		NULL // 여기서 hr 리턴 받아도됨
-	);
-	assert(SUCCEEDED(hr));
-}
+	CComponent::Free();
 
+	for (auto& pShaderResourceView : m_Textures)
+		SafeRelease(pShaderResourceView);
 
-CTexture::~CTexture()
-{
-}
-
-void CTexture::Set()
-{
-	static float t = 0.0f;
-	t += 0.0001f;
-	XMMATRIX newMat = XMMatrixRotationX(t);
-
-	//XMMATRIX mSpin = XMMatrixRotationX(-t);
-	//XMMATRIX mTranslate = XMMatrixTranslation(5.0f,-5.0f, 0.0f);
-	//XMMATRIX mScale = XMMatrixScaling(0.1f, 0.1f, 0.1f);
-
-	//newMat = mScale * mSpin * mTranslate;
-
-	worldBuffer->SetMatrix(newMat);
-	//colorBuffer->SetPSBuffer(0);
-	worldBuffer->SetVSBuffer(1);
-	shader->Render();
-
-	CEngine::GetInstance()->GetDeviceContext()->PSSetShaderResources(
-		0, // 0번
-		1, // 갯수 
-		&m_ResourceView);
-}
-
-void CTexture::Render()
-{
-	UINT stride = sizeof(VertexTexture); // 그릴 크기
-	UINT offset = 0;
-
-	// vertex buffer 여러개 들어갈 수 있음
-	// IA 붙는 이유 나중에 설명해주실꺼
-	CEngine::GetInstance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	CEngine::GetInstance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	// 그릴 방식 설정
-	CEngine::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-	// 실제로 그리는 거
-	CEngine::GetInstance()->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+	m_Textures.clear();
 }

@@ -169,6 +169,9 @@ HRESULT CToolManager::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	//if (FAILED(m_pEngine->AddPrototype(0, TEXT("Component_Texture_Devil"), CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../Bin/Resources/Textures/Devil.png")))))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 

@@ -14,17 +14,21 @@
 #include <map>
 
 #include <d3d11.h>
-#include <D3DX11.h>
-#include <D3DCompiler.h>
-using namespace std;
-
-
+#include <d3dx11effect.h>
+#include <d3dcompiler.h>
+#include "d3dxGlobal.h"
+#include "DirectXTex.h"
 #include <DirectXMath.h>
-#include <DirectXPackedVector.h>
+//#include <DirectXPackedVector.h>
+//using namespace DirectX::PackedVector;
+
+
+using namespace DirectX;
+
 #include <wrl.h> // ComPtr smartpointer for COM
 #include <wrl\client.h>
-using namespace DirectX;
-using namespace DirectX::PackedVector;
+using namespace std;
+
 
 #include "PxPhysicsAPI.h"
 using namespace physx;

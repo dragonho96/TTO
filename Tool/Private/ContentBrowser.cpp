@@ -7,16 +7,20 @@ USING(Tool)
 CContentBrowser::CContentBrowser()
 	:m_FrameCount(0)
 {
+	m_pEngine = CEngine::GetInstance();
+	m_pDevice = m_pEngine->GetDevice();
+	m_pDeviceContext  = m_pEngine->GetDeviceContext();
 	Initialize();
+
 }
 
 void CContentBrowser::Initialize()
 {
 	m_CurrentDirectory = s_AssetPath;
 
-	m_pTexFolder = new CTexture(L"../../Assets/Texture/Folder.png");
-	m_pTexFile = new CTexture(L"../../Assets/Texture/File.png");
-	m_pTexImage = new CTexture(L"../../Assets/Texture/Image.png");
+	m_pTexFolder = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/File.png"));
+	//m_pTexFile = new CTexture(L"../../Assets/Texture/File.png");
+	//m_pTexImage = new CTexture(L"../../Assets/Texture/Image.png");
 }
 
 
@@ -55,9 +59,9 @@ void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 
 void CContentBrowser::Free()
 {
-	SafeDelete(m_pTexFolder);
-	SafeDelete(m_pTexFile);
-	SafeDelete(m_pTexImage);
+	SafeRelease(m_pTexFolder);
+	//SafeRelease(m_pTexFile);
+	//SafeRelease(m_pTexImage);
 }
 
 void CContentBrowser::Update()
@@ -116,13 +120,17 @@ void CContentBrowser::Update()
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
 		ImTextureID texImage;
 		if (FILESYSTEM::is_directory(iter.status()))
-			texImage = (ImTextureID)m_pTexFolder->GetResourceView();
+			texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
 		else
 		{
+			//if (path.extension().string() == ".png")
+			//	texImage = (ImTextureID)m_pTexImage->GetResourceView();
+			//else
+			//	texImage = (ImTextureID)m_pTexFile->GetResourceView();
 			if (path.extension().string() == ".png")
-				texImage = (ImTextureID)m_pTexImage->GetResourceView();
+				texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
 			else
-				texImage = (ImTextureID)m_pTexFile->GetResourceView();
+				texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
 		}
 
 		ImGui::ImageButton(texImage, { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });
