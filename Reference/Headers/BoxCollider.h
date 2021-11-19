@@ -27,6 +27,7 @@ public:
 	virtual void SetUpPhysX() override;
 public:
 	void SetSize(_float3 vSize);
+	_float3 GetSize() { return m_vSize; };
 
 private:
 	CEngine*		m_pEngine;

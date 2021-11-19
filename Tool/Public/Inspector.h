@@ -16,6 +16,8 @@ public:
 
 public:
 	void DrawVec3(const string& label, _float3& values);
+	void DrawCollider();
+	void DrawTransform();
 
 private:
 	//std::shared_ptr<CGizmo>		m_pGizmo;

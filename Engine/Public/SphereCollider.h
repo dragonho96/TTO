@@ -26,6 +26,7 @@ public:
 	virtual void SetUpPhysX() override;
 public:
 	void SetSize(float fRadius);
+	float GetSize() { return m_fRadius; }
 
 private:
 	CEngine*		m_pEngine;

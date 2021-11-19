@@ -5,6 +5,8 @@
 CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
+	, m_fRadius(0.5f)
+	, m_fHeight(1.f)
 {
 
 }
@@ -12,6 +14,8 @@ CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext *
 CCapsuleCollider::CCapsuleCollider(const CCapsuleCollider & rhs)
 	: CCollider(rhs)
 	, m_pEngine(CEngine::GetInstance())
+	, m_fRadius(0.5f)
+	, m_fHeight(1.f)
 {
 
 }
@@ -103,12 +107,12 @@ void CCapsuleCollider::SetUpPhysX()
 	//pActor->Setglo
 }
 
-void CCapsuleCollider::SetSize(float fRadius, float fHeight)
+void CCapsuleCollider::SetSize(pair<float, float> size)
 {
-	if (m_fRadius != fRadius || m_fHeight != fHeight)
+	if (m_fRadius != size.first || m_fHeight != size.second)
 	{
-		m_fRadius = fRadius;
-		m_fHeight = fHeight;
+		m_fRadius = size.first;
+		m_fHeight = size.second;
 
 		dynamic_cast<CVIBuffer_LineCapsule*>(m_pDebugLine)->SetSize(m_fRadius, m_fHeight);
 	}

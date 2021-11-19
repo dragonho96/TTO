@@ -29,6 +29,7 @@ protected:
 
 protected:
 	string					m_Name = "Empty Object";
+	bool					m_bDead = false;
 
 protected:
 	unordered_map<const _tchar*, class CComponent*>			m_Components;
@@ -42,6 +43,8 @@ public:
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;
+	void SetDead() { m_bDead = true; }
+	_bool isDead() { return m_bDead; }
 };
 
 END

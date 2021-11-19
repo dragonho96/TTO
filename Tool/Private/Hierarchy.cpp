@@ -46,34 +46,39 @@ void CHierarchy::Update()
 				g_pObjFocused = pObj;
 			}
 			else if (ImGui::IsMouseClicked(1))
-				openPopup = !openPopup;
-		}
-		if (openPopup)
-		{
-			ImGui::OpenPopup("my_select_popup");
-
-			if (ImGui::BeginPopup("my_select_popup"))
 			{
-				if (ImGui::MenuItem("Delete"))
-				{
-					/* Delete Object*/
-
-					openPopup = !openPopup;
-				}
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Close"))
-				{
-					/* Close Popup*/
-					openPopup = !openPopup;
-				}
-
-				ImGui::EndPopup();
+				selected = iCount;
+				g_pObjFocused = pObj;
+				openPopup = !openPopup;
 			}
 		}
-		ImGui::PopID();
 
+		ImGui::PopID();
+	}
+	if (openPopup)
+	{
+		ImGui::OpenPopup("my_select_popup");
+
+		if (ImGui::BeginPopup("my_select_popup"))
+		{
+			if (ImGui::MenuItem("Delete"))
+			{
+				/* Delete Object*/
+				g_pObjFocused->SetDead();
+				g_pObjFocused = nullptr;
+				openPopup = !openPopup;
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Close"))
+			{
+				/* Close Popup*/
+				openPopup = !openPopup;
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	ImGui::End();

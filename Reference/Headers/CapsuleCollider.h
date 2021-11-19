@@ -26,7 +26,8 @@ public:
 	virtual HRESULT SetUpDebugLine() override;
 	virtual void SetUpPhysX() override;
 public:
-	void SetSize(float fRadius, float fHeight);
+	void SetSize(pair<float, float> size);
+	pair<float, float> GetSize() { return make_pair(m_fRadius, m_fHeight); }
 
 private:
 	CEngine*		m_pEngine;

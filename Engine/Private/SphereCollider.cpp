@@ -5,6 +5,7 @@
 CSphereCollider::CSphereCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
+	, m_fRadius(0.5f)
 {
 
 }
@@ -12,6 +13,7 @@ CSphereCollider::CSphereCollider(ID3D11Device * pDevice, ID3D11DeviceContext * p
 CSphereCollider::CSphereCollider(const CSphereCollider & rhs)
 	: CCollider(rhs)
 	, m_pEngine(CEngine::GetInstance())
+	, m_fRadius(0.5f)
 {
 
 }

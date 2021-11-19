@@ -91,11 +91,6 @@ void CGizmo::Update()
 
 void CGizmo::LateUpdate()
 {
-
-}
-
-void CGizmo::SetGizmoWindow(float* mat)
-{
 	ImGuiIO& io = ImGui::GetIO();
 	float viewManipulateRight = io.DisplaySize.x;
 	float viewManipulateTop = 0;
@@ -109,7 +104,8 @@ void CGizmo::SetGizmoWindow(float* mat)
 	//ImGuizmo::SetDrawlist();
 	float windowWidth = (float)ImGui::GetWindowWidth();
 	float windowHeight = (float)ImGui::GetWindowHeight();
-	ImVec2 imageRect = ImGui::GetContentRegionAvail();
+	imageRect = ImGui::GetContentRegionAvail();
+	winPos = ImGui::GetWindowPos();
 
 	if (!ImGui::IsWindowCollapsed())
 	{
@@ -122,23 +118,14 @@ void CGizmo::SetGizmoWindow(float* mat)
 			imageRect, ImVec2(0, 0), ImVec2(1, 1));
 	}
 
-	//if (ImGui::IsWindowFocused())
-	//{
-	//	m_pGUIManager->AddLog("Gizmo Focused");
-	//}
-
-
-
-
-
 	if (g_pObjFocused)
 	{
 		ImGuizmo::SetDrawlist();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
+		ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
 
-		ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, mat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+		ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 		XMFLOAT4X4 objMat;
-		memcpy(&objMat, mat, sizeof(XMFLOAT4X4));
+		memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
 
 		// FIX HERE
 		CComponent* pObjTransform = nullptr;
@@ -147,6 +134,22 @@ void CGizmo::SetGizmoWindow(float* mat)
 
 		dynamic_cast<CTransform*>(pObjTransform)->SetMatrix(objMat);
 	}
+
+	ImGui::End();
+	ImGui::PopStyleColor(1);
+
+	CToolManager::SetImGuiStyle();
+	CToolManager::SetImGuiColor();
+}
+
+void CGizmo::SetObjMat(float* mat)
+{
+	memcpy(_objMat, mat, sizeof(float) * 16);
+
+	//if (ImGui::IsWindowFocused())
+	//{
+	//	m_pGUIManager->AddLog("Gizmo Focused");
+	//}
 
 	//CEngine::GetInstance()->SetObjectMatrix(objMat);
 
@@ -164,12 +167,6 @@ void CGizmo::SetGizmoWindow(float* mat)
 	//	}
 	//	ImGui::EndDragDropTarget();
 	//}
-
-	ImGui::End();
-	ImGui::PopStyleColor(1);
-
-	CToolManager::SetImGuiStyle();
-	CToolManager::SetImGuiColor();
 }
 
 

@@ -5,6 +5,7 @@
 CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
+	, m_vSize(1.f, 1.f, 1.f)
 {
 
 }
@@ -12,6 +13,7 @@ CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice
 CBoxCollider::CBoxCollider(const CBoxCollider & rhs)
 	: CCollider(rhs)
 	, m_pEngine(CEngine::GetInstance())
+	, m_vSize(1.f, 1.f, 1.f)
 {
 
 }
