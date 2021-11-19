@@ -20,9 +20,8 @@ public:
 	virtual void Free() override;
 
 public:
-	HRESULT CreateBuffer();
-	HRESULT UpdateBuffer();
-	void SetRadius(float fRadius);
+	HRESULT CreateBuffer(void** pVertices);
+	void SetSize(float fRadius);
 
 private:
 	_float				m_fRadius;

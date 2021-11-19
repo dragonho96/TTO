@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "VIBuffer_LineSphere.h"
 #include "SphereCollider.h"
+#include "BoxCollider.h"
+#include "CapsuleCollider.h"
 
 USING(Tool)
 CInspector::CInspector()
@@ -28,8 +30,9 @@ void CInspector::Update()
 
 	/* Get GameObject Name and Change */
 	char buf[64];
-	sprintf(buf, "GameObject");
+	sprintf_s(buf, g_pObjFocused->GetName().c_str());
 	ImGui::InputText("##Name", buf, IM_ARRAYSIZE(buf));
+	g_pObjFocused->SetName(string(buf));
 
 	ImGui::SameLine();
 
@@ -37,25 +40,45 @@ void CInspector::Update()
 		ImGui::OpenPopup("AddComponent");
 	if (ImGui::BeginPopup("AddComponent"))
 	{
-
-		if (ImGui::MenuItem("Collider"))
+		if (ImGui::MenuItem("SphereCollider"))
 		{
 			/* Add Collider */
 			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_SphereCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+				MSG_BOX("Failed to AddComponent");
+		}
+		if (ImGui::MenuItem("BoxCollider"))
+		{
+			/* Add Collider */
+			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_BoxCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+				MSG_BOX("Failed to AddComponent");
+		}
+		if (ImGui::MenuItem("CapsuleCollider"))
+		{
+			/* Add Collider */
+			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_CapsuleCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
 				MSG_BOX("Failed to AddComponent");
 		}
 
 		ImGui::EndPopup();
 	}
 
-
 	ImGui::Separator();
 
-	//ImGui::Text("Transform");
-	GIZMOMATRIX mat = m_pGizmo->GetMatrix();
-	_float3 tr = { mat.matTranslation[0], mat.matTranslation[1], mat.matTranslation[2] };
-	_float3 rt = { mat.matRotation[0], mat.matRotation[1], mat.matRotation[2] };
-	_float3 sc = { mat.matScale[0], mat.matScale[1], mat.matScale[2] };
+	CComponent* pObjTransform = nullptr;
+	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+		MSG_BOX("Failed to Get Transform");
+
+	float _objMat[16];
+	XMFLOAT4X4 objMat = dynamic_cast<CTransform*>(pObjTransform)->GetMatrix();
+	memcpy(_objMat, &objMat, sizeof(XMFLOAT4X4));
+
+	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+
+	ImGuizmo::DecomposeMatrixToComponents(_objMat, matrixTranslation, matrixRotation, matrixScale);
+	_float3 tr, rt, sc;
+	memcpy(&tr, matrixTranslation, sizeof(float) * 3);
+	memcpy(&rt, matrixRotation, sizeof(float) * 3);
+	memcpy(&sc, matrixScale, sizeof(float) * 3);
 
 	if (ImGui::TreeNodeEx("Transform"))
 	{
@@ -66,17 +89,17 @@ void CInspector::Update()
 		ImGui::TreePop();
 	}
 
-	mat.matTranslation[0] = tr.x;
-	mat.matTranslation[1] = tr.y;
-	mat.matTranslation[2] = tr.z;
-	mat.matRotation[0] = rt.x;
-	mat.matRotation[1] = rt.y;
-	mat.matRotation[2] = rt.z;
-	mat.matScale[0] = sc.x;
-	mat.matScale[1] = sc.y;
-	mat.matScale[2] = sc.z;
+	memcpy(matrixTranslation, &tr, sizeof(float) * 3);
+	memcpy(matrixRotation, &rt, sizeof(float) * 3);
+	memcpy(matrixScale, &sc, sizeof(float) * 3);
+	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
 
-	m_pGizmo->SetNewGizmoMatrix(mat);
+	ImGuizmo::RecomposeMatrixFromComponents(
+		matrixTranslation,
+		matrixRotation,
+		matrixScale, _objMat);
+
+	m_pGizmo->SetGizmoWindow(_objMat);
 
 	ImGui::Separator();
 
@@ -84,11 +107,18 @@ void CInspector::Update()
 	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_Collider")))
 		if (ImGui::TreeNodeEx("Collider"))
 		{
-			dynamic_cast<CSphereCollider*>(pComponent)->SetRadius(1.f);
+			if (dynamic_cast<CSphereCollider*>(pComponent))
+				dynamic_cast<CSphereCollider*>(pComponent)->SetSize(1.f);
+			else if (dynamic_cast<CBoxCollider*>(pComponent))
+				dynamic_cast<CBoxCollider*>(pComponent)->SetSize(_float3(1.f, 2.f, 2.f));
+			else if (dynamic_cast<CCapsuleCollider*>(pComponent))
+				dynamic_cast<CCapsuleCollider*>(pComponent)->SetSize(2.f, 2.f);
+
 			ImGui::TreePop();
 		}
 
 	ImGui::End();
+
 }
 
 void CInspector::LateUpdate()

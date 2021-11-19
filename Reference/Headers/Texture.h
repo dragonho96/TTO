@@ -15,7 +15,7 @@ private:
 
 public: /* Getter */
 	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex = 0) {
-		return m_Textures[iIndex];
+		return m_Textures[iIndex].Get();
 	}
 
 
@@ -24,7 +24,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	vector<ID3D11ShaderResourceView*>			m_Textures;
+	vector<ComRef<ID3D11ShaderResourceView>>			m_Textures;
 	typedef vector<ID3D11ShaderResourceView*>	TEXTURES;
 
 private:

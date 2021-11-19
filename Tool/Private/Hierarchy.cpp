@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Hierarchy.h"
+#include "GameObject.h"
 
 USING(Tool)
 CHierarchy::CHierarchy()
@@ -26,7 +27,7 @@ void CHierarchy::Update()
 	}
 
 	// 여기서 리스트 순회하면서 추가
-	static bool selected = false;
+	static int selected = -1;
 	static bool openPopup = false;
 	list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
 	
@@ -34,14 +35,15 @@ void CHierarchy::Update()
 	for (auto& pObj : pObjList)
 	{
 		ImGui::PushID(iCount++);
-		ImGui::Selectable("selectable", selected);
+		ImGui::Selectable(pObj->GetName().c_str(), iCount == selected);
 
 		if (ImGui::IsItemHovered())
 		{
 			if (ImGui::IsMouseClicked(0))
 			{
 				/* Set Focused Game Object*/
-				selected = !selected;
+				selected = iCount;
+				g_pObjFocused = pObj;
 			}
 			else if (ImGui::IsMouseClicked(1))
 				openPopup = !openPopup;

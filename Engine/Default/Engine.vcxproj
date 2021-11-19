@@ -171,6 +171,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\Public\BoxCollider.h" />
+    <ClInclude Include="..\Public\CapsuleCollider.h" />
     <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\ComponentManager.h" />
@@ -207,6 +209,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\TimerManager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_LineBox.h" />
+    <ClInclude Include="..\Public\VIBuffer_LineCapsule.h" />
     <ClInclude Include="..\Public\VIBuffer_LineSphere.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="RectTest.h" />
@@ -216,6 +220,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\Private\BoxCollider.cpp" />
+    <ClCompile Include="..\Private\CapsuleCollider.cpp" />
     <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\ComponentManager.cpp" />
@@ -245,6 +251,8 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\TimerManager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_LineBox.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="RectTest.cpp" />

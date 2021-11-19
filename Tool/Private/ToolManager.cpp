@@ -14,7 +14,11 @@
 #pragma region COMPONENTS
 #include "Renderer.h"
 #include "SphereCollider.h"
+#include "BoxCollider.h"
+#include "CapsuleCollider.h"
 #include "VIBuffer_LineSphere.h"
+#include "VIBuffer_LineBox.h"
+#include "VIBuffer_LineCapsule.h"
 #pragma endregion 
 
 USING(Tool)
@@ -161,12 +165,20 @@ HRESULT CToolManager::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	/* Prepare DebugLine */
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineBox"), CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineCapsule"), CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	/* Prepare Collider*/
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_SphereCollider"), CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-
-	/* Prepare DebugLine */
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_BoxCollider"), CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	//if (FAILED(m_pEngine->AddPrototype(0, TEXT("Component_Texture_Devil"), CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../Bin/Resources/Textures/Devil.png")))))

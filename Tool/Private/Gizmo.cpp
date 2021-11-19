@@ -87,27 +87,14 @@ void CGizmo::Update()
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
-
-	/* NEED TO BE FIXED */
-	CComponent* pObjTransform = nullptr;
-	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
-		MSG_BOX("Failed to Get Transform");
-
-	XMFLOAT4X4 objMat = dynamic_cast<CTransform*>(pObjTransform)->GetMatrix();
-	memcpy(_objMat, &objMat, sizeof(XMFLOAT4X4));
-
-	ImGuizmo::SetID(0);
-
-	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-
-	ImGuizmo::DecomposeMatrixToComponents(_objMat, matrixTranslation, matrixRotation, matrixScale);
-
-	memcpy(m_tGizmoMatrix.matTranslation, matrixTranslation, sizeof(float) * 3);
-	memcpy(m_tGizmoMatrix.matRotation, matrixRotation, sizeof(float) * 3);
-	memcpy(m_tGizmoMatrix.matScale, matrixScale, sizeof(float) * 3);
 }
 
 void CGizmo::LateUpdate()
+{
+
+}
+
+void CGizmo::SetGizmoWindow(float* mat)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	float viewManipulateRight = io.DisplaySize.x;
@@ -123,9 +110,6 @@ void CGizmo::LateUpdate()
 	float windowWidth = (float)ImGui::GetWindowWidth();
 	float windowHeight = (float)ImGui::GetWindowHeight();
 	ImVec2 imageRect = ImGui::GetContentRegionAvail();
-
-	//ImGui::SetWindowSize(ImVec2{ windowWidth, windowHeight });
-	//ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
 
 	if (!ImGui::IsWindowCollapsed())
 	{
@@ -147,20 +131,14 @@ void CGizmo::LateUpdate()
 
 
 
-	if (nullptr != g_pObjFocused)
+	if (g_pObjFocused)
 	{
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
 
-		ImGuizmo::RecomposeMatrixFromComponents(
-			m_tNewGizmoMatrix.matTranslation,
-			m_tNewGizmoMatrix.matRotation,
-			m_tNewGizmoMatrix.matScale, _objMat);
-
-		//ImGuizmo::DrawGrid(_view, _projection, identityMatrix, 100.f);
-		ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+		ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, mat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 		XMFLOAT4X4 objMat;
-		memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
+		memcpy(&objMat, mat, sizeof(XMFLOAT4X4));
 
 		// FIX HERE
 		CComponent* pObjTransform = nullptr;

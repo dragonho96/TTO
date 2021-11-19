@@ -20,6 +20,8 @@ public:
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void LateUpdate() override;
+public:
+	void SetGizmoWindow(float* mat);
 
 public:
 	const GIZMOMATRIX GetMatrix() { return m_tGizmoMatrix; }
