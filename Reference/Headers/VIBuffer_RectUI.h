@@ -2,7 +2,7 @@
 
 #include "VIBuffer.h"
 #include "RectTransform.h"
-
+#include "Texture.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CVIBuffer_RectUI final : public CVIBuffer
@@ -23,6 +23,7 @@ public:
 
 private:
 	CRectTransform* m_pRectTransform = nullptr;
+	CTexture*		m_pTexture = nullptr;
 };
 
 END

@@ -10,6 +10,7 @@
 #include "VIBuffer_LineSphere.h"
 #include "VIBuffer_LineBox.h"
 #include "VIBuffer_LineCapsule.h"
+#include "VIBuffer_RectUI.h"
 #pragma endregion 
 
 #pragma region OBJECTS
@@ -65,6 +66,8 @@ HRESULT CScene_Tool::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineBox"), CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineCapsule"), CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Prepare Collider*/
