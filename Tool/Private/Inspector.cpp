@@ -2,6 +2,7 @@
 #include "..\Public\Inspector.h"
 #include "GameObject.h"
 #include "VIBuffer_LineSphere.h"
+#include "VIBuffer_RectUI.h"
 #include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "CapsuleCollider.h"
@@ -229,7 +230,19 @@ void CInspector::DrawImage()
 	{
 		if (ImGui::TreeNodeEx("Image"))
 		{
-
+			ImGui::Text(dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetTextureFilePath().c_str());
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+				{
+					//string s = *(static_cast<std::string *>(payload->Data));
+					//const int s = *(const int*)(payload->Data);
+					const char* s = (const char*)(payload->Data);
+					//string sdf = "ss" + to_string(s);
+					dynamic_cast<CVIBuffer_RectUI*>(pComponent)->UpdateTexture(s);
+				}
+				ImGui::EndDragDropTarget();
+			}
 			ImGui::TreePop();
 		}
 	}

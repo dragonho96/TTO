@@ -21,6 +21,10 @@ public:
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 
+public:
+	string GetTextureFilePath();
+	void UpdateTexture(string texturePath);
+
 private:
 	CRectTransform* m_pRectTransform = nullptr;
 	CTexture*		m_pTexture = nullptr;

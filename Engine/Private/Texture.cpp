@@ -36,6 +36,7 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTexture
 		ComRef<ID3D11ShaderResourceView>			pShaderResourceView = nullptr;
 
 		wsprintf(szTextureFileName, pTextureFilePath, i);
+		m_FilePath = WCHARToString(szTextureFileName);
 
 		DirectX::ScratchImage				Image;
 

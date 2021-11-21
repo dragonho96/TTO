@@ -104,4 +104,18 @@ namespace Engine
 		const string	m_pTargetTag;
 
 	};
+
+	inline string WCHARToString(const _tchar* ptsz)
+	{
+		wstring ws(ptsz);
+		// your new String
+		string str(ws.begin(), ws.end());
+		return str;
+	}
+
+	inline const _tchar* StringToWCHAR(string str)
+	{
+		wstring ws(str.begin(), str.end());
+		return ws.c_str();
+	}
 }
