@@ -18,9 +18,9 @@ void CContentBrowser::Initialize()
 {
 	m_CurrentDirectory = s_AssetPath;
 
-	m_pTexFolder = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/File.png"));
-	//m_pTexFile = new CTexture(L"../../Assets/Texture/File.png");
-	//m_pTexImage = new CTexture(L"../../Assets/Texture/Image.png");
+	m_pTexFolder = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/Folder.png"));
+	m_pTexFile = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/File.png"));
+	m_pTexImage = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/Image.png"));
 }
 
 
@@ -60,8 +60,8 @@ void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 void CContentBrowser::Free()
 {
 	SafeRelease(m_pTexFolder);
-	//SafeRelease(m_pTexFile);
-	//SafeRelease(m_pTexImage);
+	SafeRelease(m_pTexFile);
+	SafeRelease(m_pTexImage);
 }
 
 void CContentBrowser::Update()
@@ -123,14 +123,10 @@ void CContentBrowser::Update()
 			texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
 		else
 		{
-			//if (path.extension().string() == ".png")
-			//	texImage = (ImTextureID)m_pTexImage->GetResourceView();
-			//else
-			//	texImage = (ImTextureID)m_pTexFile->GetResourceView();
 			if (path.extension().string() == ".png")
-				texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
+				texImage = (ImTextureID)m_pTexImage->Get_ShaderResourceView();
 			else
-				texImage = (ImTextureID)m_pTexFolder->Get_ShaderResourceView();
+				texImage = (ImTextureID)m_pTexFile->Get_ShaderResourceView();
 		}
 
 		ImGui::ImageButton(texImage, { thumbnailSize, thumbnailSize }, { 0, 0 }, { 1, 1 });

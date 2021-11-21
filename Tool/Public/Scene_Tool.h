@@ -11,6 +11,7 @@ public:
 	virtual _uint Update(_double TimeDelta)  override;
 	virtual HRESULT Render() override;
 private:
+	HRESULT ReadyPrototypeComponent();
 	HRESULT ReadyPrototypeGameObject(); /* 로고에서 사용할 객체의 원형을 생성한다. (다른 씬의 경ㅇ우, 로더에서 구현될 내용.) */
 
 public:

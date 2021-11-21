@@ -32,7 +32,21 @@ HRESULT CLayer::AddGameObjectInLayer(CGameObject * pGameObject)
 
 _uint CLayer::Update(_double dDeltaTime)
 {
+	_bool		bDead = 0;
 	_int		iProgress = 0;
+
+	for (auto& iter = m_ObjectList.begin(); iter != m_ObjectList.end();)
+	{
+		if (bDead = (*iter)->isDead())
+		{
+			SafeRelease(*iter);
+			iter = m_ObjectList.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
 
 	for (auto& pGameObject : m_ObjectList)
 	{

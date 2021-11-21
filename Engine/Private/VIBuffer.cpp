@@ -18,7 +18,9 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
 	, m_pVertices(rhs.m_pVertices)
 	, m_ePrimitive(rhs.m_ePrimitive)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
+	, m_iNumVerticesPerPrimitive(rhs.m_iNumVerticesPerPrimitive)
 {
 	//SafeAddRef(m_pIB);
 	//SafeAddRef(m_pVB);
@@ -43,7 +45,8 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pObjTransform = (CTransform*)pArg;
+	if (pArg)
+		m_pObjTransform = (CTransform*)pArg;
 
 	return S_OK;
 }
@@ -55,27 +58,31 @@ HRESULT CVIBuffer::Render()
 
 	_uint		iOffset = 0;
 
-	ConstantBuffer cb1;
-	//cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
-	cb1.mWorld = XMMatrixTranspose( XMLoadFloat4x4( &m_pObjTransform->GetMatrix() ) );
-	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
-	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
-	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+	//ConstantBuffer cb1;
+	////cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
+	//cb1.mWorld = XMMatrixTranspose( XMLoadFloat4x4( &m_pObjTransform->GetMatrix() ) );
+	//cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
+	//cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
+	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
+	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
+
+	m_pShader->SetUp_ValueOnShader("World", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("View", &XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix()), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("Projection", &XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix()), sizeof(_matrix));
+
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
-	
 	if (m_IBSubResourceData.pSysMem)
 		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
-
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 	// m_pDeviceContext->IASetInputLayout();
 
 	m_pShader->Render();
 
-	//if (m_IBSubResourceData.pSysMem)
-	//	m_pDeviceContext->DrawIndexed();
-	CEngine::GetInstance()->GetDeviceContext()->Draw(m_iNumVertices, 0);
+	if (m_IBSubResourceData.pSysMem)
+		m_pDeviceContext->DrawIndexed(m_iNumPrimitive * m_iNumVerticesPerPrimitive, 0, 0);
+	else
+		m_pDeviceContext->Draw(m_iNumVertices, 0);
 	return S_OK;
 }
 

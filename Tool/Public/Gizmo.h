@@ -20,6 +20,12 @@ public:
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void LateUpdate() override;
+public:
+	void ManipulateGameObject();
+	void ManipulateUI();
+
+public:
+	void SetObjMat(float* mat);
 
 public:
 	const GIZMOMATRIX GetMatrix() { return m_tGizmoMatrix; }
@@ -36,6 +42,9 @@ private:
 	float _view[16];
 	float _projection[16];
 	float _objMat[16];	// Selected Obj Mat
+
+	ImVec2 imageRect;
+	ImVec2 winPos;
 };
 
 END

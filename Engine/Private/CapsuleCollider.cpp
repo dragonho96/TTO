@@ -1,54 +1,56 @@
-#include "..\Public\SphereCollider.h"
+#include "..\Public\CapsuleCollider.h"
 #include "Transform.h"
 
 
-CSphereCollider::CSphereCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
+	, m_fHeight(1.f)
 {
 
 }
 
-CSphereCollider::CSphereCollider(const CSphereCollider & rhs)
+CCapsuleCollider::CCapsuleCollider(const CCapsuleCollider & rhs)
 	: CCollider(rhs)
 	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
+	, m_fHeight(1.f)
 {
 
 }
 
 
-CSphereCollider * CSphereCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CCapsuleCollider * CCapsuleCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CSphereCollider*	pInstance = new CSphereCollider(pDevice, pDeviceContext);
+	CCapsuleCollider*	pInstance = new CCapsuleCollider(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->InitializePrototype()))
 	{
-		MSG_BOX("Failed To Creating CSphereCollider");
+		MSG_BOX("Failed To Creating CCapsuleCollider");
 		SafeRelease(pInstance);
 	}
 	return pInstance;
 }
 
-CComponent * CSphereCollider::Clone(void * pArg)
+CComponent * CCapsuleCollider::Clone(void * pArg)
 {
-	CComponent*	pInstance = new CSphereCollider(*this);
+	CComponent*	pInstance = new CCapsuleCollider(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Creating CSphereCollider");
+		MSG_BOX("Failed To Creating CCapsuleCollider");
 		SafeRelease(pInstance);
 	}
 	return pInstance;
 }
 
-void CSphereCollider::Free()
+void CCapsuleCollider::Free()
 {
 	__super::Free();
 }
 
-HRESULT CSphereCollider::InitializePrototype()
+HRESULT CCapsuleCollider::InitializePrototype()
 {
 	if (FAILED(__super::InitializePrototype()))
 		return E_FAIL;
@@ -56,7 +58,7 @@ HRESULT CSphereCollider::InitializePrototype()
 	return S_OK;
 }
 
-HRESULT CSphereCollider::Initialize(void * pArg)
+HRESULT CCapsuleCollider::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -68,11 +70,11 @@ HRESULT CSphereCollider::Initialize(void * pArg)
 }
 
 
-HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
+HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
-	m_pDebugLine = pEngine->CloneComponent(0, TEXT("Prototype_VIBuffer_LineSphere"), m_pObjTransform);
+	m_pDebugLine = pEngine->CloneComponent(0, TEXT("Prototype_VIBuffer_LineCapsule"), m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
 
@@ -81,7 +83,7 @@ HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CSphereCollider::SetUpPhysX()
+void CCapsuleCollider::SetUpPhysX()
 {
 	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
 	//PxTransform relativePose(PxQuat(PxHalfPi, PxVec(0, 0, 1)));
@@ -90,6 +92,7 @@ void CSphereCollider::SetUpPhysX()
 	//aCapsuleShape->setLocalPose(relativePose);
 	//PxRigidBodyExt::updateMassAndInertia(*aSphereActor, capsuleDensity);
 	//aScene->addActor(aCapsuleActor);
+
 
 	PxTransform transform(PxVec3(), PxQuat());
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
@@ -104,11 +107,14 @@ void CSphereCollider::SetUpPhysX()
 	//pActor->Setglo
 }
 
-void CSphereCollider::SetSize(float fRadius)
+void CCapsuleCollider::SetSize(pair<float, float> size)
 {
-	if (m_fRadius == fRadius)
-		return;
+	if (m_fRadius != size.first || m_fHeight != size.second)
+	{
+		m_fRadius = size.first;
+		m_fHeight = size.second;
 
-	m_fRadius = fRadius;
-	dynamic_cast<CVIBuffer_LineSphere*>(m_pDebugLine)->SetSize(m_fRadius);
+		dynamic_cast<CVIBuffer_LineCapsule*>(m_pDebugLine)->SetSize(m_fRadius, m_fHeight);
+	}
 }
+

@@ -65,6 +65,12 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 
 HRESULT CGameObject::AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg)
 {
+	if (GetComponent(pComponentTag))
+	{
+		MSG_BOX("Component already exist");
+		return E_FAIL;
+	}
+
 	CComponent*		pComponent = m_pEngine->CloneComponent(iSceneIndex, pPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;

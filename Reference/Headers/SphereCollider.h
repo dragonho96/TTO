@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Component.h"
+#include "Collider.h"
 #include "VIBuffer.h"
 #include "VIBuffer_LineSphere.h"
-#include "Transform.h"
 
 
 BEGIN(Engine)
 
-class ENGINE_DLL CSphereCollider final : public CComponent
+class ENGINE_DLL CSphereCollider final : public CCollider
 {
 private:
 	explicit CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -16,27 +15,21 @@ private:
 	virtual ~CSphereCollider() = default;
 public:
 	static CSphereCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	virtual CSphereCollider* Clone(void* pArg) override;
+	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
-	void Render();
-
 public:
-	HRESULT SetUpDebugLine();
-	void SetUpPhysX();
-
+	virtual HRESULT SetUpDebugLine() override;
+	virtual void SetUpPhysX() override;
 public:
-	void SetRadius(float fRadius);
+	void SetSize(float fRadius);
+	float GetSize() { return m_fRadius; }
+
 private:
 	CEngine*		m_pEngine;
-	// Physx info
-	// Debug line info
-	CComponent*		m_pDebugLineSphere;
-	CTransform*		m_pObjTransform;
-
 	float			m_fRadius;
 };
 

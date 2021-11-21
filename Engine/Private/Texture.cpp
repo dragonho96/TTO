@@ -12,8 +12,8 @@ CTexture::CTexture(const CTexture & rhs)
 	, m_Textures(rhs.m_Textures)
 	, m_iNumTextures(rhs.m_iNumTextures)
 {
-	for (auto& pShaderResourceView : m_Textures)
-		SafeAddRef(pShaderResourceView);
+	//for (auto& pShaderResourceView : m_Textures)
+	//	SafeAddRef(pShaderResourceView);
 
 }
 
@@ -33,7 +33,7 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTexture
 
 	for (_int i = 0; i < iNumTextures; ++i)
 	{
-		ID3D11ShaderResourceView*			pShaderResourceView = nullptr;
+		ComRef<ID3D11ShaderResourceView>			pShaderResourceView = nullptr;
 
 		wsprintf(szTextureFileName, pTextureFilePath, i);
 
@@ -110,8 +110,8 @@ void CTexture::Free()
 {
 	CComponent::Free();
 
-	for (auto& pShaderResourceView : m_Textures)
-		SafeRelease(pShaderResourceView);
+	//for (auto& pShaderResourceView : m_Textures)
+	//	SafeRelease(pShaderResourceView);
 
 	m_Textures.clear();
 }

@@ -109,20 +109,38 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\Rect">
       <UniqueIdentifier>{2ea9e81b-1bb3-4e95-88b4-077aeeb4e5ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\VIBuffer\Line">
-      <UniqueIdentifier>{e4ee138d-0fc5-433e-8a14-634e04d74f98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\02.GameObject\EmptyObject">
       <UniqueIdentifier>{701f2559-62f0-4a9b-b037-41d2daec9b6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\VIBuffer\Line\Circle">
-      <UniqueIdentifier>{f366b6e2-55cb-4b4b-9a19-4491f441da65}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\Collider">
       <UniqueIdentifier>{c5b03e99-1a15-48e0-aba3-2663e021ae10}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\Collider\SphereCollider">
       <UniqueIdentifier>{cc8e8ca0-b595-4b06-ace2-8f3514cb7db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\DebugLine">
+      <UniqueIdentifier>{e4ee138d-0fc5-433e-8a14-634e04d74f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\DebugLine\Sphere">
+      <UniqueIdentifier>{f366b6e2-55cb-4b4b-9a19-4491f441da65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\DebugLine\Box">
+      <UniqueIdentifier>{629656b6-379e-4f42-939a-29b15519675c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\DebugLine\Capsule">
+      <UniqueIdentifier>{51ae2768-f2b0-4145-b31d-8438da676180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\BoxCollider">
+      <UniqueIdentifier>{e672362d-be1f-45b4-a8b4-4d7e6ac85ac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\CapsuleCollider">
+      <UniqueIdentifier>{86487514-cb8e-4b04-a0ac-ed0e0398fe0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\RectTransform">
+      <UniqueIdentifier>{3ad9e086-9f34-4d10-8a5e-c6ae60357f63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\RectUI">
+      <UniqueIdentifier>{e0af2ccd-208d-4c3f-bee3-4d37120ce883}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,7 +266,28 @@
       <Filter>01.Utility\03.Components\Collider\SphereCollider</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_LineSphere.h">
-      <Filter>01.Utility\03.Components\VIBuffer\Line\Circle</Filter>
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LineBox.h">
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LineCapsule.h">
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Capsule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BoxCollider.h">
+      <Filter>01.Utility\03.Components\Collider\BoxCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CapsuleCollider.h">
+      <Filter>01.Utility\03.Components\Collider\CapsuleCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RectTransform.h">
+      <Filter>01.Utility\03.Components\RectTransform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EmptyUI.h">
+      <Filter>01.Utility\02.GameObject\EmptyObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_RectUI.h">
+      <Filter>01.Utility\03.Components\VIBuffer\RectUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -356,7 +395,28 @@
       <Filter>01.Utility\03.Components\Collider\SphereCollider</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp">
-      <Filter>01.Utility\03.Components\VIBuffer\Line\Circle</Filter>
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LineBox.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\DebugLine\Capsule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BoxCollider.cpp">
+      <Filter>01.Utility\03.Components\Collider\BoxCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CapsuleCollider.cpp">
+      <Filter>01.Utility\03.Components\Collider\CapsuleCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RectTransform.cpp">
+      <Filter>01.Utility\03.Components\RectTransform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EmptyUI.cpp">
+      <Filter>01.Utility\02.GameObject\EmptyObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_RectUI.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\RectUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
