@@ -91,7 +91,6 @@ void CSphereCollider::SetUpPhysX()
 	//PxRigidBodyExt::updateMassAndInertia(*aSphereActor, capsuleDensity);
 	//aScene->addActor(aCapsuleActor);
 
-
 	PxTransform transform(PxVec3(), PxQuat());
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
 	PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);

@@ -21,6 +21,10 @@ public:
 	virtual void Update() override;
 	virtual void LateUpdate() override;
 public:
+	void ManipulateGameObject();
+	void ManipulateUI();
+
+public:
 	void SetObjMat(float* mat);
 
 public:

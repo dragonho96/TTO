@@ -17,20 +17,33 @@ void CHierarchy::Update()
 {
 	ImGui::Begin("Hierarchy");
 
-	if (ImGui::Button("Add Empty GameObject"))
+	if (ImGui::Button("Add Empty Object"))
+		ImGui::OpenPopup("AddGameObject");
+	if (ImGui::BeginPopup("AddGameObject"))
 	{
-		//Add GameObject 
-		CGameObject* pObj = m_pEngine->AddGameObject(0,
-			TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
-		g_pObjFocused = pObj;
-
+		if (ImGui::MenuItem("GameObject"))
+		{
+			//Add GameObject 
+			CGameObject* pObj = m_pEngine->AddGameObject(0,
+				TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
+			g_pObjFocused = pObj;
+		}
+		if (ImGui::MenuItem("UI"))
+		{
+			//Add GameObject 
+			CGameObject* pObj = m_pEngine->AddGameObject(0,
+				TEXT("Prototype_EmptyUI"), TEXT("LAYER_TOOL"));
+			g_pObjFocused = pObj;
+		}
+		ImGui::EndPopup();
 	}
+
 
 	// 여기서 리스트 순회하면서 추가
 	static int selected = -1;
 	static bool openPopup = false;
 	list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
-	
+
 	int iCount = 0;
 	for (auto& pObj : pObjList)
 	{

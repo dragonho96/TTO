@@ -50,3 +50,13 @@ float4 PS( PS_INPUT input) : SV_Target
 {
     return input.Color;
 }
+
+
+technique11 DefaultDevice
+{
+    pass DefaultPass
+    {
+        VertexShader = compile vs_5_0 VS();
+        PixelShader = compile ps_5_0 PS();
+    }
+}

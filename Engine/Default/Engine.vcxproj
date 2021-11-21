@@ -180,6 +180,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\DebugCapsule.h" />
     <ClInclude Include="..\Public\DebugSphere.h" />
     <ClInclude Include="..\Public\EmptyGameObject.h" />
+    <ClInclude Include="..\Public\EmptyUI.h" />
     <ClInclude Include="..\Public\Engine.h" />
     <ClInclude Include="..\public\Engine_Defines.h" />
     <ClInclude Include="..\public\Engine_Function.h" />
@@ -196,6 +197,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\InputManager.h" />
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\PxManager.h" />
+    <ClInclude Include="..\Public\RectTransform.h" />
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\Public\Scene.h" />
     <ClInclude Include="..\Public\SceneManager.h" />
@@ -213,6 +215,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\VIBuffer_LineCapsule.h" />
     <ClInclude Include="..\Public\VIBuffer_LineSphere.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_RectUI.h" />
     <ClInclude Include="RectTest.h" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +232,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\DebugCapsule.cpp" />
     <ClCompile Include="..\Private\DebugSphere.cpp" />
     <ClCompile Include="..\Private\EmptyGameObject.cpp" />
+    <ClCompile Include="..\Private\EmptyUI.cpp" />
     <ClCompile Include="..\Private\Engine.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
@@ -239,6 +243,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\InputManager.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
+    <ClCompile Include="..\Private\RectTransform.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\Private\Scene.cpp" />
     <ClCompile Include="..\Private\SceneManager.cpp" />
@@ -255,6 +260,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_RectUI.cpp" />
     <ClCompile Include="RectTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

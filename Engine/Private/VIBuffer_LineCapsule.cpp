@@ -26,6 +26,8 @@ HRESULT CVIBuffer_LineCapsule::InitializePrototype()
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	CreateBuffer(&m_pVertices);
+
+	return S_OK;
 }
 
 HRESULT CVIBuffer_LineCapsule::Initialize(void * pArg)
@@ -94,7 +96,7 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 	_int index = 0;
 	float phi = 0.f;
 	// x = 0
-	for (_int i = 0; i < m_fSliceCount / 2; i++) {
+	for (_uint i = 0; i < m_fSliceCount / 2; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) + m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
@@ -103,7 +105,7 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 	index++;
 	// x = 0
 	phi = 0.f;
-	for (_int i = m_fSliceCount / 2; i < m_fSliceCount; i++) {
+	for (_uint i = m_fSliceCount / 2; i < m_fSliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3(0, (m_fRadius * sinf(phi)) - m_fHeight / 2.f, (m_fRadius * cosf(phi)));
 		index++;
@@ -114,14 +116,14 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 
 	// y = 0
 	phi = 0.f;
-	for (_int i = 0; i < m_fSliceCount; i++) {
+	for (_uint i = 0; i < m_fSliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), m_fHeight / 2.f, (m_fRadius * sinf(phi)));
 		index++;
 	}
 	// y = 0
 	phi = 0.f;
-	for (_int i = 0; i < m_fSliceCount; i++) {
+	for (_uint i = 0; i < m_fSliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), -m_fHeight / 2.f, (m_fRadius * sinf(phi)));
 		index++;
@@ -129,7 +131,7 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 
 	// z = 0
 	phi = 0.f;
-	for (_int i = 0; i < m_fSliceCount / 2; i++) {
+	for (_uint i = 0; i < m_fSliceCount / 2; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), (m_fRadius * sinf(phi)) + m_fHeight / 2.f, 0);
 		index++;
@@ -138,7 +140,7 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 	index++;
 	// z = 0
 	phi = 0.f;
-	for (_int i = m_fSliceCount / 2; i < m_fSliceCount; i++) {
+	for (_uint i = m_fSliceCount / 2; i < m_fSliceCount; i++) {
 		phi = i * phiStep;
 		vertices[index] = _float3((m_fRadius * cosf(phi)), (m_fRadius * sinf(phi)) - m_fHeight / 2.f, 0);
 		index++;
@@ -152,26 +154,26 @@ HRESULT CVIBuffer_LineCapsule::CreateBuffer(void** pVertices)
 	ZeroMemory(m_pLines, sizeof(VTXCOLOR) * m_iNumVertices);
 
 	index = 0;
-	for (_int i = 0; i < m_fSliceCount + 2; i++) {
+	for (_uint i = 0; i < m_fSliceCount + 2; i++) {
 		m_pLines[index++].vPos = vertices[i];
 		m_pLines[index++].vPos = i == (m_fSliceCount + 2) - 1 ? vertices[0] : vertices[i + 1];
 	}
 
-	for (_int i = m_fSliceCount + 2; i < m_fSliceCount * 2 + 2; i++) {
+	for (_uint i = m_fSliceCount + 2; i < m_fSliceCount * 2 + 2; i++) {
 		m_pLines[index++].vPos = vertices[i];
 		m_pLines[index++].vPos = i == (m_fSliceCount * 2 + 2) - 1 ? vertices[m_fSliceCount + 2] : vertices[i + 1];
 	}
 
-	for (_int i = m_fSliceCount * 2 + 2; i < m_fSliceCount * 3 + 2; i++) {
+	for (_uint i = m_fSliceCount * 2 + 2; i < m_fSliceCount * 3 + 2; i++) {
 		m_pLines[index++].vPos = vertices[i];
 		m_pLines[index++].vPos = i == (m_fSliceCount * 3 + 2) - 1 ? vertices[m_fSliceCount * 2 + 2] : vertices[i + 1];
 	}
 
-	for (_int i = m_fSliceCount * 3 + 2; i < m_fSliceCount * 4 + 4; i++) {
+	for (_uint i = m_fSliceCount * 3 + 2; i < m_fSliceCount * 4 + 4; i++) {
 		m_pLines[index++].vPos = vertices[i];
 		m_pLines[index++].vPos = i == (m_fSliceCount * 4 + 4) - 1 ? vertices[m_fSliceCount * 3 + 2] : vertices[i + 1];
 	}
-	for (_int i = 0; i < m_iNumVertices; ++i)
+	for (_uint i = 0; i < m_iNumVertices; ++i)
 		m_pLines[i].vColor = { 0.f, 1.f, 0.f, 1.f };
 
 	SafeDeleteArray(vertices);

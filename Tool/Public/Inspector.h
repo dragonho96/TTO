@@ -15,9 +15,15 @@ public:
 	virtual void LateUpdate() override;
 
 public:
+	void UpdateGameObject();
+	void UpdateUI();
+
+public:
 	void DrawVec3(const string& label, _float3& values);
+	void DrawRectDesc(const string& label, _float& x, _float& y);
 	void DrawCollider();
 	void DrawTransform();
+	void DrawRectTransform();
 
 private:
 	//std::shared_ptr<CGizmo>		m_pGizmo;

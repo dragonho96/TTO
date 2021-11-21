@@ -7,19 +7,43 @@ BEGIN(Engine)
 class CShader
 {
 public:
-	explicit CShader(wstring file, string vsName = "VS", string psName = "PS");
+	typedef struct tagEffectDesc
+	{
+		ID3DX11EffectPass*			pPass = nullptr;
+		ID3D11InputLayout*			pLayout = nullptr;
+
+		D3DX11_PASS_DESC			Desc;
+		D3DX11_PASS_SHADER_DESC		PassVsDesc;
+		D3DX11_EFFECT_SHADER_DESC	EffectVsDesc;
+		vector<D3D11_SIGNATURE_PARAMETER_DESC> vecSignatureDescs;
+	}EFFECTDESC;
+
+public:
+	explicit CShader(wstring file);
 	virtual ~CShader();
 
 public:
-	void Render();
+	HRESULT Render(_uint iPassIndex = 0);
 
 private:
-	HRESULT CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut);
-	HRESULT CreateVertexShader();
-	HRESULT CreatePixelShader();
-	HRESULT CreateInputLayout();
+	//HRESULT CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut);
+
+	//HRESULT CreateVertexShader();
+	//HRESULT CreatePixelShader();
+	//HRESULT CreateInputLayout();
+
+public:
+	HRESULT Compile_Shader(wstring pShaderFilePath, _uint iTechniqueIndex = 0);
+	HRESULT SetUp_ValueOnShader(const char* pConstantName, void* pData, _uint iByteSize);
+	ID3D11InputLayout* CreateInputLayout(ID3DBlob* fxBlob, D3DX11_EFFECT_SHADER_DESC* effectVsDesc, vector<D3D11_SIGNATURE_PARAMETER_DESC>& params);
+
+
+protected:
+	vector<EFFECTDESC>			m_EffectDescs;
+	ID3DX11Effect*				m_pEffect = nullptr;
 
 private:
+
 	wstring shaderFile;
 	string vsName;
 	string psName;

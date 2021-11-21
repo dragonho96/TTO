@@ -3,6 +3,8 @@
 #include "ToolManager.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "EmptyGameObject.h"
+#include "EmptyUI.h"
 
 CGameObject* g_pObjFocused = nullptr;
 
@@ -120,19 +122,11 @@ void CGizmo::LateUpdate()
 
 	if (g_pObjFocused)
 	{
-		ImGuizmo::SetDrawlist();
-		ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
+		if (dynamic_cast<CEmptyGameObject*>(g_pObjFocused))
+			ManipulateGameObject();
+		else
+			ManipulateUI();
 
-		ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-		XMFLOAT4X4 objMat;
-		memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
-
-		// FIX HERE
-		CComponent* pObjTransform = nullptr;
-		if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
-			MSG_BOX("Failed to Get Transform");
-
-		dynamic_cast<CTransform*>(pObjTransform)->SetMatrix(objMat);
 	}
 
 	ImGui::End();
@@ -140,6 +134,53 @@ void CGizmo::LateUpdate()
 
 	CToolManager::SetImGuiStyle();
 	CToolManager::SetImGuiColor();
+}
+
+void CGizmo::ManipulateGameObject()
+{
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
+
+	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+	XMFLOAT4X4 objMat;
+	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
+
+	// FIX HERE
+	CComponent* pObjTransform = nullptr;
+	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+		MSG_BOX("Failed to Get Transform");
+
+	dynamic_cast<CTransform*>(pObjTransform)->SetMatrix(objMat);
+}
+
+void CGizmo::ManipulateUI()
+{
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
+
+	//XMMATRIX viewMatrix = XMMatrixIdentity();
+	//XMFLOAT4X4 fView;
+	//XMStoreFloat4x4(&fView, viewMatrix);
+	//memcpy(_view, &fView, sizeof(XMFLOAT4X4));
+
+	///* TODO : Get WinSize */
+	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280, 720, 0.0f, 1.f);
+	XMFLOAT4X4 projection;
+	XMStoreFloat4x4(&projection, projMatrix);
+	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
+
+
+	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+
+	XMFLOAT4X4 objMat;
+	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
+
+	CComponent* pObjTransform = nullptr;
+	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+		MSG_BOX("Failed to Get Transform");
+
+	dynamic_cast<CRectTransform*>(pObjTransform)->SetTransformMat(objMat);
+
 }
 
 void CGizmo::SetObjMat(float* mat)

@@ -35,6 +35,7 @@ protected: /* For.Index Buffer */
 	_uint						m_iNumPrimitive = 0;
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitive;
+	_uint						m_iNumVerticesPerPrimitive = 0;
 
 protected:
 	ID3D11InputLayout*			m_pInputLayOut = nullptr;
