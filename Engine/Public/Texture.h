@@ -27,9 +27,12 @@ private:
 	vector<ComRef<ID3D11ShaderResourceView>>			m_Textures;
 	typedef vector<ID3D11ShaderResourceView*>	TEXTURES;
 
+public:
+	const string	GetFilePath() const { return m_FilePath; }
+
 private:
 	_uint			m_iNumTextures = 0;
-
+	string			m_FilePath;
 
 public:
 	/* 원형생성. */

@@ -164,4 +164,18 @@ void CVIBuffer_RectUI::Free()
 	SafeRelease(m_pTexture);
 }
 
+string CVIBuffer_RectUI::GetTextureFilePath()
+{
+	if (m_pTexture)
+		return m_pTexture->GetFilePath();
+}
+
+void CVIBuffer_RectUI::UpdateTexture(string texturePath)
+{
+	SafeRelease(m_pTexture);
+	wstring wstr = wstring(texturePath.begin(), texturePath.end());
+
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, wstr.c_str());
+}
+
 
