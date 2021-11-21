@@ -98,7 +98,7 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 		m_pRectTransform = (CRectTransform*)pArg;
 
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_RectImage.fx");
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_TGA, L"../../Assets/Texture/Folder.png");
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, L"../../Assets/Texture/Folder.png");
 
 	return S_OK;
 }
@@ -107,6 +107,7 @@ HRESULT CVIBuffer_RectUI::Render()
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
+
 
 	_uint		iOffset = 0;
 
@@ -159,6 +160,7 @@ CComponent * CVIBuffer_RectUI::Clone(void * pArg)
 void CVIBuffer_RectUI::Free()
 {
 	__super::Free();
+	SafeRelease(m_pTexture);
 }
 
 

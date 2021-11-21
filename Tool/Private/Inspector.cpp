@@ -106,6 +106,10 @@ void CInspector::UpdateUI()
 
 	DrawRectTransform();
 
+	ImGui::Separator();
+
+	DrawImage();
+
 }
 
 void CInspector::DrawVec3(const string & label, _float3 & values)

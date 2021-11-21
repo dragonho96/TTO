@@ -56,7 +56,7 @@ Texture2D Map;
 float4 PS_MAIN(PS_IN input) : SV_TARGET
 {
     float4 color = Map.Sample(Sampler, input.vTexUV); // 월요일날 설명해주실꺼
-
+    clip(color.a < 0.1f ? -1 : 1);
     return color;
 }
 
