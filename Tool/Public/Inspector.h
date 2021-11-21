@@ -26,6 +26,7 @@ public:
 public:
 	void DrawRectTransform();
 	void DrawRectDesc(const string& label, _float& x, _float& y);
+	void DrawImage();
 
 private:
 	//std::shared_ptr<CGizmo>		m_pGizmo;

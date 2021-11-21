@@ -110,10 +110,11 @@ HRESULT CVIBuffer_RectUI::Render()
 
 
 	_uint		iOffset = 0;
-
+	_float4 color = { 1.f, 0.f, 0.f, 1.f };
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("vColor", &color, sizeof(_float4));
 
 	ID3DX11EffectShaderResourceVariable* map;
 	map = m_pShader->AsSRV("Map");

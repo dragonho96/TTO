@@ -6,6 +6,10 @@ cbuffer Matrices
 	matrix		g_ProjMatrix;	
 }
 
+cbuffer Color
+{
+    float4 vColor;
+};
 
 struct VS_IN
 {
@@ -16,7 +20,7 @@ struct VS_IN
 struct VS_OUT
 {
 	float4	vPosition : SV_POSITION;
-	float2	vTexUV : TEXCOORD0;
+    float2 vTexUV : TEXCOORD0;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -43,7 +47,7 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
 	float4	vPosition : SV_POSITION;
-	float2	vTexUV : TEXCOORD0;
+    float2 vTexUV : TEXCOORD0;
 };
 
 SamplerState Sampler
@@ -57,6 +61,7 @@ float4 PS_MAIN(PS_IN input) : SV_TARGET
 {
     float4 color = Map.Sample(Sampler, input.vTexUV); // 월요일날 설명해주실꺼
     clip(color.a < 0.1f ? -1 : 1);
+    color = float4(1.f, 0.f, 0.f, 1.f);
     return color;
 }
 

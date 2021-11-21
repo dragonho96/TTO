@@ -80,6 +80,13 @@ void CGizmo::Update()
 	ImGuizmo::BeginFrame();
 	ImGuizmo::Enable(true);
 
+	if (CEngine::GetInstance()->IsKeyDown('W'))
+		m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (CEngine::GetInstance()->IsKeyDown('E'))
+		m_CurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (CEngine::GetInstance()->IsKeyDown('R'))
+		m_CurrentGizmoOperation = ImGuizmo::SCALE;
+
 	XMMATRIX viewMatrix = CEngine::GetInstance()->GetViewMatrix();
 	XMFLOAT4X4 fView;
 	XMStoreFloat4x4(&fView, viewMatrix);

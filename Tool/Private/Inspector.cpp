@@ -222,6 +222,19 @@ void CInspector::DrawRectDesc(const string & label, _float & x, _float & y)
 	ImGui::PopID();
 }
 
+void CInspector::DrawImage()
+{
+	CComponent* pComponent;
+	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_VIBuffer")))
+	{
+		if (ImGui::TreeNodeEx("Image"))
+		{
+
+			ImGui::TreePop();
+		}
+	}
+}
+
 void CInspector::DrawCollider()
 {
 	CComponent* pComponent;
