@@ -93,6 +93,12 @@ void CInspector::UpdateUI()
 		ImGui::OpenPopup("AddComponent");
 	if (ImGui::BeginPopup("AddComponent"))
 	{
+		if (ImGui::MenuItem("Image"))
+		{
+			/* Add Collider */
+			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_VIBuffer_RectUI"), TEXT("Com_VIBuffer"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+				MSG_BOX("Failed to AddComponent");
+		}
 		ImGui::EndPopup();
 	}
 

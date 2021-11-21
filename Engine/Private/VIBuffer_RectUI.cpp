@@ -52,6 +52,7 @@ HRESULT CVIBuffer_RectUI::InitializePrototype()
 #pragma region INDEXBUFFER
 
 	m_iNumPrimitive = 2;
+	m_iNumVerticesPerPrimitive = 3;
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -96,6 +97,9 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 	if (pArg)
 		m_pRectTransform = (CRectTransform*)pArg;
 
+	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Rect.fx");
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_TGA, L"../../Assets/Texture/Folder.png");
+
 	return S_OK;
 }
 
@@ -105,10 +109,10 @@ HRESULT CVIBuffer_RectUI::Render()
 		return E_FAIL;
 
 	_uint		iOffset = 0;
-	
-	m_pShader->SetUp_ValueOnShader("World", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("View", &XMMatrixIdentity(), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("Projection", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
+
+	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	if (m_IBSubResourceData.pSysMem)
