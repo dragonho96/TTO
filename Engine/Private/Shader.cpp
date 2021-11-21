@@ -273,7 +273,7 @@ HRESULT CShader::SetUp_ValueOnShader(const char * pConstantName, void * pData, _
 
 	if (FAILED(pVariable->SetRawValue(pData, 0, iByteSize)))
 		return E_FAIL;
-
+	//pVariable->AsShaderResource
 	return S_OK;
 }
 
@@ -365,4 +365,9 @@ ID3D11InputLayout * CShader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_
 	}
 
 	return NULL;
+}
+
+ID3DX11EffectShaderResourceVariable * CShader::AsSRV(string name)
+{
+	return m_pEffect->GetVariableByName(name.c_str())->AsShaderResource();;
 }

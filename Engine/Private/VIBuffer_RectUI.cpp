@@ -97,7 +97,7 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 	if (pArg)
 		m_pRectTransform = (CRectTransform*)pArg;
 
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Rect.fx");
+	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_RectImage.fx");
 	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_TGA, L"../../Assets/Texture/Folder.png");
 
 	return S_OK;
@@ -113,6 +113,10 @@ HRESULT CVIBuffer_RectUI::Render()
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
+
+	ID3DX11EffectShaderResourceVariable* map;
+	map = m_pShader->AsSRV("Map");
+	map->SetResource(m_pTexture->Get_ShaderResourceView());
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	if (m_IBSubResourceData.pSysMem)
