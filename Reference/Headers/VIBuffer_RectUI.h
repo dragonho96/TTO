@@ -24,10 +24,12 @@ public:
 public:
 	string GetTextureFilePath();
 	void UpdateTexture(string texturePath);
+	_float4& GetColor() { return m_Color; }
 
 private:
 	CRectTransform* m_pRectTransform = nullptr;
 	CTexture*		m_pTexture = nullptr;
+	_float4			m_Color = {0.f, 0.f, 0.f, 1.f};
 };
 
 END

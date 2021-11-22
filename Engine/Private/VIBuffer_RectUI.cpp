@@ -110,11 +110,11 @@ HRESULT CVIBuffer_RectUI::Render()
 
 
 	_uint		iOffset = 0;
-	_float4 color = { 1.f, 0.f, 0.f, 1.f };
+	//_float4 color = { 1.f, 0.f, 0.f, 1.f };
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("vColor", &color, sizeof(_float4));
+	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
 
 	ID3DX11EffectShaderResourceVariable* map;
 	map = m_pShader->AsSRV("Map");
@@ -174,7 +174,6 @@ void CVIBuffer_RectUI::UpdateTexture(string texturePath)
 {
 	SafeRelease(m_pTexture);
 	wstring wstr = wstring(texturePath.begin(), texturePath.end());
-
 	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, wstr.c_str());
 }
 

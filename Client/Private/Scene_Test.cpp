@@ -4,8 +4,8 @@
 #include "Engine.h"
 #include "Background.h"
 #include "VIBuffer.h"
-#include "VIBuffer_LineSphere.h"
-
+#include "Terrain.h"
+#include "VIBuffer_Terrain.h"
 USING(Client)
 
 CScene_Test::CScene_Test(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -39,8 +39,9 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerLineCircle(TEXT("LAYER_LINE"))))
+	if (FAILED(ReadyLayerTerrain(TEXT("LAYER_TERRAIN"))))
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -60,23 +61,25 @@ HRESULT CScene_Test::Render()
 
 HRESULT CScene_Test::ReadyPrototypeGameObject()
 {
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_Transform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 	/* Prototype_BackGround */
-	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_LineCircle"), CBackground::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+
 
 	return S_OK;
 }
 
-HRESULT CScene_Test::ReadyLayerLineCircle(const _tchar * pLayerTag)
+HRESULT CScene_Test::ReadyLayerTerrain(const _tchar * pLayerTag)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
-	/* For.GameObject_BackGround */
-	if (FAILED(pEngine->AddGameObject(SCENE_TEST, TEXT("Prototype_LineCircle"), pLayerTag)))
+	if (nullptr == pEngine->AddGameObject(SCENE_TEST, TEXT("Prototype_Terrain"), pLayerTag))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);

@@ -20,7 +20,8 @@ HRESULT CVIBuffer_Rect::InitializePrototype()
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 4;
 	m_iNumVertexBuffers = 1;
-	
+	m_iNumVerticesPerPrimitive = 3;
+
 	/* For.D3D11_BUFFER_DESC */
 	m_VBDesc.ByteWidth = m_iStride * m_iNumVertices;
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;

@@ -72,6 +72,8 @@ HRESULT CBackground::SetUpComponents()
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 

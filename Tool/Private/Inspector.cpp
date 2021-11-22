@@ -243,8 +243,19 @@ void CInspector::DrawImage()
 				}
 				ImGui::EndDragDropTarget();
 			}
+			static bool alpha_preview = true;
+			static bool alpha_half_preview = false;
+			static bool drag_and_drop = true;
+			static bool options_menu = true;
+			static bool hdr = false;
+			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
+
+			_float4& color = dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetColor();
+			ImGui::Text("Color widget with Float Display:");
+			ImGui::ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags_Float);
 			ImGui::TreePop();
 		}
+
 	}
 }
 

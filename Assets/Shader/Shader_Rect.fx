@@ -17,6 +17,7 @@ struct VS_OUT
 {
 	float4	vPosition : SV_POSITION;
 	float2	vTexUV : TEXCOORD0;
+    float4  vLocalPos : COLOR;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -31,7 +32,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 	Out.vTexUV = In.vTexUV;
-
+    Out.vLocalPos = vector(In.vPosition, 1.f);
 	return Out;
 }
 
@@ -44,20 +45,26 @@ struct PS_IN
 {
 	float4	vPosition : SV_POSITION;
 	float2	vTexUV : TEXCOORD0;
+    float4 vLocalPos : COLOR;
 };
 
 vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
 	vector		vColor = (vector)0;
+    float heightColorY = 0.f;
+    float heightColorZ = 0.f;
+    if (In.vLocalPos.y > 0.f)
+        heightColorY = In.vLocalPos.y;
+    else
+        heightColorZ = -In.vLocalPos.y;
+	//if (In.vTexUV.x < 0.01f || 
+	//	In.vTexUV.x > 0.99f || 
+	//	In.vTexUV.y < 0.01f || 
+	//	In.vTexUV.y > 0.99f
+	//	)
+	//	vColor = vector(1.f, 1.f, 0.f, 1.f);
 
-	vColor = vector(1.f, 0.f, 0.f, 1.f);
-
-	if (In.vTexUV.x < 0.01f || 
-		In.vTexUV.x > 0.99f || 
-		In.vTexUV.y < 0.01f || 
-		In.vTexUV.y > 0.99f
-		)
-		vColor = vector(1.f, 1.f, 0.f, 1.f);
+    vColor = vector(1.f, heightColorY, heightColorZ, 1.f);
 
 	return vColor;
 }
