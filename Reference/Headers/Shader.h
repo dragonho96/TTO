@@ -35,6 +35,7 @@ private:
 public:
 	HRESULT Compile_Shader(wstring pShaderFilePath, _uint iTechniqueIndex = 0);
 	HRESULT SetUp_ValueOnShader(const char* pConstantName, void* pData, _uint iByteSize);
+	HRESULT SetUp_TextureOnShader(const char* pConstantName, class CTexture* pTextureComponent, _uint iTextureIndex = 0);
 	ID3D11InputLayout* CreateInputLayout(ID3DBlob* fxBlob, D3DX11_EFFECT_SHADER_DESC* effectVsDesc, vector<D3D11_SIGNATURE_PARAMETER_DESC>& params);
 	ID3DX11EffectShaderResourceVariable* AsSRV(string name);
 

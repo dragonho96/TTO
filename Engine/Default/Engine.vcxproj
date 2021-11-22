@@ -211,6 +211,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\Public\TimerManager.h" />
     <ClInclude Include="..\Public\Transform.h" />
+    <ClInclude Include="..\Public\UUID.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_LineBox.h" />
     <ClInclude Include="..\Public\VIBuffer_LineCapsule.h" />
@@ -257,6 +258,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\Private\TimerManager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
+    <ClCompile Include="..\Private\UUID.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineBox.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp" />

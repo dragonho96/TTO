@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "..\Public\Hierarchy.h"
 #include "GameObject.h"
+#include "Log.h"
+
+static int selected = -1;
+static bool openPopup = false;
 
 USING(Tool)
 CHierarchy::CHierarchy()
@@ -27,6 +31,8 @@ void CHierarchy::Update()
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
 				TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
 			g_pObjFocused = pObj;
+			string s = to_string( pObj->GetUUID());
+			dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(s.c_str());
 		}
 		if (ImGui::MenuItem("UI"))
 		{
@@ -40,33 +46,57 @@ void CHierarchy::Update()
 
 
 	// 여기서 리스트 순회하면서 추가
-	static int selected = -1;
-	static bool openPopup = false;
+
 	list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
+	list<CGameObject*> pObjListNoParent;
+	for (auto& obj : pObjList)
+	{
+		if (!obj->GetParent())
+			pObjListNoParent.push_back(obj);
+	}
 
 	int iCount = 0;
-	for (auto& pObj : pObjList)
+	for (auto& pObj : pObjListNoParent)
 	{
-		ImGui::PushID(iCount++);
-		ImGui::Selectable(pObj->GetName().c_str(), iCount == selected);
+		SetObjectHierarchy(pObj, iCount);
+		//ImGui::PushID(iCount++);
+		//ImGui::Selectable(pObj->GetName().c_str(), iCount == selected);
 
-		if (ImGui::IsItemHovered())
-		{
-			if (ImGui::IsMouseClicked(0))
-			{
-				/* Set Focused Game Object*/
-				selected = iCount;
-				g_pObjFocused = pObj;
-			}
-			else if (ImGui::IsMouseClicked(1))
-			{
-				selected = iCount;
-				g_pObjFocused = pObj;
-				openPopup = !openPopup;
-			}
-		}
+		//if (ImGui::IsItemHovered())
+		//{
+		//	if (ImGui::IsMouseClicked(0))
+		//	{
+		//		/* Set Focused Game Object*/
+		//		selected = iCount;
+		//		g_pObjFocused = pObj;
+		//	}
+		//	else if (ImGui::IsMouseClicked(1))
+		//	{
+		//		selected = iCount;
+		//		g_pObjFocused = pObj;
+		//		openPopup = !openPopup;
+		//	}
+		//}
 
-		ImGui::PopID();
+		//if (ImGui::BeginDragDropSource())
+		//{
+		//	//const CGameObject* obj = pObj;
+		//	ImGui::SetDragDropPayload("GameObject", &pObj, sizeof(pObj), ImGuiCond_Once);
+		//	ImGui::Text("GameObject");
+		//	ImGui::EndDragDropSource();
+		//}
+
+		//if (ImGui::BeginDragDropTarget())
+		//{
+		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		//	{
+		//		CGameObject** droppedObj = (CGameObject**)(payload->Data);
+		//		pObj->AddChild(*droppedObj);
+		//	}
+		//	ImGui::EndDragDropTarget();
+		//}
+
+		//ImGui::PopID();
 	}
 	if (openPopup)
 	{
@@ -99,6 +129,59 @@ void CHierarchy::Update()
 
 void CHierarchy::LateUpdate()
 {
+}
+
+void CHierarchy::SetObjectHierarchy(CGameObject* pObj, int& iCount)
+{
+	ImGui::PushID(iCount++);
+	ImGuiTreeNodeFlags node_flags = iCount == selected ? ImGuiTreeNodeFlags_Selected : 0;
+	bool bOpen = ImGui::TreeNodeEx(pObj->GetName().c_str(), node_flags, pObj->GetName().c_str(), iCount == selected);
+	if (ImGui::IsItemHovered())
+	{
+		if (ImGui::IsMouseClicked(0))
+		{
+			/* Set Focused Game Object*/
+			selected = iCount;
+			g_pObjFocused = pObj;
+		}
+		else if (ImGui::IsMouseClicked(1))
+		{
+			selected = iCount;
+			g_pObjFocused = pObj;
+			openPopup = !openPopup;
+		}
+	}
+
+	if (ImGui::BeginDragDropSource())
+	{
+		//const CGameObject* obj = pObj;
+		ImGui::SetDragDropPayload("GameObject", &pObj, sizeof(pObj), ImGuiCond_Once);
+		ImGui::Text("GameObject");
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			CGameObject** droppedObj = (CGameObject**)(payload->Data);
+			pObj->AddChild(*droppedObj);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	if (bOpen)
+	{
+		list<CGameObject*> children = pObj->GetChildren();
+		for (auto& child : children)
+		{
+			SetObjectHierarchy(child, iCount);
+		}
+		ImGui::TreePop();
+	}
+
+	//ImGui::Selectable(pObj->GetName().c_str(), iCount == selected);
+
+	ImGui::PopID();
 }
 
 void CHierarchy::Free()
