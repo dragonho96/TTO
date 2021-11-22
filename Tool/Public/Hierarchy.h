@@ -14,6 +14,9 @@ public:
 	virtual void Update() override;
 	virtual void LateUpdate() override;
 
+public:
+	void SetObjectHierarchy(CGameObject* pObj, int& iCount);
+
 private:
 	CEngine* m_pEngine;
 };

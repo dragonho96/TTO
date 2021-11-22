@@ -42,6 +42,42 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+void CGameObject::AddChild(CGameObject* pChild)
+{
+	if (pChild->GetParent())
+		pChild->GetParent()->RemoveChild(pChild);
+	m_listChildren.push_back(pChild);
+	pChild->SetParent(this);
+}
+
+void CGameObject::RemoveChild(CGameObject * pChild)
+{
+	if (m_listChildren.size() <= 0)
+		return;
+
+	uint64_t uuid = pChild->GetUUID();
+
+	for (auto& iter = m_listChildren.begin(); iter != m_listChildren.end();)
+	{
+		if (uuid == (*iter)->GetUUID())
+		{
+			(*iter)->SetParent(nullptr);
+			iter = m_listChildren.erase(iter);
+			return;
+		}
+		else
+			++iter;
+	}
+}
+
+void CGameObject::ClearChildren()
+{
+	for (auto& child : m_listChildren)
+		child->SetParent(nullptr);
+
+	m_listChildren.clear();
+}
+
 HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent ** pOut, void * pArg)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
@@ -101,4 +137,7 @@ void CGameObject::Free()
 		SafeRelease(Pair.second);
 
 	m_Components.clear();
+
+	m_listChildren.clear();
+	m_pParent = nullptr;
 }

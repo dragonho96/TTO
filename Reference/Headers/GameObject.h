@@ -22,8 +22,15 @@ public:
 	/* Getter Setter Name for Tool Inspector */
 	string GetName() { return m_Name; }
 	void SetName(string name) { m_Name = name; }
-
+public:
 	uint64_t GetUUID() { return m_UUID(); }
+public:
+	void SetParent(CGameObject* pParent) { m_pParent = pParent; }
+	void AddChild(CGameObject* pChild);
+	void RemoveChild(CGameObject* pChild);
+	void ClearChildren();
+	CGameObject* GetParent() { return m_pParent; }
+	list<CGameObject*> GetChildren() { return m_listChildren; }
 
 protected:
 	CEngine*				m_pEngine = nullptr;
@@ -33,12 +40,14 @@ protected:
 protected:
 	string					m_Name = "Empty Object";
 	CUUID					m_UUID;
-
 	bool					m_bDead = false;
 
 protected:
 	unordered_map<const _tchar*, class CComponent*>			m_Components;
 	typedef unordered_map<const _tchar*, class CComponent*>	COMPONENTS;
+
+	list<CGameObject*>	m_listChildren;
+	CGameObject*		m_pParent = nullptr;
 
 public:
 	HRESULT SetUpComponents(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** pOut, void* pArg = nullptr);
