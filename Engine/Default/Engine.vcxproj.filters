@@ -142,6 +142,9 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\RectUI">
       <UniqueIdentifier>{e0af2ccd-208d-4c3f-bee3-4d37120ce883}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\Terrain">
+      <UniqueIdentifier>{ea0fb18a-0531-4b45-b662-176eb40b26d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -289,6 +292,9 @@
     <ClInclude Include="..\Public\VIBuffer_RectUI.h">
       <Filter>01.Utility\03.Components\VIBuffer\RectUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>01.Utility\03.Components\VIBuffer\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -417,6 +423,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_RectUI.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\RectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -46,6 +46,9 @@
     <ClInclude Include="..\Public\Scene_Test.h">
       <Filter>01.Scenes\Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Scene_Test.cpp">
       <Filter>01.Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>02.GameObjects\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +141,9 @@
     </Filter>
     <Filter Include="01.Scenes\Test">
       <UniqueIdentifier>{4258d464-ef75-47e6-8d6b-1bae8b80a25b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Terrain">
+      <UniqueIdentifier>{c02996f5-caf3-4521-8d4f-9ad3146637d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

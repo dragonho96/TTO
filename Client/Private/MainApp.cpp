@@ -28,9 +28,9 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	//ImGui_ImplDX11_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
+	//ImGui::DestroyContext();
 
 	SafeRelease(m_pRenderer);
 
@@ -58,7 +58,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(OpenScene(SCENE_TEST)))
 		return E_FAIL;
 
-	ImGuiInitialize();
+	//ImGuiInitialize();
 
 	return S_OK;
 }
@@ -73,12 +73,14 @@ _uint CMainApp::Update(_double dDeltaTime)
 
 	m_pEngine->Update(dDeltaTime);
 	m_pEngine->UpdateScene(dDeltaTime);
-	if (m_pEngine->IsKeyDown('A'))
-		ADDLOG("hihi")
 
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+
+	//if (m_pEngine->IsKeyDown('A'))
+	//	ADDLOG("hihi")
+
+	//ImGui_ImplDX11_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	//ImGui::NewFrame();
 
 	return 0;
 }
@@ -88,7 +90,7 @@ HRESULT CMainApp::Render()
 	if (g_Done)
 		return _uint();
 
-	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
+	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pEngine->ClearDepthStencilView(1.f, 0);
 	m_pEngine->RenderClient();
 	/* 필요한 객체들을 백버퍼에 그린다. */
@@ -96,14 +98,13 @@ HRESULT CMainApp::Render()
 	m_pEngine->RenderScene();
 	
 	// ImGui
-	m_pEngine->UpdateImGui();
+	//m_pEngine->UpdateImGui();
+	//// ImGui::EndFrame();
+	//ImGui::Render();
+	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//ImGui::UpdatePlatformWindows();
+	//ImGui::RenderPlatformWindowsDefault();
 
-
-	// ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
 	m_pEngine->Present();
 
 #ifdef _DEBUG

@@ -2,22 +2,18 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "VIBuffer.h"
 
-BEGIN(Engine)
-class CRenderer;
-class CVIBuffer;
-END
 
 BEGIN(Client)
-
-class CBackground final : public CGameObject
+class CTerrain final : public CGameObject
 {
 public:
-	explicit CBackground(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CBackground(const CBackground& rhs);
-	virtual ~CBackground() = default;
+	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CTerrain(const CTerrain& rhs);
+	virtual ~CTerrain() = default;
 public:
-	static CBackground* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 
@@ -34,6 +30,8 @@ private:
 private:
 	CRenderer*		m_pRendererCom = nullptr;
 	CVIBuffer*		m_pVIBuffer = nullptr;
+	CTransform*		m_pTransform = nullptr;
+
 };
 
 END
