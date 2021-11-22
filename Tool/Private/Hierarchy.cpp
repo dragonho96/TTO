@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Hierarchy.h"
 #include "GameObject.h"
+#include "Log.h"
 
 USING(Tool)
 CHierarchy::CHierarchy()
@@ -27,6 +28,8 @@ void CHierarchy::Update()
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
 				TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
 			g_pObjFocused = pObj;
+			string s = to_string( pObj->GetUUID());
+			dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(s.c_str());
 		}
 		if (ImGui::MenuItem("UI"))
 		{

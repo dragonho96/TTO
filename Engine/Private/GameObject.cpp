@@ -12,6 +12,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pDeviceContext(rhs.m_pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
+	, m_UUID(CUUID())
 {
 }
 

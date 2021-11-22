@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Engine.h"
+#include "UUID.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CGameObject abstract : public CBase
@@ -22,6 +23,8 @@ public:
 	string GetName() { return m_Name; }
 	void SetName(string name) { m_Name = name; }
 
+	uint64_t GetUUID() { return m_UUID(); }
+
 protected:
 	CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
@@ -29,6 +32,8 @@ protected:
 
 protected:
 	string					m_Name = "Empty Object";
+	CUUID					m_UUID;
+
 	bool					m_bDead = false;
 
 protected:
