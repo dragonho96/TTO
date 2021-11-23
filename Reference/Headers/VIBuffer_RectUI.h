@@ -25,6 +25,7 @@ public:
 	string GetTextureFilePath();
 	void UpdateTexture(string texturePath);
 	_float4& GetColor() { return m_Color; }
+	void SetColor(_float4 color) { m_Color = color; }
 
 private:
 	CRectTransform* m_pRectTransform = nullptr;

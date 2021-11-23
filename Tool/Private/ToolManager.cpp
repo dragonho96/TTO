@@ -51,8 +51,9 @@ HRESULT CToolManager::Initialize()
 
 	InitializeImGui();
 
+	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
+
 	return S_OK;
-	//m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
 }
 
 void CToolManager::Update(_double dDeltaTime)
