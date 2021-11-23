@@ -48,6 +48,7 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 
 _uint CEngine::Update(_double dTimeDelta)
 {
+	m_pInputManager->Update();
 	m_pGameObjectManager->Update(dTimeDelta);
 	m_pGameObjectManager->LateUpdate(dTimeDelta);
 	return _uint();

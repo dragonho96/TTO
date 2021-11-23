@@ -13,11 +13,67 @@ CSceneSerializer::CSceneSerializer()
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 }
-static void SerializeObject(YAML::Emitter& out, CGameObject* obj)
-{
 
+
+
+
+void CSceneSerializer::Serialize(const string & filePath)
+{
+	YAML::Emitter out;
+
+	out << YAML::BeginMap;
+	out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+	out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
+
+	list<CGameObject*> objList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
+	for (auto& obj : objList)
+	{
+		if (dynamic_cast<CEmptyGameObject*>(obj))
+			SerializeObject(out, obj);
+		else
+			SerializeUI(out, obj);
+	}
+	// Save GameObjects
+
+	out << YAML::EndSeq;
+	out << YAML::EndMap;
+
+	std::ofstream fout(filePath);
+	fout << out.c_str();
 }
-static void SerializeUI(YAML::Emitter& out, CGameObject* obj)
+
+bool CSceneSerializer::Deserialize(const string & filePath)
+{
+	std::ifstream stream(filePath);
+	std::stringstream strStream;
+	strStream << stream.rdbuf();
+
+	YAML::Node data = YAML::Load(strStream.str());
+	if (!data["Scene"])
+		return false;
+
+	string SceneName = data["Scene"].as<string>();
+
+	auto gameObjects = data["GameObjects"];
+	if (gameObjects)
+	{
+		for (auto obj : gameObjects)
+		{
+			if (obj["Type"].as<string>() == "UI")
+				DeserializeUI(obj);
+			else
+				DeserializeObject(obj);
+		}
+	}
+
+	return true;
+}
+
+void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
+{
+}
+
+void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 {
 	out << YAML::BeginMap;
 
@@ -62,74 +118,51 @@ static void SerializeUI(YAML::Emitter& out, CGameObject* obj)
 
 	out << YAML::EndMap;
 }
-static void SerializeGameObject(YAML::Emitter& out, CGameObject* obj)
+
+void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 {
-	if (dynamic_cast<CEmptyGameObject*>(obj))
-		SerializeObject(out, obj);
-	else
-		SerializeUI(out, obj);
-}
-
-void CSceneSerializer::Serialize(const string & filePath)
-{
-	YAML::Emitter out;
-
-	out << YAML::BeginMap;
-	out << YAML::Key << "Scene" << YAML::Value << "Untitled";
-	out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
-
-	list<CGameObject*> objList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
-	for (auto& obj : objList)
+	if (obj["Type"].as<string>() == "UI")
 	{
-		SerializeGameObject(out, obj);
-	}
-	// Save GameObjects
-
-	out << YAML::EndSeq;
-	out << YAML::EndMap;
-
-	std::ofstream fout(filePath);
-	fout << out.c_str();
-}
-
-bool CSceneSerializer::Deserialize(const string & filePath)
-{
-	std::ifstream stream(filePath);
-	std::stringstream strStream;
-	strStream << stream.rdbuf();
-
-	YAML::Node data = YAML::Load(strStream.str());
-	if (!data["Scene"])
-		return false;
-
-	string SceneName = data["Scene"].as<string>();
-
-	auto gameObjects = data["GameObjects"];
-	if (gameObjects)
-	{
-		for (auto obj : gameObjects)
+		CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyUI"), TEXT("LAYER_TEST"));
+		auto transformCom = obj["Com_Transform"];
+		if (transformCom)
 		{
-			if (obj["Type"].as<string>() == "UI")
+			CRectTransform::RECTTRANSFORMDESC desc;
+
+			auto sequence = transformCom["Position"];
+			desc.posX = sequence[0].as<float>();
+			desc.posY = sequence[1].as<float>();
+			sequence = transformCom["Size"];
+			desc.sizeX = sequence[0].as<float>();
+			desc.sizeY = sequence[1].as<float>();
+
+			dynamic_cast<CEmptyUI*>(deserializedObject)->SetRectTransform(desc);
+		}
+
+		auto viBuffer = obj["Com_VIBuffer"];
+		if (viBuffer)
+		{
+			CComponent* pTransform = deserializedObject->GetComponent(TEXT("Com_Transform"));
+			deserializedObject->AddComponent(0, TEXT("Prototype_VIBuffer_RectUI"), TEXT("Com_VIBuffer"), pTransform);
+			CComponent* pVIBuffer = deserializedObject->GetComponent(TEXT("Com_VIBuffer"));;
+
+			string texturePath = viBuffer["TexturePath"].as<string>();
+			if ("" != texturePath)
 			{
-				CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyUI"), TEXT("LAYER_TEST"));
-				auto transformCom = obj["Com_Transform"];
-				if (transformCom)
-				{
-					CRectTransform::RECTTRANSFORMDESC desc;
-
-					auto sequence = transformCom["Position"];
-					desc.posX = sequence[0].as<float>();
-					desc.posY = sequence[1].as<float>();
-					sequence = transformCom["Size"];
-					desc.sizeX = sequence[0].as<float>();
-					desc.sizeY = sequence[1].as<float>();
-
-					dynamic_cast<CEmptyUI*>(deserializedObject)->SetRectTransform(desc);
-				}
-
+				dynamic_cast<CVIBuffer_RectUI*>(pVIBuffer)->UpdateTexture(texturePath);
 			}
+
+			_float4 color;
+			auto sequence = viBuffer["Color"];
+			color.x = sequence[0].as<float>();
+			color.y = sequence[1].as<float>();
+			color.z = sequence[2].as<float>();
+			color.w = sequence[3].as<float>();
+			dynamic_cast<CVIBuffer_RectUI*>(pVIBuffer)->SetColor(color);
 		}
 	}
+}
 
-	return true;
+void CSceneSerializer::DeserializeObject(YAML::Node & obj)
+{
 }

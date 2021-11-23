@@ -81,6 +81,8 @@ bool CRectTransform::IsMouseInRect()
 
 void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 {
+	m_TransformDesc = _desc;
+
 	int curWindowSizeX = 1280;
 	int curWindowSizeY = 720;
 

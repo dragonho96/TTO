@@ -4,6 +4,7 @@ IMPLEMENT_SINGLETON(CInputManager)
 
 CInputManager::CInputManager()
 {
+	Initialize();
 }
 
 void CInputManager::Free()

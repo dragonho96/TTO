@@ -13,6 +13,11 @@ public:
 public:
 	void Serialize(const string& filePath);
 	bool Deserialize(const string& filePath);
+	void SerializeObject(YAML::Emitter& out, CGameObject* obj);
+	void SerializeUI(YAML::Emitter& out, CGameObject* obj);
+
+	void DeserializeUI(YAML::Node& obj);
+	void DeserializeObject(YAML::Node& obj);
 private:
 	CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;

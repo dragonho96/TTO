@@ -22,6 +22,7 @@ public:
 	HRESULT Render();
 public:
 	void ImGuiInitialize();
+	void SetImGuiStyle();
 
 private:
 	HRESULT OpenScene(SCENE eScene);

@@ -52,7 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 	msg.message = WM_NULL;
 
-	CEngine::GetInstance()->InitializeInput();
+	//CEngine::GetInstance()->InitializeInput();
 	CToolManager* pToolManager = new CToolManager();
 	pToolManager->Initialize();
 
@@ -72,7 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				break;
 			}
 		}
-		CEngine::GetInstance()->UpdateInput();
+		//CEngine::GetInstance()->UpdateInput();
 		pToolManager->Update(1.f/60.f);
 		pToolManager->Render();
     }

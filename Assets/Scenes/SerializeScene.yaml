@@ -1,10 +1,10 @@
 Scene: Untitled
 GameObjects:
   - Type: UI
-    UUID: 5927525591711173442
+    UUID: 12623290701908229292
     Com_Transform:
-      Position: [602.841064, 310.356506]
+      Position: [567.977295, 356.963776]
       Size: [50, 50]
     Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 0]
+      TexturePath: ..\..\Assets\Texture\File.png
+      Color: [0, 0, 1, 1]

@@ -55,8 +55,8 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerTerrain(TEXT("LAYER_TERRAIN"))))
-		return E_FAIL;
+	//if (FAILED(ReadyLayerTerrain(TEXT("LAYER_TERRAIN"))))
+	//	return E_FAIL;
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 	return S_OK;
@@ -82,7 +82,7 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_Transform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_RectTransform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_RectTransform"), CRectTransform::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
