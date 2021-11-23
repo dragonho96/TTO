@@ -33,6 +33,7 @@ public:
 
 public:
 	const _float3 GetMouseMoveValue() const;
+	const _float3 GetMousePosition() const;
 
 private:
 	bitset<KEY_MAX>		m_keyUp;

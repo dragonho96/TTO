@@ -82,6 +82,7 @@ public:
 	bool IsMousePressed(DWORD mouse);
 
 	_float3 GetMouseMoveValue();
+	_float3 GetMousePosition();
 
 	void InputProc(const HWND hWnd, const UINT message,
 		const WPARAM wParam, const LPARAM lParam);

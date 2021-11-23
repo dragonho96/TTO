@@ -230,7 +230,10 @@ void CInspector::DrawImage()
 	{
 		if (ImGui::TreeNodeEx("Image"))
 		{
-			ImGui::Text(dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetTextureFilePath().c_str());
+			// TODO: Check if it has image source
+			string imageName = dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetTextureFilePath().c_str();
+			imageName = imageName == "" ? "None" : imageName;
+			ImGui::Text(imageName.c_str());
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
@@ -243,6 +246,7 @@ void CInspector::DrawImage()
 				}
 				ImGui::EndDragDropTarget();
 			}
+
 			static bool alpha_preview = true;
 			static bool alpha_half_preview = false;
 			static bool drag_and_drop = true;
@@ -251,7 +255,6 @@ void CInspector::DrawImage()
 			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 
 			_float4& color = dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetColor();
-			ImGui::Text("Color widget with Float Display:");
 			ImGui::ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags_Float);
 			ImGui::TreePop();
 		}

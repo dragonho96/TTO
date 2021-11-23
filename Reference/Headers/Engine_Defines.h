@@ -1,12 +1,13 @@
 #pragma once
 #pragma warning (disable : 4005)
 #pragma warning(disable: 4251)
+#pragma warning(disable: 4275)
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <fstream>
-#include <process.h>
 #include <unordered_map>
+#include <process.h>
 #include <algorithm>
 #include <typeinfo>
 #include <memory> // for smart ptr
@@ -69,7 +70,7 @@ using namespace physx;
 
 
 //#include "Engine.h"
-//#include "yaml-cpp\yaml.h"
+#include "yaml-cpp\yaml.h"
 
 using namespace Engine;
 

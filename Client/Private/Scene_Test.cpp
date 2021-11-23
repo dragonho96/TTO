@@ -6,6 +6,22 @@
 #include "VIBuffer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
+#pragma region COMPONENTS
+#include "Transform.h"
+#include "RectTransform.h"
+#include "SphereCollider.h"
+#include "BoxCollider.h"
+#include "CapsuleCollider.h"
+#include "VIBuffer_LineSphere.h"
+#include "VIBuffer_LineBox.h"
+#include "VIBuffer_LineCapsule.h"
+#include "VIBuffer_RectUI.h"
+#pragma endregion 
+
+#pragma region OBJECTS
+#include "EmptyGameObject.h"
+#include "EmptyUI.h"
+#pragma endregion
 USING(Client)
 
 CScene_Test::CScene_Test(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -42,6 +58,7 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerTerrain(TEXT("LAYER_TERRAIN"))))
 		return E_FAIL;
 
+	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 	return S_OK;
 }
 
@@ -65,11 +82,20 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_Transform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_RectTransform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 
 	/* Prototype_BackGround */
 	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-
+	/* Gameobject Prototype */
+	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_EmptyGameObject"), CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(TEXT("Prototype_EmptyUI"), CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 
 	return S_OK;

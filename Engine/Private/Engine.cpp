@@ -222,14 +222,14 @@ _double CEngine::ComputeDeltaTime(const _tchar * pTimerTag)
 
 void CEngine::SerializeScene(const string & filePath)
 {
-	//CSceneSerializer serializer;
-	//serializer.Serialize(filePath);
+	CSceneSerializer serializer;
+	serializer.Serialize(filePath);
 }
 
 void CEngine::DeserializeScene(const string & filePath)
 {
-	//CSceneSerializer serializer;
-	//serializer.Deserialize(filePath);
+	CSceneSerializer serializer;
+	serializer.Deserialize(filePath);
 }
 
 HRESULT CEngine::SetUpCurrentScene(CScene * pCurrentScene)
@@ -336,6 +336,11 @@ bool CEngine::IsMousePressed(DWORD mouse)
 _float3 CEngine::GetMouseMoveValue()
 {
 	return m_pInputManager->GetMouseMoveValue();
+}
+
+_float3 CEngine::GetMousePosition()
+{
+	return m_pInputManager->GetMousePosition();
 }
 
 void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam)

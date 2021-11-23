@@ -25,6 +25,18 @@ public:
 	virtual _uint LateUpdate(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void SetRectTransform(CRectTransform::RECTTRANSFORMDESC _desc);
+
+public:
+	void InteractMouse();
+	bool IsHovered() { return m_bHover; }
+	bool IsSelected() { return m_bSelect; }
+
+protected:
+	_bool m_bHover = false;
+	_bool m_bSelect = false;
+
 private:
 	HRESULT SetUpComponents();
 

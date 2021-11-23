@@ -59,10 +59,15 @@ Texture2D Map;
 
 float4 PS_MAIN(PS_IN input) : SV_TARGET
 {
-    float4 color = Map.Sample(Sampler, input.vTexUV); // 월요일날 설명해주실꺼
+    float4 color = Map.Sample(Sampler, input.vTexUV);
     clip(color.a < 0.1f ? -1 : 1);
     color = vColor;
     return color;
+}
+
+float4 PS_DEFAULT(PS_IN input) : SV_TARGET
+{
+    return vColor;
 }
 
 technique11		DefaultDevice
@@ -70,12 +75,12 @@ technique11		DefaultDevice
 	pass DefaultPass
 	{
 		VertexShader = compile vs_5_0 VS_MAIN();
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
+        PixelShader = compile ps_5_0 PS_DEFAULT();
+    }
 
-	//pass DefaultPass
-	//{
-	//	VertexShader = compile vs_5_0 VS_MAIN_A();
-	//	PixelShader = compile ps_5_0 PS_MAIN_A();
-	//}
+    pass WithImage
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
 }

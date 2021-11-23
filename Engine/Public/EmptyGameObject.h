@@ -32,7 +32,6 @@ private:
 private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
-
 };
 
 END

@@ -68,11 +68,11 @@ HRESULT CVIBuffer_Terrain::InitializePrototype()
 	VTXTEX* pVertices = new VTXTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXTEX) * m_iNumVertices);
 
-	for (int i = 0; i < sizeZ; ++i)
+	for (_uint i = 0; i < sizeZ; ++i)
 	{
-		for (int j = 0; j < sizeX; ++j)
+		for (_uint j = 0; j < sizeX; ++j)
 		{
-			int index = i * sizeX + j;
+			_uint index = i * sizeX + j;
 			float y = sin(j * 0.1f);
 			pVertices[index].vPosition = _float3(j * fInterval, y, i * fInterval);
 			pVertices[index].vTexUV = _float2(0.f, 0.f);

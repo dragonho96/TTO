@@ -50,7 +50,7 @@ protected:
 	CGameObject*		m_pParent = nullptr;
 
 public:
-	HRESULT SetUpComponents(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** pOut, void* pArg = nullptr);
+	HRESULT SetUpComponents(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** pOut = nullptr, void* pArg = nullptr);
 	HRESULT AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg = nullptr);
 	CComponent* GetComponent(const _tchar * pComponentTag);
 

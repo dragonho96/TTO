@@ -68,6 +68,8 @@ _uint CEmptyUI::Update(_double TimeDelta)
 	if (__super::Update(TimeDelta))
 		return E_FAIL;
 
+	InteractMouse();
+
 	return S_OK;
 }
 
@@ -86,6 +88,25 @@ HRESULT CEmptyUI::Render()
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
 
 	return S_OK;
+}
+
+void CEmptyUI::SetRectTransform(CRectTransform::RECTTRANSFORMDESC _desc)
+{
+	m_pRectTransformCom->SetTransformMat(_desc);
+}
+
+void CEmptyUI::InteractMouse()
+{
+	if (m_pRectTransformCom->IsMouseInRect())
+	{
+		m_bHover = true;
+		if (m_pEngine->IsMouseUp(0))
+			m_bSelect = !m_bSelect;
+	}
+	else
+	{
+		m_bHover = false;
+	}
 }
 
 HRESULT CEmptyUI::SetUpComponents()
