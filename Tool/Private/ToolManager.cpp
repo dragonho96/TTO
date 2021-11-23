@@ -127,6 +127,8 @@ void CToolManager::Render()
 
 void CToolManager::Release()
 {
+	m_pEngine->SerializeScene("../../Assets/Scenes/SerializeScene.yaml");
+
 	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->ClearLog();
 
 	ImGui_ImplDX11_Shutdown();

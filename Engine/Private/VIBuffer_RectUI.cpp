@@ -98,7 +98,7 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 		m_pRectTransform = (CRectTransform*)pArg;
 
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_RectImage.fx");
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, L"../../Assets/Texture/Isu.png");
+	//m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, L"../../Assets/Texture/Isu.png");
 
 	return S_OK;
 }
@@ -108,25 +108,25 @@ HRESULT CVIBuffer_RectUI::Render()
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-
 	_uint		iOffset = 0;
-	//_float4 color = { 1.f, 0.f, 0.f, 1.f };
-	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
-
-	m_pShader->SetUp_TextureOnShader("Map", m_pTexture);
-	//ID3DX11EffectShaderResourceVariable* map;
-	//map = m_pShader->AsSRV("Map");
-	//map->SetResource(m_pTexture->Get_ShaderResourceView());
-
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	if (m_IBSubResourceData.pSysMem)
 		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 
-	m_pShader->Render();
+	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetTransformMat())), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pRectTransform->GetProjMat())), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
+	
+	if (m_pTexture)
+	{
+		m_pShader->SetUp_TextureOnShader("Map", m_pTexture);
+		m_pShader->Render(1);
+	}
+	else
+		m_pShader->Render();
+
 
 	if (m_IBSubResourceData.pSysMem)
 		m_pDeviceContext->DrawIndexed(m_iNumPrimitive * m_iNumVerticesPerPrimitive, 0, 0);
@@ -169,6 +169,7 @@ string CVIBuffer_RectUI::GetTextureFilePath()
 {
 	if (m_pTexture)
 		return m_pTexture->GetFilePath();
+	return "";
 }
 
 void CVIBuffer_RectUI::UpdateTexture(string texturePath)

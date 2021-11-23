@@ -9,9 +9,9 @@
 //--------------------------------------------------------------------------------------
 cbuffer ConstantBuffer : register( b0 )
 {
-	matrix World;
-	matrix View;
-	matrix Projection;
+    matrix g_WorldMatrix;
+    matrix g_ViewMatrix;
+    matrix g_ProjMatrix;
 }
 
 //--------------------------------------------------------------------------------------
@@ -34,9 +34,9 @@ struct PS_INPUT
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
-    output.Pos = mul( input.Pos, World );
-    output.Pos = mul( output.Pos, View );
-    output.Pos = mul( output.Pos, Projection );
+    output.Pos = mul(input.Pos, g_WorldMatrix);
+    output.Pos = mul(output.Pos, g_ViewMatrix);
+    output.Pos = mul(output.Pos, g_ProjMatrix);
     output.Color = input.Color;
     
     return output;

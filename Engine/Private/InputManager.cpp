@@ -215,3 +215,8 @@ const _float3 CInputManager::GetMouseMoveValue() const
 	return wheelMoveValue;
 }
 
+const _float3 CInputManager::GetMousePosition() const
+{
+	return position;
+}
+

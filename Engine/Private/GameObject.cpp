@@ -91,7 +91,8 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 	else
 	{
 		m_Components.emplace(pComponentTag, pComponent);
-		*pOut = pComponent;
+		if (pOut)
+			*pOut = pComponent;
 		//SafeAddRef(pComponent);
 	}
 

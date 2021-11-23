@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
+#include "Log.h"
 
 CGameObject* g_pObjFocused = nullptr;
 
@@ -70,6 +71,9 @@ void CGizmo::Initialize()
 
 void CGizmo::Update()
 {
+	_float3 vec = CEngine::GetInstance()->GetMousePosition();
+	string s = "" + to_string(vec.x) + " : " + to_string(vec.y);
+	dynamic_cast<CLog*>(CEngine::GetInstance()->GetWindow("Log"))->AddLog(s.c_str());
 	CToolManager::SetImGuizmoStyle();
 	CToolManager::SetImGuiColor();
 
@@ -125,6 +129,7 @@ void CGizmo::LateUpdate()
 		CEngine::GetInstance()->ChangeProj(textureRect.x, textureRect.y);
 		ImGui::Image((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView()),
 			imageRect, ImVec2(0, 0), ImVec2(1, 1));
+		CEngine::GetInstance()->ChangeProj(imageRect.x, imageRect.y);
 	}
 
 	if (g_pObjFocused)
@@ -152,7 +157,7 @@ void CGizmo::ManipulateGameObject()
 	XMFLOAT4X4 objMat;
 	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
 
-	// FIX HERE
+	// TODO : FIX HERE
 	CComponent* pObjTransform = nullptr;
 	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
 		MSG_BOX("Failed to Get Transform");
@@ -170,8 +175,8 @@ void CGizmo::ManipulateUI()
 	//XMStoreFloat4x4(&fView, viewMatrix);
 	//memcpy(_view, &fView, sizeof(XMFLOAT4X4));
 
-	///* TODO : Get WinSize */
-	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280, 720, 0.0f, 1.f);
+	/* TODO : Get WinSize */
+	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280 , 720, 0.0f, 1.f);
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));

@@ -4,12 +4,14 @@
 
 CRectTransform::CRectTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 
 CRectTransform::CRectTransform(const CRectTransform & rhs)
 	: CComponent(rhs)
 	, m_TransformDesc(rhs.m_TransformDesc)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 
@@ -34,6 +36,8 @@ CComponent * CRectTransform::Clone(void * pArg)
 		MSG_BOX("Failed To Clone CRectTransform");
 		SafeRelease(pInstance);
 	}
+
+
 	return pInstance;
 }
 
@@ -60,6 +64,19 @@ HRESULT CRectTransform::Initialize(void * pArg)
 
 	SetTransformMat(m_TransformDesc);
 	return S_OK;
+}
+
+bool CRectTransform::IsMouseInRect()
+{
+	_float3 mousePos = m_pEngine->GetMousePosition();
+	if (mousePos.x <= m_TransformDesc.posX + (m_TransformDesc.sizeX / 2) &&
+		mousePos.x >= m_TransformDesc.posX - (m_TransformDesc.sizeX / 2) &&
+		mousePos.y <= m_TransformDesc.posY + (m_TransformDesc.sizeY / 2) &&
+		mousePos.y >= m_TransformDesc.posY - (m_TransformDesc.sizeY / 2))
+	{
+		return true;
+	}
+	return false;
 }
 
 void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)

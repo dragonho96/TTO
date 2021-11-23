@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Engine.h"
 
 BEGIN(Engine)
 
@@ -26,6 +27,8 @@ public:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
+public:
+	bool IsMouseInRect();
 
 public:
 	_float4x4				GetTransformMat() { return m_TransformMatrix; }
@@ -36,6 +39,7 @@ public:
 	void					SetTransformMat(_float4x4 _mat);
 
 private:
+	CEngine*				m_pEngine = nullptr;
 	_float4x4				m_ProjMatrix;
 	_float4x4				m_TransformMatrix;
 	RECTTRANSFORMDESC		m_TransformDesc;

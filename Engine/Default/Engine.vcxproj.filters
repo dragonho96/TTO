@@ -55,9 +55,6 @@
     <Filter Include="01.Utility\03.Components">
       <UniqueIdentifier>{95cb760b-4fcc-482f-916e-da621757770f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\Manager">
-      <UniqueIdentifier>{b6d16ade-ce09-4650-9d8c-81a28091aeb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\Renderer">
       <UniqueIdentifier>{ab1bd81c-4e1c-4ff0-b8fb-753af0ec19a1}</UniqueIdentifier>
     </Filter>
@@ -94,14 +91,8 @@
     <Filter Include="ImGui\Manager">
       <UniqueIdentifier>{d120267c-b496-494c-a29a-5f06fa47c738}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{70dbd42c-de2e-450b-adbe-11a22ce9f581}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Buffers">
       <UniqueIdentifier>{2604c2cf-2cbf-4544-93b1-0beb5a2fda68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rect">
-      <UniqueIdentifier>{b92b6501-6094-457d-ae84-e8b5b3e42bee}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\VIBuffer">
       <UniqueIdentifier>{d4cba2c7-b020-45d1-bd99-eaa763bbd8fa}</UniqueIdentifier>
@@ -145,8 +136,17 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\Terrain">
       <UniqueIdentifier>{ea0fb18a-0531-4b45-b662-176eb40b26d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.System\02.UUID">
-      <UniqueIdentifier>{fd72592d-9384-4be3-bb14-b6ecf5cae133}</UniqueIdentifier>
+    <Filter Include="01.Utility\03.Components\Texture">
+      <UniqueIdentifier>{70dbd42c-de2e-450b-adbe-11a22ce9f581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\00.Manager">
+      <UniqueIdentifier>{b6d16ade-ce09-4650-9d8c-81a28091aeb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UUID">
+      <UniqueIdentifier>{965dad16-0e1d-44bd-82aa-6c7d882d57b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Button">
+      <UniqueIdentifier>{a5d532bf-1563-4d99-a7a2-4569c4001d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +219,6 @@
     <ClInclude Include="..\Public\InputManager.h">
       <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Texture.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\GlobalBuffers.h">
       <Filter>Buffers</Filter>
     </ClInclude>
@@ -232,7 +229,7 @@
       <Filter>01.Utility\03.Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ComponentManager.h">
-      <Filter>01.Utility\03.Components\Manager</Filter>
+      <Filter>01.Utility\03.Components\00.Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Renderer.h">
       <Filter>01.Utility\03.Components\Renderer</Filter>
@@ -255,7 +252,6 @@
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="RectTest.h" />
     <ClInclude Include="..\Public\VIBuffer.h">
       <Filter>01.Utility\03.Components\VIBuffer</Filter>
     </ClInclude>
@@ -298,7 +294,12 @@
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>01.Utility\03.Components\VIBuffer\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UUID.h" />
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>01.Utility\03.Components\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UUID.h">
+      <Filter>UUID</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -355,14 +356,11 @@
     <ClCompile Include="..\Private\InputManager.cpp">
       <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Texture.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Component.cpp">
       <Filter>01.Utility\03.Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ComponentManager.cpp">
-      <Filter>01.Utility\03.Components\Manager</Filter>
+      <Filter>01.Utility\03.Components\00.Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
       <Filter>01.Utility\03.Components\Renderer</Filter>
@@ -388,7 +386,6 @@
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="RectTest.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp">
       <Filter>01.Utility\03.Components\VIBuffer</Filter>
     </ClCompile>
@@ -431,6 +428,11 @@
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UUID.cpp" />
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>01.Utility\03.Components\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UUID.cpp">
+      <Filter>UUID</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

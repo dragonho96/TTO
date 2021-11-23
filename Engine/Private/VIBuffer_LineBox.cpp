@@ -29,7 +29,7 @@ HRESULT CVIBuffer_LineBox::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Tutorial05.fx");
+	m_pShader = make_unique<CShader>(L"../../Assets/Shader/DebugLine.fx");
 	return S_OK;
 }
 
