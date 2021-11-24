@@ -20,6 +20,7 @@ CEngine::CEngine()
 	, m_pSoundManager(CSound::GetInstance())
 	, m_pPipeline(CPipeline::GetInstance())
 {
+	SafeAddRef(m_pPipeline);
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
 	SafeAddRef(m_pGraphicDevice);

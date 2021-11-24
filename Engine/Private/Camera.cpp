@@ -6,15 +6,12 @@ CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
 	, m_pPipeline(CPipeline::GetInstance())
 {
-	SafeAddRef(m_pPipeline);
 }
 
 CCamera::CCamera(const CCamera & rhs)
 	: CGameObject(rhs)
 	, m_pPipeline(rhs.m_pPipeline)
 {
-	SafeAddRef(m_pPipeline);
-
 }
 
 HRESULT CCamera::InitializePrototype()
@@ -56,7 +53,7 @@ _uint CCamera::Update(_double TimeDelta)
 	__super::Update(TimeDelta);
 
 	m_pPipeline->Set_Transform(CPipeline::D3DTS_VIEW, m_pTransformCom->GetWorldMatrixInverse());
-	m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH((60.0f), _float(1280) / 720.0f, 0.2f, 300.f));
+	m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XM_PIDIV2, _float(1280) / 720.0f, 0.2f, 300.f));
 
 	return _uint();
 }
@@ -74,5 +71,4 @@ void CCamera::Free()
 	__super::Free();
 
 	SafeRelease(m_pTransformCom);
-	SafeRelease(m_pPipeline);
 }
