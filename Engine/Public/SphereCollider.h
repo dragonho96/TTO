@@ -23,7 +23,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	virtual HRESULT SetUpDebugLine() override;
-	virtual void SetUpPhysX() override;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) override;
 public:
 	void SetSize(float fRadius);
 	float GetSize() { return m_fRadius; }

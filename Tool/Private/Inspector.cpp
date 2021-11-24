@@ -272,24 +272,41 @@ void CInspector::DrawCollider()
 			if (dynamic_cast<CSphereCollider*>(pComponent))
 			{
 				float radius = dynamic_cast<CSphereCollider*>(pComponent)->GetSize();
-				ImGui::DragFloat("Radius", &radius, 0.1f);
+				ImGui::DragFloat("Radius", &radius, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
 				dynamic_cast<CSphereCollider*>(pComponent)->SetSize(radius);
 			}
 			else if (dynamic_cast<CBoxCollider*>(pComponent))
 			{
 				_float3 size = dynamic_cast<CBoxCollider*>(pComponent)->GetSize();
-				ImGui::DragFloat("X", &size.x, 0.1f);
-				ImGui::DragFloat("Y", &size.y, 0.1f);
-				ImGui::DragFloat("Z", &size.z, 0.1f);
+				ImGui::DragFloat("X", &size.x, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+				ImGui::DragFloat("Y", &size.y, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+				ImGui::DragFloat("Z", &size.z, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
 				dynamic_cast<CBoxCollider*>(pComponent)->SetSize(size);
 			}
 			else if (dynamic_cast<CCapsuleCollider*>(pComponent))
 			{
 				pair<float, float> size = dynamic_cast<CCapsuleCollider*>(pComponent)->GetSize();
-				ImGui::DragFloat("X", &size.first, 0.1f);
-				ImGui::DragFloat("Y", &size.second, 0.1f);
+				ImGui::DragFloat("X", &size.first, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+				ImGui::DragFloat("Y", &size.second, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
 				dynamic_cast<CCapsuleCollider*>(pComponent)->SetSize(size);
 			}
+
+			//_bool bHasRigidBody = dynamic_cast<CCollider*>(pComponent)->HasRigidBody();
+			CCollider* pCollider = dynamic_cast<CCollider*>(pComponent);
+			//_bool bHasRigidBody = pCollider->HasRigidBody();
+			ImGui::Checkbox("RigidBody", &pCollider->GetRigidBodyDesc().bEnabled);
+			if (pCollider->GetRigidBodyDesc().bEnabled)
+			{
+				ImGui::Indent();
+
+				CCollider::RIGIDBODYDESC desc = pCollider->GetRigidBodyDesc();
+				ImGui::Checkbox("UseGravity", &pCollider->GetRigidBodyDesc().bGravity);
+				ImGui::Checkbox("IsKinematic", &pCollider->GetRigidBodyDesc().bKinematic);
+
+				ImGui::Unindent();
+			}
+
+
 
 			ImGui::TreePop();
 		}
@@ -305,7 +322,7 @@ void CInspector::DrawTransform()
 	float _objMat[16];
 	XMFLOAT4X4 objMat = dynamic_cast<CTransform*>(pObjTransform)->GetMatrix();
 	memcpy(_objMat, &objMat, sizeof(XMFLOAT4X4));
-	
+
 	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
 	ImGuizmo::DecomposeMatrixToComponents(_objMat, matrixTranslation, matrixRotation, matrixScale);
@@ -353,7 +370,7 @@ void CInspector::DrawRectTransform()
 	}
 
 	// SetTransformMat(desc)
-	 dynamic_cast<CRectTransform*>(pObjTransform)->SetTransformMat(desc);
+	dynamic_cast<CRectTransform*>(pObjTransform)->SetTransformMat(desc);
 
 	// GetTransformMat
 	float _objMat[16];

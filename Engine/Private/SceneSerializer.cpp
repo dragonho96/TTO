@@ -7,6 +7,13 @@
 #include "VIBuffer_RectUI.h"
 #pragma endregion
 
+#pragma region COMPONENT
+#include "Collider.h"
+#include "BoxCollider.h"
+#include "SphereCollider.h"
+#include "CapsuleCollider.h"
+#pragma endregion
+
 CSceneSerializer::CSceneSerializer()
 	: m_pEngine(CEngine::GetInstance())
 {
@@ -100,6 +107,38 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 
 		out << YAML::EndMap;
+	}
+
+	if (obj->GetComponent(TEXT("Com_Collider")))
+	{
+		CCollider* collider = dynamic_cast<CCollider*>(obj->GetComponent(TEXT("Com_Collider")));
+
+		// Check if RB exist
+		out << YAML::Key << "Com_Collider";
+		out << YAML::BeginMap;
+
+		if (dynamic_cast<CBoxCollider*>(collider))
+		{
+			CBoxCollider* boxCollier = dynamic_cast<CBoxCollider*>(collider);
+			_float3 boxSize = boxCollier->GetSize();
+
+			out << YAML::Key << "Type" << YAML::Value << "Box";
+			out << YAML::Key << "Size" << YAML::Value << YAML::Flow;
+			out << YAML::BeginSeq << boxSize.x << boxSize.y << boxSize.z << YAML::EndSeq;
+		}
+
+		CCollider::RIGIDBODYDESC desc = collider->GetRigidBodyDesc();
+		out << YAML::Key << "RigidBody";
+		out << YAML::BeginMap;
+
+		out << YAML::Key << "Enabled" << YAML::Value << desc.bEnabled;
+		out << YAML::Key << "Gravity" << YAML::Value << desc.bGravity;
+		out << YAML::Key << "Kinematic" << YAML::Value << desc.bKinematic;
+		
+		out << YAML::EndMap;
+		
+		out << YAML::EndMap;
+
 	}
 
 	out << YAML::EndMap;
@@ -213,14 +252,40 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		sc[1] = sequence[1].as<float>();
 		sc[2] = sequence[2].as<float>();
 
-		float _objMat[16];
-		XMFLOAT4X4 objMat;
+		float _objMat[16]; XMFLOAT4X4 objMat;
 		ImGuizmo::RecomposeMatrixFromComponents(tr, rt, sc, _objMat);
-
 		memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
 
 		CComponent* pTransform = deserializedObject->GetComponent(TEXT("Com_Transform"));
 		dynamic_cast<CTransform*>(pTransform)->SetMatrix(objMat);
 	}
+	auto colliderCom = obj["Com_Collider"];
+	if (colliderCom)
+	{
+		CCollider::RIGIDBODYDESC desc;
+		ZeroMemory(&desc, sizeof(desc));
 
+		auto rigidBody = colliderCom["RigidBody"];
+		desc.bEnabled = rigidBody["Enabled"].as<bool>();
+		desc.bGravity = rigidBody["Gravity"].as<bool>();
+		desc.bKinematic = rigidBody["Kinematic"].as<bool>();
+
+		string type = colliderCom["Type"].as<string>();
+		if (type == "Box")
+		{
+			if(deserializedObject->AddComponent(0, TEXT("Prototype_BoxCollider"), TEXT("Com_Collider"), deserializedObject->GetComponent(TEXT("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent BoxCollider");
+
+			auto sequence = colliderCom["Size"];
+			_float3 size;
+			size.x = sequence[0].as<float>();
+			size.y = sequence[1].as<float>();
+			size.z = sequence[2].as<float>();
+
+			CComponent* pCollider = deserializedObject->GetComponent(TEXT("Com_Collider"));
+			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
+		}
+
+
+	}
 }

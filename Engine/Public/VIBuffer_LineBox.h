@@ -21,7 +21,7 @@ public:
 
 public:
 	HRESULT CreateBuffer(void** pVertices);
-	void SetSize(_float3 vSize);
+	void SetSize(_float3 m_Size);
 
 private:
 	void*				m_pCloneVertices = nullptr;

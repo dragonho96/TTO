@@ -49,6 +49,7 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 _uint CEngine::Update(_double dTimeDelta)
 {
 	m_pInputManager->Update();
+	UpdatePx(dTimeDelta);
 	m_pGameObjectManager->Update(dTimeDelta);
 	m_pGameObjectManager->LateUpdate(dTimeDelta);
 	return _uint();
@@ -434,7 +435,7 @@ PxControllerManager * CEngine::GetControllerManager()
 	return m_pPxManager->GetControllerManager();
 }
 
-void CEngine::AddActor(PxRigidDynamic * pActor)
+void CEngine::AddActor(PxRigidActor * pActor)
 {
 	m_pPxManager->AddActor(pActor);
 }

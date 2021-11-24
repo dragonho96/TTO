@@ -83,7 +83,7 @@ HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CCapsuleCollider::SetUpPhysX()
+void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 {
 	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
 	//PxTransform relativePose(PxQuat(PxHalfPi, PxVec(0, 0, 1)));

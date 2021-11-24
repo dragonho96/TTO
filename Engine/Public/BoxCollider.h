@@ -24,14 +24,14 @@ public:
 
 public:
 	virtual HRESULT SetUpDebugLine() override;
-	virtual void SetUpPhysX() override;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) override;
 public:
-	void SetSize(_float3 vSize);
-	_float3 GetSize() { return m_vSize; };
+	void SetSize(_float3 m_Size);
+	_float3 GetSize() { return m_Size; };
 
 private:
 	CEngine*		m_pEngine;
-	_float3			m_vSize;
+	_float3			m_Size;
 };
 
 END
