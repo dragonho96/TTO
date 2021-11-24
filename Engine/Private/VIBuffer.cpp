@@ -71,8 +71,8 @@ HRESULT CVIBuffer::Render()
 	//m_pShader->SetUp_ValueOnShader("Projection", &XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix()), sizeof(_matrix));
 
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix()), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix()), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
 
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);

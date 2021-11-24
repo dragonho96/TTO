@@ -35,6 +35,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Camera_Tool.cpp" />
     <ClCompile Include="..\Private\ContentBrowser.cpp" />
     <ClCompile Include="..\Private\Gizmo.cpp" />
     <ClCompile Include="..\Private\Hierarchy.cpp" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
+    <ClInclude Include="..\Public\Camera_Tool.h" />
     <ClInclude Include="..\Public\ContentBrowser.h" />
     <ClInclude Include="..\Public\Gizmo.h" />
     <ClInclude Include="..\Public\Hierarchy.h" />

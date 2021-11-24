@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Base.h"
-#include "Engine.h"
 #include "UUID.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CGameObject abstract : public CBase
@@ -33,7 +33,7 @@ public:
 	list<CGameObject*> GetChildren() { return m_listChildren; }
 
 protected:
-	CEngine*				m_pEngine = nullptr;
+	class CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 

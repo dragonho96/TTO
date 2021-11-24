@@ -34,6 +34,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{e17f5b08-e647-4a79-856a-ba2eb6b7f890}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{78663f16-7fee-4771-bc43-4b8052cd43cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -80,6 +83,9 @@
     <ClCompile Include="..\Private\Scene_Tool.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Camera_Tool.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -120,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Scene_Tool.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Tool.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

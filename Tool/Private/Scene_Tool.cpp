@@ -18,6 +18,8 @@
 #include "EmptyUI.h"
 #pragma endregion
 
+#include "Camera_Tool.h"
+
 USING(Tool)
 
 CScene_Tool::CScene_Tool(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
@@ -34,6 +36,9 @@ HRESULT CScene_Tool::Initialize()
 		return E_FAIL;
 
 	if (FAILED(ReadyPrototypeGameObject()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -89,6 +94,28 @@ HRESULT CScene_Tool::ReadyPrototypeGameObject()
 	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_EmptyGameObject"), CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_EmptyUI"), CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
+
+	return S_OK;
+}
+
+HRESULT CScene_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
+{
+	CEngine*		pEngine = GET_INSTANCE(CEngine);
+
+	if (FAILED(pEngine->AddPrototype(TEXT("GameObject_Camera_Fly"), CCamera_Tool::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	CCamera::CAMERADESC		CameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
+
+	CameraDesc.vEye = _float3(0.f, 0.f, -5.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
+
+	if (nullptr == pEngine->AddGameObject(0, TEXT("GameObject_Camera_Fly"), pLayerTag, &CameraDesc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);

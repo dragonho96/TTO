@@ -4,6 +4,7 @@
 #include "GameObjectManager.h"
 #include "ComponentManager.h"
 #include "ImGuiManager.h"
+#include "Pipeline.h"
 #include "Sound.h"
 
 BEGIN(Engine)
@@ -94,6 +95,11 @@ public:
 	void ClearComponentManager(_uint iSceneIndex);
 #pragma endregion
 
+#pragma region PIPELINE
+	_matrix GetTransform(CPipeline::TYPE eType);
+	_vector GetCamPosition();
+#pragma endregion
+
 #pragma region IMGUI
 	void InitializeImGui(HWND hWnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void UpdateImGui();
@@ -123,6 +129,8 @@ private:
 	class CGameObjectManager*		m_pGameObjectManager = nullptr;
 	class CComponentManager*		m_pComponentManager = nullptr;
 	class CInputManager*			m_pInputManager = nullptr;
+	class CPipeline*				m_pPipeline = nullptr;
+
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;
 	class CSound*					m_pSoundManager = nullptr;

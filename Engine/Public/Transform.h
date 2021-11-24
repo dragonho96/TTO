@@ -23,6 +23,13 @@ public:
 		return *(_vector*)&m_WorldMatrix.m[eState][0];
 	}
 
+	_matrix GetWorldMatrixInverse() const {
+		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
+	}
+	_matrix GetWorldMatrix() const {
+		return XMLoadFloat4x4(&m_WorldMatrix);
+	}
+	
 	_float GetScale(STATE eState);
 
 	void SetState(STATE eState, _fvector vData){ 
