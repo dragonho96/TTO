@@ -25,6 +25,7 @@ CDebugCapsule::~CDebugCapsule()
 void CDebugCapsule::InitializePxController()
 {
 	PxCapsuleControllerDesc desc;
+
 	desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
 	desc.radius = 0.25f;
 	desc.height = 0.5f;

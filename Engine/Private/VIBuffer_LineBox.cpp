@@ -80,8 +80,8 @@ HRESULT CVIBuffer_LineBox::CreateBuffer(void** pVertices)
 	m_VBDesc.MiscFlags = 0;
 	m_VBDesc.StructureByteStride = m_iStride;
 
-	_float3 max{ m_Size.x / 2.f, m_Size.y / 2.f , m_Size.z / 2.f };
-	_float3 min{ -m_Size.x / 2.f, -m_Size.y / 2.f , -m_Size.z / 2.f };
+	_float3 max{ m_Size.x / 2.f, m_Size.y / 2.f, m_Size.z / 2.f };
+	_float3 min{ -m_Size.x / 2.f, -m_Size.y / 2.f, -m_Size.z / 2.f };
 
 	VTXCOLOR vertices[8];
 

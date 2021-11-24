@@ -5,7 +5,7 @@
 CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
 	, m_pEngine(CEngine::GetInstance())
-	, m_vSize(1.f, 1.f, 1.f)
+	, m_Size(1.f, 1.f, 1.f)
 {
 
 }
@@ -13,7 +13,7 @@ CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice
 CBoxCollider::CBoxCollider(const CBoxCollider & rhs)
 	: CCollider(rhs)
 	, m_pEngine(CEngine::GetInstance())
-	, m_vSize(1.f, 1.f, 1.f)
+	, m_Size(1.f, 1.f, 1.f)
 {
 
 }
@@ -81,8 +81,9 @@ HRESULT CBoxCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CBoxCollider::SetUpPhysX()
+void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 {
+	m_RigidBodyDesc = desc;
 	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
 	//PxTransform relativePose(PxQuat(PxHalfPi, PxVec(0, 0, 1)));
 	//PxShape* aCapsuleShape = PxRigidActorExt::createExclusiveShape(*aSphereActor,
@@ -91,26 +92,69 @@ void CBoxCollider::SetUpPhysX()
 	//PxRigidBodyExt::updateMassAndInertia(*aSphereActor, capsuleDensity);
 	//aScene->addActor(aCapsuleActor);
 
+	//physx::PxRigidStatic* sphere = physx::PxCreateStatic(*phy.getPhysics(), global_tf, physx::PxSphereGeometry(physx::PxReal(0.5)), *phy.getMaterial());
+	
+	// TODO: Add Static and Dynamic RigidBody
+	// Create Shape with input size
+	// 1. Check if it has RB
+	// 2. No RB? -> RigidStatic
+	// 3. Yes RB? -> DynamicStatic
 
-	PxTransform transform(PxVec3(), PxQuat());
+	// TODO: Add Static RB First ( if there is no rb)
+
+	memcpy(&m_Size, pShapeInfo, sizeof(_float3));
+	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
+	PxTransform transform;
+	memcpy(&transform.p, &position, sizeof(_float3));
+	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+	memcpy(&transform.q, &quat, sizeof(_float4));
+	PxVec3 geoSize;
+	memcpy(&geoSize, &m_Size, sizeof(_float3));
+	geoSize = geoSize / 2;
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
-	PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
+	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxBoxGeometry(geoSize), *pMaterial);
 
-	PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
-	pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	pActor->attachShape(*pShape);
+	// Make Dynamic
+	if (desc.bEnabled)
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
+		m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
+		m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+	}
+	// Make Static
+	else
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
+	}
 
-	m_pEngine->AddActor(pActor);
+	m_pRigidActor->attachShape(*meshShape);
+	m_pEngine->AddActor(m_pRigidActor);
+
+	
+
+
+
+
+
+
+	//PxTransform transform(PxVec3(), PxQuat());
+	//PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
+
+	//PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
+	//pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+	//pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	//pActor->attachShape(*pShape);
+
+	//m_pEngine->AddActor(pActor);
 	//pActor->Setglo
 }
 
 void CBoxCollider::SetSize(_float3 vSize)
 {
-	if (vSize.x != m_vSize.x || vSize.y != m_vSize.y || vSize.z != m_vSize.z)
+	if (vSize.x != m_Size.x || vSize.y != m_Size.y || vSize.z != m_Size.z)
 	{
-		m_vSize = vSize;
-		dynamic_cast<CVIBuffer_LineBox*>(m_pDebugLine)->SetSize(m_vSize);
+		m_Size = vSize;
+		dynamic_cast<CVIBuffer_LineBox*>(m_pDebugLine)->SetSize(m_Size);
 	}
 }
 

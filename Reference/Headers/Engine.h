@@ -113,7 +113,7 @@ public:
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
-	void					AddActor(PxRigidDynamic* pActor);
+	void					AddActor(PxRigidActor* pActor);
 #pragma endregion
 
 private:

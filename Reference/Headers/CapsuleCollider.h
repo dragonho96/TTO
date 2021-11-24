@@ -24,7 +24,7 @@ public:
 
 public:
 	virtual HRESULT SetUpDebugLine() override;
-	virtual void SetUpPhysX() override;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) override;
 public:
 	void SetSize(pair<float, float> size);
 	pair<float, float> GetSize() { return make_pair(m_fRadius, m_fHeight); }

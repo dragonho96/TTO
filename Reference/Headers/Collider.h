@@ -10,6 +10,14 @@ BEGIN(Engine)
 class ENGINE_DLL CCollider abstract : public CComponent
 {
 public:
+	typedef struct tagRigidBody
+	{
+		_bool bEnabled;
+		_bool bGravity;
+		_bool bKinematic;
+	}RIGIDBODYDESC;
+
+public:
 	explicit CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CCollider(const CCollider& rhs);
 	virtual ~CCollider() = default;
@@ -23,11 +31,19 @@ public:
 
 public:
 	virtual HRESULT SetUpDebugLine() PURE;
-	virtual void SetUpPhysX() PURE;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) PURE;
+
+public:
+	RIGIDBODYDESC&	GetRigidBodyDesc() { return m_RigidBodyDesc; }
 
 protected:
 	CComponent*		m_pDebugLine;
 	CTransform*		m_pObjTransform;
+	PxRigidActor*	m_pRigidActor;
+	RIGIDBODYDESC	m_RigidBodyDesc;
+	//protected:
+	//	PxPhysics*					m_pPhysics;
+	//	PxControllerManager*		m_pControllerManager;
 };
 
 END
