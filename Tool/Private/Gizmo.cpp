@@ -71,9 +71,7 @@ void CGizmo::Initialize()
 
 void CGizmo::Update()
 {
-	_float3 vec = CEngine::GetInstance()->GetMousePosition();
-	string s = "" + to_string(vec.x) + " : " + to_string(vec.y);
-	dynamic_cast<CLog*>(CEngine::GetInstance()->GetWindow("Log"))->AddLog(s.c_str());
+
 	CToolManager::SetImGuizmoStyle();
 	CToolManager::SetImGuiColor();
 

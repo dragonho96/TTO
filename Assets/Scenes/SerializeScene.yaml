@@ -1,7 +1,7 @@
 Scene: Untitled
 GameObjects:
   - Type: Object
-    UUID: 3165023733524917496
+    UUID: 11226859398324331215
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [-0, 0, -0]
