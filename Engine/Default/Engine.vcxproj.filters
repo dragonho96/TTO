@@ -148,6 +148,12 @@
     <Filter Include="01.Utility\03.Components\Button">
       <UniqueIdentifier>{a5d532bf-1563-4d99-a7a2-4569c4001d60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\Camera">
+      <UniqueIdentifier>{aae62dd2-4efb-4f4d-9756-6f0930dca4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Pipeline">
+      <UniqueIdentifier>{3f0359f9-3029-4d76-a314-b22b171a0d2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -300,6 +306,12 @@
     <ClInclude Include="..\Public\UUID.h">
       <Filter>UUID</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Pipeline.h">
+      <Filter>01.Utility\04.Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -433,6 +445,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UUID.cpp">
       <Filter>UUID</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pipeline.cpp">
+      <Filter>01.Utility\04.Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

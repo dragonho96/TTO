@@ -160,6 +160,7 @@
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\Camera_Fly.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Log.h" />
@@ -188,6 +189,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Camera_Fly.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />

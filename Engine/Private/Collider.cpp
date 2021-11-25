@@ -38,6 +38,17 @@ HRESULT CCollider::Initialize(void * pArg)
 
 HRESULT CCollider::Render()
 {
+	if (m_pController)
+	{
+		if (CEngine::GetInstance()->IsKeyPressed(VK_UP))
+		{
+			m_pController->move(PxVec3{ 0.f, 0.f, 0.1f }, 0.f, 0.1f, PxControllerFilters{});
+		}
+		if (CEngine::GetInstance()->IsKeyPressed(VK_DOWN))
+		{
+			m_pController->move(PxVec3{ 0.f, 0.f, -0.1f }, 0.f, 0.1f, PxControllerFilters{});
+		}
+	}
 	if (m_pDebugLine)
 		dynamic_cast<CVIBuffer*>(m_pDebugLine)->Render();
 	return S_OK;

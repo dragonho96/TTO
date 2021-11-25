@@ -94,14 +94,14 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	g_World1 = XMMatrixIdentity();
 	g_World2 = XMMatrixIdentity();
 
-	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	g_View = XMMatrixLookAtLH(Eye, At, Up);
+	//// Initialize the view matrix
+	//XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
+	//XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	//XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	//g_View = XMMatrixLookAtLH(Eye, At, Up);
 
-	// Initialize the projection matrix
-	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
+	//// Initialize the projection matrix
+	//g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, iWidth / (FLOAT)iHeight, 0.01f, 100.0f);
 
 
 	//ConstantBuffer cb1;

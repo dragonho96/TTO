@@ -1,15 +1,17 @@
 Scene: Untitled
 GameObjects:
   - Type: Object
-    UUID: 2630227649394124472
+    UUID: 3165023733524917496
     Com_Transform:
-      Translation: [4.53916836, 2.63378024, 0]
+      Translation: [0, 0, 0]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
-      Type: Box
-      Size: [1, 1, 1]
+      Type: Capsule
+      Radius: 0.5
+      Height: 1
       RigidBody:
         Enabled: true
-        Gravity: true
+        Gravity: false
         Kinematic: false
+        CharacterController: true

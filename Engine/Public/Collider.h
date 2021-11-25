@@ -15,6 +15,7 @@ public:
 		_bool bEnabled;
 		_bool bGravity;
 		_bool bKinematic;
+		_bool bCC;
 	}RIGIDBODYDESC;
 
 public:
@@ -37,10 +38,13 @@ public:
 	RIGIDBODYDESC&	GetRigidBodyDesc() { return m_RigidBodyDesc; }
 
 protected:
-	CComponent*		m_pDebugLine;
-	CTransform*		m_pObjTransform;
-	PxRigidActor*	m_pRigidActor;
 	RIGIDBODYDESC	m_RigidBodyDesc;
+
+	CComponent*		m_pDebugLine = nullptr;
+	CTransform*		m_pObjTransform = nullptr;
+
+	PxRigidActor*	m_pRigidActor = nullptr;
+	PxController*	m_pController = nullptr;
 	//protected:
 	//	PxPhysics*					m_pPhysics;
 	//	PxControllerManager*		m_pControllerManager;

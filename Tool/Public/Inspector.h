@@ -22,6 +22,7 @@ public:
 	void DrawVec3(const string& label, _float3& values);
 	void DrawCollider();
 	void DrawTransform();
+	void DrawBuffer();
 
 public:
 	void DrawRectTransform();

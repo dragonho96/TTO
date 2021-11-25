@@ -5,6 +5,7 @@
 #pragma region UICOM
 #include "RectTransform.h"
 #include "VIBuffer_RectUI.h"
+#include "VIBuffer_Terrain.h"
 #pragma endregion
 
 #pragma region COMPONENT
@@ -126,6 +127,21 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 			out << YAML::Key << "Size" << YAML::Value << YAML::Flow;
 			out << YAML::BeginSeq << boxSize.x << boxSize.y << boxSize.z << YAML::EndSeq;
 		}
+		else if (dynamic_cast<CSphereCollider*>(collider))
+		{
+			CSphereCollider* sphereCollier = dynamic_cast<CSphereCollider*>(collider);
+			_float radius = sphereCollier->GetSize();
+			out << YAML::Key << "Type" << YAML::Value << "Sphere";
+			out << YAML::Key << "Radius" << YAML::Value << radius;
+		}
+		else if (dynamic_cast<CCapsuleCollider*>(collider))
+		{
+			CCapsuleCollider* capsuleCollier = dynamic_cast<CCapsuleCollider*>(collider);
+			pair<float, float> capuleSize = capsuleCollier->GetSize();
+			out << YAML::Key << "Type" << YAML::Value << "Capsule";
+			out << YAML::Key << "Radius" << YAML::Value << capuleSize.first;
+			out << YAML::Key << "Height" << YAML::Value << capuleSize.second;
+		}
 
 		CCollider::RIGIDBODYDESC desc = collider->GetRigidBodyDesc();
 		out << YAML::Key << "RigidBody";
@@ -134,11 +150,30 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::Key << "Enabled" << YAML::Value << desc.bEnabled;
 		out << YAML::Key << "Gravity" << YAML::Value << desc.bGravity;
 		out << YAML::Key << "Kinematic" << YAML::Value << desc.bKinematic;
-		
+		out << YAML::Key << "CharacterController" << YAML::Value << desc.bCC;
+
 		out << YAML::EndMap;
 		
 		out << YAML::EndMap;
 
+	}
+
+	if (obj->GetComponent(TEXT("Com_VIBuffer")))
+	{
+		CVIBuffer* viBuffer = dynamic_cast<CVIBuffer*>(obj->GetComponent(TEXT("Com_VIBuffer")));
+
+		out << YAML::Key << "Com_VIBuffer";
+		out << YAML::BeginMap;
+
+		if (dynamic_cast<CVIBuffer_Terrain*>(viBuffer))
+		{
+			CVIBuffer_Terrain* pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(viBuffer);
+			out << YAML::Key << "Type" << YAML::Value << "Terrain";
+			out << YAML::Key << "HeightMapPath" << YAML::Value << pTerrainBuffer->GetHeightMapPath();
+			out << YAML::Key << "TexturePath" << YAML::Value << pTerrainBuffer->GetTexturePath();
+		}
+
+		out << YAML::EndMap;
 	}
 
 	out << YAML::EndMap;
@@ -269,6 +304,7 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		desc.bEnabled = rigidBody["Enabled"].as<bool>();
 		desc.bGravity = rigidBody["Gravity"].as<bool>();
 		desc.bKinematic = rigidBody["Kinematic"].as<bool>();
+		desc.bCC = rigidBody["CharacterController"].as<bool>();
 
 		string type = colliderCom["Type"].as<string>();
 		if (type == "Box")
@@ -285,7 +321,43 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			CComponent* pCollider = deserializedObject->GetComponent(TEXT("Com_Collider"));
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
+		else if (type == "Sphere")
+		{
+			if (deserializedObject->AddComponent(0, TEXT("Prototype_SphereCollider"), TEXT("Com_Collider"), deserializedObject->GetComponent(TEXT("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent Prototype_SphereCollider");
 
+			_float radius = colliderCom["Radius"].as<float>();
+			CComponent* pCollider = deserializedObject->GetComponent(TEXT("Com_Collider"));
+			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
+		}
+		else if (type == "Capsule")
+		{
+			if (deserializedObject->AddComponent(0, TEXT("Prototype_CapsuleCollider"), TEXT("Com_Collider"), deserializedObject->GetComponent(TEXT("Com_Transform"))))
+			MSG_BOX("Failed to AddComponent Prototype_CapsuleCollider");
 
+			pair<float, float> capsuleSize;
+			capsuleSize.first = colliderCom["Radius"].as<float>();
+			capsuleSize.second = colliderCom["Height"].as<float>();
+			CComponent* pCollider = deserializedObject->GetComponent(TEXT("Com_Collider"));
+			dynamic_cast<CCapsuleCollider*>(pCollider)->SetUpRigidActor(&capsuleSize, desc);
+		}
+	}
+
+	auto viBufferCom = obj["Com_VIBuffer"];
+	if (viBufferCom)
+	{
+		string type = viBufferCom["Type"].as<string>();
+		if (type == "Terrain")
+		{
+			if (deserializedObject->AddComponent(0, TEXT("Prototype_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), deserializedObject->GetComponent(TEXT("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent Prototype_VIBuffer_Terrain");
+
+			string heightMapPath = viBufferCom["HeightMapPath"].as<string>();
+			string texturePath = viBufferCom["TexturePath"].as<string>();
+
+			CVIBuffer_Terrain* pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(deserializedObject->GetComponent(TEXT("Com_VIBuffer")));
+			pTerrainBuffer->SetHeightMapPath(heightMapPath);
+			pTerrainBuffer->SetTexturePath(texturePath);
+		}
 	}
 }

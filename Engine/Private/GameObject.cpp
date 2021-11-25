@@ -130,6 +130,17 @@ CComponent* CGameObject::GetComponent(const _tchar * pComponentTag)
 		return (*iter).second;
 }
 
+HRESULT CGameObject::RemoveComponent(const _tchar * pComponentTag)
+{
+	auto& iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));
+	if (m_Components.end() == iter)
+		return E_FAIL;
+
+	SafeRelease((*iter).second);
+	m_Components.erase(iter);
+	return S_OK;
+}
+
 
 
 void CGameObject::Free()

@@ -18,7 +18,9 @@ CEngine::CEngine()
 	, m_pComponentManager(CComponentManager::GetInstance())
 	, m_pImGuiManager(CImGuiManager::GetInstance())
 	, m_pSoundManager(CSound::GetInstance())
+	, m_pPipeline(CPipeline::GetInstance())
 {
+	SafeAddRef(m_pPipeline);
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
 	SafeAddRef(m_pGraphicDevice);
@@ -80,6 +82,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CGameObjectManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGameObjectManager");
+
+	if (0 != CPipeline::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CPipeline");
 
 	if (0 != CComponentManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CComponentManager");
@@ -374,6 +379,22 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 	m_pComponentManager->Clear(iSceneIndex);
 }
 
+_matrix CEngine::GetTransform(CPipeline::TYPE eType)
+{
+	if (nullptr == m_pPipeline)
+		return XMMatrixIdentity();
+
+	return m_pPipeline->Get_Transform(eType);
+}
+
+_vector CEngine::GetCamPosition()
+{
+	if (nullptr == m_pPipeline)
+		return XMVectorZero();
+
+	return m_pPipeline->Get_CamPosition();
+}
+
 void CEngine::InitializeImGui(HWND hWnd, ID3D11Device * device, ID3D11DeviceContext * deviceContext)
 {
 	m_pImGuiManager->Initialize(hWnd, device, deviceContext);
@@ -444,6 +465,7 @@ void CEngine::AddActor(PxRigidActor * pActor)
 
 void CEngine::Free()
 {
+	SafeRelease(m_pPipeline);
 	SafeRelease(m_pComponentManager);
 	SafeRelease(m_pGameObjectManager);
 	SafeRelease(m_pSceneManager);
