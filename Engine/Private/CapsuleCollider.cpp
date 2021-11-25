@@ -85,25 +85,74 @@ HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 
 void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 {
-	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
-	//PxTransform relativePose(PxQuat(PxHalfPi, PxVec(0, 0, 1)));
-	//PxShape* aCapsuleShape = PxRigidActorExt::createExclusiveShape(*aSphereActor,
-	//	PxCapsuleGeometry(radius, halfHeight), aMaterial);
-	//aCapsuleShape->setLocalPose(relativePose);
-	//PxRigidBodyExt::updateMassAndInertia(*aSphereActor, capsuleDensity);
-	//aScene->addActor(aCapsuleActor);
-
-
-	PxTransform transform(PxVec3(), PxQuat());
+	m_RigidBodyDesc = desc;
+	pair<float, float> capsuleSize;
+	memcpy(&capsuleSize, pShapeInfo, sizeof(pair<float, float>));
+	PxReal radius = capsuleSize.first;
+	PxReal height = capsuleSize.second;
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
-	PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
+	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
+	PxTransform transform;
+	memcpy(&transform.p, &position, sizeof(_float3));
 
-	PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
-	pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	pActor->attachShape(*pShape);
+	if (desc.bCC)
+	{
+		PxCapsuleControllerDesc desc;
+		desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
+		desc.radius = radius;
+		desc.height = height;
+		desc.slopeLimit = 0.f/*cosf(D3DXToRadian(45.f))*/;
+		//desc.stepOffset = 0.2f;
+		desc.upDirection = PxVec3(0.0, 1.0, 0.0);
+		desc.material = pMaterial;
+		desc.position = PxExtendedVec3(transform.p.x, transform.p.y, transform.p.z);
+		desc.contactOffset = 0.001f;
+		//desc.behaviorCallback = 
+		//desc.reportCallback = &m_callback;
+		//CE_ASSERT(desc.isValid(), "Capsule is not valid");
 
-	m_pEngine->AddActor(pActor);
+		m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
+		return;
+	}
+
+
+
+
+	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+	memcpy(&transform.q, &quat, sizeof(_float4));
+
+	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxCapsuleGeometry(radius, height), *pMaterial);
+	/* Fix to upright standing capsule */
+	PxTransform relativePose(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+	meshShape->setLocalPose(relativePose);
+
+	if (desc.bEnabled)
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
+		m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
+		m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+	}
+	// Make Static
+	else
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
+	}
+
+	m_pRigidActor->attachShape(*meshShape);
+	m_pEngine->AddActor(m_pRigidActor);
+
+
+
+	//PxTransform transform(PxVec3(), PxQuat());
+	//PxMaterial* pMaterial = m_pEngine->GetMaterial();
+	//PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
+
+	//PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
+	//pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+	//pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	//pActor->attachShape(*pShape);
+
+	//m_pEngine->AddActor(pActor);
 	//pActor->Setglo
 }
 

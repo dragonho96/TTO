@@ -88,6 +88,10 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	/* Buffer */
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineBox"), CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineCapsule"), CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
@@ -95,6 +99,10 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_BoxCollider"), CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_SphereCollider"), CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Prototype_BackGround */

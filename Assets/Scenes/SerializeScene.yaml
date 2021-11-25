@@ -1,25 +1,17 @@
 Scene: Untitled
 GameObjects:
   - Type: Object
-    UUID: 10823495079901652872
+    UUID: 3165023733524917496
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
-      Type: Box
-      Size: [4.5, 3.4000001, 4.0999999]
+      Type: Capsule
+      Radius: 0.5
+      Height: 1
       RigidBody:
-        Enabled: false
+        Enabled: true
         Gravity: false
         Kinematic: false
-  - Type: Object
-    UUID: 1458429798384143397
-    Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [-0, 0, -0]
-      Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ../../Assets/Texture/Height.bmp
-      TexturePath: ../../Assets/Texture/Folder.png
+        CharacterController: true

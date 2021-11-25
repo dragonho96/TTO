@@ -172,11 +172,13 @@ void CGizmo::ManipulateUI()
 
 	//XMMATRIX viewMatrix = XMMatrixIdentity();
 	//XMFLOAT4X4 fView;
+	//viewMatrix = XMMatrixInverse(nullptr, viewMatrix);
 	//XMStoreFloat4x4(&fView, viewMatrix);
 	//memcpy(_view, &fView, sizeof(XMFLOAT4X4));
 
 	/* TODO : Get WinSize */
-	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280 , 720, 0.0f, 1.f);
+	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280, 720, 0.0f, 1.f);
+	//XMMATRIX projMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ);
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));

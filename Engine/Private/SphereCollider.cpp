@@ -83,25 +83,32 @@ HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 
 void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 {
-	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
-	//PxTransform relativePose(PxQuat(PxHalfPi, PxVec(0, 0, 1)));
-	//PxShape* aCapsuleShape = PxRigidActorExt::createExclusiveShape(*aSphereActor,
-	//	PxCapsuleGeometry(radius, halfHeight), aMaterial);
-	//aCapsuleShape->setLocalPose(relativePose);
-	//PxRigidBodyExt::updateMassAndInertia(*aSphereActor, capsuleDensity);
-	//aScene->addActor(aCapsuleActor);
-
-	PxTransform transform(PxVec3(), PxQuat());
+	m_RigidBodyDesc = desc;
+	memcpy(&m_fRadius, pShapeInfo, sizeof(_float));
+	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
+	PxTransform transform;
+	memcpy(&transform.p, &position, sizeof(_float3));
+	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+	memcpy(&transform.q, &quat, sizeof(_float4));
+	PxReal radius = m_fRadius;
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
-	PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
+	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxSphereGeometry(radius), *pMaterial);
 
-	PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
-	pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	pActor->attachShape(*pShape);
+	// Make Dynamic
+	if (desc.bEnabled)
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
+		m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
+		m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+	}
+	// Make Static
+	else
+	{
+		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
+	}
 
-	m_pEngine->AddActor(pActor);
-	//pActor->Setglo
+	m_pRigidActor->attachShape(*meshShape);
+	m_pEngine->AddActor(m_pRigidActor);
 }
 
 void CSphereCollider::SetSize(float fRadius)

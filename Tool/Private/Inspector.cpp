@@ -313,17 +313,16 @@ void CInspector::DrawCollider()
 				dynamic_cast<CCapsuleCollider*>(pComponent)->SetSize(size);
 			}
 
-			//_bool bHasRigidBody = dynamic_cast<CCollider*>(pComponent)->HasRigidBody();
 			CCollider* pCollider = dynamic_cast<CCollider*>(pComponent);
-			//_bool bHasRigidBody = pCollider->HasRigidBody();
 			ImGui::Checkbox("RigidBody", &pCollider->GetRigidBodyDesc().bEnabled);
 			if (pCollider->GetRigidBodyDesc().bEnabled)
 			{
 				ImGui::Indent();
 
 				CCollider::RIGIDBODYDESC desc = pCollider->GetRigidBodyDesc();
-				ImGui::Checkbox("UseGravity", &pCollider->GetRigidBodyDesc().bGravity);
-				ImGui::Checkbox("IsKinematic", &pCollider->GetRigidBodyDesc().bKinematic);
+				ImGui::Checkbox("Use Gravity", &pCollider->GetRigidBodyDesc().bGravity);
+				ImGui::Checkbox("Is Kinematic", &pCollider->GetRigidBodyDesc().bKinematic);
+				ImGui::Checkbox("Character Controller", &pCollider->GetRigidBodyDesc().bCC);
 
 				ImGui::Unindent();
 			}
