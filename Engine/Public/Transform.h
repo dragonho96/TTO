@@ -11,7 +11,7 @@ public:
 public:
 	typedef struct tagTransformDesc
 	{
-		_float		fSpeedPerSec;
+		_float		fSpeedPerSec = 5.f;
 		_float		fRotatePerSec;
 	} TRANSFORMDESC;
 private:

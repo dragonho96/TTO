@@ -53,6 +53,7 @@ public:
 	HRESULT SetUpComponents(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** pOut = nullptr, void* pArg = nullptr);
 	HRESULT AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg = nullptr);
 	CComponent* GetComponent(const _tchar * pComponentTag);
+	HRESULT RemoveComponent(const _tchar* pComponentTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

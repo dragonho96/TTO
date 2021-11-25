@@ -2,6 +2,13 @@
 
 namespace Engine
 {
+	typedef struct tagVertex_Normal_TextureUV
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexUV;
+	}VTXNORTEX;
+
 	typedef struct tagVertex_TextureUV
 	{
 		XMFLOAT3		vPosition;

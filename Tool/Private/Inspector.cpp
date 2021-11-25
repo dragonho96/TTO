@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "VIBuffer_LineSphere.h"
 #include "VIBuffer_RectUI.h"
+#include "VIBuffer_Terrain.h"
 #include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "CapsuleCollider.h"
@@ -55,6 +56,8 @@ void CInspector::UpdateGameObject()
 		ImGui::OpenPopup("AddComponent");
 	if (ImGui::BeginPopup("AddComponent"))
 	{
+		ImGui::Text("Collider");
+		ImGui::Indent();
 		if (ImGui::MenuItem("SphereCollider"))
 		{
 			/* Add Collider */
@@ -73,6 +76,15 @@ void CInspector::UpdateGameObject()
 			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_CapsuleCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
 				MSG_BOX("Failed to AddComponent");
 		}
+		ImGui::Unindent();
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Terrain"))
+		{
+			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+				MSG_BOX("Failed to AddComponent");
+		}
 
 		ImGui::EndPopup();
 	}
@@ -80,6 +92,10 @@ void CInspector::UpdateGameObject()
 	ImGui::Separator();
 
 	DrawTransform();
+
+	ImGui::Separator();
+
+	DrawBuffer();
 
 	ImGui::Separator();
 
@@ -267,7 +283,13 @@ void CInspector::DrawCollider()
 	CComponent* pComponent;
 	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_Collider")))
 	{
-		if (ImGui::TreeNodeEx("Collider"))
+		bool bDelete = false;
+		bool open = ImGui::TreeNodeEx("Collider");
+		ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+		if (ImGui::Button("X##RemoveComponent"))
+			bDelete = true;
+
+		if (open)
 		{
 			if (dynamic_cast<CSphereCollider*>(pComponent))
 			{
@@ -310,6 +332,9 @@ void CInspector::DrawCollider()
 
 			ImGui::TreePop();
 		}
+
+		//if (bDelete)
+		//	g_pObjFocused->RemoveComponent(TEXT("Com_Collider"));
 	}
 }
 
@@ -351,6 +376,46 @@ void CInspector::DrawTransform()
 		matrixScale, _objMat);
 
 	m_pGizmo->SetObjMat(_objMat);
+}
+
+void CInspector::DrawBuffer()
+{
+	CComponent* pVIBuffer = nullptr;
+	if (pVIBuffer = g_pObjFocused->GetComponent(TEXT("Com_VIBuffer")))
+	{
+		bool bDelete = false;
+
+		if (dynamic_cast<CVIBuffer_Terrain*>(pVIBuffer))
+		{
+			bool open = ImGui::TreeNodeEx("Terrain");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+			if (ImGui::Button("X##RemoveComponent"))
+				bDelete = true;
+
+			if (open)
+			{
+				string heightMapPath = dynamic_cast<CVIBuffer_Terrain*>(pVIBuffer)->GetHeightMapPath().c_str();
+				heightMapPath = heightMapPath == "" ? "None" : heightMapPath;
+				ImGui::Text(heightMapPath.c_str());
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+					{
+						const char* s = (const char*)(payload->Data);
+						dynamic_cast<CVIBuffer_Terrain*>(pVIBuffer)->SetHeightMapPath(s);
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::TreePop();
+			}
+
+
+		}
+
+		if (bDelete)
+			g_pObjFocused->RemoveComponent(TEXT("Com_VIBuffer"));
+	}
 }
 
 void CInspector::DrawRectTransform()

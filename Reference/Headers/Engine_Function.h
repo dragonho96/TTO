@@ -118,4 +118,16 @@ namespace Engine
 		wstring ws(str.begin(), str.end());
 		return ws.c_str();
 	}
+
+	inline string WstringToString(wstring ws)
+	{
+		string str(ws.begin(), ws.end());
+		return str;
+	}
+
+	inline wstring StringToWString(string str)
+	{
+		wstring ws(str.begin(), str.end());
+		return ws;
+	}
 }

@@ -5,6 +5,7 @@
 #pragma region UICOM
 #include "RectTransform.h"
 #include "VIBuffer_RectUI.h"
+#include "VIBuffer_Terrain.h"
 #pragma endregion
 
 #pragma region COMPONENT
@@ -127,6 +128,8 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 			out << YAML::BeginSeq << boxSize.x << boxSize.y << boxSize.z << YAML::EndSeq;
 		}
 
+		// TODO: Sphere and Capsule
+
 		CCollider::RIGIDBODYDESC desc = collider->GetRigidBodyDesc();
 		out << YAML::Key << "RigidBody";
 		out << YAML::BeginMap;
@@ -139,6 +142,24 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		
 		out << YAML::EndMap;
 
+	}
+
+	if (obj->GetComponent(TEXT("Com_VIBuffer")))
+	{
+		CVIBuffer* viBuffer = dynamic_cast<CVIBuffer*>(obj->GetComponent(TEXT("Com_VIBuffer")));
+
+		out << YAML::Key << "Com_VIBuffer";
+		out << YAML::BeginMap;
+
+		if (dynamic_cast<CVIBuffer_Terrain*>(viBuffer))
+		{
+			CVIBuffer_Terrain* pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(viBuffer);
+			out << YAML::Key << "Type" << YAML::Value << "Terrain";
+			out << YAML::Key << "HeightMapPath" << YAML::Value << pTerrainBuffer->GetHeightMapPath();
+			out << YAML::Key << "TexturePath" << YAML::Value << pTerrainBuffer->GetTexturePath();
+		}
+
+		out << YAML::EndMap;
 	}
 
 	out << YAML::EndMap;
@@ -285,7 +306,23 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			CComponent* pCollider = deserializedObject->GetComponent(TEXT("Com_Collider"));
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
+	}
 
+	auto viBufferCom = obj["Com_VIBuffer"];
+	if (viBufferCom)
+	{
+		string type = viBufferCom["Type"].as<string>();
+		if (type == "Terrain")
+		{
+			if (deserializedObject->AddComponent(0, TEXT("Prototype_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), deserializedObject->GetComponent(TEXT("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent Prototype_VIBuffer_Terrain");
 
+			string heightMapPath = viBufferCom["HeightMapPath"].as<string>();
+			string texturePath = viBufferCom["TexturePath"].as<string>();
+
+			CVIBuffer_Terrain* pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(deserializedObject->GetComponent(TEXT("Com_VIBuffer")));
+			pTerrainBuffer->SetHeightMapPath(heightMapPath);
+			pTerrainBuffer->SetTexturePath(texturePath);
+		}
 	}
 }

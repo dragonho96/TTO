@@ -11,6 +11,7 @@
 #include "VIBuffer_LineBox.h"
 #include "VIBuffer_LineCapsule.h"
 #include "VIBuffer_RectUI.h"
+#include "VIBuffer_Terrain.h"
 #pragma endregion 
 
 #pragma region OBJECTS
@@ -74,6 +75,8 @@ HRESULT CScene_Tool::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 	/* Prepare Collider*/
 	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_SphereCollider"), CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
@@ -111,7 +114,7 @@ HRESULT CScene_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
 
-	CameraDesc.vEye = _float3(0.f, 0.f, -5.f);
+	CameraDesc.vEye = _float3(0.f, 3.f, -5.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 

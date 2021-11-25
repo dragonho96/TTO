@@ -17,6 +17,19 @@ public:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
+public:
+	HRESULT CreateBuffer(void** pVertices);
+	void SetHeightMapPath(string path);
+	void SetTexturePath(string path);
+	string GetHeightMapPath();
+	string GetTexturePath();
+
+private:
+	_uint			m_iNumVerticesX = 0;
+	_uint			m_iNumVerticesZ = 0;
+	wstring			m_HeightMapPath = TEXT("../../Assets/Texture/Height.bmp");
+	wstring			m_TexturePath = TEXT("../../Assets/Texture/Folder.png");
+	void*			m_pCloneVertices = nullptr;
 };
 
 END
