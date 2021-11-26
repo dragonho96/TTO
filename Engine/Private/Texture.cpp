@@ -17,7 +17,7 @@ CTexture::CTexture(const CTexture & rhs)
 
 }
 
-HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTextureFilePath, _int iNumTextures)
+HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, string pTextureFilePath, _int iNumTextures)
 {
 	CComponent::InitializePrototype();
 
@@ -26,6 +26,7 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTexture
 
 	//if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED)))
 	//	return E_FAIL;
+	m_FilePath = pTextureFilePath;
 
 	m_iNumTextures = iNumTextures;
 
@@ -35,8 +36,8 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTexture
 	{
 		ComRef<ID3D11ShaderResourceView>			pShaderResourceView = nullptr;
 
-		wsprintf(szTextureFileName, pTextureFilePath, i);
-		m_FilePath = WCHARToString(szTextureFileName);
+		wstring ws(pTextureFilePath.begin(), pTextureFilePath.end());
+		const _tchar* path = ws.c_str();
 
 		DirectX::ScratchImage				Image;
 
@@ -45,13 +46,13 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, const _tchar * pTexture
 		switch (eType)
 		{
 		case TYPE_DDS:
-			hr = DirectX::LoadFromDDSFile(szTextureFileName, DirectX::DDS_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromDDSFile(path, DirectX::DDS_FLAGS_NONE, nullptr, Image);
 			break;
 		case TYPE_TGA:
-			hr = DirectX::LoadFromTGAFile(szTextureFileName, nullptr, Image);
+			hr = DirectX::LoadFromTGAFile(path, nullptr, Image);
 			break;
 		case TYPE_WIC:
-			hr = DirectX::LoadFromWICFile(szTextureFileName, DirectX::WIC_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromWICFile(path, DirectX::WIC_FLAGS_NONE, nullptr, Image);
 			break;
 		}
 
@@ -81,7 +82,7 @@ HRESULT CTexture::Initialize(void * pArg)
 	return S_OK;
 }
 
-CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, TEXTURETYPE eType, const _tchar * pTextureFilePath, _int iNumTextures)
+CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, TEXTURETYPE eType, string pTextureFilePath, _int iNumTextures)
 {
 	CTexture*		pInstance = new CTexture(pDevice, pDevice_Context);
 

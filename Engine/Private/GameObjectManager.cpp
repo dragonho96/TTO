@@ -54,7 +54,7 @@ _int CGameObjectManager::LateUpdate(_double dDeltaTime)
 	return S_OK;
 }
 
-HRESULT CGameObjectManager::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pPrototype)
+HRESULT CGameObjectManager::AddPrototype(string pPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == pPrototype ||
 		nullptr != FindPrototype(pPrototypeTag))
@@ -65,7 +65,7 @@ HRESULT CGameObjectManager::AddPrototype(const _tchar* pPrototypeTag, CGameObjec
 	return S_OK;
 }
 
-CGameObject* CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
+CGameObject* CGameObjectManager::AddGameObject(_uint iSceneIndex, string pPrototypeTag, string pLayerTag, void * pArg)
 {
 	CGameObject*	pPrototype = FindPrototype(pPrototypeTag);
 	if (nullptr == pPrototype)
@@ -94,7 +94,7 @@ CGameObject* CGameObjectManager::AddGameObject(_uint iSceneIndex, const _tchar* 
 	return pGameObject;
 }
 
-list<class CGameObject*> CGameObjectManager::GetGameObjectInLayer(_uint iSceneIndex, const _tchar * pLayerTag)
+list<class CGameObject*> CGameObjectManager::GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag)
 {
 	CLayer* pLayer = FindLayer(iSceneIndex, pLayerTag);
 	if (nullptr == pLayer)
@@ -106,9 +106,9 @@ list<class CGameObject*> CGameObjectManager::GetGameObjectInLayer(_uint iSceneIn
 	return pLayer->GetGameObjectList();
 }
 
-CGameObject * CGameObjectManager::FindPrototype(const _tchar* pPrototypeTag)
+CGameObject * CGameObjectManager::FindPrototype(string pPrototypeTag)
 {
-	auto iter = find_if(m_pPrototypes.begin(), m_pPrototypes.end(), CTagFinder(pPrototypeTag));
+	auto iter = find_if(m_pPrototypes.begin(), m_pPrototypes.end(), STagFinder(pPrototypeTag));
 	
 	if (iter == m_pPrototypes.end())
 		return nullptr;
@@ -116,9 +116,9 @@ CGameObject * CGameObjectManager::FindPrototype(const _tchar* pPrototypeTag)
 	return iter->second;
 }
 
-CLayer * CGameObjectManager::FindLayer(_uint iSceneIndex, const _tchar* pLayerTag)
+CLayer * CGameObjectManager::FindLayer(_uint iSceneIndex, string pLayerTag)
 {
-	auto iter = find_if(m_pGameObjects[iSceneIndex].begin(), m_pGameObjects[iSceneIndex].end(), CTagFinder(pLayerTag));
+	auto iter = find_if(m_pGameObjects[iSceneIndex].begin(), m_pGameObjects[iSceneIndex].end(), STagFinder(pLayerTag));
 
 	if (iter == m_pGameObjects[iSceneIndex].end())
 		return nullptr;

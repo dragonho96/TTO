@@ -18,9 +18,9 @@ void CContentBrowser::Initialize()
 {
 	m_CurrentDirectory = s_AssetPath;
 
-	m_pTexFolder = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/Folder.png"));
-	m_pTexFile = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/File.png"));
-	m_pTexImage = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, TEXT("../../Assets/Texture/Image.png"));
+	m_pTexFolder = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Texture/Folder.png");
+	m_pTexFile = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Texture/File.png");
+	m_pTexImage = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Texture/Image.png");
 }
 
 

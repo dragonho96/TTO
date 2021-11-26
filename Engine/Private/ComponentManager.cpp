@@ -20,7 +20,7 @@ HRESULT CComponentManager::ReserveManager(_uint iNumScenes)
 	return S_OK;
 }
 
-HRESULT CComponentManager::AddPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
+HRESULT CComponentManager::AddPrototype(_uint iSceneIndex, string pPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == pPrototype ||
 		iSceneIndex >= m_iNumScenes ||
@@ -32,7 +32,7 @@ HRESULT CComponentManager::AddPrototype(_uint iSceneIndex, const _tchar * pProto
 	return S_OK;
 }
 
-CComponent * CComponentManager::CloneComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, void* pArg)
+CComponent * CComponentManager::CloneComponent(_uint iSceneIndex, string pPrototypeTag, void* pArg)
 {
 	if (iSceneIndex >= m_iNumScenes)
 		return nullptr;
@@ -55,9 +55,9 @@ void CComponentManager::Clear(_uint iSceneIndex)
 	m_pPrototypes[iSceneIndex].clear();
 }
 
-CComponent * CComponentManager::FindPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag)
+CComponent * CComponentManager::FindPrototype(_uint iSceneIndex, string pPrototypeTag)
 {
-	auto	iter = find_if(m_pPrototypes[iSceneIndex].begin(), m_pPrototypes[iSceneIndex].end(), CTagFinder(pPrototypeTag));
+	auto	iter = find_if(m_pPrototypes[iSceneIndex].begin(), m_pPrototypes[iSceneIndex].end(), STagFinder(pPrototypeTag));
 
 	if (iter == m_pPrototypes[iSceneIndex].end())
 		return nullptr;

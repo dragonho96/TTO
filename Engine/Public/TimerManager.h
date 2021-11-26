@@ -12,13 +12,13 @@ private:
 	explicit CTimerManager();
 	virtual ~CTimerManager() = default;
 public:
-	HRESULT AddTimers(const _tchar* pTimerTag);
-	_double ComputeDeltaTime(const _tchar* pTimerTag);
+	HRESULT AddTimers(string pTimerTag);
+	_double ComputeDeltaTime(string pTimerTag);
 private:
-	unordered_map<const _tchar*, CTimer*>			m_Timers;
-	typedef unordered_map<const _tchar*, CTimer*>	TIMERS;
+	unordered_map<string, CTimer*>			m_Timers;
+	typedef unordered_map<string, CTimer*>	TIMERS;
 private:
-	CTimer* FindTimers(const _tchar* pTimerTag);
+	CTimer* FindTimers(string pTimerTag);
 public:
 	virtual void Free();
 };

@@ -49,17 +49,17 @@ protected:
 	bool					m_bDead = false;
 
 protected:
-	unordered_map<const _tchar*, class CComponent*>			m_Components;
-	typedef unordered_map<const _tchar*, class CComponent*>	COMPONENTS;
+	unordered_map<string, class CComponent*>			m_Components;
+	typedef unordered_map<string, class CComponent*>	COMPONENTS;
 
 	list<CGameObject*>	m_listChildren;
 	CGameObject*		m_pParent = nullptr;
 
 public:
-	HRESULT SetUpComponents(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** pOut = nullptr, void* pArg = nullptr);
-	HRESULT AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg = nullptr);
-	CComponent* GetComponent(const _tchar * pComponentTag);
-	HRESULT RemoveComponent(const _tchar* pComponentTag);
+	HRESULT SetUpComponents(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, CComponent** pOut = nullptr, void* pArg = nullptr);
+	HRESULT AddComponent(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, void* pArg = nullptr);
+	CComponent* GetComponent(string pComponentTag);
+	HRESULT RemoveComponent(string pComponentTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

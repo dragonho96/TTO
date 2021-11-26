@@ -174,9 +174,9 @@ string CVIBuffer_RectUI::GetTextureFilePath()
 
 void CVIBuffer_RectUI::UpdateTexture(string texturePath)
 {
-	SafeRelease(m_pTexture);
-	wstring wstr = wstring(texturePath.begin(), texturePath.end());
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, wstr.c_str());
+	//SafeRelease(m_pTexture);
+	//wstring wstr = wstring(texturePath.begin(), texturePath.end());
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, texturePath);
 }
 
 

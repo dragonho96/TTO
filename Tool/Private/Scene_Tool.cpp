@@ -39,7 +39,7 @@ HRESULT CScene_Tool::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("LAYER_TOOL"))))
+	if (FAILED(Ready_Layer_Camera("LAYER_TOOL")))
 		return E_FAIL;
 
 	return S_OK;
@@ -61,29 +61,29 @@ HRESULT CScene_Tool::Render()
 
 HRESULT CScene_Tool::ReadyPrototypeComponent()
 {
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_Transform"), CTransform::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Transform", CTransform::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_RectTransform"), CRectTransform::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_RectTransform", CRectTransform::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Prepare DebugLine */
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineSphere"), CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_VIBuffer_LineSphere", CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineBox"), CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_VIBuffer_LineBox", CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_LineCapsule"), CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_VIBuffer_LineCapsule", CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_RectUI"), CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_VIBuffer_RectUI", CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Prepare Collider*/
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_SphereCollider"), CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_SphereCollider", CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_BoxCollider"), CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_CapsuleCollider", CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -94,9 +94,9 @@ HRESULT CScene_Tool::ReadyPrototypeGameObject()
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
 	/* Gameobject Prototype */
-	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_EmptyGameObject"), CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(pEngine->AddPrototype("Prototype_EmptyGameObject", CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_EmptyUI"), CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(pEngine->AddPrototype("Prototype_EmptyUI", CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
@@ -104,11 +104,11 @@ HRESULT CScene_Tool::ReadyPrototypeGameObject()
 	return S_OK;
 }
 
-HRESULT CScene_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
+HRESULT CScene_Tool::Ready_Layer_Camera(string pLayerTag)
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	if (FAILED(pEngine->AddPrototype(TEXT("GameObject_Camera_Fly"), CCamera_Tool::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(pEngine->AddPrototype("GameObject_Camera_Fly", CCamera_Tool::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	CCamera::CAMERADESC		CameraDesc;
@@ -118,7 +118,7 @@ HRESULT CScene_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
-	if (nullptr == pEngine->AddGameObject(0, TEXT("GameObject_Camera_Fly"), pLayerTag, &CameraDesc))
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);

@@ -26,13 +26,13 @@ void CPlayer::Free()
 
 HRESULT CPlayer::Initialize()
 {
-	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, L"seebal");
+	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
 	if (list.size() <= 0)
 		return E_FAIL;
 
 	m_pGameObject = list.front();
-	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent(TEXT("Com_Transform")));
-	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent(TEXT("Com_Collider")));
+	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
+	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pController = m_pCollider->GetController();
 	return S_OK;
 }

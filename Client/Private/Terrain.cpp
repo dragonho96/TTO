@@ -92,13 +92,13 @@ HRESULT CTerrain::Render()
 HRESULT CTerrain::SetUpComponents()
 {
 	/* For.Renderer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransform)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransform)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer, (void*)m_pTransform)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_Terrain", "Com_VIBuffer", (CComponent**)&m_pVIBuffer, (void*)m_pTransform)))
 		return E_FAIL;
 
 	return S_OK;

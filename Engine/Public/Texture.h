@@ -20,7 +20,7 @@ public: /* Getter */
 
 
 public:
-	virtual HRESULT InitializePrototype(TEXTURETYPE eType, const _tchar* pTextureFilePath, _int iNumTextures);
+	virtual HRESULT InitializePrototype(TEXTURETYPE eType, string pTextureFilePath, _int iNumTextures);
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
@@ -36,7 +36,7 @@ private:
 
 public:
 	/* 원형생성. */
-	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, TEXTURETYPE eType, const _tchar* pTextureFilePath, _int iNumTextures = 1);
+	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, TEXTURETYPE eType, string pTextureFilePath, _int iNumTextures = 1);
 
 	/* 복사본생성. */
 	virtual CComponent* Clone(void* pArg) override;

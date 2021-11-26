@@ -30,7 +30,7 @@ void CHierarchy::Update()
 		{
 			//Add GameObject 
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
-				TEXT("Prototype_EmptyGameObject"), TEXT("Default"));
+				"Prototype_EmptyGameObject", "Default");
 			g_pObjFocused = pObj;
 			string s = to_string( pObj->GetUUID());
 			dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(s.c_str());
@@ -39,7 +39,7 @@ void CHierarchy::Update()
 		{
 			//Add GameObject 
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
-				TEXT("Prototype_EmptyUI"), TEXT("UI"));
+				"Prototype_EmptyUI", "UI");
 			g_pObjFocused = pObj;
 		}
 		ImGui::EndPopup();
@@ -47,10 +47,10 @@ void CHierarchy::Update()
 
 
 	// 여기서 리스트 순회하면서 추가
-	unordered_map<const _tchar*, CLayer*>* layers = m_pEngine->GetLayers();
+	unordered_map<string, CLayer*>* layers = m_pEngine->GetLayers();
 	for (auto& pair : *layers)
 	{
-		if (!wcscmp(pair.first, L"LAYER_TOOL"))
+		if (pair.first == "LAYER_TOOL")
 			continue;
 
 		list<CGameObject*> pObjList = (pair.second)->GetGameObjectList();

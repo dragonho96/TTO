@@ -66,10 +66,10 @@ HRESULT CBackground::Render()
 HRESULT CBackground::SetUpComponents()
 {
 	/* For.Renderer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC,"Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, TEXT("Prototype_VIBuffer_LineSphere"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBuffer)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_LineSphere", "Com_VIBuffer", (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
 

@@ -1,18 +1,19 @@
 Scene: Untitled
 GameObjects:
-  - Name: Box
-    UUID: 10168853372447248760
-    Layer: seebal
+  - Name: Empty Object
+    UUID: 11472549866217420058
+    Layer: Player
     Type: Object
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
-      Type: Box
-      Size: [1.70000005, 1, 1]
+      Type: Capsule
+      Radius: 0.5
+      Height: 1
       RigidBody:
-        Enabled: false
+        Enabled: true
         Gravity: false
         Kinematic: false
-        CharacterController: false
+        CharacterController: true

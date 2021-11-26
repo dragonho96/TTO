@@ -53,10 +53,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	if (FAILED(pEngine->AddTimers(TEXT("Timer_Default"))))
+	if (FAILED(pEngine->AddTimers("Timer_Default")))
 		return FALSE;
 
-	if (FAILED(pEngine->AddTimers(TEXT("Timer_40"))))
+	if (FAILED(pEngine->AddTimers("Timer_40")))
 		return FALSE;
 
 	_double			TimeAcc = 0.0;
@@ -77,7 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				break;
 		}
 
-		TimeAcc += pEngine->ComputeDeltaTime(TEXT("Timer_Default"));
+		TimeAcc += pEngine->ComputeDeltaTime("Timer_Default");
 
 		if (TimeAcc > 1.0 / 144.0)
 		{
