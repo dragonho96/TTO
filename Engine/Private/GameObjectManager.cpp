@@ -152,6 +152,9 @@ void CGameObjectManager::Clear(_uint iSceneIndex)
 		return;
 
 	for (auto& Pair : m_pGameObjects[iSceneIndex])
+	{
+		//SafeDeleteArray(Pair.first);
 		SafeRelease(Pair.second);
+	}
 	m_pGameObjects[iSceneIndex].clear();
 }

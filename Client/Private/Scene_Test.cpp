@@ -23,6 +23,8 @@
 #include "EmptyUI.h"
 #include "Camera_Fly.h"
 #pragma endregion
+
+#include "Player.h"
 USING(Client)
 
 CScene_Test::CScene_Test(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -60,6 +62,8 @@ HRESULT CScene_Test::Initialize()
 		return E_FAIL;
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
+
+	ReadyScript();
 	return S_OK;
 }
 
@@ -137,6 +141,12 @@ HRESULT CScene_Test::ReadyLayerCamera(const _tchar * pLayerTag)
 
 	RELEASE_INSTANCE(CEngine);
 
+	return S_OK;
+}
+
+HRESULT CScene_Test::ReadyScript()
+{
+	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
 	return S_OK;
 }
 

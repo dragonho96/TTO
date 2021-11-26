@@ -2,6 +2,7 @@
 #include "..\Public\Hierarchy.h"
 #include "GameObject.h"
 #include "Log.h"
+#include "Layer.h"
 
 static int selected = -1;
 static bool openPopup = false;
@@ -29,7 +30,7 @@ void CHierarchy::Update()
 		{
 			//Add GameObject 
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
-				TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
+				TEXT("Prototype_EmptyGameObject"), TEXT("Default"));
 			g_pObjFocused = pObj;
 			string s = to_string( pObj->GetUUID());
 			dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->AddLog(s.c_str());
@@ -38,7 +39,7 @@ void CHierarchy::Update()
 		{
 			//Add GameObject 
 			CGameObject* pObj = m_pEngine->AddGameObject(0,
-				TEXT("Prototype_EmptyUI"), TEXT("LAYER_TOOL"));
+				TEXT("Prototype_EmptyUI"), TEXT("UI"));
 			g_pObjFocused = pObj;
 		}
 		ImGui::EndPopup();
@@ -46,58 +47,38 @@ void CHierarchy::Update()
 
 
 	// 여기서 리스트 순회하면서 추가
-
-	list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
-	list<CGameObject*> pObjListNoParent;
-	for (auto& obj : pObjList)
+	unordered_map<const _tchar*, CLayer*>* layers = m_pEngine->GetLayers();
+	for (auto& pair : *layers)
 	{
-		if (!obj->GetParent())
-			pObjListNoParent.push_back(obj);
+		if (!wcscmp(pair.first, L"LAYER_TOOL"))
+			continue;
+
+		list<CGameObject*> pObjList = (pair.second)->GetGameObjectList();
+		list<CGameObject*> pObjListNoParent;
+		for (auto& obj : pObjList)
+		{
+			if (!obj->GetParent())
+				pObjListNoParent.push_back(obj);
+		}
+		int iCount = 0;
+		for (auto& pObj : pObjListNoParent)
+		{
+			SetObjectHierarchy(pObj, iCount);
+		}
 	}
+	//list<CGameObject*> pObjList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
+	//list<CGameObject*> pObjListNoParent;
+	//for (auto& obj : pObjList)
+	//{
+	//	if (!obj->GetParent())
+	//		pObjListNoParent.push_back(obj);
+	//}
 
-	int iCount = 0;
-	for (auto& pObj : pObjListNoParent)
-	{
-		SetObjectHierarchy(pObj, iCount);
-		//ImGui::PushID(iCount++);
-		//ImGui::Selectable(pObj->GetName().c_str(), iCount == selected);
-
-		//if (ImGui::IsItemHovered())
-		//{
-		//	if (ImGui::IsMouseClicked(0))
-		//	{
-		//		/* Set Focused Game Object*/
-		//		selected = iCount;
-		//		g_pObjFocused = pObj;
-		//	}
-		//	else if (ImGui::IsMouseClicked(1))
-		//	{
-		//		selected = iCount;
-		//		g_pObjFocused = pObj;
-		//		openPopup = !openPopup;
-		//	}
-		//}
-
-		//if (ImGui::BeginDragDropSource())
-		//{
-		//	//const CGameObject* obj = pObj;
-		//	ImGui::SetDragDropPayload("GameObject", &pObj, sizeof(pObj), ImGuiCond_Once);
-		//	ImGui::Text("GameObject");
-		//	ImGui::EndDragDropSource();
-		//}
-
-		//if (ImGui::BeginDragDropTarget())
-		//{
-		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
-		//	{
-		//		CGameObject** droppedObj = (CGameObject**)(payload->Data);
-		//		pObj->AddChild(*droppedObj);
-		//	}
-		//	ImGui::EndDragDropTarget();
-		//}
-
-		//ImGui::PopID();
-	}
+	//int iCount = 0;
+	//for (auto& pObj : pObjListNoParent)
+	//{
+	//	SetObjectHierarchy(pObj, iCount);
+	//}
 	if (openPopup)
 	{
 		ImGui::OpenPopup("my_select_popup");

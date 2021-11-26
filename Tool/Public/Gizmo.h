@@ -40,6 +40,7 @@ private:
 	GIZMOMATRIX m_tNewGizmoMatrix;
 
 	float _view[16];
+	float _viewUI[16];
 	float _projection[16];
 	float _objMat[16];	// Selected Obj Mat
 

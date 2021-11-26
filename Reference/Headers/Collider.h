@@ -36,6 +36,8 @@ public:
 
 public:
 	RIGIDBODYDESC&	GetRigidBodyDesc() { return m_RigidBodyDesc; }
+	PxRigidActor*	GetRigidActor() { return m_pRigidActor; }
+	PxController* GetController() { return m_pController; }
 
 protected:
 	RIGIDBODYDESC	m_RigidBodyDesc;

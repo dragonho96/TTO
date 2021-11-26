@@ -1,6 +1,7 @@
 #include "..\Public\SceneSerializer.h"
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
+#include "Layer.h"
 
 #pragma region UICOM
 #include "RectTransform.h"
@@ -22,9 +23,6 @@ CSceneSerializer::CSceneSerializer()
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 }
 
-
-
-
 void CSceneSerializer::Serialize(const string & filePath)
 {
 	YAML::Emitter out;
@@ -33,13 +31,30 @@ void CSceneSerializer::Serialize(const string & filePath)
 	out << YAML::Key << "Scene" << YAML::Value << "Untitled";
 	out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
 
-	list<CGameObject*> objList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
-	for (auto& obj : objList)
+	//list<CGameObject*> objList = m_pEngine->GetGameObjectInLayer(0, TEXT("LAYER_TOOL"));
+	unordered_map<const _tchar*, CLayer*>* layers = m_pEngine->GetLayers();
+	for (auto& pair : *layers)
 	{
-		if (dynamic_cast<CEmptyGameObject*>(obj))
-			SerializeObject(out, obj);
-		else
-			SerializeUI(out, obj);
+		if (!wcscmp(pair.first, L"LAYER_TOOL"))
+			continue;
+
+		list<CGameObject*> objList = (pair.second)->GetGameObjectList();
+		for (auto& obj : objList)
+		{
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "Name" << YAML::Value << obj->GetName();
+			out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
+			out << YAML::Key << "Layer" << YAML::Value << obj->GetLayer();
+
+			if (dynamic_cast<CEmptyGameObject*>(obj))
+				SerializeObject(out, obj);
+			else
+				SerializeUI(out, obj);
+
+			out << YAML::EndMap;
+
+		}
 	}
 	// Save GameObjects
 
@@ -79,10 +94,8 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 
 void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 {
-	out << YAML::BeginMap;
 
 	out << YAML::Key << "Type" << YAML::Value << "Object";
-	out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
 
 	if (obj->GetComponent(TEXT("Com_Transform")))
 	{
@@ -176,15 +189,12 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::EndMap;
 	}
 
-	out << YAML::EndMap;
 }
 
 void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 {
-	out << YAML::BeginMap;
 
 	out << YAML::Key << "Type" << YAML::Value << "UI";
-	out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
 
 	if (obj->GetComponent(TEXT("Com_Transform")))
 	{
@@ -222,12 +232,17 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::EndMap;
 	}
 
-	out << YAML::EndMap;
 }
 
 void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 {
-	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyUI"), TEXT("LAYER_TOOL"));
+	auto name = obj["Name"].as<string>();
+	auto uuid = obj["UUID"].as<uint64_t>();
+	auto layer = obj["Layer"].as<string>();
+	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyUI"), StringToTCHAR(layer));
+
+	deserializedObject->SetInfo(name, layer, uuid);
+
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
 	{
@@ -268,7 +283,14 @@ void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 
 void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 {
-	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyGameObject"), TEXT("LAYER_TOOL"));
+	auto name = obj["Name"].as<string>();
+	auto uuid = obj["UUID"].as<uint64_t>();
+	auto layer = obj["Layer"].as<string>();
+	wstring ws(layer.begin(), layer.end());
+	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, TEXT("Prototype_EmptyGameObject"), TEXT("seebal"));
+
+	deserializedObject->SetInfo(name, layer, uuid);
+
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
 	{

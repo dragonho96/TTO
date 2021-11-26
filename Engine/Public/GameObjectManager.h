@@ -26,7 +26,7 @@ public:
 	HRESULT	AddPrototype(const _tchar* sPrototypeTag, CGameObject* pPrototype);
 	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* sPrototypeTag, const _tchar* pLayerTag, void* pArg);
 	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
-
+	unordered_map<const _tchar*, CLayer*>* GetLayers() { return m_pGameObjects; }
 public:
 	CGameObject*	FindPrototype(const _tchar* pPrototypeTag);
 	CLayer*			FindLayer(_uint iSceneIndex, const _tchar* pLayerTag);
@@ -38,7 +38,7 @@ private:
 	unordered_map<const _tchar*, CGameObject*>			m_pPrototypes;
 
 	typedef unordered_map<const _tchar*, CLayer*>		GAMEOBJECTS;
-	GAMEOBJECTS*								m_pGameObjects = nullptr;
+	GAMEOBJECTS*										m_pGameObjects = nullptr;
 };
 
 END

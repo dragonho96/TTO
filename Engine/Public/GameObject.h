@@ -23,7 +23,12 @@ public:
 	string GetName() { return m_Name; }
 	void SetName(string name) { m_Name = name; }
 public:
+	string GetLayer() { return m_Layer; }
+	void SetLayer(string layer) { m_Layer = layer; }
+public:
 	uint64_t GetUUID() { return m_UUID(); }
+public:
+	void SetInfo(string name, string layer, uint64_t uuid);
 public:
 	void SetParent(CGameObject* pParent) { m_pParent = pParent; }
 	void AddChild(CGameObject* pChild);
@@ -39,6 +44,7 @@ protected:
 
 protected:
 	string					m_Name = "Empty Object";
+	string					m_Layer = "Default";
 	CUUID					m_UUID;
 	bool					m_bDead = false;
 

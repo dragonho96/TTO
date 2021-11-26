@@ -39,7 +39,7 @@ HRESULT CScene_Tool::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(TEXT("LAYER_TOOL"))))
 		return E_FAIL;
 
 	return S_OK;

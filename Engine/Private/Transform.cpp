@@ -3,7 +3,8 @@
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
+	m_TransformDesc.fRotatePerSec = 5.f;
+	m_TransformDesc.fSpeedPerSec = 5.f;
 }
 
 CTransform::CTransform(const CTransform & rhs)
