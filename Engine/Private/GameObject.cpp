@@ -42,6 +42,13 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+void CGameObject::SetInfo(string name, string layer, uint64_t uuid)
+{
+	m_Name = name;
+	m_Layer = layer;
+	m_UUID = uuid;
+}
+
 void CGameObject::AddChild(CGameObject* pChild)
 {
 	if (pChild->GetParent())

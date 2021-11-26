@@ -34,6 +34,13 @@ void CInspector::Update()
 		ImGui::InputText("##Name", buf, IM_ARRAYSIZE(buf));
 		g_pObjFocused->SetName(string(buf));
 
+		ImGui::Separator();
+
+		sprintf_s(buf, g_pObjFocused->GetLayer().c_str());
+		ImGui::InputText("Layer", buf, IM_ARRAYSIZE(buf));
+		g_pObjFocused->SetLayer(string(buf));
+
+
 		if (dynamic_cast<CEmptyGameObject*>(g_pObjFocused))
 			UpdateGameObject();
 		else

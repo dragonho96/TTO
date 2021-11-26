@@ -4,8 +4,6 @@
 #include "SceneSerializer.h"
 #include "PxManager.h"
 #include "InputManager.h"
-
-
 IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
@@ -19,7 +17,9 @@ CEngine::CEngine()
 	, m_pImGuiManager(CImGuiManager::GetInstance())
 	, m_pSoundManager(CSound::GetInstance())
 	, m_pPipeline(CPipeline::GetInstance())
+	, m_pScriptObjectManager(CScriptObjectManager::GetInstance())
 {
+	SafeAddRef(m_pScriptObjectManager);
 	SafeAddRef(m_pPipeline);
 	SafeAddRef(m_pTimerManager);
 	SafeAddRef(m_pInputManager);
@@ -51,8 +51,10 @@ HRESULT CEngine::Initialize(_uint iNumScenes)
 _uint CEngine::Update(_double dTimeDelta)
 {
 	m_pInputManager->Update();
-	UpdatePx(dTimeDelta);
+	m_pScriptObjectManager->Update(dTimeDelta);
 	m_pGameObjectManager->Update(dTimeDelta);
+
+	m_pScriptObjectManager->LateUpdate(dTimeDelta);
 	m_pGameObjectManager->LateUpdate(dTimeDelta);
 	return _uint();
 }
@@ -79,6 +81,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CSceneManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CSceneManager");
+
+	if (0 != CScriptObjectManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CScriptObjectManager");
 
 	if (0 != CGameObjectManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CGameObjectManager");
@@ -279,7 +284,6 @@ CGameObject* CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeT
 
 
 	return m_pGameObjectManager->AddGameObject(iSceneIndex, pPrototypeTag, pLayerTag, pArg);
-
 }
 
 void CEngine::ClearGameObjectManager(_uint iSceneIndex)
@@ -293,6 +297,16 @@ void CEngine::ClearGameObjectManager(_uint iSceneIndex)
 list<class CGameObject*> CEngine::GetGameObjectInLayer(_uint iSceneIndex, const _tchar * pLayerTag)
 {
 	return m_pGameObjectManager->GetGameObjectInLayer(iSceneIndex, pLayerTag);
+}
+
+unordered_map<const _tchar*, CLayer*>* CEngine::GetLayers()
+{
+	return m_pGameObjectManager->GetLayers();
+}
+
+void CEngine::AddScriptObject(IScriptObject * pObj)
+{
+	m_pScriptObjectManager->AddObject(pObj);
 }
 
 void CEngine::InitializeInput()
@@ -465,6 +479,7 @@ void CEngine::AddActor(PxRigidActor * pActor)
 
 void CEngine::Free()
 {
+	SafeRelease(m_pScriptObjectManager);
 	SafeRelease(m_pPipeline);
 	SafeRelease(m_pComponentManager);
 	SafeRelease(m_pGameObjectManager);

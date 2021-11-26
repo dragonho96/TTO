@@ -5,6 +5,7 @@ USING(Engine)
 CEmptyUI::CEmptyUI(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
+	m_Layer = "UI";
 }
 
 CEmptyUI::CEmptyUI(const CEmptyUI & rhs)

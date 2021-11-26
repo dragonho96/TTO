@@ -8,7 +8,7 @@
 BEGIN(Client)
 class CTerrain final : public CGameObject
 {
-public:
+private:
 	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CTerrain(const CTerrain& rhs);
 	virtual ~CTerrain() = default;

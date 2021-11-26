@@ -154,6 +154,15 @@
     <Filter Include="01.Utility\04.Pipeline">
       <UniqueIdentifier>{3f0359f9-3029-4d76-a314-b22b171a0d2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\ScriptObject">
+      <UniqueIdentifier>{cb69c61d-8aa3-469e-8186-38420f05f330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\ScriptObject\Manager">
+      <UniqueIdentifier>{8c7636d2-986c-4f8b-a8a6-ea8c0afcfd95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\ScriptObject\IScriptObject">
+      <UniqueIdentifier>{ea54df49-4f5c-4909-a930-8e677473308f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -312,6 +321,12 @@
     <ClInclude Include="..\Public\Camera.h">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ScriptObjectManager.h">
+      <Filter>01.Utility\02.GameObject\ScriptObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IScriptObject.h">
+      <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -451,6 +466,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera.cpp">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ScriptObjectManager.cpp">
+      <Filter>01.Utility\02.GameObject\ScriptObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IScriptObject.cpp">
+      <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

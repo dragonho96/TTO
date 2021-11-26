@@ -67,6 +67,13 @@ void CGizmo::Initialize()
 	XMFLOAT4X4 fMatIdentity;
 	XMStoreFloat4x4(&fMatIdentity, XMMatrixIdentity());
 	memcpy(_objMat, &fMatIdentity, sizeof(XMFLOAT4X4));
+
+	/* Set up UI View*/
+	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f);
+	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMMATRIX view = XMMatrixLookAtLH(Eye, At, Up);
+	memcpy(_viewUI, &view, sizeof(XMMATRIX));
 }
 
 void CGizmo::Update()
@@ -174,6 +181,8 @@ void CGizmo::ManipulateUI()
 	//XMStoreFloat4x4(&fView, viewMatrix);
 	//memcpy(_view, &fView, sizeof(XMFLOAT4X4));
 
+
+
 	/* TODO : Get WinSize */
 	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280, 720, 0.0f, 1.f);
 	//XMMATRIX projMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ);
@@ -182,7 +191,7 @@ void CGizmo::ManipulateUI()
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
 
 
-	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+	ImGuizmo::Manipulate(_viewUI, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 
 	XMFLOAT4X4 objMat;
 	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));

@@ -6,6 +6,7 @@
 #include "ImGuiManager.h"
 #include "Pipeline.h"
 #include "Sound.h"
+#include "ScriptObjectManager.h"
 
 BEGIN(Engine)
 
@@ -68,7 +69,12 @@ public:
 	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 	void	ClearGameObjectManager(_uint iSceneIndex);
 	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
+	unordered_map<const _tchar*, CLayer*>* GetLayers();
 #pragma endregion
+
+#pragma region SCRIPTOBJECT
+	void AddScriptObject(IScriptObject* pObj);
+#pragma endregion 
 
 #pragma region INPUT
 	void InitializeInput();
@@ -130,6 +136,7 @@ private:
 	class CComponentManager*		m_pComponentManager = nullptr;
 	class CInputManager*			m_pInputManager = nullptr;
 	class CPipeline*				m_pPipeline = nullptr;
+	class CScriptObjectManager*		m_pScriptObjectManager = nullptr;
 
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;

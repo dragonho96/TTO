@@ -116,7 +116,8 @@ namespace Engine
 	inline const _tchar* StringToWCHAR(string str)
 	{
 		wstring ws(str.begin(), str.end());
-		return ws.c_str();
+		const _tchar* out = ws.c_str();
+		return out;
 	}
 
 	inline string WstringToString(wstring ws)
@@ -129,5 +130,17 @@ namespace Engine
 	{
 		wstring ws(str.begin(), str.end());
 		return ws;
+	}
+
+	typedef std::basic_string<TCHAR> tstring;
+	inline TCHAR* StringToTCHAR(string& s)
+	{
+		tstring tstr;
+		const char* all = s.c_str();
+		size_t len = 1 + strlen(all);
+		wchar_t* t = new wchar_t[len];
+		if (NULL == t) throw std::bad_alloc();
+		mbstowcs(t, all, len);
+		return (TCHAR*)t;
 	}
 }

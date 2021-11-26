@@ -71,9 +71,12 @@ _uint CMainApp::Update(_double dDeltaTime)
 	if (g_Done)
 		return _uint();
 
+
 	m_pEngine->Update(dDeltaTime);
 	m_pEngine->UpdateScene(dDeltaTime);
 
+	// TODO: Fix Update Order
+	m_pEngine->UpdatePx(dDeltaTime);
 
 	//if (m_pEngine->IsKeyDown('A'))
 	//	ADDLOG("hihi")
