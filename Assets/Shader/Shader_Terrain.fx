@@ -5,7 +5,13 @@ cbuffer Matrices
 	matrix		g_ViewMatrix;
 	matrix		g_ProjMatrix;	
 }
+texture2D g_DiffuseTexture;
 
+SamplerState g_DiffuseSampler
+{
+    AddressU = wrap;
+    AddressV = wrap;
+};
 
 struct VS_IN
 {
@@ -49,14 +55,7 @@ struct PS_IN
 vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
 	vector		vColor = (vector)0;
-
-	//if (In.vTexUV.x < 0.01f || 
-	//	In.vTexUV.x > 0.99f || 
-	//	In.vTexUV.y < 0.01f || 
-	//	In.vTexUV.y > 0.99f
-	//	)
-	//	vColor = vector(1.f, 1.f, 0.f, 1.f);
-
+    vColor = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
 	return vColor;
 }
 

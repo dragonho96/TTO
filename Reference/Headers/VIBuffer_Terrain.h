@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VIBuffer.h"
+#include "Texture.h"
 
 BEGIN(Engine)
 
@@ -17,6 +18,8 @@ public:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
+	virtual HRESULT Render() override;
+
 public:
 	HRESULT CreateBuffer(void** pVertices);
 	void SetHeightMapPath(string path);
@@ -31,9 +34,10 @@ private:
 	_uint			m_iNumVerticesX = 0;
 	_uint			m_iNumVerticesZ = 0;
 	wstring			m_HeightMapPath = TEXT("../../Assets/Texture/Height.bmp");
-	wstring			m_TexturePath = TEXT("../../Assets/Texture/Folder.png");
+	wstring			m_TexturePath = TEXT("../../Assets/Texture/Height.bmp");
 	void*			m_pCloneVertices = nullptr;
 	PxRigidStatic*	m_pTerrainActor = nullptr;
+	CTexture*		m_pTexture = nullptr;
 };
 
 END

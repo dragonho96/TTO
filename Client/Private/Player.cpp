@@ -43,10 +43,14 @@ void CPlayer::Update(_double deltaTime)
 	if (m_pController)
 	{
 		// Look Vector
-		m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
+		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
 		_vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
 		PxVec3 pxLook;
 		memcpy(&pxLook, &look, sizeof(PxVec3));
+
+		_vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
+		PxVec3 pxRight;
+		memcpy(&pxRight, &right, sizeof(PxVec3));
 
 		if (CEngine::GetInstance()->IsKeyPressed(VK_UP))
 		{
@@ -55,6 +59,14 @@ void CPlayer::Update(_double deltaTime)
 		if (CEngine::GetInstance()->IsKeyPressed(VK_DOWN))
 		{
 			m_pController->move(-pxLook, 0.f, deltaTime, PxControllerFilters{});
+		}
+		if (CEngine::GetInstance()->IsKeyPressed(VK_RIGHT))
+		{
+			m_pController->move(pxRight, 0.f, deltaTime, PxControllerFilters{});
+		}
+		if (CEngine::GetInstance()->IsKeyPressed(VK_LEFT))
+		{
+			m_pController->move(-pxRight, 0.f, deltaTime, PxControllerFilters{});
 		}
 
 		PxExtendedVec3 pos = m_pController->getPosition();

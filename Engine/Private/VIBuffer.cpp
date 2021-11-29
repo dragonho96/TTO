@@ -58,28 +58,15 @@ HRESULT CVIBuffer::Render()
 
 	_uint		iOffset = 0;
 
-	//ConstantBuffer cb1;
-	////cb1.mWorld = XMMatrixTranspose(XMMatrixIdentity());
-	//cb1.mWorld = XMMatrixTranspose( XMLoadFloat4x4( &m_pObjTransform->GetMatrix() ) );
-	//cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
-	//cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
-	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-	//	CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
-
-	//m_pShader->SetUp_ValueOnShader("World", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
-	//m_pShader->SetUp_ValueOnShader("View", &XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix()), sizeof(_matrix));
-	//m_pShader->SetUp_ValueOnShader("Projection", &XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix()), sizeof(_matrix));
-
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
-
+	
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	if (m_IBSubResourceData.pSysMem)
 		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
-	// m_pDeviceContext->IASetInputLayout();
 
 	m_pShader->Render();
 
