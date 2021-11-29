@@ -68,19 +68,19 @@ void CInspector::UpdateGameObject()
 		if (ImGui::MenuItem("SphereCollider"))
 		{
 			/* Add Collider */
-			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_SphereCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_SphereCollider", "Com_Collider", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
 		if (ImGui::MenuItem("BoxCollider"))
 		{
 			/* Add Collider */
-			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_BoxCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_BoxCollider", "Com_Collider", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
 		if (ImGui::MenuItem("CapsuleCollider"))
 		{
 			/* Add Collider */
-			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_CapsuleCollider"), TEXT("Com_Collider"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_CapsuleCollider", "Com_Collider", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
 		ImGui::Unindent();
@@ -89,7 +89,7 @@ void CInspector::UpdateGameObject()
 
 		if (ImGui::MenuItem("Terrain"))
 		{
-			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_VIBuffer_Terrain", "Com_VIBuffer", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
 
@@ -120,7 +120,7 @@ void CInspector::UpdateUI()
 		if (ImGui::MenuItem("Image"))
 		{
 			/* Add Collider */
-			if (FAILED(g_pObjFocused->AddComponent(0, TEXT("Prototype_VIBuffer_RectUI"), TEXT("Com_VIBuffer"), g_pObjFocused->GetComponent(TEXT("Com_Transform")))))
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_VIBuffer_RectUI", "Com_VIBuffer", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
 		ImGui::EndPopup();
@@ -249,7 +249,7 @@ void CInspector::DrawRectDesc(const string & label, _float & x, _float & y)
 void CInspector::DrawImage()
 {
 	CComponent* pComponent;
-	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_VIBuffer")))
+	if (pComponent = g_pObjFocused->GetComponent("Com_VIBuffer"))
 	{
 		if (ImGui::TreeNodeEx("Image"))
 		{
@@ -288,7 +288,7 @@ void CInspector::DrawImage()
 void CInspector::DrawCollider()
 {
 	CComponent* pComponent;
-	if (pComponent = g_pObjFocused->GetComponent(TEXT("Com_Collider")))
+	if (pComponent = g_pObjFocused->GetComponent("Com_Collider"))
 	{
 		bool bDelete = false;
 		bool open = ImGui::TreeNodeEx("Collider");
@@ -347,7 +347,7 @@ void CInspector::DrawCollider()
 void CInspector::DrawTransform()
 {
 	CComponent* pObjTransform = nullptr;
-	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+	if (!(pObjTransform = g_pObjFocused->GetComponent("Com_Transform")))
 		MSG_BOX("Failed to Get Transform");
 
 	float _objMat[16];
@@ -387,7 +387,7 @@ void CInspector::DrawTransform()
 void CInspector::DrawBuffer()
 {
 	CComponent* pVIBuffer = nullptr;
-	if (pVIBuffer = g_pObjFocused->GetComponent(TEXT("Com_VIBuffer")))
+	if (pVIBuffer = g_pObjFocused->GetComponent("Com_VIBuffer"))
 	{
 		bool bDelete = false;
 
@@ -420,14 +420,14 @@ void CInspector::DrawBuffer()
 		}
 
 		if (bDelete)
-			g_pObjFocused->RemoveComponent(TEXT("Com_VIBuffer"));
+			g_pObjFocused->RemoveComponent("Com_VIBuffer");
 	}
 }
 
 void CInspector::DrawRectTransform()
 {
 	CComponent* pObjTransform = nullptr;
-	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+	if (!(pObjTransform = g_pObjFocused->GetComponent("Com_Transform")))
 		MSG_BOX("Failed to Get Transform");
 
 	CRectTransform::RECTTRANSFORMDESC desc = dynamic_cast<CRectTransform*>(pObjTransform)->GetTransformDesc();

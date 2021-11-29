@@ -16,12 +16,12 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 {
 	CVIBuffer_Terrain*	pInstance = new CVIBuffer_Terrain(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->InitializePrototype()))
-	{
-		MSG_BOX("Failed To Creating CVIBuffer_Terrain");
-		SafeRelease(pInstance);
-	}
-
+	//if (FAILED(pInstance->InitializePrototype()))
+	//{
+	//	MSG_BOX("Failed To Creating CVIBuffer_Terrain");
+	//	SafeRelease(pInstance);
+	//}
+	pInstance->InitializePrototype();
 
 	return pInstance;
 }
@@ -47,9 +47,9 @@ void CVIBuffer_Terrain::Free()
 
 HRESULT CVIBuffer_Terrain::InitializePrototype()
 {
-	if (FAILED(__super::InitializePrototype()))
-		return E_FAIL;
-
+	//if (FAILED(__super::InitializePrototype()))
+	//	return E_FAIL;
+	__super::InitializePrototype();
 	CreateBuffer(&m_pVertices);
 
 	return S_OK;
@@ -98,6 +98,8 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 	m_VBDesc.MiscFlags = 0;
 	m_VBDesc.StructureByteStride = m_iStride;
 
+	float fHeightScale = 20.f;
+
 	*pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(*pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
 
@@ -107,14 +109,14 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3(j, (pPixel[iIndex] & 0x000000ff) / 20.0f, i);
+			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
 		}
 	}
 	/* For.D3D11_SUBRESOURCE_DATA */
 	m_VBSubResourceData.pSysMem = *pVertices;
-
 #pragma endregion VERTEXBUFFER
 
 #pragma region INDEXBUFFER
@@ -228,6 +230,7 @@ void CVIBuffer_Terrain::SetHeightMapPath(string path)
 {
 	m_HeightMapPath = StringToWString(path);
 	CreateBuffer(&m_pCloneVertices);
+	CreateHeightField(&m_pCloneVertices);
 }
 
 void CVIBuffer_Terrain::SetTexturePath(string path)
@@ -243,4 +246,46 @@ string CVIBuffer_Terrain::GetHeightMapPath()
 string CVIBuffer_Terrain::GetTexturePath()
 {
 	return WstringToString(m_TexturePath);
+}
+
+void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
+{
+	if (m_pTerrainActor)
+		m_pTerrainActor->release();
+
+	m_pTerrainActor = CEngine::GetInstance()->GetPhysics()->createRigidStatic(PxTransform(PxIdentity));
+	m_pTerrainActor->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
+
+	const double i255 = 1.0 / 255.0;
+	const PxReal heightScale = 0.005f;
+
+	PxHeightFieldSample* hfSamples = new PxHeightFieldSample[m_iNumVertices];
+	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
+	{
+		for (_uint j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			hfSamples[iIndex].height = (PxI16)((VTXNORTEX*)*pVertices)[iIndex].vPosition.y;
+			hfSamples[iIndex].materialIndex0 = 0;
+			hfSamples[iIndex].materialIndex1 = 0;
+			hfSamples[iIndex].clearTessFlag();
+		}
+	}
+	// Build PxHeightFieldDesc from samples
+	PxHeightFieldDesc terrainDesc;
+	terrainDesc.format = PxHeightFieldFormat::eS16_TM;
+	terrainDesc.nbColumns = m_iNumVerticesX;
+	terrainDesc.nbRows = m_iNumVerticesZ;
+	terrainDesc.samples.data = hfSamples;
+	terrainDesc.samples.stride = sizeof(PxHeightFieldSample); // 2x 8-bit material indices + 16-bit height
+	PxHeightField* heightField = CEngine::GetInstance()->GetCooking()->createHeightField(terrainDesc, CEngine::GetInstance()->GetPhysics()->getPhysicsInsertionCallback());
+	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), 1, 1, 1);
+	//PxTransform localPose;
+	//localPose.p = PxVec3();         // heightfield is at world (0,minHeight,0)
+	//localPose.q = PxQuat(PxIdentity);
+	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
+	PxShape* shape = PxRigidActorExt::createExclusiveShape(*m_pTerrainActor, hfGeom, *mat);
+	CEngine::GetInstance()->AddActor(m_pTerrainActor);
+	delete[] hfSamples;
 }

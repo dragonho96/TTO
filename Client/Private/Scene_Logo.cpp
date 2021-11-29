@@ -18,7 +18,7 @@ HRESULT CScene_Logo::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerBackGround(TEXT("LAYER_BACKGROUND"))))
+	if (FAILED(ReadyLayerBackGround("LAYER_BACKGROUND")))
 		return E_FAIL;
 
 	return S_OK;
@@ -53,7 +53,7 @@ HRESULT CScene_Logo::ReadyPrototypeGameObject()
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
 	/* Prototype_BackGround */
-	if (FAILED(pEngine->AddPrototype(TEXT("Prototype_BackGround"), CBackground::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(pEngine->AddPrototype("Prototype_BackGround", CBackground::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
@@ -61,12 +61,12 @@ HRESULT CScene_Logo::ReadyPrototypeGameObject()
 	return S_OK;
 }
 
-HRESULT CScene_Logo::ReadyLayerBackGround(const _tchar* pLayerTag)
+HRESULT CScene_Logo::ReadyLayerBackGround(string pLayerTag)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
 	/* For.GameObject_BackGround */
-	if (FAILED(pEngine->AddGameObject(SCENE_LOGO, TEXT("Prototype_BackGround"), pLayerTag)))
+	if (FAILED(pEngine->AddGameObject(SCENE_LOGO, "Prototype_BackGround", pLayerTag)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);

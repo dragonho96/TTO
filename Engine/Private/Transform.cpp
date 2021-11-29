@@ -30,6 +30,8 @@ HRESULT CTransform::InitializePrototype()
 
 HRESULT CTransform::Initialize(void * pArg)
 {
+	//XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+
 	if (nullptr != pArg)
 		memcpy(&m_TransformDesc, pArg, sizeof(TRANSFORMDESC));
 
@@ -38,8 +40,10 @@ HRESULT CTransform::Initialize(void * pArg)
 
 void CTransform::GoStraight(_double TimeDelta)
 {
-	_vector		vLook = GetState(CTransform::STATE_LOOK);
-	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector			vPosition = _vector();
+	_vector			vLook = _vector();
+	vLook = GetState(CTransform::STATE_LOOK);
+	vPosition = GetState(CTransform::STATE_POSITION);
 
 	vPosition += XMVector3Normalize(vLook) * m_TransformDesc.fSpeedPerSec * _float(TimeDelta);
 
@@ -138,7 +142,7 @@ void CTransform::RotateAxis(_fvector vAxis, _double TimeDelta)
 	vUp = GetState(CTransform::STATE_UP);
 	vLook = GetState(CTransform::STATE_LOOK);
 
-	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, XMConvertToRadians(m_TransformDesc.fRotatePerSec) * TimeDelta);
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, XMConvertToRadians(m_TransformDesc.fRotatePerSec) * (float)TimeDelta);
 
 	SetState(CTransform::STATE_RIGHT, XMVector4Transform(vRight, RotationMatrix));
 	SetState(CTransform::STATE_UP, XMVector4Transform(vUp, RotationMatrix));
@@ -148,12 +152,12 @@ void CTransform::RotateAxis(_fvector vAxis, _double TimeDelta)
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CTransform*	pInstance = new CTransform(pDevice, pDeviceContext);
-
-	if (FAILED(pInstance->InitializePrototype()))
-	{
-		MSG_BOX("Failed To Creating CTransform");
-		SafeRelease(pInstance);
-	}
+	pInstance->InitializePrototype();
+	//if (FAILED(pInstance->InitializePrototype()))
+	//{
+	//	MSG_BOX("Failed To Creating CTransform");
+	//	SafeRelease(pInstance);
+	//}
 	return pInstance;
 }
 

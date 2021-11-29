@@ -23,21 +23,21 @@ public:
 public:
 	// allocate the size of list
 	HRESULT ReserveManager(_uint iNumScenes);
-	HRESULT	AddPrototype(const _tchar* sPrototypeTag, CGameObject* pPrototype);
-	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* sPrototypeTag, const _tchar* pLayerTag, void* pArg);
-	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
-	unordered_map<const _tchar*, CLayer*>* GetLayers() { return m_pGameObjects; }
+	HRESULT	AddPrototype(string sPrototypeTag, CGameObject* pPrototype);
+	CGameObject* AddGameObject(_uint iSceneIndex, string sPrototypeTag, string pLayerTag, void* pArg);
+	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag);
+	unordered_map<string, CLayer*>* GetLayers() { return m_pGameObjects; }
 public:
-	CGameObject*	FindPrototype(const _tchar* pPrototypeTag);
-	CLayer*			FindLayer(_uint iSceneIndex, const _tchar* pLayerTag);
+	CGameObject*	FindPrototype(string pPrototypeTag);
+	CLayer*			FindLayer(_uint iSceneIndex, string pLayerTag);
 
 private:
 	_uint		m_iNumScenes = 0;
 
 private:
-	unordered_map<const _tchar*, CGameObject*>			m_pPrototypes;
+	unordered_map<string, CGameObject*>			m_pPrototypes;
 
-	typedef unordered_map<const _tchar*, CLayer*>		GAMEOBJECTS;
+	typedef unordered_map<string, CLayer*>		GAMEOBJECTS;
 	GAMEOBJECTS*										m_pGameObjects = nullptr;
 };
 

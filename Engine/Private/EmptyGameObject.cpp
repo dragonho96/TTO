@@ -81,11 +81,11 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 
 HRESULT CEmptyGameObject::Render()
 {
-	CComponent* buffer = GetComponent(TEXT("Com_VIBuffer"));
+	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
 		
-	CComponent* collider = GetComponent(TEXT("Com_Collider"));
+	CComponent* collider = GetComponent("Com_Collider");
 	if (collider)
 		dynamic_cast<CCollider*>(collider)->Render();
 
@@ -94,10 +94,10 @@ HRESULT CEmptyGameObject::Render()
 
 HRESULT CEmptyGameObject::SetUpComponents()
 {
-	if (FAILED(__super::SetUpComponents(0, TEXT("Prototype_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+	if (FAILED(__super::SetUpComponents(0, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(0, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(__super::SetUpComponents(0, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	return S_OK;

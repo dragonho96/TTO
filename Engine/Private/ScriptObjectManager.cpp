@@ -21,7 +21,8 @@ void CScriptObjectManager::LateUpdate(_double deltaTime)
 
 void CScriptObjectManager::AddObject(IScriptObject * pObj)
 {
-	m_ScriptObjects.push_back(pObj);
+	if (pObj)
+		m_ScriptObjects.push_back(pObj);
 }
 
 void CScriptObjectManager::Free()

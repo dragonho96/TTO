@@ -14,17 +14,17 @@ private:
 
 public:
 	HRESULT ReserveManager(_uint iNumScenes);
-	HRESULT AddPrototype(_uint iSceneIndex, const _tchar* pPrototypeTag, CComponent* pPrototype);
-	CComponent* CloneComponent(_uint iSceneIndex, const _tchar* pPrototypeTag, void* pArg);
+	HRESULT AddPrototype(_uint iSceneIndex, string pPrototypeTag, CComponent* pPrototype);
+	CComponent* CloneComponent(_uint iSceneIndex, string pPrototypeTag, void* pArg);
 	void Clear(_uint iSceneIndex);
 
 private:
-	unordered_map<const _tchar*, CComponent*>*			m_pPrototypes = nullptr;
-	typedef unordered_map<const _tchar*, CComponent*>	PROTOTYPES;
+	unordered_map<string, CComponent*>*			m_pPrototypes = nullptr;
+	typedef unordered_map<string, CComponent*>	PROTOTYPES;
 private:
 	_uint		m_iNumScenes = 0;
 public:
-	CComponent* FindPrototype(_uint iSceneIndex, const _tchar* pPrototypeTag);
+	CComponent* FindPrototype(_uint iSceneIndex, string pPrototypeTag);
 };
 
 END

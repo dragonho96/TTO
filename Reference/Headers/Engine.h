@@ -50,8 +50,8 @@ public:
 
 #pragma region TIMER_MANAGER
 public:
-	HRESULT AddTimers(const _tchar* pTimerTag);
-	_double ComputeDeltaTime(const _tchar* pTimerTag);
+	HRESULT AddTimers(string pTimerTag);
+	_double ComputeDeltaTime(string pTimerTag);
 #pragma endregion
 
 #pragma region SCENE
@@ -65,11 +65,11 @@ public:
 
 #pragma region GAMEOBJECT_MANAGER
 public:
-	HRESULT AddPrototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
-	CGameObject* AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT AddPrototype(string pPrototypeTag, class CGameObject* pPrototype);
+	CGameObject* AddGameObject(_uint iSceneIndex, string pPrototypeTag, string pLayerTag, void* pArg = nullptr);
 	void	ClearGameObjectManager(_uint iSceneIndex);
-	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, const _tchar* pLayerTag);
-	unordered_map<const _tchar*, CLayer*>* GetLayers();
+	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag);
+	unordered_map<string, CLayer*>* GetLayers();
 #pragma endregion
 
 #pragma region SCRIPTOBJECT
@@ -96,8 +96,8 @@ public:
 #pragma endregion
 
 #pragma region COMPONENT
-	HRESULT AddPrototype(_uint iSceneIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
-	class CComponent* CloneComponent(_uint iSceneIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	HRESULT AddPrototype(_uint iSceneIndex, string pPrototypeTag, class CComponent* pPrototype);
+	class CComponent* CloneComponent(_uint iSceneIndex, string pPrototypeTag, void* pArg = nullptr);
 	void ClearComponentManager(_uint iSceneIndex);
 #pragma endregion
 
@@ -126,6 +126,8 @@ public:
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
 	void					AddActor(PxRigidActor* pActor);
+	PxScene*				GetScene();
+	PxCooking*				GetCooking();
 #pragma endregion
 
 private:

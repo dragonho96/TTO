@@ -216,7 +216,7 @@ void CEngine::ChangeProj(_uint iWidth, _uint iHeight)
 }
 
 
-HRESULT CEngine::AddTimers(const _tchar * pTimerTag)
+HRESULT CEngine::AddTimers(string pTimerTag)
 {
 	if (nullptr == m_pTimerManager)
 		return E_FAIL;
@@ -224,7 +224,7 @@ HRESULT CEngine::AddTimers(const _tchar * pTimerTag)
 	return m_pTimerManager->AddTimers(pTimerTag);
 }
 
-_double CEngine::ComputeDeltaTime(const _tchar * pTimerTag)
+_double CEngine::ComputeDeltaTime(string pTimerTag)
 {
 	if (nullptr == m_pTimerManager)
 		return 0.0;
@@ -268,7 +268,7 @@ HRESULT CEngine::RenderScene()
 	return m_pSceneManager->RenderScene();
 }
 
-HRESULT CEngine::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pPrototype)
+HRESULT CEngine::AddPrototype(string pPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pGameObjectManager)
 		return E_FAIL;
@@ -277,7 +277,7 @@ HRESULT CEngine::AddPrototype(const _tchar* pPrototypeTag, CGameObject * pProtot
 
 }
 
-CGameObject* CEngine::AddGameObject(_uint iSceneIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, void * pArg)
+CGameObject* CEngine::AddGameObject(_uint iSceneIndex, string pPrototypeTag, string pLayerTag, void * pArg)
 {
 	if (nullptr == m_pGameObjectManager)
 		return nullptr;
@@ -294,12 +294,12 @@ void CEngine::ClearGameObjectManager(_uint iSceneIndex)
 	m_pGameObjectManager->Clear(iSceneIndex);
 }
 
-list<class CGameObject*> CEngine::GetGameObjectInLayer(_uint iSceneIndex, const _tchar * pLayerTag)
+list<class CGameObject*> CEngine::GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag)
 {
 	return m_pGameObjectManager->GetGameObjectInLayer(iSceneIndex, pLayerTag);
 }
 
-unordered_map<const _tchar*, CLayer*>* CEngine::GetLayers()
+unordered_map<string, CLayer*>* CEngine::GetLayers()
 {
 	return m_pGameObjectManager->GetLayers();
 }
@@ -369,7 +369,7 @@ void CEngine::InputProc(const HWND hWnd, const UINT message, const WPARAM wParam
 	m_pInputManager->InputProc(hWnd, message, wParam, lParam);
 }
 
-HRESULT CEngine::AddPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
+HRESULT CEngine::AddPrototype(_uint iSceneIndex, string pPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponentManager)
 		return E_FAIL;
@@ -377,7 +377,7 @@ HRESULT CEngine::AddPrototype(_uint iSceneIndex, const _tchar * pPrototypeTag, C
 	return m_pComponentManager->AddPrototype(iSceneIndex, pPrototypeTag, pPrototype);
 }
 
-CComponent * CEngine::CloneComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, void * pArg)
+CComponent * CEngine::CloneComponent(_uint iSceneIndex, string pPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pComponentManager)
 		return nullptr;
@@ -473,6 +473,16 @@ PxControllerManager * CEngine::GetControllerManager()
 void CEngine::AddActor(PxRigidActor * pActor)
 {
 	m_pPxManager->AddActor(pActor);
+}
+
+PxScene * CEngine::GetScene()
+{
+	return m_pPxManager->GetScene();
+}
+
+PxCooking * CEngine::GetCooking()
+{
+	return m_pPxManager->GetCooking();
 }
 
 #pragma endregion

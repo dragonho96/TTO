@@ -7,7 +7,7 @@ CTimerManager::CTimerManager()
 
 }
 
-HRESULT CTimerManager::AddTimers(const _tchar * pTimerTag)
+HRESULT CTimerManager::AddTimers(const string pTimerTag)
 {
 	if (nullptr != FindTimers(pTimerTag))
 		return E_FAIL;
@@ -21,7 +21,7 @@ HRESULT CTimerManager::AddTimers(const _tchar * pTimerTag)
 	return S_OK;
 }
 
-_double CTimerManager::ComputeDeltaTime(const _tchar * pTimerTag)
+_double CTimerManager::ComputeDeltaTime(string pTimerTag)
 {
 	CTimer*	pTimer = FindTimers(pTimerTag);	
 	if (nullptr == pTimer)
@@ -30,9 +30,9 @@ _double CTimerManager::ComputeDeltaTime(const _tchar * pTimerTag)
 	return pTimer->ComputeDeltaTime();
 }
 
-CTimer * CTimerManager::FindTimers(const _tchar * pTimerTag)
+CTimer * CTimerManager::FindTimers(string pTimerTag)
 {
-	auto	iter = find_if(m_Timers.begin(), m_Timers.end(), CTagFinder(pTimerTag));
+	auto	iter = find_if(m_Timers.begin(), m_Timers.end(), STagFinder(pTimerTag));
 	if (iter == m_Timers.end())
 		return nullptr;
 

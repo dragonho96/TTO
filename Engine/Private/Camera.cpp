@@ -30,7 +30,12 @@ HRESULT CCamera::Initialize(void * pArg)
 	if (nullptr != pArg)
 		memcpy(&m_CameraDesc, pArg, sizeof(CAMERADESC));
 
+	//AddComponent(0, "Prototype_Transform", "Com_Transform");
+
+	//m_pTransformCom = dynamic_cast<CTransform*>(GetComponent("Com_Transform"));
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pDeviceContext);
+
+
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 

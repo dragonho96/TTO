@@ -258,7 +258,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 
 	// For.Prototype_Renderer
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Renderer", m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	SafeAddRef(m_pRenderer);
 

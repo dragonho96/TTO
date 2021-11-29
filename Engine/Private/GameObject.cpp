@@ -85,7 +85,7 @@ void CGameObject::ClearChildren()
 	m_listChildren.clear();
 }
 
-HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent ** pOut, void * pArg)
+HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, CComponent ** pOut, void * pArg)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
@@ -93,7 +93,7 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 	if (nullptr == pComponent)
 		return E_FAIL;
 
-	if (m_Components.end() != find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag)))
+	if (m_Components.end() != find_if(m_Components.begin(), m_Components.end(), STagFinder(pComponentTag)))
 		return E_FAIL;
 	else
 	{
@@ -108,7 +108,7 @@ HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, const _tchar * pPrototyp
 	return S_OK;
 }
 
-HRESULT CGameObject::AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTag, const _tchar* pComponentTag, void* pArg)
+HRESULT CGameObject::AddComponent(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, void* pArg)
 {
 	if (GetComponent(pComponentTag))
 	{
@@ -128,18 +128,18 @@ HRESULT CGameObject::AddComponent(_uint iSceneIndex, const _tchar * pPrototypeTa
 	return S_OK;
 }
 
-CComponent* CGameObject::GetComponent(const _tchar * pComponentTag)
+CComponent* CGameObject::GetComponent(string pComponentTag)
 {
-	auto& iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));
+	auto& iter = find_if(m_Components.begin(), m_Components.end(), STagFinder(pComponentTag));
 	if (m_Components.end() == iter)
 		return nullptr;
 	else
 		return (*iter).second;
 }
 
-HRESULT CGameObject::RemoveComponent(const _tchar * pComponentTag)
+HRESULT CGameObject::RemoveComponent(string pComponentTag)
 {
-	auto& iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));
+	auto& iter = find_if(m_Components.begin(), m_Components.end(), STagFinder(pComponentTag));
 	if (m_Components.end() == iter)
 		return E_FAIL;
 

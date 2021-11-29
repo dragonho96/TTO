@@ -84,7 +84,7 @@ _uint CEmptyUI::LateUpdate(_double TimeDelta)
 
 HRESULT CEmptyUI::Render()
 {
-	CComponent* buffer = GetComponent(TEXT("Com_VIBuffer"));
+	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
 
@@ -112,10 +112,10 @@ void CEmptyUI::InteractMouse()
 
 HRESULT CEmptyUI::SetUpComponents()
 {
-	if (FAILED(__super::SetUpComponents(0, TEXT("Prototype_RectTransform"), TEXT("Com_Transform"), (CComponent**)&m_pRectTransformCom)))
+	if (FAILED(__super::SetUpComponents(0, "Prototype_RectTransform", "Com_Transform", (CComponent**)&m_pRectTransformCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::SetUpComponents(0, TEXT("Prototype_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(__super::SetUpComponents(0, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	return S_OK;

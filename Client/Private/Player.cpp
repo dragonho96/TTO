@@ -15,6 +15,7 @@ CPlayer* CPlayer::Create(CGameObject* pObj)
 	{
 		MSG_BOX("Failed to Create CPlayer");
 		SafeRelease(pInstance);
+		return nullptr;
 	}
 
 	return pInstance;
@@ -26,13 +27,13 @@ void CPlayer::Free()
 
 HRESULT CPlayer::Initialize()
 {
-	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, L"seebal");
+	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
 	if (list.size() <= 0)
 		return E_FAIL;
 
 	m_pGameObject = list.front();
-	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent(TEXT("Com_Transform")));
-	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent(TEXT("Com_Collider")));
+	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
+	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pController = m_pCollider->GetController();
 	return S_OK;
 }
@@ -59,6 +60,8 @@ void CPlayer::Update(_double deltaTime)
 		PxExtendedVec3 pos = m_pController->getPosition();
 		_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
 		m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&newPos));
+
+		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 	}
 }
 

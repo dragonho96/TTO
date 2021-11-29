@@ -164,7 +164,7 @@ void CGizmo::ManipulateGameObject()
 
 	// TODO : FIX HERE
 	CComponent* pObjTransform = nullptr;
-	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+	if (!(pObjTransform = g_pObjFocused->GetComponent("Com_Transform")))
 		MSG_BOX("Failed to Get Transform");
 
 	dynamic_cast<CTransform*>(pObjTransform)->SetMatrix(objMat);
@@ -197,7 +197,7 @@ void CGizmo::ManipulateUI()
 	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));
 
 	CComponent* pObjTransform = nullptr;
-	if (!(pObjTransform = g_pObjFocused->GetComponent(TEXT("Com_Transform"))))
+	if (!(pObjTransform = g_pObjFocused->GetComponent("Com_Transform")))
 		MSG_BOX("Failed to Get Transform");
 
 	dynamic_cast<CRectTransform*>(pObjTransform)->SetTransformMat(objMat);

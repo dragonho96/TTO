@@ -159,7 +159,7 @@ HRESULT CToolManager::OpenScene(SCENE eScene)
 HRESULT CToolManager::ReadyPrototypeComponent()
 {
 	/* Prepare Renderer */
-	if (FAILED(m_pEngine->AddPrototype(0, TEXT("Prototype_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Renderer", m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;

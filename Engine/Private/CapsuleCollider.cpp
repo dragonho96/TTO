@@ -60,9 +60,9 @@ HRESULT CCapsuleCollider::InitializePrototype()
 
 HRESULT CCapsuleCollider::Initialize(void * pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
+	//if (FAILED(__super::Initialize(pArg)))
+	//	return E_FAIL;
+	__super::Initialize(pArg);
 	if (FAILED(SetUpDebugLine()))
 		return E_FAIL;
 
@@ -74,7 +74,7 @@ HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
-	m_pDebugLine = pEngine->CloneComponent(0, TEXT("Prototype_VIBuffer_LineCapsule"), m_pObjTransform);
+	m_pDebugLine = pEngine->CloneComponent(0, "Prototype_VIBuffer_LineCapsule", m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
 

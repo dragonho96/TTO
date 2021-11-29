@@ -9,7 +9,6 @@ BEGIN(Engine)
 class CGraphicDevice final : public CBase
 {
 	DECLARE_SINGLETON(CGraphicDevice)
-
 private:
 	CGraphicDevice();
 	virtual ~CGraphicDevice() = default;

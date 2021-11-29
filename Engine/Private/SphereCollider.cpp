@@ -72,7 +72,7 @@ HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);
 
-	m_pDebugLine = pEngine->CloneComponent(0, TEXT("Prototype_VIBuffer_LineSphere"), m_pObjTransform);
+	m_pDebugLine = pEngine->CloneComponent(0, "Prototype_VIBuffer_LineSphere", m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
 
