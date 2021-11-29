@@ -24,12 +24,16 @@ public:
 	string GetHeightMapPath();
 	string GetTexturePath();
 
+public:
+	void CreateHeightField(void ** pVertices);
+
 private:
 	_uint			m_iNumVerticesX = 0;
 	_uint			m_iNumVerticesZ = 0;
 	wstring			m_HeightMapPath = TEXT("../../Assets/Texture/Height.bmp");
 	wstring			m_TexturePath = TEXT("../../Assets/Texture/Folder.png");
 	void*			m_pCloneVertices = nullptr;
+	PxRigidStatic*	m_pTerrainActor = nullptr;
 };
 
 END

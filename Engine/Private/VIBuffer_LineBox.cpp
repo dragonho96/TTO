@@ -22,6 +22,8 @@ HRESULT CVIBuffer_LineBox::InitializePrototype()
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	CreateBuffer(&m_pVertices);
+
+	return S_OK;
 }
 
 HRESULT CVIBuffer_LineBox::Initialize(void * pArg)

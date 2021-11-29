@@ -475,6 +475,16 @@ void CEngine::AddActor(PxRigidActor * pActor)
 	m_pPxManager->AddActor(pActor);
 }
 
+PxScene * CEngine::GetScene()
+{
+	return m_pPxManager->GetScene();
+}
+
+PxCooking * CEngine::GetCooking()
+{
+	return m_pPxManager->GetCooking();
+}
+
 #pragma endregion
 
 void CEngine::Free()

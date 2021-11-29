@@ -60,9 +60,9 @@ HRESULT CCapsuleCollider::InitializePrototype()
 
 HRESULT CCapsuleCollider::Initialize(void * pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
+	//if (FAILED(__super::Initialize(pArg)))
+	//	return E_FAIL;
+	__super::Initialize(pArg);
 	if (FAILED(SetUpDebugLine()))
 		return E_FAIL;
 

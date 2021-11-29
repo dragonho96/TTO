@@ -24,10 +24,9 @@ HRESULT CCamera_Fly::InitializePrototype()
 
 HRESULT CCamera_Fly::Initialize(void * pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
-
+	//if (FAILED(__super::Initialize(pArg)))
+	//	return E_FAIL;
+	__super::Initialize(pArg);
 
 	return S_OK;
 }

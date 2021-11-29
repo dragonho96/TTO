@@ -374,9 +374,9 @@ ID3D11InputLayout * CShader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_
 		HRESULT hr = CEngine::GetInstance()->GetDevice()->CreateInputLayout
 		(
 			&inputLayoutDesc[0]
-			, inputLayoutDesc.size()
+			, (UINT)inputLayoutDesc.size()
 			, pCode
-			, pCodeSize
+			, (size_t)pCodeSize
 			, &inputLayout
 		);
 		assert(SUCCEEDED(hr));

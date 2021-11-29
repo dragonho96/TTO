@@ -103,7 +103,7 @@ void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 	m_TransformMatrix._41 = fPosX - (curWindowSizeX >> 1);
 	m_TransformMatrix._42 = -fPosY + (curWindowSizeY >> 1);
 
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(curWindowSizeX, curWindowSizeY, 0.0f, 1.f));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((float)curWindowSizeX, (float)curWindowSizeY, 0.0f, 1.f));
 
 
 }

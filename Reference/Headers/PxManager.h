@@ -20,6 +20,8 @@ public:
 	PxMaterial*				GetMaterial() { return m_pMaterial; }
 	PxControllerManager*	GetControllerManager() { return m_pControllerManager; }
 	void					AddActor(PxRigidActor* pActor);
+	PxScene*				GetScene() { return m_pScene; }
+	PxCooking*				GetCooking() { return m_pCooking; }
 
 private:
 	PxDefaultAllocator		m_Allocator;

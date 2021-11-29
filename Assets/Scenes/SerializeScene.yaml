@@ -1,11 +1,56 @@
 Scene: Untitled
 GameObjects:
-  - Name: Empty Object
-    UUID: 11472549866217420058
+  - Name: Player
+    UUID: 7627985759431099672
     Layer: Player
     Type: Object
     Com_Transform:
+      Translation: [13.503088, 20.5211258, 24.7535439]
+      Rotation: [-0, 0, -0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Type: Capsule
+      Radius: 0.5
+      Height: 1
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: true
+  - Name: Empty Object
+    UUID: 4963114123050138202
+    Layer: Default
+    Type: Object
+    Com_Transform:
       Translation: [0, 0, 0]
+      Rotation: [-0, 0, -0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ../../Assets/Texture/Height.bmp
+      TexturePath: ../../Assets/Texture/Folder.png
+  - Name: Empty Object
+    UUID: 4195299383995526939
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [12.2391357, 14.0714407, 12.3010969]
+      Rotation: [-0, 0, -0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Type: Box
+      Size: [1, 1, 1]
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: false
+  - Name: Empty Object
+    UUID: 11077244451855431660
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [24.8315926, 21.8075199, 16.2578316]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
@@ -15,5 +60,5 @@ GameObjects:
       RigidBody:
         Enabled: true
         Gravity: false
-        Kinematic: false
-        CharacterController: true
+        Kinematic: true
+        CharacterController: false

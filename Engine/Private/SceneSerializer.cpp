@@ -341,7 +341,7 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			size.z = sequence[2].as<float>();
 
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
-			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
+			// dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
 		else if (type == "Sphere")
 		{
@@ -350,12 +350,12 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 
 			_float radius = colliderCom["Radius"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
-			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
+			// dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
 		}
 		else if (type == "Capsule")
 		{
 			if (deserializedObject->AddComponent(0, "Prototype_CapsuleCollider", "Com_Collider", deserializedObject->GetComponent("Com_Transform")))
-			MSG_BOX("Failed to AddComponent Prototype_CapsuleCollider");
+				MSG_BOX("Failed to AddComponent Prototype_CapsuleCollider");
 
 			pair<float, float> capsuleSize;
 			capsuleSize.first = colliderCom["Radius"].as<float>();

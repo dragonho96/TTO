@@ -1,7 +1,6 @@
 #pragma once
 
 #include "VIBuffer.h"
-#include "Shader.h"
 
 BEGIN(Engine)
 
