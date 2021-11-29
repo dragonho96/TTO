@@ -43,6 +43,7 @@ void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
 	SafeDeleteArray(m_pCloneVertices);
+	SafeRelease(m_pTexture);
 }
 
 HRESULT CVIBuffer_Terrain::InitializePrototype()
@@ -61,6 +62,15 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Terrain.fx");
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Texture/Height.bmp");
+
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Terrain::Render()
+{
+	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
+	__super::Render();
 	return S_OK;
 }
 
@@ -112,9 +122,11 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), 1.f - i / (m_iNumVerticesZ - 1.f));
 		}
 	}
+
+
 	/* For.D3D11_SUBRESOURCE_DATA */
 	m_VBSubResourceData.pSysMem = *pVertices;
 #pragma endregion VERTEXBUFFER
@@ -257,16 +269,17 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	m_pTerrainActor->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
 
 	const double i255 = 1.0 / 255.0;
-	const PxReal heightScale = 0.005f;
+	const PxReal heightScale = 20.f;
 
 	PxHeightFieldSample* hfSamples = new PxHeightFieldSample[m_iNumVertices];
+	//_uint vertexIndex = m_iNumVertices - 1;
 	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
 	{
 		for (_uint j = 0; j < m_iNumVerticesX; ++j)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
-
-			hfSamples[iIndex].height = (PxI16)((VTXNORTEX*)*pVertices)[iIndex].vPosition.y;
+			_uint		vertexIndex = j * m_iNumVerticesX + i;
+			hfSamples[iIndex].height = (PxI16)(((VTXNORTEX*)*pVertices)[vertexIndex].vPosition.y * heightScale);
 			hfSamples[iIndex].materialIndex0 = 0;
 			hfSamples[iIndex].materialIndex1 = 0;
 			hfSamples[iIndex].clearTessFlag();
@@ -280,12 +293,13 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	terrainDesc.samples.data = hfSamples;
 	terrainDesc.samples.stride = sizeof(PxHeightFieldSample); // 2x 8-bit material indices + 16-bit height
 	PxHeightField* heightField = CEngine::GetInstance()->GetCooking()->createHeightField(terrainDesc, CEngine::GetInstance()->GetPhysics()->getPhysicsInsertionCallback());
-	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), 1, 1, 1);
-	//PxTransform localPose;
-	//localPose.p = PxVec3();         // heightfield is at world (0,minHeight,0)
-	//localPose.q = PxQuat(PxIdentity);
+	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), (1/20.f), 1, 1);
+	PxTransform localPose;
+	localPose.p = PxVec3(0, 0, 0);         // heightfield is at world (0,minHeight,0)
+	localPose.q = PxQuat(PxIdentity);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = PxRigidActorExt::createExclusiveShape(*m_pTerrainActor, hfGeom, *mat);
+	shape->setLocalPose(localPose);
 	CEngine::GetInstance()->AddActor(m_pTerrainActor);
 	delete[] hfSamples;
 }

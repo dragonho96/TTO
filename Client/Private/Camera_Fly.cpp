@@ -36,24 +36,44 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 	if (nullptr == m_pTransformCom)
 		return -1;
 
-	if (GetKeyState('W') & 0x8000)
+	if (GetActiveWindow() == g_hWnd)
 	{
-		m_pTransformCom->GoStraight(TimeDelta);
-	}
 
-	if (GetKeyState('S') & 0x8000)
-	{
-		m_pTransformCom->GoBackWard(TimeDelta);
-	}
+		if (m_pEngine->IsKeyPressed('W'))
+		{
+			m_pTransformCom->GoStraight(TimeDelta * 2.f);
+		}
 
-	if (GetKeyState('A') & 0x8000)
-	{
-		m_pTransformCom->GoLeft(TimeDelta);
-	}
+		if (m_pEngine->IsKeyPressed('S'))
+		{
+			m_pTransformCom->GoBackWard(TimeDelta * 2.f);
+		}
 
-	if (GetKeyState('D') & 0x8000)
-	{
-		m_pTransformCom->GoRight(TimeDelta);
+		if (m_pEngine->IsKeyPressed('A'))
+		{
+			m_pTransformCom->GoLeft(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->IsKeyPressed('D'))
+		{
+			m_pTransformCom->GoRight(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->GetMouseMoveValue().z > 0)
+			m_pTransformCom->GoStraight(TimeDelta * 3.f);
+		if (m_pEngine->GetMouseMoveValue().z < 0)
+			m_pTransformCom->GoBackWard(TimeDelta * 3.f);
+
+		_long			MouseMove = 0;
+
+		if (m_pEngine->IsMousePressed(1))
+		{
+			if (MouseMove = m_pEngine->GetMouseMoveValue().x)
+				m_pTransformCom->RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * TimeDelta);
+
+			if (MouseMove = m_pEngine->GetMouseMoveValue().y)
+				m_pTransformCom->RotateAxis(m_pTransformCom->GetState(CTransform::STATE_RIGHT), -MouseMove * TimeDelta);
+		}
 	}
 
 	return __super::Update(TimeDelta);

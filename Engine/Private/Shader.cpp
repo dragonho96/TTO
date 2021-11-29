@@ -389,5 +389,5 @@ ID3D11InputLayout * CShader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_
 
 ID3DX11EffectShaderResourceVariable * CShader::AsSRV(string name)
 {
-	return m_pEffect->GetVariableByName(name.c_str())->AsShaderResource();;
+	return m_pEffect->GetVariableByName(name.c_str())->AsShaderResource();
 }
