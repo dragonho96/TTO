@@ -163,6 +163,18 @@
     <Filter Include="01.Utility\02.GameObject\ScriptObject\IScriptObject">
       <UniqueIdentifier>{ea54df49-4f5c-4909-a930-8e677473308f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\05.Light">
+      <UniqueIdentifier>{c28a65d2-dc86-429f-85bf-1c2212487c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.Light\Manager">
+      <UniqueIdentifier>{40af9944-0e5e-4bb9-a629-ef25b6de07b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.Pathfind">
+      <UniqueIdentifier>{39d24f9d-6a08-4f2c-b340-c98f899f17d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.Pathfind\Node">
+      <UniqueIdentifier>{bb351f88-abc5-4123-8db7-04c6172537a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -327,6 +339,14 @@
     <ClInclude Include="..\Public\IScriptObject.h">
       <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LightManager.h">
+      <Filter>01.Utility\05.Light\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h" />
+    <ClInclude Include="..\Public\Node.h">
+      <Filter>01.Utility\06.Pathfind\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Private\Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -473,5 +493,13 @@
     <ClCompile Include="..\Private\IScriptObject.cpp">
       <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\LightManager.cpp">
+      <Filter>01.Utility\05.Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp" />
+    <ClCompile Include="..\Private\Node.cpp">
+      <Filter>01.Utility\06.Pathfind\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Grid.cpp" />
   </ItemGroup>
 </Project>

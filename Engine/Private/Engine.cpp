@@ -18,7 +18,9 @@ CEngine::CEngine()
 	, m_pSoundManager(CSound::GetInstance())
 	, m_pPipeline(CPipeline::GetInstance())
 	, m_pScriptObjectManager(CScriptObjectManager::GetInstance())
+	, m_pLightManager(CLightManager::GetInstance())
 {
+	SafeAddRef(m_pLightManager);
 	SafeAddRef(m_pScriptObjectManager);
 	SafeAddRef(m_pPipeline);
 	SafeAddRef(m_pTimerManager);
@@ -393,6 +395,22 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 	m_pComponentManager->Clear(iSceneIndex);
 }
 
+const LIGHTDESC * CEngine::GetLightDesc(_uint iIndex) const
+{
+	if (nullptr == m_pLightManager)
+		return nullptr;
+
+	return m_pLightManager->GetLightDesc(iIndex);
+}
+
+HRESULT CEngine::AddLight(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc)
+{
+	if (nullptr == m_pLightManager)
+		return E_FAIL;
+
+	return m_pLightManager->AddLight(pDevice, pDeviceContext, LightDesc);
+}
+
 _matrix CEngine::GetTransform(CPipeline::TYPE eType)
 {
 	if (nullptr == m_pPipeline)
@@ -489,6 +507,7 @@ PxCooking * CEngine::GetCooking()
 
 void CEngine::Free()
 {
+	SafeRelease(m_pLightManager);
 	SafeRelease(m_pScriptObjectManager);
 	SafeRelease(m_pPipeline);
 	SafeRelease(m_pComponentManager);

@@ -7,6 +7,7 @@
 #include "Pipeline.h"
 #include "Sound.h"
 #include "ScriptObjectManager.h"
+#include "LightManager.h"
 
 BEGIN(Engine)
 
@@ -101,6 +102,11 @@ public:
 	void ClearComponentManager(_uint iSceneIndex);
 #pragma endregion
 
+#pragma region LIGHT
+	const LIGHTDESC* GetLightDesc(_uint iIndex = 0) const;
+	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
+#pragma endregion
+
 #pragma region PIPELINE
 	_matrix GetTransform(CPipeline::TYPE eType);
 	_vector GetCamPosition();
@@ -139,6 +145,7 @@ private:
 	class CInputManager*			m_pInputManager = nullptr;
 	class CPipeline*				m_pPipeline = nullptr;
 	class CScriptObjectManager*		m_pScriptObjectManager = nullptr;
+	class CLightManager*			m_pLightManager = nullptr;
 
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;

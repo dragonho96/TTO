@@ -19,6 +19,7 @@ public:
 private:
 	HRESULT ReadyPrototypeGameObject(); // 바로 추가
 	HRESULT ReadyLayerCamera(string pLayerTag); /* 복제본을 생성하여 레이어에 추가하는 형태 .*/
+	HRESULT ReadyLayerGrid(string pLayerTag);
 	HRESULT ReadyScript();
 };
 

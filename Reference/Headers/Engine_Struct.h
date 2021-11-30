@@ -2,6 +2,22 @@
 
 namespace Engine
 {
+	typedef struct tagLightDesc
+	{
+		XMFLOAT4		vLightDir;
+
+		XMFLOAT4		vDiffuse;
+		XMFLOAT4		vAmbient;
+		XMFLOAT4		vSpecular;
+	}LIGHTDESC;
+
+	typedef struct tagMaterialDesc
+	{
+		XMFLOAT4		vDiffuse;
+		XMFLOAT4		vAmbient;
+		XMFLOAT4		vSpecular;
+	}MATERIALDESC;
+
 	typedef struct tagVertex_Normal_TextureUV
 	{
 		XMFLOAT3		vPosition;

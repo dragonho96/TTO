@@ -108,7 +108,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 	m_VBDesc.MiscFlags = 0;
 	m_VBDesc.StructureByteStride = m_iStride;
 
-	float fHeightScale = 20.f;
+	float fHeightScale = 10.f;
 
 	*pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(*pVertices, sizeof(VTXNORTEX) * m_iNumVertices);

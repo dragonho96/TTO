@@ -174,6 +174,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
   <ItemGroup>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
+    <ClInclude Include="..\Private\Grid.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\BoxCollider.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -201,7 +202,10 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\IScriptObject.h" />
     <ClInclude Include="..\Public\Layer.h" />
     <ClInclude Include="..\Public\InputManager.h" />
+    <ClInclude Include="..\Public\Light.h" />
+    <ClInclude Include="..\Public\LightManager.h" />
     <ClInclude Include="..\Public\Line.h" />
+    <ClInclude Include="..\Public\Node.h" />
     <ClInclude Include="..\Public\Pipeline.h" />
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\RectTransform.h" />
@@ -252,7 +256,10 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\IScriptObject.cpp" />
     <ClCompile Include="..\Private\Layer.cpp" />
     <ClCompile Include="..\Private\InputManager.cpp" />
+    <ClCompile Include="..\Private\Light.cpp" />
+    <ClCompile Include="..\Private\LightManager.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
+    <ClCompile Include="..\Private\Node.cpp" />
     <ClCompile Include="..\Private\Pipeline.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\RectTransform.cpp" />
@@ -276,6 +283,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_RectUI.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
+    <ClCompile Include="..\Public\Grid.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
