@@ -1,14 +1,32 @@
 
+#include "Shader_Defines.hpp"
+
 cbuffer Matrices
 {
 	matrix		g_WorldMatrix;
 	matrix		g_ViewMatrix;
 	matrix		g_ProjMatrix;	
 }
-texture2D g_DiffuseTexture;
+
+cbuffer LightDesc
+{
+    vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
+    vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
+    vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
+}
+
+cbuffer MaterialDesc
+{
+    vector g_vMtrlDiffuse;
+    vector g_vMtrlAmbient = vector(0.1f, 0.1f, 0.1f, 1.f);
+}
+
+Texture2D g_DiffuseTexture;
 
 SamplerState g_DiffuseSampler
 {
+    Filter = min_mag_mip_linear;
+
     AddressU = wrap;
     AddressV = wrap;
 };
@@ -23,22 +41,28 @@ struct VS_IN
 struct VS_OUT
 {
 	float4	vPosition : SV_POSITION;
+    float fShade : COLOR0;
 	float2	vTexUV : TEXCOORD0;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
 VS_OUT VS_MAIN(VS_IN In)
 {
-	VS_OUT		Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
 
-	matrix		matWV, matWVP;
+    matrix matWV, matWVP;
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
 
-	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-	Out.vTexUV = In.vTexUV;
-	return Out;
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexUV = In.vTexUV * 20.f;  // Tiling
+
+    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+	// Out.fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
+    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
+    return Out;
 }
 
 /* VS_OUT 구조체의 SV_POSITION이라는 시멘틱을 가진 데이터에 한해서만  */
@@ -49,20 +73,29 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
 	float4	vPosition : SV_POSITION;
+    float fShade : COLOR0;
 	float2	vTexUV : TEXCOORD0;
 };
 
 vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
-	vector		vColor = (vector)0;
-    vColor = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
-	return vColor;
+    vector vColor = (vector) 0;
+
+    vector vDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+    vColor = (g_vLightDiffuse * vDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient));
+    vColor.a = vDiffuse.a;
+
+    return vColor;
 }
 
 technique11		DefaultDevice
 {
 	pass DefaultPass
 	{
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}

@@ -62,7 +62,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Terrain.fx");
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Texture/Height.bmp");
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
 
 	return S_OK;
 }
@@ -278,7 +278,8 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 		for (_uint j = 0; j < m_iNumVerticesX; ++j)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
-			_uint		vertexIndex = j * m_iNumVerticesX + i;
+			_uint		vertexIndex = j * m_iNumVerticesX + i; // PhysX
+
 			hfSamples[iIndex].height = (PxI16)(((VTXNORTEX*)*pVertices)[vertexIndex].vPosition.y * heightScale);
 			hfSamples[iIndex].materialIndex0 = 0;
 			hfSamples[iIndex].materialIndex1 = 0;

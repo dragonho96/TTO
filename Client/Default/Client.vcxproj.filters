@@ -55,6 +55,9 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Assets\Shader\Shader_Defines.hpp">
+      <Filter>FX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -163,6 +166,9 @@
     <Filter Include="02.GameObjects\Player">
       <UniqueIdentifier>{df44392e-0c4f-47cf-9d47-ce3bd03fdaef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FX">
+      <UniqueIdentifier>{bfd9097f-0a6e-415e-9acc-d189c34c374d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -173,5 +179,10 @@
     <Text Include="ReadMe.txt">
       <Filter>99.Default</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
