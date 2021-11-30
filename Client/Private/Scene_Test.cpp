@@ -23,6 +23,7 @@
 #include "EmptyUI.h"
 #include "Camera_Fly.h"
 #include "Node.h"
+#include "Grid.h"
 #pragma endregion
 
 #include "Player.h"
@@ -61,8 +62,10 @@ HRESULT CScene_Test::Initialize()
 
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
-	if (FAILED(ReadyLayerGrid("LAYER_NODE")))
+
+	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
 		return E_FAIL;
+
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
@@ -122,6 +125,12 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyUI", CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	/* PathFinding*/
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Grid", CGrid::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -152,10 +161,10 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	if (FAILED(pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	CGrid::GRIDDESC desc = { 10, 10, 1.2f };
 
-	if (nullptr == pEngine->AddGameObject(0, "GameObject_Node", pLayerTag))
+
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Grid", pLayerTag, &desc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);

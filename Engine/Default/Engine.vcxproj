@@ -174,7 +174,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
   <ItemGroup>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
-    <ClInclude Include="..\Private\Grid.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\BoxCollider.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -197,6 +196,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\GameObjectManager.h" />
     <ClInclude Include="..\Public\GlobalBuffers.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
+    <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\ImGuiManager.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
     <ClInclude Include="..\Public\IScriptObject.h" />
@@ -251,6 +251,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
     <ClCompile Include="..\Private\GraphicDevice.cpp" />
+    <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\ImGuiManager.cpp" />
     <ClCompile Include="..\Private\ImGuiWindow.cpp" />
     <ClCompile Include="..\Private\IScriptObject.cpp" />
@@ -283,7 +284,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_RectUI.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
-    <ClCompile Include="..\Public\Grid.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

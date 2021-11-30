@@ -101,6 +101,13 @@ HRESULT CVIBuffer_Rect::Initialize(void * pArg)
 	return S_OK;
 }
 
+HRESULT CVIBuffer_Rect::Render()
+{
+	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
+	__super::Render();
+	return S_OK;
+}
+
 CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(pDevice, pDeviceContext);

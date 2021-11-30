@@ -24,7 +24,7 @@ private:
 public:
 	void SetPosition(_float3 _position)
 	{
-		m_vPosition = _position;
+		m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&_position));
 	}
 	void SetWalkable(_bool _walkable)
 	{

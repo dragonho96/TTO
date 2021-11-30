@@ -62,9 +62,8 @@ HRESULT CNode::SetUpComponents()
 	if (FAILED(__super::SetUpComponents(0, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransform)))
 		return E_FAIL;
 
-	//if (FAILED(__super::SetUpComponents(0, "Prototype_VIBuffer_Rect", "Com_VIBuffer", (CComponent**)&m_VIBuffer), (void*)m_pTransform))
-	//	return E_FAIL;
-	AddComponent(0, "Prototype_VIBuffer_Rect", "Com_VIBuffer", GetComponent("Com_Transform"));
+	m_pTransform->SetUpRotation(m_pTransform->GetState(CTransform::STATE_RIGHT), 90.f);
+	AddComponent(0, "Prototype_VIBuffer_Rect", "Com_VIBuffer", m_pTransform);
 	m_VIBuffer = dynamic_cast<CVIBuffer_Rect*>(GetComponent("Com_VIBuffer"));
 
 	return S_OK;

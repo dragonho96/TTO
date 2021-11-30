@@ -63,9 +63,9 @@ HRESULT CPxManager::Initialize()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 	m_pMaterial = m_pPhysics->createMaterial(0.5f, 10.f, 0.6f);
-	//PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, PxPlane(0, 1, 0, 0), *m_pMaterial);
-	//groundPlane->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
-	//m_pScene->addActor(*groundPlane);
+	PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, PxPlane(0, 1, 0, 0), *m_pMaterial);
+	groundPlane->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
+	m_pScene->addActor(*groundPlane);
 	
 
 	m_pControllerManager = PxCreateControllerManager(*m_pScene);
