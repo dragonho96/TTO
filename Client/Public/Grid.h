@@ -31,7 +31,7 @@ public:
 	CNode*	NodeFromWorldPoint(_float3 worldPosition);
 	void SetUpGrid();
 	list<CNode*> GetNeighbours(CNode* node);
-
+	_int GetMaxSize() { m_Desc.iSizeX * m_Desc.iSizeZ; }
 private:
 	GRIDDESC		m_Desc;
 	vector<CNode*>	m_Nodes;

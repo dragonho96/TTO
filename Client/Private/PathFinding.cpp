@@ -25,11 +25,17 @@ void CPathFinding::Initialize()
 
 void CPathFinding::Update()
 {
-	_float3 startPos, targetPos;
-	XMStoreFloat3(&startPos, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));
-	targetPos = { 0, 0, 0 };
+	if (CEngine::GetInstance()->IsKeyDown('A'))
+	{
+		CEngine::GetInstance()->AddTimers("Timer_PathFinding");
+		CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
 
-	FindPath(startPos, targetPos);
+		_float3 startPos, targetPos;
+		XMStoreFloat3(&startPos, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));
+		targetPos = { 0, 0, 0 };
+
+		FindPath(startPos, targetPos);
+	}
 }
 
 void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
@@ -39,12 +45,17 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 
 	if (nullptr == startNode || nullptr == targetNode)
 		return;
-
-	list<CNode*> openSet, closedSet;
+	list<CNode*> openSet;
+	list<CNode*> closedSet;
 	openSet.emplace_back(startNode);
+	// make_heap(openSet.begin(), openSet.end());
 
 	while (openSet.size() > 0)
 	{
+		//pop_heap(openSet.begin(), openSet.end());
+		//CNode* currentNode = openSet.back();
+		//openSet.pop_back();
+
 		CNode* currentNode = openSet.front();
 		openSet.pop_front();
 		for (auto& openNode : openSet)
@@ -65,25 +76,29 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		if (currentNode == targetNode)
 		{
 			RetracePath(startNode, targetNode);
+			_double timeElapsed = CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
+			
+			ADDLOG(to_string(timeElapsed).c_str());
 			return;
 		}
 
 		list<CNode*> neighbours = m_pGrid->GetNeighbours(currentNode);
 		for (auto& neighbour : neighbours)
 		{
-			auto find = std::find(closedSet.begin(), closedSet.end(), neighbour);
-			if (find != closedSet.end() || !neighbour->IsWalkable())
+			auto findList = std::find(closedSet.begin(), closedSet.end(), neighbour);
+			if (findList != closedSet.end() || !neighbour->IsWalkable())
 				continue;
 
 			_int newMovementCostToNeighbour = currentNode->GetGCost() + GetDistance(currentNode, neighbour);
-			find = std::find(openSet.begin(), openSet.end(), neighbour);
-			if (find == openSet.end() || newMovementCostToNeighbour < neighbour->GetGCost())
+			auto findVector = std::find(openSet.begin(), openSet.end(), neighbour);
+			if (findVector == openSet.end() || newMovementCostToNeighbour < neighbour->GetGCost())
 			{
 				neighbour->SetGCost(newMovementCostToNeighbour);
 				neighbour->SetHCost(GetDistance(neighbour, targetNode));
 				neighbour->SetParent(currentNode);
 
-				openSet.emplace_back(neighbour);
+				openSet.push_back(neighbour);
+				// push_heap(openSet.begin(), openSet.end());
 			}
 		}
 	}

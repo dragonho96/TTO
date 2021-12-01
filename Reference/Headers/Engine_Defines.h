@@ -43,6 +43,10 @@ using namespace physx;
 
 #include <fmod.h>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #include <experimental\filesystem>
 
 #define FILESYSTEM std::experimental::filesystem

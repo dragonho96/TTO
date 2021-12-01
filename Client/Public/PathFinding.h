@@ -25,6 +25,7 @@ public:
 private:
 	CGrid*			m_pGrid;
 	CTransform*		m_pPlayerTransform;
+	_double			m_dTimeElapsed = 0;
 };
 
 END

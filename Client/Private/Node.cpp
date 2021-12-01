@@ -73,6 +73,15 @@ HRESULT CNode::SetUpComponents()
 }
 
 
+_int CNode::CompareTo(CNode * nodeToCompare)
+{
+	_int compare = intCmp(GetFCost(), nodeToCompare->GetFCost());
+	if (compare == 0)
+		compare = intCmp(GetHCost(), nodeToCompare->GetHCost());
+
+	return -compare;
+}
+
 CNode * CNode::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CNode*		pInstance = new CNode(pDevice, pDeviceContext);

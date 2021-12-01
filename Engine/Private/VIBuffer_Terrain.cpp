@@ -123,8 +123,8 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			//float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
-			float height = 0.f;
+			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			//float height = 0.f;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), 1.f - i / (m_iNumVerticesZ - 1.f));

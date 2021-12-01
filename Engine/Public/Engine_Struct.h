@@ -2,6 +2,16 @@
 
 namespace Engine
 {
+	typedef struct tagVertex_Mesh
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexUV;
+		XMFLOAT3		vTangent;
+		XMUINT4		BlendIndex;
+		XMFLOAT4	BlendWeight;
+	}VTXMESH;
+
 	typedef struct tagLightDesc
 	{
 		XMFLOAT4		vLightDir;

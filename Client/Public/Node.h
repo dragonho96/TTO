@@ -49,6 +49,9 @@ public:
 
 	CNode* GetParent() { return m_pParent; }
 	void SetParent(CNode* parent) { m_pParent = parent; }
+
+public:
+	_int CompareTo(CNode* nodeToCompare);
 private:
 	_bool				m_bWalkable;
 	_float3				m_vPosition;
@@ -60,7 +63,8 @@ private:
 	CVIBuffer_Rect*		m_VIBuffer = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 	CTransform*			m_pTransform = nullptr;
-
+public:
+	_int	heapIndex;
 public:
 	static CNode* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;
