@@ -143,4 +143,16 @@ namespace Engine
 		mbstowcs(t, all, len);
 		return (TCHAR*)t;
 	}
+
+	inline _int intCmp(_int a, _int b)
+	{
+		_int out;
+		if (a > b)
+			out = 1;
+		else if (a == b)
+			out = 0;
+		else
+			out = -1;
+		return out;
+	}
 }

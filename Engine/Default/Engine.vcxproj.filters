@@ -163,6 +163,18 @@
     <Filter Include="01.Utility\02.GameObject\ScriptObject\IScriptObject">
       <UniqueIdentifier>{ea54df49-4f5c-4909-a930-8e677473308f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\05.Light">
+      <UniqueIdentifier>{c28a65d2-dc86-429f-85bf-1c2212487c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.Light\Manager">
+      <UniqueIdentifier>{40af9944-0e5e-4bb9-a629-ef25b6de07b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Model">
+      <UniqueIdentifier>{207a4dce-5368-4433-89a9-290e0c2eb518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Model\MeshContainer">
+      <UniqueIdentifier>{b659cce4-3466-4beb-9261-32b3a2ce3ea7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -327,6 +339,16 @@
     <ClInclude Include="..\Public\IScriptObject.h">
       <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LightManager.h">
+      <Filter>01.Utility\05.Light\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utility\05.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>01.Utility\03.Components\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MeshContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -473,5 +495,15 @@
     <ClCompile Include="..\Private\IScriptObject.cpp">
       <Filter>01.Utility\02.GameObject\ScriptObject\IScriptObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\LightManager.cpp">
+      <Filter>01.Utility\05.Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utility\05.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>01.Utility\03.Components\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MeshContainer.cpp" />
   </ItemGroup>
 </Project>

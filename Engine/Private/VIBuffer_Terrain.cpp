@@ -70,6 +70,10 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 HRESULT CVIBuffer_Terrain::Render()
 {
 	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
+	_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
+
+	ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
+	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
 	__super::Render();
 	return S_OK;
 }
@@ -108,7 +112,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 	m_VBDesc.MiscFlags = 0;
 	m_VBDesc.StructureByteStride = m_iStride;
 
-	float fHeightScale = 20.f;
+	float fHeightScale = 10.f;
 
 	*pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(*pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
@@ -120,6 +124,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
 			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			//float height = 0.f;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), 1.f - i / (m_iNumVerticesZ - 1.f));
@@ -242,7 +247,8 @@ void CVIBuffer_Terrain::SetHeightMapPath(string path)
 {
 	m_HeightMapPath = StringToWString(path);
 	CreateBuffer(&m_pCloneVertices);
-	CreateHeightField(&m_pCloneVertices);
+
+	// CreateHeightField(&m_pCloneVertices);
 }
 
 void CVIBuffer_Terrain::SetTexturePath(string path)

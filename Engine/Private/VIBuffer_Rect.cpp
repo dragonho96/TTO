@@ -94,6 +94,17 @@ HRESULT CVIBuffer_Rect::InitializePrototype()
 
 HRESULT CVIBuffer_Rect::Initialize(void * pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Rect.fx");
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Rect::Render()
+{
+	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
+	__super::Render();
 	return S_OK;
 }
 

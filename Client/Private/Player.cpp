@@ -52,21 +52,22 @@ void CPlayer::Update(_double deltaTime)
 		PxVec3 pxRight;
 		memcpy(&pxRight, &right, sizeof(PxVec3));
 
+		_float fSpeedFactor = 10.f;
 		if (CEngine::GetInstance()->IsKeyPressed(VK_UP))
 		{
-			m_pController->move(pxLook, 0.f, deltaTime, PxControllerFilters{});
+			m_pController->move(pxLook / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
 		if (CEngine::GetInstance()->IsKeyPressed(VK_DOWN))
 		{
-			m_pController->move(-pxLook, 0.f, deltaTime, PxControllerFilters{});
+			m_pController->move(-pxLook / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
 		if (CEngine::GetInstance()->IsKeyPressed(VK_RIGHT))
 		{
-			m_pController->move(pxRight, 0.f, deltaTime, PxControllerFilters{});
+			m_pController->move(pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
 		if (CEngine::GetInstance()->IsKeyPressed(VK_LEFT))
 		{
-			m_pController->move(-pxRight, 0.f, deltaTime, PxControllerFilters{});
+			m_pController->move(-pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
 
 		PxExtendedVec3 pos = m_pController->getPosition();

@@ -9,7 +9,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CEmptyUI final : public CGameObject
 {
-public:
+private:
 	explicit CEmptyUI(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CEmptyUI(const CEmptyUI& rhs);
 	virtual ~CEmptyUI() = default;

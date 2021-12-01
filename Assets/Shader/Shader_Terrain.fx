@@ -13,12 +13,23 @@ cbuffer LightDesc
     vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
     vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
     vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
+    vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 }
 
 cbuffer MaterialDesc
 {
     vector g_vMtrlDiffuse;
     vector g_vMtrlAmbient = vector(0.1f, 0.1f, 0.1f, 1.f);
+    vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+    float g_fPower = 30.f;
+}
+
+cbuffer EtcDesc
+{
+    vector g_vBrushPos = vector(10.f, 0.f, 10.f, 1.f);
+    float g_fRange = 5.f;
+
+    vector g_vCamPosition;
 }
 
 Texture2D g_DiffuseTexture;
@@ -42,7 +53,9 @@ struct VS_OUT
 {
 	float4	vPosition : SV_POSITION;
     float fShade : COLOR0;
+    float fSpecular : COLOR1;
 	float2	vTexUV : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -62,6 +75,15 @@ VS_OUT VS_MAIN(VS_IN In)
 	// Out.fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
 
+    vector vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+
+    vector vLook = vWorldPos - g_vCamPosition;
+    vector vReflect = reflect(normalize(g_vLightDir), normalize(vWorldNormal));
+
+    Out.fSpecular = pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), g_fPower);
+
+    Out.vWorldPos = vWorldPos;
+
     return Out;
 }
 
@@ -74,7 +96,9 @@ struct PS_IN
 {
 	float4	vPosition : SV_POSITION;
     float fShade : COLOR0;
+    float fSpecular : COLOR1;
 	float2	vTexUV : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 vector	PS_MAIN(PS_IN In) : SV_TARGET
@@ -82,7 +106,8 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET
     vector vColor = (vector) 0;
 
     vector vDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
-    vColor = (g_vLightDiffuse * vDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient));
+    vColor = (g_vLightDiffuse * vDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) + 
+         (g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
     vColor.a = vDiffuse.a;
 
     return vColor;
@@ -99,10 +124,4 @@ technique11		DefaultDevice
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
-
-	//pass DefaultPass
-	//{
-	//	VertexShader = compile vs_5_0 VS_MAIN_A();
-	//	PixelShader = compile ps_5_0 PS_MAIN_A();
-	//}
 }

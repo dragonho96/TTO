@@ -22,6 +22,8 @@
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
 #include "Camera_Fly.h"
+#include "Node.h"
+#include "Grid.h"
 #pragma endregion
 
 #include "Player.h"
@@ -64,6 +66,12 @@ HRESULT CScene_Test::Initialize()
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
+
+	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
+		return E_FAIL;
+
+	m_pPathFinding = CPathFinding::GetInstance();
+	m_pPathFinding->Initialize();
 	return S_OK;
 }
 
@@ -71,6 +79,7 @@ _uint CScene_Test::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
 
+	m_pPathFinding->Update();
 	return _uint();
 }
 
@@ -100,6 +109,8 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectUI", CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Rect", CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
@@ -116,6 +127,12 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyGameObject", CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyUI", CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* PathFinding*/
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Grid", CGrid::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 
@@ -137,6 +154,21 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
+
+	return S_OK;
+}
+
+HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
+{
+	CEngine*		pEngine = GET_INSTANCE(CEngine);
+
+	CGrid::GRIDDESC desc = { 16, 16, 1.2f };
+
+
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Grid", pLayerTag, &desc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
