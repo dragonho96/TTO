@@ -63,12 +63,15 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
-		return E_FAIL;
-
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
+
+	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
+		return E_FAIL;
+
+	m_pPathFinding = CPathFinding::GetInstance();
+	m_pPathFinding->Initialize();
 	return S_OK;
 }
 
@@ -76,6 +79,7 @@ _uint CScene_Test::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
 
+	m_pPathFinding->Update();
 	return _uint();
 }
 

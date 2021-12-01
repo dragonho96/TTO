@@ -25,13 +25,17 @@ public:
 public:
 	virtual HRESULT InitializePrototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual _uint	Update(_double dDeltaTime) override;
+
+public:
+	CNode*	NodeFromWorldPoint(_float3 worldPosition);
 public:
 	void SetUpGrid();
 
 private:
 	GRIDDESC		m_Desc;
 	vector<CNode*>	m_Nodes;
-
+	CTransform*		m_pPlayerTransform;
 };
 
 END

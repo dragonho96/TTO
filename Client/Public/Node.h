@@ -3,9 +3,9 @@
 #include "GameObject.h"
 #include "VIBuffer_Rect.h"
 
-BEGIN(Engine)
+BEGIN(Client)
 
-class ENGINE_DLL CNode : public CGameObject
+class CNode : public CGameObject
 {
 protected:
 	explicit CNode(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
@@ -22,18 +22,41 @@ private:
 	HRESULT SetUpComponents();
 
 public:
-	void SetPosition(_float3 _position)
-	{
+	void SetPosition(_float3 _position, _int _gridX, _int _gridZ){
 		m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&_position));
+		m_vPosition = _position;
+		m_iGridX = _gridX;
+		m_iGridZ = _gridZ;
 	}
-	void SetWalkable(_bool _walkable)
-	{
+	void SetWalkable(_bool _walkable){
 		m_bWalkable = _walkable;
 	}
+	void SetColor(_float4 color) {
+		m_VIBuffer->SetColor(color);
+	}
+	_float3 GetPosition() { return m_vPosition; }
+	_bool	IsWalkable() { return m_bWalkable; }
 
+	_int GetGridX() { return m_iGridX; }
+	_int GetGridZ() { return m_iGridZ; }
+
+	_int GetFCost() { return m_iGCost + m_iHCost; }
+	_int GetGCost() { return m_iGCost; }
+	_int GetHCost() { return m_iHCost; }
+
+	void SetGCost(_int gCost) { m_iGCost = gCost; }
+	void SetHCost(_int hCost) { m_iHCost = hCost; }
+
+	CNode* GetParent() { return m_pParent; }
+	void SetParent(CNode* parent) { m_pParent = parent; }
 private:
 	_bool				m_bWalkable;
 	_float3				m_vPosition;
+	_int				m_iGridX;
+	_int				m_iGridZ;
+	_int				m_iGCost;
+	_int				m_iHCost;
+	CNode*				m_pParent;
 	CVIBuffer_Rect*		m_VIBuffer = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 	CTransform*			m_pTransform = nullptr;

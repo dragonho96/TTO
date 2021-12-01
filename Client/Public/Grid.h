@@ -3,8 +3,8 @@
 #include "GameObject.h"
 #include "Node.h"
 
-BEGIN(Engine)
-class ENGINE_DLL CGrid : public CGameObject
+BEGIN(Client)
+class CGrid : public CGameObject
 {
 public:
 	typedef struct tagGridDesc
@@ -25,13 +25,17 @@ public:
 public:
 	virtual HRESULT InitializePrototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual _uint	Update(_double dDeltaTime) override;
+
 public:
+	CNode*	NodeFromWorldPoint(_float3 worldPosition);
 	void SetUpGrid();
+	list<CNode*> GetNeighbours(CNode* node);
 
 private:
 	GRIDDESC		m_Desc;
 	vector<CNode*>	m_Nodes;
-
+	CTransform*		m_pPlayerTransform;
 };
 
 END

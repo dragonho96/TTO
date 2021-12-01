@@ -196,7 +196,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\GameObjectManager.h" />
     <ClInclude Include="..\Public\GlobalBuffers.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
-    <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\ImGuiManager.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
     <ClInclude Include="..\Public\IScriptObject.h" />
@@ -205,7 +204,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Light.h" />
     <ClInclude Include="..\Public\LightManager.h" />
     <ClInclude Include="..\Public\Line.h" />
-    <ClInclude Include="..\Public\Node.h" />
     <ClInclude Include="..\Public\Pipeline.h" />
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\RectTransform.h" />
@@ -251,7 +249,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
     <ClCompile Include="..\Private\GraphicDevice.cpp" />
-    <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\ImGuiManager.cpp" />
     <ClCompile Include="..\Private\ImGuiWindow.cpp" />
     <ClCompile Include="..\Private\IScriptObject.cpp" />
@@ -260,7 +257,6 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\Light.cpp" />
     <ClCompile Include="..\Private\LightManager.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
-    <ClCompile Include="..\Private\Node.cpp" />
     <ClCompile Include="..\Private\Pipeline.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\RectTransform.cpp" />

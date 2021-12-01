@@ -177,9 +177,12 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Fly.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Log.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\Node.h" />
+    <ClInclude Include="..\Public\PathFinding.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Scene_GamePlay.h" />
     <ClInclude Include="..\Public\Scene_Loading.h" />
@@ -206,9 +209,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
+    <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\Node.cpp" />
+    <ClCompile Include="..\Private\PathFinding.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Scene_GamePlay.cpp" />
     <ClCompile Include="..\Private\Scene_Loading.cpp" />

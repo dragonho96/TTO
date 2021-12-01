@@ -58,6 +58,13 @@
     <ClInclude Include="..\..\Assets\Shader\Shader_Defines.hpp">
       <Filter>FX</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Grid.h">
+      <Filter>PathFinding\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Node.h">
+      <Filter>PathFinding\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PathFinding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -108,6 +115,13 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Grid.cpp">
+      <Filter>PathFinding\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Node.cpp">
+      <Filter>PathFinding\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PathFinding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -168,6 +182,15 @@
     </Filter>
     <Filter Include="FX">
       <UniqueIdentifier>{bfd9097f-0a6e-415e-9acc-d189c34c374d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathFinding">
+      <UniqueIdentifier>{b8375056-5470-4f93-b684-311dc07c6ef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathFinding\Grid">
+      <UniqueIdentifier>{12593d30-3da1-4307-9d26-cf886fc50737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathFinding\Node">
+      <UniqueIdentifier>{b89def4f-662e-4fe3-a8de-8777d9237882}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

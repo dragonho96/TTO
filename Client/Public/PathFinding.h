@@ -1,0 +1,30 @@
+#pragma once
+
+#include "Base.h"
+#include "Engine.h"
+#include "Grid.h"
+
+BEGIN(Client)
+
+class CPathFinding : public CBase
+{
+	DECLARE_SINGLETON(CPathFinding)
+private:
+	CPathFinding();
+	virtual ~CPathFinding() = default;
+public:
+	void Initialize();
+	void Update();
+public:
+	void FindPath(_float3 startPos, _float3 targetPos);
+	void RetracePath(CNode* startNode, CNode* endNode);
+	_int GetDistance(CNode* nodeA, CNode* nodeB);
+
+public:
+	virtual void Free() override;
+private:
+	CGrid*			m_pGrid;
+	CTransform*		m_pPlayerTransform;
+};
+
+END

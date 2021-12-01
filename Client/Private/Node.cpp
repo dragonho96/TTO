@@ -1,4 +1,7 @@
+#include "stdafx.h"
 #include "..\Public\Node.h"
+
+USING(Client)
 
 CNode::CNode(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -69,6 +72,7 @@ HRESULT CNode::SetUpComponents()
 	return S_OK;
 }
 
+
 CNode * CNode::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CNode*		pInstance = new CNode(pDevice, pDeviceContext);
@@ -82,7 +86,7 @@ CNode * CNode::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceConte
 	return pInstance;
 }
 
-Engine::CGameObject* Engine::CNode::Clone(void* pArg)
+Engine::CGameObject* CNode::Clone(void* pArg)
 {
 	CGameObject*		pInstance = new CNode(*this);
 

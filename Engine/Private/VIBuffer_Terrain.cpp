@@ -70,6 +70,10 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 HRESULT CVIBuffer_Terrain::Render()
 {
 	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
+	_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
+
+	ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
+	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
 	__super::Render();
 	return S_OK;
 }
@@ -119,7 +123,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			// float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			//float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
 			float height = 0.f;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);

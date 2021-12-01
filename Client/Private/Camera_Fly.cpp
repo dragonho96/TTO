@@ -69,10 +69,10 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 		if (m_pEngine->IsMousePressed(1))
 		{
 			if (MouseMove = m_pEngine->GetMouseMoveValue().x)
-				m_pTransformCom->RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * TimeDelta);
+				m_pTransformCom->RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * TimeDelta * 3.f);
 
 			if (MouseMove = m_pEngine->GetMouseMoveValue().y)
-				m_pTransformCom->RotateAxis(m_pTransformCom->GetState(CTransform::STATE_RIGHT), MouseMove * TimeDelta);
+				m_pTransformCom->RotateAxis(m_pTransformCom->GetState(CTransform::STATE_RIGHT), MouseMove * TimeDelta * 3.f);
 		}
 	}
 

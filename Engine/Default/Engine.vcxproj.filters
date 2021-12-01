@@ -169,15 +169,6 @@
     <Filter Include="01.Utility\05.Light\Manager">
       <UniqueIdentifier>{40af9944-0e5e-4bb9-a629-ef25b6de07b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\06.Pathfinding">
-      <UniqueIdentifier>{39d24f9d-6a08-4f2c-b340-c98f899f17d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06.Pathfinding\Node">
-      <UniqueIdentifier>{bb351f88-abc5-4123-8db7-04c6172537a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06.Pathfinding\Grid">
-      <UniqueIdentifier>{0e5ec12d-3d91-4723-af29-8a2b855e9ffa}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -345,14 +336,8 @@
     <ClInclude Include="..\Public\LightManager.h">
       <Filter>01.Utility\05.Light\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Node.h">
-      <Filter>01.Utility\06.Pathfinding\Node</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Light.h">
       <Filter>01.Utility\05.Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Grid.h">
-      <Filter>01.Utility\06.Pathfinding\Grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -503,14 +488,8 @@
     <ClCompile Include="..\Private\LightManager.cpp">
       <Filter>01.Utility\05.Light\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Node.cpp">
-      <Filter>01.Utility\06.Pathfinding\Node</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Light.cpp">
       <Filter>01.Utility\05.Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Grid.cpp">
-      <Filter>01.Utility\06.Pathfinding\Grid</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
