@@ -1,6 +1,6 @@
-#include "Engine_Defines.h"
 #include "..\Public\Shader.h"
 #include "Texture.h"
+#include "Engine.h"
 
 CShader::CShader(string file)
 	: shaderFile(file)

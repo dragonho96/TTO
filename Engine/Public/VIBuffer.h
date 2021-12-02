@@ -2,7 +2,6 @@
 
 #include "Component.h"
 #include "Shader.h"
-#include "Transform.h"
 
 BEGIN(Engine)
 
@@ -42,11 +41,11 @@ protected:
 	ID3DX11Effect*				m_pEffect = nullptr;
 
 protected:
-	Scope<CShader>	m_pShader;
+	Scope<class CShader>	m_pShader;
 
 protected:
 	void*				m_pVertices = nullptr;
-	CTransform*			m_pObjTransform = nullptr;
+	class CTransform*			m_pObjTransform = nullptr;
 protected:
 	HRESULT Create_Buffers();
 	HRESULT Compile_Shader(const _tchar* pShaderFilePath, _uint iTechniqueIndex = 0);

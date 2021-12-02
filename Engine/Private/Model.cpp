@@ -24,7 +24,7 @@ HRESULT CModel::InitializePrototype(string pMeshFilePath, string pMeshFileName, 
 	//strcpy_s(szFullPath, pMeshFilePath);
 	//strcat_s(szFullPath, pMeshFileName);
 
-	string strFullPath = pMeshFileName + pMeshFileName;
+	string strFullPath = pMeshFilePath + pMeshFileName;
 
 	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (nullptr == m_pScene)

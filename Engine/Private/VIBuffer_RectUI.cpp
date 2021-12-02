@@ -1,4 +1,5 @@
 #include "..\Public\VIBuffer_RectUI.h"
+#include "Shader.h"
 
 CVIBuffer_RectUI::CVIBuffer_RectUI(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)	

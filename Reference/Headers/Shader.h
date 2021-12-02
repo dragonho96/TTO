@@ -1,6 +1,5 @@
 #pragma once
 #include "Engine_Defines.h"
-#include "Engine.h"
 
 BEGIN(Engine)
 

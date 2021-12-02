@@ -1,7 +1,12 @@
 #pragma once
 
 #include "GameObject.h"
-#include "VIBuffer_Rect.h"
+#include "Engine.h"
+BEGIN(Engine)
+class CRenderer;
+class CTransform;
+class CVIBuffer_Rect;
+END
 
 BEGIN(Client)
 

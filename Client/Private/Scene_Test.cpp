@@ -187,7 +187,7 @@ HRESULT CScene_Test::ReadyScript()
 
 HRESULT CScene_Test::ReadyModel()
 {
-	if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../Bin/Resources/Meshes/Kaelthas/", "Kaelthas.fbx", "../Bin/ShaderFiles/Shader_Mesh.fx"))))
+	if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../../Assets/Meshes/Kaelthas/", "Kaelthas.fbx", "../../Assets/Shader/Shader_Mesh.fx"))))
 		return E_FAIL;
 
 	return S_OK;

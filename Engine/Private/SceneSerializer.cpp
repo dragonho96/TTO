@@ -286,7 +286,6 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
-	wstring ws(layer.begin(), layer.end());
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyGameObject", layer);
 
 	deserializedObject->SetInfo(name, layer, uuid);

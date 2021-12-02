@@ -1,7 +1,13 @@
 #pragma once
 
 #include "Renderer.h"
-//#include "Model.h"
+#include "Model.h"
+#include "Texture.h"
+#include "Renderer.h"
+#include "Transform.h"
+#include "VIBuffer_Rect.h"
+#include "VIBuffer_Terrain.h"
+
 BEGIN(Engine)
 
 class CComponentManager final : public CBase

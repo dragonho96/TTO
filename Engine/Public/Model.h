@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Shader.h"
 
 BEGIN(Engine)
 
