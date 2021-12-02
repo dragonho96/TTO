@@ -14,14 +14,17 @@ BEGIN(Engine)
 class ENGINE_DLL CEngine final : public CBase
 {
 	DECLARE_SINGLETON(CEngine)private:
+public:
+	enum class USAGE { USAGE_CLIENT, USAGE_TOOL, USAGE_NONE };
 private:
 	CEngine();
-	virtual ~CEngine() = default; 
+	virtual ~CEngine() = default;
 
 public:
-	HRESULT			Initialize(_uint iNumScenes);
+	HRESULT			Initialize(_uint iNumScenes, USAGE usage);
 	_uint			Update(_double dTimeDelta);
 	static void		ReleaseEngine();
+	USAGE			GetCurrentUsage() { return m_eUsage; }
 
 #pragma region DEVICE_MANAGER
 public:
@@ -150,6 +153,9 @@ private:
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;
 	class CSound*					m_pSoundManager = nullptr;
+
+	USAGE							m_eUsage;
+
 public:
 	virtual void Free() override;
 };

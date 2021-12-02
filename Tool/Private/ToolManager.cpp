@@ -40,7 +40,7 @@ HRESULT CToolManager::Initialize()
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 
 
-	if (FAILED(m_pEngine->Initialize(SCENE_END)))
+	if (FAILED(m_pEngine->Initialize(SCENE_END, CEngine::USAGE::USAGE_TOOL)))
 		return E_FAIL;
 
 	if (FAILED(ReadyPrototypeComponent()))
@@ -136,7 +136,7 @@ void CToolManager::Release()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	SafeRelease(m_pRenderer);
+	// SafeRelease(m_pRenderer);
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
 }

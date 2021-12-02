@@ -56,6 +56,9 @@ public:
 	const _float4x4 GetMatrix() { return m_WorldMatrix; }
 	void SetMatrix(const _float4x4 _matrix) { m_WorldMatrix = _matrix; }
 
+	void SetPxMatrix(PxMat44 mat);
+	void SetPxPosition(PxExtendedVec3 vec3);
+
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);

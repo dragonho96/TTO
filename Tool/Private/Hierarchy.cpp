@@ -47,6 +47,7 @@ void CHierarchy::Update()
 
 
 	// 여기서 리스트 순회하면서 추가
+	int iCount = 0;
 	unordered_map<string, CLayer*>* layers = m_pEngine->GetLayers();
 	for (auto& pair : *layers)
 	{
@@ -60,7 +61,6 @@ void CHierarchy::Update()
 			if (!obj->GetParent())
 				pObjListNoParent.push_back(obj);
 		}
-		int iCount = 0;
 		for (auto& pObj : pObjListNoParent)
 		{
 			SetObjectHierarchy(pObj, iCount);
@@ -114,14 +114,15 @@ void CHierarchy::LateUpdate()
 
 void CHierarchy::SetObjectHierarchy(CGameObject* pObj, int& iCount)
 {
-	ImGui::PushID(iCount++);
+	ImGui::PushID(iCount);
 	ImGuiTreeNodeFlags node_flags = iCount == selected ? ImGuiTreeNodeFlags_Selected : 0;
-	bool bOpen = ImGui::TreeNodeEx(pObj->GetName().c_str(), node_flags, pObj->GetName().c_str(), iCount == selected);
+	bool bOpen = ImGui::TreeNodeEx(&to_string(iCount)/*pObj->GetName().c_str()*/, node_flags, pObj->GetName().c_str(), iCount == selected);
 	if (ImGui::IsItemHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
 			/* Set Focused Game Object*/
+			ADDLOG(to_string(iCount).c_str());
 			selected = iCount;
 			g_pObjFocused = pObj;
 		}
@@ -132,6 +133,7 @@ void CHierarchy::SetObjectHierarchy(CGameObject* pObj, int& iCount)
 			openPopup = !openPopup;
 		}
 	}
+	iCount++;
 
 	if (ImGui::BeginDragDropSource())
 	{

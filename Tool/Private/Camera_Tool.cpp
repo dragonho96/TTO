@@ -39,45 +39,52 @@ _uint CCamera_Tool::Update(_double TimeDelta)
 		return -1;
 
 
-	if (m_pEngine->IsKeyPressed('W'))
+	if (GetActiveWindow() == g_hWnd)
 	{
-		m_pTransformCom->GoStraight(TimeDelta);
+
+		if (m_pEngine->IsKeyPressed('W'))
+		{
+			m_pTransformCom->GoStraight(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->IsKeyPressed('S'))
+		{
+			m_pTransformCom->GoBackWard(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->IsKeyPressed('A'))
+		{
+			m_pTransformCom->GoLeft(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->IsKeyPressed('D'))
+		{
+			m_pTransformCom->GoRight(TimeDelta * 2.f);
+		}
+
+		if (m_pEngine->GetMouseMoveValue().z > 0)
+			m_pTransformCom->GoStraight(TimeDelta * 3.f);
+		if (m_pEngine->GetMouseMoveValue().z < 0)
+			m_pTransformCom->GoBackWard(TimeDelta * 3.f);
+
+		_long			MouseMove = 0;
+
+		if (m_pEngine->IsMousePressed(1))
+		{
+			if (MouseMove = m_pEngine->GetMouseMoveValue().x)
+				m_pTransformCom->RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * TimeDelta * 3.f);
+
+			if (MouseMove = m_pEngine->GetMouseMoveValue().y)
+				m_pTransformCom->RotateAxis(m_pTransformCom->GetState(CTransform::STATE_RIGHT), MouseMove * TimeDelta * 3.f);
+		}
+
+		if (m_pEngine->GetMouseMoveValue().z > 0)
+			m_pTransformCom->GoStraight(TimeDelta * 3.f);
+		if (m_pEngine->GetMouseMoveValue().z < 0)
+			m_pTransformCom->GoBackWard(TimeDelta * 3.f);
 	}
 
-	if (m_pEngine->IsKeyPressed('S'))
-	{
-		m_pTransformCom->GoBackWard(TimeDelta);
-	}
 
-	if (m_pEngine->IsKeyPressed('A'))
-	{
-		m_pTransformCom->GoLeft(TimeDelta);
-	}
-
-	if (m_pEngine->IsKeyPressed('D'))
-	{
-		m_pTransformCom->GoRight(TimeDelta);
-	}
-
-	if (m_pEngine->GetMouseMoveValue().z > 0)
-		m_pTransformCom->GoStraight(TimeDelta * 3.f);
-	if (m_pEngine->GetMouseMoveValue().z < 0)
-		m_pTransformCom->GoBackWard(TimeDelta * 3.f);
-
-	_long			MouseMove = 0;
-
-	_float3 vec = m_pEngine->GetMouseMoveValue();
-	string s = "" + to_string(vec.x) + " : " + to_string(vec.y);
-	dynamic_cast<CLog*>(CEngine::GetInstance()->GetWindow("Log"))->AddLog(s.c_str());
-
-	if (m_pEngine->IsMousePressed(1))
-	{
-		if (MouseMove = m_pEngine->GetMouseMoveValue().x)
-			m_pTransformCom->RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), -MouseMove * TimeDelta);
-
-		if (MouseMove = m_pEngine->GetMouseMoveValue().y)
-			m_pTransformCom->RotateAxis(m_pTransformCom->GetState(CTransform::STATE_RIGHT), -MouseMove * TimeDelta);
-	}
 
 	return __super::Update(TimeDelta);
 }

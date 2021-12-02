@@ -31,16 +31,32 @@ HRESULT CCollider::Initialize(void * pArg)
 	if (pArg)
 		m_pObjTransform = (CTransform*)pArg;
 
-	//SetUpPhysX();
-
 	return S_OK;
+}
+
+_uint CCollider::LateUpdate(double deltaTime)
+{
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		if (m_pController)
+		{
+			PxExtendedVec3 pos = m_pController->getPosition();
+			m_pObjTransform->SetPxPosition(pos);
+		}
+		// Check if its dynamic or static
+		else if (m_pRigidActor)
+		{
+			PxTransform actorTransform = m_pRigidActor->getGlobalPose();
+			PxMat44 pxMat = PxMat44(actorTransform);
+			m_pObjTransform->SetPxMatrix(pxMat);
+		}
+	}
+
+	return _uint();
 }
 
 HRESULT CCollider::Render()
 {
-
-
-
 	if (m_pDebugLine)
 		dynamic_cast<CVIBuffer*>(m_pDebugLine)->Render();
 	return S_OK;

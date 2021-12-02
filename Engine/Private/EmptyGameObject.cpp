@@ -76,6 +76,10 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
+	CComponent* collider = GetComponent("Com_Collider");
+	if (collider)
+		dynamic_cast<CCollider*>(collider)->LateUpdate(TimeDelta);
+
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_PRIORITY, this);
 }
 

@@ -67,8 +67,6 @@ CNode * CGrid::NodeFromWorldPoint(_float3 worldPosition)
 		if (worldPosition.x > (fNodePos.x - fScaleFactor) && worldPosition.x < (fNodePos.x + fScaleFactor) &&
 			worldPosition.z >(fNodePos.z - fScaleFactor) && worldPosition.z < (fNodePos.z + fScaleFactor))
 			return node;
-
-		node->SetColor(_float4{ 1.f, 1.f, 0.f, 1.f });
 	}
 	return nullptr;
 }
@@ -85,14 +83,33 @@ void CGrid::SetUpGrid()
 			_float3 position = { j * m_Desc.iSizeInterval, 1.f, i * m_Desc.iSizeInterval };
 			m_Nodes[index] = dynamic_cast<CNode*>(m_pEngine->AddGameObject(0, "GameObject_Node", "LAYER_NODE"));
 			m_Nodes[index]->SetPosition(position, i, j);
-			m_Nodes[index]->SetWalkable(true);
+
+			// Raycast and check if its walkable
+			PxScene* scene = CEngine::GetInstance()->GetScene();
+			PxVec3 origin;                 // [in] Ray origin
+			PxVec3 unitDir = { 0.f, 1.f, 0.f };                // [in] Normalized ray direction
+			PxReal maxDistance = 2.f;            // [in] Raycast max distance
+			PxRaycastBuffer hit;                 // [out] Raycast results
+
+												 // Raycast against all static & dynamic objects (no filtering)
+												 // The main result from this call is the closest hit, stored in the 'hit.block' structure
+			memcpy(&origin, &position, sizeof(PxVec3));
+
+			bool status = scene->raycast(origin, unitDir, maxDistance, hit);
+			if (status)
+				m_Nodes[index]->SetWalkable(false);
+			else
+				m_Nodes[index]->SetWalkable(true);
 		}
 	}
+	ResetColor();
 }
 
 list<CNode*> CGrid::GetNeighbours(CNode * node)
 {
 	list<CNode*> neighbours;
+	_int curNodeX = node->GetGridX();
+	_int curNodeZ = node->GetGridZ();
 
 	for (_int x = -1; x <= 1; ++x)
 	{
@@ -101,15 +118,56 @@ list<CNode*> CGrid::GetNeighbours(CNode * node)
 			if (x == 0 && z == 0)
 				continue;
 
-			_int checkX = node->GetGridX() + x;
-			_int checkZ = node->GetGridZ() + z;
+			_int checkX = curNodeX + x;
+			_int checkZ = curNodeZ + z;
 
 			if (checkX >= 0 && checkX < m_Desc.iSizeX &&
 				checkZ >= 0 && checkZ < m_Desc.iSizeZ)
-				neighbours.emplace_back(m_Nodes[checkX * m_Desc.iSizeZ + checkZ]);
+			{
+				if (m_Nodes[checkX * m_Desc.iSizeZ + checkZ]->IsWalkable())
+				{
+					if (!m_Nodes[curNodeX * m_Desc.iSizeZ + checkZ]->IsWalkable() &&
+						!m_Nodes[checkX * m_Desc.iSizeZ + curNodeZ]->IsWalkable())
+						continue;
+
+					if (!m_Nodes[curNodeX * m_Desc.iSizeZ + checkZ]->IsWalkable() ||
+						!m_Nodes[checkX * m_Desc.iSizeZ + curNodeZ]->IsWalkable())
+						continue;
+
+					neighbours.emplace_back(m_Nodes[checkX * m_Desc.iSizeZ + checkZ]);
+				}
+			}
 		}
 	}
 	return neighbours;
+}
+
+void CGrid::ResetColor()
+{
+	for (auto node : m_Nodes)
+	{
+		if (node->IsWalkable())
+			node->SetColor(_float4{ 1.f, 1.f, 0.f, 1.f });
+		else
+			node->SetColor(_float4{ 1.f, 0.f, 0.f, 1.f });
+	}
+}
+
+_bool CGrid::ValidateNode(_int checkX, _int checkZ)
+{
+	if (checkX >= 0 && checkX < m_Desc.iSizeX && checkZ >= 0 && checkZ < m_Desc.iSizeZ &&
+		m_Nodes[checkX * m_Desc.iSizeZ + checkZ]->IsWalkable())
+		return true;
+
+	return false;
+}
+
+CNode * CGrid::GetNode(_int checkX, _int checkZ)
+{
+	if (checkX >= 0 && checkX < m_Desc.iSizeX && checkZ >= 0 && checkZ < m_Desc.iSizeZ)
+		return m_Nodes[checkX * m_Desc.iSizeZ + checkZ];
+
+	return nullptr;
 }
 
 

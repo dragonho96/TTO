@@ -31,7 +31,7 @@ HRESULT CPxManager::Initialize()
 
 	m_pPvd = PxCreatePvd(*m_pFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
-	m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
 	PxTolerancesScale scale;
 	scale.length = 1;        // typical length of an object

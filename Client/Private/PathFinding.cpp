@@ -25,6 +25,8 @@ void CPathFinding::Initialize()
 
 void CPathFinding::Update()
 {
+	if (!m_pGrid)
+		return;
 	if (CEngine::GetInstance()->IsKeyDown('A'))
 	{
 		CEngine::GetInstance()->AddTimers("Timer_PathFinding");
@@ -45,8 +47,10 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 
 	if (nullptr == startNode || nullptr == targetNode)
 		return;
-	list<CNode*> openSet;
-	list<CNode*> closedSet;
+
+	openSet.clear();
+	closedSet.clear();
+
 	openSet.emplace_back(startNode);
 	// make_heap(openSet.begin(), openSet.end());
 
@@ -81,6 +85,24 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 			ADDLOG(to_string(timeElapsed).c_str());
 			return;
 		}
+		
+		_int curNodeX = currentNode->GetGridX();
+		_int curNodeZ = currentNode->GetGridZ();
+
+		//for (_int x = -1; x <= 1; x++)
+		//{
+		//	for (_int z = -1; z <= 1; z++)
+		//	{
+		//		if (x == 0 && z == 0)
+		//			continue;
+
+		//		_int checkX = curNodeX + x;
+		//		_int checkZ = curNodeZ + z;
+
+		//		AddOpenSet(checkX, checkZ, currentNode, targetNode);
+		//	}
+		//}
+
 
 		list<CNode*> neighbours = m_pGrid->GetNeighbours(currentNode);
 		for (auto& neighbour : neighbours)
@@ -103,6 +125,42 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		}
 	}
 }
+_bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode* pTargetNode)
+{
+	CNode* node = m_pGrid->GetNode(checkX, checkZ);
+	if (nullptr == node)
+		return false;
+
+	_int curNodeX = pCurNode->GetGridX();
+	_int curNodeZ = pCurNode->GetGridZ();
+
+	auto find = std::find(closedSet.begin(), closedSet.end(), node);
+
+
+	if (m_pGrid->ValidateNode(checkX, checkZ) && find == closedSet.end())
+	{
+		// 벽 사이로 통과 안됨
+		if ((!m_pGrid->ValidateNode(curNodeX, checkZ)) && (!m_pGrid->ValidateNode(checkX, curNodeZ)))
+			return false;
+
+		// 수직수평 장애물 이동 불가
+		if ((!m_pGrid->ValidateNode(curNodeX, checkZ)) || (!m_pGrid->ValidateNode(checkX, curNodeZ)))
+			return false;
+
+		_int newMovementCostToNeighbour = pCurNode->GetGCost() + GetDistance(pCurNode, node);
+		auto findVector = std::find(openSet.begin(), openSet.end(), node);
+		if (findVector == openSet.end() || newMovementCostToNeighbour < node->GetGCost())
+		{
+			node->SetGCost(newMovementCostToNeighbour);
+			node->SetHCost(GetDistance(node, pTargetNode));
+			node->SetParent(pCurNode);
+
+			openSet.push_back(node);
+			// push_heap(openSet.begin(), openSet.end());
+		}
+	}
+	return _bool();
+}
 
 void CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 {
@@ -113,11 +171,12 @@ void CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 		path.emplace_back(currentNode);
 		currentNode = currentNode->GetParent();
 	}
+
+	m_pGrid->ResetColor();
 	
 	for (auto& node : path)
-	{
-		node->SetColor(_float4{ 1.f, 0.f, 0.f, 1.f });
-	}
+		node->SetColor(_float4{ 0.f, 1.f, 0.f, 1.f });
+
 }
 
 _int CPathFinding::GetDistance(CNode * nodeA, CNode * nodeB)
@@ -130,6 +189,8 @@ _int CPathFinding::GetDistance(CNode * nodeA, CNode * nodeB)
 
 	return 14 * dstX + 10 * (dstZ - dstX);
 }
+
+
 
 void CPathFinding::Free()
 {
