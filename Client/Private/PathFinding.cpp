@@ -34,7 +34,7 @@ void CPathFinding::Update()
 
 		_float3 startPos, targetPos;
 		XMStoreFloat3(&startPos, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));
-		targetPos = { 0, 0, 0 };
+		targetPos = { 2, 0, 2 };
 
 		FindPath(startPos, targetPos);
 	}
@@ -61,20 +61,21 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		//openSet.pop_back();
 
 		CNode* currentNode = openSet.front();
-		openSet.pop_front();
-		for (auto& openNode : openSet)
+		//openSet.pop_front();
+		auto iter = openSet.begin(); ++iter;
+		for (iter; iter != openSet.end(); ++iter)
 		{
-			int openFCost = openNode->GetFCost();
-			int openHCost = openNode->GetHCost();
+			int openFCost = (*iter)->GetFCost();
+			int openHCost = (*iter)->GetHCost();
 			int currentFCost = currentNode->GetFCost();
 			int currentHCost = currentNode->GetHCost();
-			if (openFCost < currentFCost || openFCost == currentFCost && openHCost < currentHCost)
+			if (openFCost <= currentFCost && openHCost < currentHCost)
 			{
-				currentNode = openNode;
+				currentNode = (*iter);
 			}
 		}
 
-		// openSet.remove(currentNode);
+		openSet.remove(currentNode);
 		closedSet.push_back(currentNode);
 
 		if (currentNode == targetNode)
@@ -108,15 +109,15 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		for (auto& neighbour : neighbours)
 		{
 			auto findList = std::find(closedSet.begin(), closedSet.end(), neighbour);
-			if (findList != closedSet.end() || !neighbour->IsWalkable())
+			if (findList != closedSet.end()/* || !neighbour->IsWalkable()*/)
 				continue;
 
-			_int newMovementCostToNeighbour = currentNode->GetGCost() + GetDistance(currentNode, neighbour);
+			_int newMovementCostToNeighbour = currentNode->GetGCost() + GetMoveCost(currentNode, neighbour);
 			auto findVector = std::find(openSet.begin(), openSet.end(), neighbour);
 			if (findVector == openSet.end() || newMovementCostToNeighbour < neighbour->GetGCost())
 			{
 				neighbour->SetGCost(newMovementCostToNeighbour);
-				neighbour->SetHCost(GetDistance(neighbour, targetNode));
+				neighbour->SetHCost(GetHCost(neighbour, targetNode));
 				neighbour->SetParent(currentNode);
 
 				openSet.push_back(neighbour);
@@ -147,12 +148,12 @@ _bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode*
 		if ((!m_pGrid->ValidateNode(curNodeX, checkZ)) || (!m_pGrid->ValidateNode(checkX, curNodeZ)))
 			return false;
 
-		_int newMovementCostToNeighbour = pCurNode->GetGCost() + GetDistance(pCurNode, node);
+		_int newMovementCostToNeighbour = pCurNode->GetGCost() + GetMoveCost(pCurNode, node);
 		auto findVector = std::find(openSet.begin(), openSet.end(), node);
 		if (findVector == openSet.end() || newMovementCostToNeighbour < node->GetGCost())
 		{
 			node->SetGCost(newMovementCostToNeighbour);
-			node->SetHCost(GetDistance(node, pTargetNode));
+			node->SetHCost(GetHCost(node, pTargetNode));
 			node->SetParent(pCurNode);
 
 			openSet.push_back(node);
@@ -179,15 +180,24 @@ void CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 
 }
 
-_int CPathFinding::GetDistance(CNode * nodeA, CNode * nodeB)
+_int CPathFinding::GetMoveCost(CNode * nodeA, CNode * nodeB)
 {
 	_int dstX = abs(nodeA->GetGridX() - nodeB->GetGridX());
 	_int dstZ = abs(nodeA->GetGridZ() - nodeB->GetGridZ());
 
-	if (dstX > dstZ)
-		return 14 * dstZ + 10 * (dstX - dstZ);
+	return (dstX == 0 || dstZ == 0) ? 10 : 14;
+	//if (dstX > dstZ)
+	//	return 14 * dstZ + 10 * (dstX - dstZ);
 
-	return 14 * dstX + 10 * (dstZ - dstX);
+	//return 14 * dstX + 10 * (dstZ - dstX);
+}
+
+_int CPathFinding::GetHCost(CNode * nodeA, CNode * nodeB)
+{
+	_int dstX = abs(nodeA->GetGridX() - nodeB->GetGridX());
+	_int dstZ = abs(nodeA->GetGridZ() - nodeB->GetGridZ());
+	
+	return (dstX + dstZ) * 10;
 }
 
 

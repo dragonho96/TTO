@@ -18,7 +18,8 @@ public:
 public:
 	void FindPath(_float3 startPos, _float3 targetPos);
 	void RetracePath(CNode* startNode, CNode* endNode);
-	_int GetDistance(CNode* nodeA, CNode* nodeB);
+	_int GetMoveCost(CNode* nodeA, CNode* nodeB);
+	_int GetHCost(CNode* nodeA, CNode* nodeB);
 	_bool AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode* pTargetNode);
 
 public:

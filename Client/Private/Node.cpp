@@ -11,6 +11,8 @@ CNode::CNode(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 CNode::CNode(const CNode & rhs)
 	: CGameObject(rhs)
 {
+	m_iGCost = 0;
+	m_iHCost = 0;
 }
 
 HRESULT CNode::InitializePrototype()
