@@ -51,7 +51,8 @@ public:
 	void SetParent(CNode* parent) { m_pParent = parent; }
 
 public:
-	_int CompareTo(CNode* nodeToCompare);
+	_int				CompareTo(CNode* nodeToCompare);
+
 private:
 	_bool				m_bWalkable;
 	_float3				m_vPosition;
