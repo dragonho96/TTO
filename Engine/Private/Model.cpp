@@ -1,4 +1,7 @@
 #include "..\public\Model.h"
+#include "MeshContainer.h"
+#include "Texture.h"
+#include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -12,14 +15,18 @@ CModel::CModel(const CModel & rhs)
 
 }
 
-HRESULT CModel::InitializePrototype(const char * pMeshFilePath, const char * pMeshFileName)
+HRESULT CModel::InitializePrototype(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
 {
+	m_pShader = make_unique<CShader>(pShaderFilePath);
+
 	char		szFullPath[MAX_PATH] = "";
 
-	strcpy_s(szFullPath, pMeshFilePath);
-	strcat_s(szFullPath, pMeshFileName);
+	//strcpy_s(szFullPath, pMeshFilePath);
+	//strcat_s(szFullPath, pMeshFileName);
 
-	m_pScene = m_Importer.ReadFile(szFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	string strFullPath = pMeshFileName + pMeshFileName;
+
+	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (nullptr == m_pScene)
 		return E_FAIL;
 
@@ -39,6 +46,7 @@ HRESULT CModel::InitializePrototype(const char * pMeshFilePath, const char * pMe
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;
 
+	m_MeshContainers.reserve(m_pScene->mNumMeshes);
 
 	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
@@ -46,7 +54,18 @@ HRESULT CModel::InitializePrototype(const char * pMeshFilePath, const char * pMe
 			return E_FAIL;
 	}
 
+	m_iStride = sizeof(VTXMESH);
 
+	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
+		return E_FAIL;
+
+	m_ModelTextures.reserve(m_pScene->mNumMaterials);
+
+	for (_uint i = 0; i < m_pScene->mNumMaterials; ++i)
+	{
+		if (FAILED(Create_Materials(m_pScene->mMaterials[i], pMeshFilePath)))
+			return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -57,8 +76,32 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
+HRESULT CModel::Render(_uint iPassIndex)
+{
+	if (nullptr == m_pDeviceContext)
+		return E_FAIL;
+
+	_uint		iOffSet = 0;
+
+	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
+	m_pDeviceContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	m_pShader->Render(iPassIndex);
+	//m_pDeviceContext->IASetInputLayout(m_EffectDescs[iPassIndex].pLayout);
+	//if (FAILED(m_EffectDescs[iPassIndex].pPass->Apply(0, m_pDeviceContext)))
+	//	return E_FAIL;
+
+	for (auto& pMeshContainer : m_MeshContainers)
+	{
+	}
+
+	return S_OK;
+}
+
 HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex)
 {
+	_uint		iStartVertexIndex = *pStartVertexIndex;
 
 	for (_uint i = 0; i < pMesh->mNumVertices; ++i)
 	{
@@ -73,6 +116,8 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 		++(*pStartVertexIndex);
 	}
 
+	_uint		iStartFaceIndex = *pStartFaceIndex;
+
 	for (_uint i = 0; i < pMesh->mNumFaces; ++i)
 	{
 		m_pPolygonIndices[*pStartFaceIndex]._0 = pMesh->mFaces[i].mIndices[0];
@@ -82,15 +127,105 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 	}
 
 
+	CMeshContainer*			pMeshContainer = CMeshContainer::Create(pMesh->mName.data, pMesh->mNumFaces, iStartFaceIndex, iStartVertexIndex);
+	if (nullptr == pMeshContainer)
+		return E_FAIL;
+
+	m_MeshContainers.push_back(pMeshContainer);
 
 	return S_OK;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const char * pMeshFilePath, const char * pMeshFileName)
+HRESULT CModel::Create_VertexIndexBuffer(string pShaderFilePath)
+{
+	/* For.VertexBuffer */
+	D3D11_BUFFER_DESC			BufferDesc;
+	ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	BufferDesc.ByteWidth = sizeof(VTXMESH) * m_iNumVertices;
+	BufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	BufferDesc.CPUAccessFlags = 0;
+	BufferDesc.MiscFlags = 0;
+	BufferDesc.StructureByteStride = sizeof(VTXMESH);
+
+	D3D11_SUBRESOURCE_DATA		SubResourceData;
+	ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	SubResourceData.pSysMem = m_pVertices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &SubResourceData, &m_pVB)))
+		return E_FAIL;
+
+
+	/* For.IndexBuffer */
+	ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	BufferDesc.ByteWidth = sizeof(POLYGONINDICES32) * m_iNumFaces;
+	BufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	BufferDesc.CPUAccessFlags = 0;
+	BufferDesc.MiscFlags = 0;
+	BufferDesc.StructureByteStride = 0;
+
+	ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	SubResourceData.pSysMem = m_pPolygonIndices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &SubResourceData, &m_pIB)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
+{
+	MODELTEXTURES*		pModelTexture = new MODELTEXTURES;
+	ZeroMemory(pModelTexture, sizeof(MODELTEXTURES));
+
+	for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+	{
+		aiString		strTexturePath;
+
+		if (FAILED(pMaterial->GetTexture(aiTextureType(i), 0, &strTexturePath)))
+			continue;
+
+		char	szTextureFileName[MAX_PATH] = "";
+		char	szExt[MAX_PATH] = "";
+
+		_splitpath(strTexturePath.data, nullptr, nullptr, szTextureFileName, szExt);
+		strcat_s(szTextureFileName, szExt);
+
+		//char		szFullPath[MAX_PATH] = "";
+		//strcpy_s(szFullPath, pMeshFilePath);
+		//strcat_s(szFullPath, szTextureFileName);
+
+		//_tchar		szWideFullPath[MAX_PATH] = TEXT("");
+
+		// Maybe?
+		string strFullPath = pMeshFilePath + szTextureFileName;
+		//MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szWideFullPath, MAX_PATH);
+
+		if (!strcmp(szExt, ".dds"))
+			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_DDS, strFullPath);
+		else if (!strcmp(szExt, ".tga"))
+			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, strFullPath);
+		else
+			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, strFullPath);
+	}
+
+
+	m_ModelTextures.push_back(pModelTexture);
+
+	return S_OK;
+}
+
+
+
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
 {
 	CModel*	pInstance = new CModel(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->InitializePrototype(pMeshFilePath, pMeshFileName)))
+	if (FAILED(pInstance->InitializePrototype(pMeshFilePath, pMeshFileName, pShaderFilePath)))
 	{
 		MSG_BOX("Failed To Creating CModel");
 		SafeRelease(pInstance);

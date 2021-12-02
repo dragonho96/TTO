@@ -7,19 +7,7 @@ BEGIN(Engine)
 class CShader
 {
 public:
-	typedef struct tagEffectDesc
-	{
-		ID3DX11EffectPass*			pPass = nullptr;
-		ID3D11InputLayout*			pLayout = nullptr;
-
-		D3DX11_PASS_DESC			Desc;
-		D3DX11_PASS_SHADER_DESC		PassVsDesc;
-		D3DX11_EFFECT_SHADER_DESC	EffectVsDesc;
-		vector<D3D11_SIGNATURE_PARAMETER_DESC> vecSignatureDescs;
-	}EFFECTDESC;
-
-public:
-	explicit CShader(wstring file);
+	explicit CShader(string file);
 	virtual ~CShader();
 
 public:
@@ -33,7 +21,7 @@ private:
 	//HRESULT CreateInputLayout();
 
 public:
-	HRESULT Compile_Shader(wstring pShaderFilePath, _uint iTechniqueIndex = 0);
+	HRESULT Compile_Shader(string pShaderFilePath, _uint iTechniqueIndex = 0);
 	HRESULT SetUp_ValueOnShader(const char* pConstantName, void* pData, _uint iByteSize);
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, class CTexture* pTextureComponent, _uint iTextureIndex = 0);
 	ID3D11InputLayout* CreateInputLayout(ID3DBlob* fxBlob, D3DX11_EFFECT_SHADER_DESC* effectVsDesc, vector<D3D11_SIGNATURE_PARAMETER_DESC>& params);
@@ -46,7 +34,7 @@ protected:
 
 private:
 
-	wstring shaderFile;
+	string shaderFile;
 	string vsName;
 	string psName;
 

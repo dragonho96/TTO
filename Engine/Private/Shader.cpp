@@ -2,7 +2,7 @@
 #include "..\Public\Shader.h"
 #include "Texture.h"
 
-CShader::CShader(wstring file)
+CShader::CShader(string file)
 	: shaderFile(file)
 {
 	Compile_Shader(file);
@@ -197,7 +197,7 @@ HRESULT CShader::Render(_uint iPassIndex)
 //}
 #pragma endregion VSPSSHADER
 
-HRESULT CShader::Compile_Shader(wstring pShaderFilePath, _uint iTechniqueIndex)
+HRESULT CShader::Compile_Shader(string pShaderFilePath, _uint iTechniqueIndex)
 {
 	_uint		iFlag = 0;
 
@@ -211,7 +211,7 @@ HRESULT CShader::Compile_Shader(wstring pShaderFilePath, _uint iTechniqueIndex)
 	ID3DBlob*		pCompileShaderErrorMessage = nullptr;
 
 	/* 외부에서 가져온 쉐이더 파일을 번역하여 바이너리화하였고 메모리영역안에 ㄷ마았다. */
-	if (FAILED(D3DCompileFromFile(pShaderFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMessage)))
+	if (FAILED(D3DCompileFromFile(StringToWString(pShaderFilePath).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMessage)))
 		return E_FAIL;
 
 	if (FAILED(D3DX11CreateEffectFromMemory(pCompileShader->GetBufferPointer(), pCompileShader->GetBufferSize(), 0, CEngine::GetInstance()->GetDevice(), &m_pEffect)))

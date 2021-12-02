@@ -2,6 +2,11 @@
 
 namespace Engine
 {
+	typedef struct TagModelTextures
+	{
+		class CTexture*		pModelTexture[AI_TEXTURE_TYPE_MAX];
+	}MODELTEXTURES;
+
 	typedef struct tagVertex_Mesh
 	{
 		XMFLOAT3		vPosition;
@@ -56,6 +61,18 @@ namespace Engine
 	{
 		unsigned long	_0, _1, _2;
 	}POLYGONINDICES32;
+
+	typedef struct tagEffectDesc
+	{
+		ID3DX11EffectPass*			pPass = nullptr;
+		ID3D11InputLayout*			pLayout = nullptr;
+
+		D3DX11_PASS_DESC			Desc;
+		D3DX11_PASS_SHADER_DESC		PassVsDesc;
+		D3DX11_EFFECT_SHADER_DESC	EffectVsDesc;
+		vector<D3D11_SIGNATURE_PARAMETER_DESC> vecSignatureDescs;
+	}EFFECTDESC;
+
 }
 
 

@@ -97,7 +97,7 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 	if (pArg)
 		m_pRectTransform = (CRectTransform*)pArg;
 
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_RectImage.fx");
+	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_RectImage.fx");
 	//m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, L"../../Assets/Texture/Isu.png");
 
 	return S_OK;

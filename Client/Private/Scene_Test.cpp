@@ -63,6 +63,8 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
+	ReadyModel();
+
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
@@ -180,6 +182,14 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
+	return S_OK;
+}
+
+HRESULT CScene_Test::ReadyModel()
+{
+	if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../Bin/Resources/Meshes/Kaelthas/", "Kaelthas.fbx", "../Bin/ShaderFiles/Shader_Mesh.fx"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

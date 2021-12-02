@@ -20,7 +20,7 @@ CLine::~CLine()
 void CLine::Initialize(_float3* lines, UINT lineCount)
 {
 	// Create Shader
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Tutorial05.fx");
+	m_pShader = make_unique<CShader>("../../Assets/Shader/Tutorial05.fx");
 	m_pTransform = CTransform::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext());
 
 	if (m_eTopology == D3D11_PRIMITIVE_TOPOLOGY_LINELIST)
