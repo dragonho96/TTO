@@ -27,7 +27,7 @@ GameObjects:
       Scale: [1, 1, 1]
     Com_VIBuffer:
       Type: Terrain
-      HeightMapPath: ..\..\Assets\Texture\heightmapTest.bmp
+      HeightMapPath: ..\..\Assets\Texture\Height.bmp
       TexturePath: ../../Assets/Texture/Folder.png
   - Name: Box
     UUID: 4195299383995526939

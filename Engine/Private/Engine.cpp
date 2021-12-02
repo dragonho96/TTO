@@ -204,6 +204,14 @@ void CEngine::RenderClient()
 	return m_pGraphicDevice->RenderClient();
 }
 
+void CEngine::RenderFont()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->RenderFont();
+}
+
 HRESULT CEngine::Present()
 {
 	if (nullptr == m_pGraphicDevice)

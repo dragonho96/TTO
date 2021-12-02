@@ -99,7 +99,7 @@ HRESULT CMainApp::Render()
 	/* 필요한 객체들을 백버퍼에 그린다. */
 	m_pRenderer->DrawRenderGroup();
 	m_pEngine->RenderScene();
-	
+	m_pEngine->RenderFont();
 	// ImGui
 	m_pEngine->UpdateImGui();
 	// ImGui::EndFrame();

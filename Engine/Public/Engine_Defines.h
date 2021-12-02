@@ -4,6 +4,7 @@
 #pragma warning(disable: 4275)
 #define _CRT_SECURE_NO_WARNINGS
 
+
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
@@ -20,6 +21,10 @@
 #include "d3dxGlobal.h"
 #include "DirectXTex.h"
 #include <DirectXMath.h>
+
+#include "DirectXTK/SpriteBatch.h"
+#include "DirectXTK/SpriteFont.h"
+
 //#include <DirectXPackedVector.h>
 //using namespace DirectX::PackedVector;
 

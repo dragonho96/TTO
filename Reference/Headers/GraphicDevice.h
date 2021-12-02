@@ -21,6 +21,7 @@ public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
 	void RenderClient();
+	void RenderFont();
 	void SetRTV2();
 	void SetRTV();
 	HRESULT Present();
@@ -63,6 +64,9 @@ private:
 	ComRef<ID3D11Buffer>				g_pConstantBuffer = NULL;
 	ComRef<ID3D11Buffer>				g_pLightBuffer = NULL;
 	ComRef<ID3D11SamplerState>			m_sampleState = NULL;
+
+	Scope<DirectX::SpriteBatch>			m_pSpriteBatch;
+	Scope<DirectX::SpriteFont>			m_pSpriteFont;
 
 	XMMATRIX					g_World1;
 	XMMATRIX					g_World2;

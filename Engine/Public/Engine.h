@@ -47,6 +47,7 @@ public:
 	void						SetRTV2();
 	void						Render();
 	void						RenderClient();
+	void						RenderFont();
 	HRESULT						Present();
 	HRESULT						ChangeResolution(_uint iWidth, _uint iHeight);
 	void						ChangeProj(_uint iWidth, _uint iHeight);

@@ -50,6 +50,8 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
+	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
+	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
 
 
 	Initialize(iWidth, iHeight);
@@ -79,6 +81,7 @@ HRESULT CGraphicDevice::Clear_DepthStencilView(_float fDepth, _uint iStencil)
 
 HRESULT CGraphicDevice::Present()
 {
+
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
 
@@ -151,6 +154,14 @@ void CGraphicDevice::RenderClient()
 {
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+}
+
+void CGraphicDevice::RenderFont()
+{
+	m_pSpriteBatch->Begin();
+	m_pSpriteFont->DrawString(m_pSpriteBatch.get(), L"Hello WOrld", XMFLOAT2(100, 100)/*, DirectX::Colors::White, 0.f, XMFLOAT2(0.f, 0.f), XMFLOAT2(3.f, 3.f)*/);
+	m_pSpriteBatch->End();
+	
 }
 
 void CGraphicDevice::SetRTV2()

@@ -63,14 +63,14 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
-	ReadyModel();
+	// ReadyModel();
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
 
-	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
-		return E_FAIL;
+	//if (FAILED(ReadyLayerGrid("LAYER_GRID")))
+	//	return E_FAIL;
 
 	m_pPathFinding = CPathFinding::GetInstance();
 	m_pPathFinding->Initialize();
