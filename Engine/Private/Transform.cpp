@@ -20,6 +20,17 @@ _float CTransform::GetScale(STATE eState)
 	return XMVectorGetX(XMVector3Length(GetState(eState)));	
 }
 
+void CTransform::SetPxMatrix(PxMat44 mat)
+{
+	memcpy(&m_WorldMatrix, &mat, sizeof(_float4x4));
+}
+
+void CTransform::SetPxPosition(PxExtendedVec3 vec3)
+{
+	_float3 newPos = { (float)vec3.x, (float)vec3.y, (float)vec3.z };
+	SetState(CTransform::STATE_POSITION, XMLoadFloat3(&newPos));
+}
+
 HRESULT CTransform::InitializePrototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());

@@ -41,3 +41,10 @@ extern CGameObject* g_pObjFocused;
 #define WINCX	1280
 #define WINCY	720
 #define FILESYSTEM std::experimental::filesystem
+
+
+#define	ADDLOG(log)																	\
+	if (CEngine::GetInstance()->GetWindow("Log"))									\
+	{																				\
+		dynamic_cast<CLog*>(CEngine::GetInstance()->GetWindow("Log"))->AddLog(log); \
+	}	

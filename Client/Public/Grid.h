@@ -32,6 +32,10 @@ public:
 	void SetUpGrid();
 	list<CNode*> GetNeighbours(CNode* node);
 	_int GetMaxSize() { m_Desc.iSizeX * m_Desc.iSizeZ; }
+	void ResetColor();
+	const GRIDDESC GetDesc() { return m_Desc; }
+	_bool ValidateNode(_int checkX, _int checkZ);
+	CNode* GetNode(_int checkX, _int checkZ);
 private:
 	GRIDDESC		m_Desc;
 	vector<CNode*>	m_Nodes;

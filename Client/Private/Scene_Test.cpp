@@ -72,6 +72,7 @@ HRESULT CScene_Test::Initialize()
 
 	m_pPathFinding = CPathFinding::GetInstance();
 	m_pPathFinding->Initialize();
+
 	return S_OK;
 }
 
@@ -165,7 +166,7 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	CGrid::GRIDDESC desc = { 16, 16, 1.2f };
+	CGrid::GRIDDESC desc = { 20, 20, 1.2f };
 
 
 	if (nullptr == pEngine->AddGameObject(0, "GameObject_Grid", pLayerTag, &desc))

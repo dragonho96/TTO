@@ -22,43 +22,42 @@ GameObjects:
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [0, 0, 0]
+      Translation: [0, 0.272737265, 0]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_VIBuffer:
       Type: Terrain
       HeightMapPath: ../../Assets/Texture/Height.bmp
       TexturePath: ../../Assets/Texture/Folder.png
-  - Name: Empty Object
+  - Name: Box
     UUID: 4195299383995526939
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [12.2391357, 14.0714407, 12.3010969]
+      Translation: [11.8143559, 1.96918488, 9.94271278]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
       Type: Box
-      Size: [1, 1, 1]
+      Size: [3.29999995, 1.70000005, 6.4000001]
       RigidBody:
-        Enabled: true
+        Enabled: false
         Gravity: true
         Kinematic: false
         CharacterController: false
-  - Name: Empty Object
-    UUID: 11077244451855431660
+  - Name: Box2
+    UUID: 14067183976447641020
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [24.8315926, 21.8075199, 16.2578316]
+      Translation: [8.13800335, 1.25642669, 16.4694252]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
-      Type: Capsule
-      Radius: 0.5
-      Height: 1
+      Type: Box
+      Size: [4.5999999, 1, 7.19999981]
       RigidBody:
-        Enabled: true
+        Enabled: false
         Gravity: false
-        Kinematic: true
+        Kinematic: false
         CharacterController: false

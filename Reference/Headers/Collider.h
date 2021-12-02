@@ -28,6 +28,7 @@ public:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
+	virtual _uint	LateUpdate(double deltaTime);
 	virtual HRESULT Render();
 
 public:

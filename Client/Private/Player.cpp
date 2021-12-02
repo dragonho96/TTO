@@ -69,12 +69,12 @@ void CPlayer::Update(_double deltaTime)
 		{
 			m_pController->move(-pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
-
-		PxExtendedVec3 pos = m_pController->getPosition();
-		_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
-		m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&newPos));
-
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
+
+		//PxExtendedVec3 pos = m_pController->getPosition();
+		//_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
+		//m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&newPos));
+
 	}
 }
 
