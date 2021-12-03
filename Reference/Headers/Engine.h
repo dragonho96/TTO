@@ -36,6 +36,11 @@ public:
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView();
 	ID3D11ShaderResourceView*	GetShaderResourceView();
 	ID3D11Buffer*				GetConstantBuffer();
+	SpriteBatch*				GetSpriteBatch();
+	SpriteFont*					GetSpriteFont();
+
+	_float2						GetCurrentWindowSize();
+
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();
@@ -47,6 +52,7 @@ public:
 	void						SetRTV2();
 	void						Render();
 	void						RenderClient();
+	void						RenderFont();
 	HRESULT						Present();
 	HRESULT						ChangeResolution(_uint iWidth, _uint iHeight);
 	void						ChangeProj(_uint iWidth, _uint iHeight);

@@ -151,6 +151,21 @@ ID3D11Buffer * CEngine::GetConstantBuffer()
 	return m_pGraphicDevice->GetConstantBuffer();
 }
 
+SpriteBatch * CEngine::GetSpriteBatch()
+{
+	return m_pGraphicDevice->GetSpriteBatch();;
+}
+
+SpriteFont * CEngine::GetSpriteFont()
+{
+	return m_pGraphicDevice->GetSpriteFont();;
+}
+
+_float2 CEngine::GetCurrentWindowSize()
+{
+	return m_pGraphicDevice->GetCurrentWindowSize();
+}
+
 XMMATRIX CEngine::GetViewMatrix()
 {
 	return m_pGraphicDevice->GetViewMatrix();
@@ -202,6 +217,14 @@ void CEngine::RenderClient()
 		return;
 
 	return m_pGraphicDevice->RenderClient();
+}
+
+void CEngine::RenderFont()
+{
+	if (nullptr == m_pGraphicDevice)
+		return;
+
+	return m_pGraphicDevice->RenderFont();
 }
 
 HRESULT CEngine::Present()

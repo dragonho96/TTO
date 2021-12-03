@@ -21,6 +21,7 @@ public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
 	void RenderClient();
+	void RenderFont();
 	void SetRTV2();
 	void SetRTV();
 	HRESULT Present();
@@ -35,7 +36,10 @@ public:
 	ID3D11RenderTargetView*		GetRenderTargetView() { return m_pBackBufferRTV.Get(); }
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV.Get(); }
 	ID3D11ShaderResourceView*	GetShaderResourceView() { return m_pShaderResourceView.Get(); }
+	SpriteBatch*				GetSpriteBatch() { return m_pSpriteBatch.get(); }
+	SpriteFont*					GetSpriteFont() { return m_pSpriteFont.get(); }
 
+	_float2						GetCurrentWindowSize() { return m_currentWindowSize; }
 	// Take this to camera later
 public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
@@ -64,11 +68,15 @@ private:
 	ComRef<ID3D11Buffer>				g_pLightBuffer = NULL;
 	ComRef<ID3D11SamplerState>			m_sampleState = NULL;
 
+	Scope<DirectX::SpriteBatch>			m_pSpriteBatch;
+	Scope<DirectX::SpriteFont>			m_pSpriteFont;
+
 	XMMATRIX					g_World1;
 	XMMATRIX					g_World2;
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
 
+	_float2						m_currentWindowSize;
 
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);

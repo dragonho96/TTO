@@ -184,7 +184,8 @@ void CGizmo::ManipulateUI()
 
 
 	/* TODO : Get WinSize */
-	XMMATRIX projMatrix = XMMatrixOrthographicLH(1280, 720, 0.0f, 1.f);
+	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
+	XMMATRIX projMatrix = XMMatrixOrthographicLH(winSize.x, winSize.y, 0.0f, 1.f);
 	//XMMATRIX projMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ);
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);

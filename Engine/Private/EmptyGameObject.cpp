@@ -1,4 +1,5 @@
 #include "..\Public\EmptyGameObject.h"
+#include "Engine.h"
 
 USING(Engine)
 

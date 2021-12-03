@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VIBuffer.h"
-#include "Texture.h"
+#include "Shader.h"
 
 BEGIN(Engine)
 
@@ -33,11 +33,11 @@ public:
 private:
 	_uint			m_iNumVerticesX = 0;
 	_uint			m_iNumVerticesZ = 0;
-	wstring			m_HeightMapPath = TEXT("../../Assets/Texture/Height.bmp");
-	wstring			m_TexturePath = TEXT("../../Assets/Texture/Height.bmp");
+	string			m_HeightMapPath = "../../Assets/Texture/Height.bmp";
+	string			m_TexturePath = "../../Assets/Texture/Height.bmp";
 	void*			m_pCloneVertices = nullptr;
 	PxRigidStatic*	m_pTerrainActor = nullptr;
-	CTexture*		m_pTexture = nullptr;
+	class CTexture*		m_pTexture = nullptr;
 };
 
 END

@@ -20,24 +20,24 @@ private:
 	virtual ~CTransform() = default;
 public:
 	_vector GetState(STATE eState) {
-		//return *(_vector*)&m_WorldMatrix.m[eState][0];
-		_float4	output;
-		switch (eState)
-		{
-		case Engine::CTransform::STATE_RIGHT:
-			output = { m_WorldMatrix._11, m_WorldMatrix._12, m_WorldMatrix._13, m_WorldMatrix._14 };
-			break;
-		case Engine::CTransform::STATE_UP:
-			output = { m_WorldMatrix._21, m_WorldMatrix._22, m_WorldMatrix._23, m_WorldMatrix._24 };
-			break;
-		case Engine::CTransform::STATE_LOOK:
-			output = { m_WorldMatrix._31, m_WorldMatrix._32, m_WorldMatrix._33, m_WorldMatrix._34 };
-			break;
-		case Engine::CTransform::STATE_POSITION:
-			output = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43, m_WorldMatrix._44 };
-			break;
-		}
-		return XMLoadFloat4(&output);
+		return *(_vector*)&m_WorldMatrix.m[eState][0];
+		//_float4	output;
+		//switch (eState)
+		//{
+		//case Engine::CTransform::STATE_RIGHT:
+		//	output = { m_WorldMatrix._11, m_WorldMatrix._12, m_WorldMatrix._13, m_WorldMatrix._14 };
+		//	break;
+		//case Engine::CTransform::STATE_UP:
+		//	output = { m_WorldMatrix._21, m_WorldMatrix._22, m_WorldMatrix._23, m_WorldMatrix._24 };
+		//	break;
+		//case Engine::CTransform::STATE_LOOK:
+		//	output = { m_WorldMatrix._31, m_WorldMatrix._32, m_WorldMatrix._33, m_WorldMatrix._34 };
+		//	break;
+		//case Engine::CTransform::STATE_POSITION:
+		//	output = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43, m_WorldMatrix._44 };
+		//	break;
+		//}
+		//return XMLoadFloat4(&output);
 	}
 
 	_matrix GetWorldMatrixInverse() const {

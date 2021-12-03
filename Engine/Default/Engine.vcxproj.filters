@@ -175,6 +175,9 @@
     <Filter Include="01.Utility\03.Components\Model\MeshContainer">
       <UniqueIdentifier>{b659cce4-3466-4beb-9261-32b3a2ce3ea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\Text">
+      <UniqueIdentifier>{a209d404-db88-49ea-aeb1-686b3938a946}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -348,7 +351,12 @@
     <ClInclude Include="..\Public\Model.h">
       <Filter>01.Utility\03.Components\Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MeshContainer.h" />
+    <ClInclude Include="..\Public\MeshContainer.h">
+      <Filter>01.Utility\03.Components\Model\MeshContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Text.h">
+      <Filter>01.Utility\03.Components\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -504,6 +512,11 @@
     <ClCompile Include="..\Private\Model.cpp">
       <Filter>01.Utility\03.Components\Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MeshContainer.cpp" />
+    <ClCompile Include="..\Private\MeshContainer.cpp">
+      <Filter>01.Utility\03.Components\Model\MeshContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Text.cpp">
+      <Filter>01.Utility\03.Components\Text</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

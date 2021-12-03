@@ -56,6 +56,9 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(RenderUI()))
 		return E_FAIL;
 
+	if (FAILED(RenderText()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -143,6 +146,23 @@ HRESULT CRenderer::RenderUI()
 		}
 	}
 	m_RenderGroups[RENDER_UI].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderText()
+{
+	for (auto& pGameObject : m_RenderGroups[RENDER_TEXT])
+	{
+		if (nullptr != pGameObject)
+		{
+			if (FAILED(pGameObject->Render()))
+				return E_FAIL;
+
+			SafeRelease(pGameObject);
+		}
+	}
+	m_RenderGroups[RENDER_TEXT].clear();
 
 	return S_OK;
 }

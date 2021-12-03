@@ -1,12 +1,6 @@
-//--------------------------------------------------------------------------------------
-// File: Tutorial05.fx
-//
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//--------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------
-// Constant Buffer Variables
-//--------------------------------------------------------------------------------------
+#include "Shader_Defines.hpp"
+
 cbuffer ConstantBuffer : register( b0 )
 {
     matrix g_WorldMatrix;
@@ -56,6 +50,10 @@ technique11 DefaultDevice
 {
     pass DefaultPass
     {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS();
         PixelShader = compile ps_5_0 PS();
     }

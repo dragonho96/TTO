@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Node.h"
 
+
 USING(Client)
 
 CNode::CNode(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

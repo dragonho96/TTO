@@ -1,4 +1,7 @@
 #include "..\public\VIBuffer.h"
+#include "Transform.h"
+#include "Shader.h"
+#include "Engine.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)

@@ -4,6 +4,7 @@
 #pragma warning(disable: 4275)
 #define _CRT_SECURE_NO_WARNINGS
 
+
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
@@ -20,6 +21,10 @@
 #include "d3dxGlobal.h"
 #include "DirectXTex.h"
 #include <DirectXMath.h>
+
+#include "DirectXTK/SpriteBatch.h"
+#include "DirectXTK/SpriteFont.h"
+
 //#include <DirectXPackedVector.h>
 //using namespace DirectX::PackedVector;
 
@@ -40,6 +45,7 @@ using namespace physx;
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "ImGuizmo.h"
+#include "imgui_stdlib.h"
 
 #include <fmod.h>
 

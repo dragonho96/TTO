@@ -1,4 +1,7 @@
 #include "..\Public\VIBuffer_Terrain.h"
+#include "Texture.h"
+#include "Shader.h"
+#include "Engine.h"
 
 USING(Engine)
 
@@ -61,7 +64,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pShader = make_unique<CShader>(L"../../Assets/Shader/Shader_Terrain.fx");
+	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Terrain.fx");
 	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
 
 	return S_OK;
@@ -82,7 +85,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 {
 	SafeDeleteArray(*pVertices);
 
-	HANDLE		hFile = CreateFile(m_HeightMapPath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(StringToWString(m_HeightMapPath).c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -245,7 +248,7 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 
 void CVIBuffer_Terrain::SetHeightMapPath(string path)
 {
-	m_HeightMapPath = StringToWString(path);
+	m_HeightMapPath = path;
 	CreateBuffer(&m_pCloneVertices);
 
 	CreateHeightField(&m_pCloneVertices);
@@ -253,17 +256,17 @@ void CVIBuffer_Terrain::SetHeightMapPath(string path)
 
 void CVIBuffer_Terrain::SetTexturePath(string path)
 {
-	m_TexturePath = StringToWString(path);
+	m_TexturePath = path;
 }
 
 string CVIBuffer_Terrain::GetHeightMapPath()
 {
-	return WstringToString(m_HeightMapPath);
+	return m_HeightMapPath;
 }
 
 string CVIBuffer_Terrain::GetTexturePath()
 {
-	return WstringToString(m_TexturePath);
+	return m_TexturePath;
 }
 
 void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)

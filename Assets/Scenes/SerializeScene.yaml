@@ -27,7 +27,7 @@ GameObjects:
       Scale: [1, 1, 1]
     Com_VIBuffer:
       Type: Terrain
-      HeightMapPath: ../../Assets/Texture/Height.bmp
+      HeightMapPath: ..\..\Assets\Texture\Height.bmp
       TexturePath: ../../Assets/Texture/Folder.png
   - Name: Box
     UUID: 4195299383995526939
@@ -61,3 +61,17 @@ GameObjects:
         Gravity: false
         Kinematic: false
         CharacterController: false
+  - Name: Empty Object
+    UUID: 4007425820099043778
+    Layer: Default
+    Type: UI
+    Com_Transform:
+      Position: [406.585663, 362.467163]
+      Size: [123.599998, 147.899994]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 0]
+    Com_Text:
+      Text: sdfhgjgjhgjg
+      Color: [1, 1, 1, 1]
+      LayerDepth: 0

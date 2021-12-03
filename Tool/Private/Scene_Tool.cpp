@@ -12,6 +12,7 @@
 #include "VIBuffer_LineCapsule.h"
 #include "VIBuffer_RectUI.h"
 #include "VIBuffer_Terrain.h"
+#include "Text.h"
 #pragma endregion 
 
 #pragma region OBJECTS
@@ -84,6 +85,9 @@ HRESULT CScene_Tool::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_CapsuleCollider", CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;
