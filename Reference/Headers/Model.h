@@ -30,8 +30,8 @@ private:
 	vector<MODELTEXTURES*>				m_ModelTextures;
 
 private:
-	ID3D11Buffer*			m_pVB = nullptr;
-	ID3D11Buffer*			m_pIB = nullptr;
+	ComRef<ID3D11Buffer>			m_pVB = nullptr;
+	ComRef<ID3D11Buffer>			m_pIB = nullptr;
 	_uint					m_iStride = 0;
 
 protected:
@@ -41,10 +41,16 @@ protected:
 	Scope<class CShader>			m_pShader;
 
 private:
+	PxVec3*				m_pxVertices;
+	PxU32*				m_pxIndices;
+	PxTriangleMesh*		m_pPxMesh;
+private:
 	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex);
 	HRESULT Create_VertexIndexBuffer(string pShaderFilePath);
 	HRESULT Create_Materials(aiMaterial*	pMaterial, string pMeshFilePath);
 
+private:
+	void CreatePxMesh();
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, string pMeshFilePath, string pMeshFileName, string pShaderFilePath);
 	virtual CComponent* Clone(void* pArg) override;

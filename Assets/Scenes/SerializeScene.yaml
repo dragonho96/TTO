@@ -66,12 +66,12 @@ GameObjects:
     Layer: Default
     Type: UI
     Com_Transform:
-      Position: [488.232117, 406.753754]
-      Size: [50, 50]
+      Position: [406.585663, 362.467163]
+      Size: [123.599998, 147.899994]
     Com_VIBuffer:
       TexturePath: ""
-      Color: [0, 0, 0, 1]
+      Color: [0, 0, 0, 0]
     Com_Text:
-      Text: sdfsdf
+      Text: sdfhgjgjhgjg
       Color: [1, 1, 1, 1]
       LayerDepth: 0

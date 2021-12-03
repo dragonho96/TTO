@@ -2,6 +2,7 @@
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Engine.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -39,14 +40,17 @@ HRESULT CModel::InitializePrototype(string pMeshFilePath, string pMeshFileName, 
 
 	m_pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(m_pVertices, sizeof(VTXMESH) * m_iNumVertices);
+	m_pxVertices = new PxVec3[m_iNumVertices];
+	ZeroMemory(m_pxVertices, sizeof(PxVec3) * m_iNumVertices);
 
 	m_pPolygonIndices = new POLYGONINDICES32[m_iNumFaces];
 	ZeroMemory(m_pPolygonIndices, sizeof(POLYGONINDICES32) * m_iNumFaces);
+	m_pxIndices = new PxU32[m_iNumFaces * 3];
+	ZeroMemory(m_pxIndices, sizeof(PxU32) * m_iNumFaces * 3);
 
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;
 
-	m_MeshContainers.reserve(m_pScene->mNumMeshes);
 
 	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
@@ -67,6 +71,7 @@ HRESULT CModel::InitializePrototype(string pMeshFilePath, string pMeshFileName, 
 			return E_FAIL;
 	}
 
+	CreatePxMesh();
 
 	return S_OK;
 }
@@ -83,8 +88,8 @@ HRESULT CModel::Render(_uint iPassIndex)
 
 	_uint		iOffSet = 0;
 
-	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
-	m_pDeviceContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVB.GetAddressOf(), &m_iStride, &iOffSet);
+	m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), DXGI_FORMAT_R32_UINT, 0);
 	m_pDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_pShader->Render(iPassIndex);
@@ -113,6 +118,9 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 
 		memcpy(&m_pVertices[*pStartVertexIndex].vTangent, &pMesh->mTangents[i], sizeof(_float3));
 
+		// PhysX
+		memcpy(&m_pxVertices[*pStartVertexIndex], &pMesh->mVertices[i], sizeof(PxVec3));
+
 		++(*pStartVertexIndex);
 	}
 
@@ -123,6 +131,10 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 		m_pPolygonIndices[*pStartFaceIndex]._0 = pMesh->mFaces[i].mIndices[0];
 		m_pPolygonIndices[*pStartFaceIndex]._1 = pMesh->mFaces[i].mIndices[1];
 		m_pPolygonIndices[*pStartFaceIndex]._2 = pMesh->mFaces[i].mIndices[2];
+
+		m_pxIndices[(*pStartFaceIndex * 3)] = pMesh->mFaces[i].mIndices[0];
+		m_pxIndices[(*pStartFaceIndex * 3) + 1] = pMesh->mFaces[i].mIndices[1];
+		m_pxIndices[(*pStartFaceIndex * 3) + 2] = pMesh->mFaces[i].mIndices[2];
 		++(*pStartFaceIndex);
 	}
 
@@ -174,6 +186,7 @@ HRESULT CModel::Create_VertexIndexBuffer(string pShaderFilePath)
 	if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &SubResourceData, &m_pIB)))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -221,6 +234,39 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 
 
 
+void CModel::CreatePxMesh()
+{
+	CEngine* pEngine = CEngine::GetInstance();
+
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count = m_iNumVertices;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.points.data = m_pxVertices;
+
+	meshDesc.triangles.count = m_iNumFaces;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+	meshDesc.triangles.data = m_pxIndices;
+
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxTriangleMeshCookingResult::Enum result;
+	bool status = pEngine->GetCooking()->cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if (!status)
+		return;
+
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	m_pPxMesh = pEngine->GetPhysics()->createTriangleMesh(readBuffer);
+
+	PxTransform transform;
+	transform.q = PxIdentity;
+	transform.p = { 0, 0, 0 };
+	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
+	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
+	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);
+	m_pRigidActor->attachShape(*shape);
+	pEngine->AddActor(m_pRigidActor);
+	return;
+}
+
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
 {
 	CModel*	pInstance = new CModel(pDevice, pDeviceContext);
@@ -247,5 +293,17 @@ CComponent * CModel::Clone(void * pArg)
 
 void CModel::Free()
 {
+	for (auto& container : m_MeshContainers)
+		SafeRelease(container);
+
+	for (auto& texture : m_ModelTextures)
+		for (auto& tex : texture->pModelTexture)
+			SafeRelease(tex);
+
+	SafeDeleteArray(m_pVertices);
+	SafeDeleteArray(m_pPolygonIndices);
+	SafeDeleteArray(m_pxVertices);
+	SafeDeleteArray(m_pxIndices);
+
 	__super::Free();
 }

@@ -70,10 +70,11 @@ HRESULT CText::Render()
 	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
 	float xFactor = winSize.x / 1280.f;
 	float yFactor = winSize.y / 720.f;
-	_float2 vPos = { (desc.posX - (desc.sizeX / 2.f)) * xFactor, (desc.posY - (desc.sizeY / 2.f)) * yFactor };
+
 	CD3D11_RECT rt((desc.posX - (desc.sizeX / 2.f)) * xFactor, (desc.posY - (desc.sizeY / 2.f)) * yFactor, 
 		(desc.posX + (desc.sizeX / 2.f)) * xFactor,  (desc.posY + (desc.sizeY / 2.f)) * yFactor);
-	
+	_float2 vPos = { (float)rt.left, (float)rt.top };
+
 	ComRef<ID3D11RasterizerState> scissorState = nullptr;
 	CD3D11_RASTERIZER_DESC rsDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE,
 		0, 0.f, 0.f, TRUE, TRUE, TRUE, FALSE);
@@ -87,13 +88,13 @@ HRESULT CText::Render()
 	});
 
 	_float padding = desc.sizeX / 20.f;
-	_float textWidth = desc.sizeX - padding;
+	_float textWidth = (desc.sizeX - padding) * xFactor;
 
 	string newStr = "";
 	string strCheck = "";
 	_float4 size, charSize;
 	XMStoreFloat4(&size, m_pSpriteFont->MeasureString(m_strText.c_str()));
-
+	
 	for (int i = 0; i < m_strText.length(); ++i)
 	{
 		string charToAdd = m_strText.substr(i, 1);
@@ -103,16 +104,18 @@ HRESULT CText::Render()
 		if (*charToAdd.begin() == '\n')
 			strCheck = "";
 
-		_float4 newStrSize;
-		XMStoreFloat4(&newStrSize, m_pSpriteFont->MeasureString(strCheck.c_str()));
-		if (newStrSize.x * m_vScale.x >= textWidth)
+		_float4 curStrSize;
+		XMStoreFloat4(&curStrSize, m_pSpriteFont->MeasureString(strCheck.c_str()));
+		_float curStrWidth = curStrSize.x * m_vScale.x * xFactor;
+
+		if (curStrWidth >= textWidth)
 		{
 			newStr += '\n';
 			strCheck = "";
 		}
 	}
 
-	m_pSpriteFont->DrawString(m_pSpriteBatch, newStr.c_str(), vPos, XMLoadFloat4(&m_vColor), 0.f, XMFLOAT2(0.f, 0.f), m_vScale, DirectX::SpriteEffects_None, m_fLayerDepth);
+	m_pSpriteFont->DrawString(m_pSpriteBatch, newStr.c_str(), vPos, XMLoadFloat4(&m_vColor), 0.f, XMFLOAT2(0.f, 0.f), _float2{ m_vScale.x * xFactor, m_vScale.y * yFactor }, DirectX::SpriteEffects_None, m_fLayerDepth);
 	m_pSpriteBatch->End();
 
 	return S_OK;

@@ -63,7 +63,7 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
-	// ReadyModel();
+	//ReadyModel();
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
