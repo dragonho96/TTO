@@ -1,5 +1,5 @@
 #include "..\Public\EmptyUI.h"
-
+#include "Engine.h"
 USING(Engine)
 
 CEmptyUI::CEmptyUI(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
@@ -79,6 +79,10 @@ _uint CEmptyUI::LateUpdate(_double TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
+	CComponent* buffer = GetComponent("Com_Text");
+	if (buffer)
+		return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_TEXT, this);
+
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_UI, this);
 }
 
@@ -87,6 +91,10 @@ HRESULT CEmptyUI::Render()
 	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
+
+	CComponent* text = GetComponent("Com_Text");
+	if (text)
+		dynamic_cast<CText*>(text)->Render();
 
 	return S_OK;
 }

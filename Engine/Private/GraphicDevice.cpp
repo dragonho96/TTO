@@ -159,7 +159,7 @@ void CGraphicDevice::RenderClient()
 void CGraphicDevice::RenderFont()
 {
 	m_pSpriteBatch->Begin();
-	m_pSpriteFont->DrawString(m_pSpriteBatch.get(), L"Hello WOrld", XMFLOAT2(100, 100)/*, DirectX::Colors::White, 0.f, XMFLOAT2(0.f, 0.f), XMFLOAT2(3.f, 3.f)*/);
+	m_pSpriteFont->DrawString(m_pSpriteBatch.get(), "Hello WOrld", XMFLOAT2(100, 100)/*, DirectX::Colors::White, 0.f, XMFLOAT2(0.f, 0.f), XMFLOAT2(3.f, 3.f)*/);
 	m_pSpriteBatch->End();
 	
 }

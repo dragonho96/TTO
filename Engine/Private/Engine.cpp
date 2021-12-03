@@ -151,6 +151,16 @@ ID3D11Buffer * CEngine::GetConstantBuffer()
 	return m_pGraphicDevice->GetConstantBuffer();
 }
 
+SpriteBatch * CEngine::GetSpriteBatch()
+{
+	return m_pGraphicDevice->GetSpriteBatch();;
+}
+
+SpriteFont * CEngine::GetSpriteFont()
+{
+	return m_pGraphicDevice->GetSpriteFont();;
+}
+
 XMMATRIX CEngine::GetViewMatrix()
 {
 	return m_pGraphicDevice->GetViewMatrix();

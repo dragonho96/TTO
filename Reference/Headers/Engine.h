@@ -36,6 +36,9 @@ public:
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView();
 	ID3D11ShaderResourceView*	GetShaderResourceView();
 	ID3D11Buffer*				GetConstantBuffer();
+	SpriteBatch*				GetSpriteBatch();
+	SpriteFont*					GetSpriteFont();
+
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();

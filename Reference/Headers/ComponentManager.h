@@ -5,8 +5,11 @@
 #include "Texture.h"
 #include "Renderer.h"
 #include "Transform.h"
+#include "RectTransform.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
+#include "Text.h"
+#include "Collider.h"
 
 BEGIN(Engine)
 

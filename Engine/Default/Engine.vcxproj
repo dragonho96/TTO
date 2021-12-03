@@ -217,6 +217,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\ShaderBuffer.h" />
     <ClInclude Include="..\Public\SphereCollider.h" />
+    <ClInclude Include="..\Public\Text.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Sound.h" />
     <ClInclude Include="..\public\Timer.h" />
@@ -271,6 +272,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\ScriptObjectManager.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SphereCollider.cpp" />
+    <ClCompile Include="..\Private\Text.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Sound.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />

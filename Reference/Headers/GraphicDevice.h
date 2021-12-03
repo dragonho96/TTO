@@ -36,6 +36,8 @@ public:
 	ID3D11RenderTargetView*		GetRenderTargetView() { return m_pBackBufferRTV.Get(); }
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView() { return m_pDepthStencilRTV.Get(); }
 	ID3D11ShaderResourceView*	GetShaderResourceView() { return m_pShaderResourceView.Get(); }
+	SpriteBatch*				GetSpriteBatch() { return m_pSpriteBatch.get(); }
+	SpriteFont*					GetSpriteFont() { return m_pSpriteFont.get(); }
 
 	// Take this to camera later
 public:

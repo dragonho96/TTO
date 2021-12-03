@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Engine.h"
 
 BEGIN(Engine)
 
@@ -39,7 +38,7 @@ public:
 	void					SetTransformMat(_float4x4 _mat);
 
 private:
-	CEngine*				m_pEngine = nullptr;
+	class CEngine*				m_pEngine = nullptr;
 	_float4x4				m_ProjMatrix;
 	_float4x4				m_TransformMatrix;
 	RECTTRANSFORMDESC		m_TransformDesc;

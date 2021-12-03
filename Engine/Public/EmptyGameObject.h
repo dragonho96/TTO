@@ -4,7 +4,6 @@
 #include "Renderer.h"
 #include "Transform.h"
 #include "VIBuffer.h"
-#include "SphereCollider.h"
 
 BEGIN(Engine)
 

@@ -61,3 +61,13 @@ GameObjects:
         Gravity: false
         Kinematic: false
         CharacterController: false
+  - Name: Empty Object
+    UUID: 709654254270440947
+    Layer: Default
+    Type: UI
+    Com_Transform:
+      Position: [256.005005, 177.024994]
+      Size: [176.699997, 193.899994]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 0]

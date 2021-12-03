@@ -9,6 +9,7 @@
 #include "CapsuleCollider.h"
 #include "EmptyGameObject.h"
 #include "RectTransform.h"
+#include "Engine.h"
 USING(Tool)
 CInspector::CInspector()
 {
@@ -123,17 +124,22 @@ void CInspector::UpdateUI()
 			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_VIBuffer_RectUI", "Com_VIBuffer", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent");
 		}
+		if (ImGui::MenuItem("Text"))
+		{
+			/* Add Collider */
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_Text", "Com_Text", g_pObjFocused->GetComponent("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent");
+		}
+
 		ImGui::EndPopup();
 	}
 
-	ImGui::Separator();
 
 	DrawRectTransform();
 
-	ImGui::Separator();
-
 	DrawImage();
 
+	DrawTextUI();
 }
 
 void CInspector::DrawVec3(const string & label, _float3 & values)
@@ -251,6 +257,8 @@ void CInspector::DrawImage()
 	CComponent* pComponent;
 	if (pComponent = g_pObjFocused->GetComponent("Com_VIBuffer"))
 	{
+		ImGui::Separator();
+
 		if (ImGui::TreeNodeEx("Image"))
 		{
 			// TODO: Check if it has image source
@@ -282,6 +290,21 @@ void CInspector::DrawImage()
 			ImGui::TreePop();
 		}
 
+	}
+}
+
+void CInspector::DrawTextUI()
+{
+	CComponent* pComponent;
+	if (pComponent = g_pObjFocused->GetComponent("Com_Text"))
+	{
+		CText* pText = dynamic_cast<CText*>(pComponent);
+		ImGui::Separator();
+		if (ImGui::TreeNodeEx("Text"))
+		{
+			ImGui::InputTextMultiline("Text", &pText->GetText());
+			ImGui::TreePop();
+		}
 	}
 }
 
@@ -431,7 +454,8 @@ void CInspector::DrawRectTransform()
 		MSG_BOX("Failed to Get Transform");
 
 	CRectTransform::RECTTRANSFORMDESC desc = dynamic_cast<CRectTransform*>(pObjTransform)->GetTransformDesc();
-
+	
+	ImGui::Separator();
 	if (ImGui::TreeNodeEx("Rect Transform"))
 	{
 		DrawRectDesc("Position", desc.posX, desc.posY);
