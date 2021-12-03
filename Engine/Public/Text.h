@@ -19,19 +19,22 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	HRESULT		Render();
 public:
-	void SetTextInfo(string text, _float layerDepth = 0.f, _vector color = DirectX::Colors::White);
+	void SetTextInfo(string text, _float layerDepth = 0.f, _float4 color = {1.f, 1.f, 1.f, 1.f});
 public:
 	string& GetText() { return m_strText; }
-	_vector& GetColor() { return m_vColor; }
+	_float4& GetColor() { return m_vColor; }
+	_float	GetLayerDepth() { return m_fLayerDepth; }
+	_float2& GetScale() { return m_vScale; }
 
 private:
 	SpriteBatch*		m_pSpriteBatch;
 	SpriteFont*			m_pSpriteFont;
 private:
 	class CRectTransform*			m_pTransform;
-	string				m_strText = "";
-	_vector				m_vColor = DirectX::Colors::White;
-	_float				m_fLayerDepth = 0.f;
+	string							m_strText = "";
+	_float4							m_vColor = { 1.f, 1.f, 1.f, 1.f };
+	_float							m_fLayerDepth = 0.f;
+	_float2							m_vScale = { 1.f, 1.f };
 };
 
 END

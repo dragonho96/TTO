@@ -82,9 +82,9 @@ bool CRectTransform::IsMouseInRect()
 void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 {
 	m_TransformDesc = _desc;
-
-	int curWindowSizeX = 1280;
-	int curWindowSizeY = 720;
+	
+	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
+	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
 
 	float defaultWindowSizeX = 1280.f;
 	float defaultWindowSizeY = 720.f;
@@ -104,14 +104,12 @@ void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 	m_TransformMatrix._42 = -fPosY + (curWindowSizeY >> 1);
 
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((float)curWindowSizeX, (float)curWindowSizeY, 0.0f, 1.f));
-
-
 }
 
 void CRectTransform::SetTransformMat(_float4x4 _mat)
 {
-	int curWindowSizeX = 1280;
-	int curWindowSizeY = 720;
+	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
+	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
 	float defaultWindowSizeX = 1280.f;
 	float defaultWindowSizeY = 720.f;
 
@@ -120,4 +118,6 @@ void CRectTransform::SetTransformMat(_float4x4 _mat)
 	m_TransformDesc.sizeY = m_TransformMatrix._22 * (defaultWindowSizeY / curWindowSizeY);
 	m_TransformDesc.posX = (m_TransformMatrix._41 + (curWindowSizeX >> 1)) * (defaultWindowSizeX / curWindowSizeX);
 	m_TransformDesc.posY = (-m_TransformMatrix._42 + (curWindowSizeY >> 1)) * (defaultWindowSizeY / curWindowSizeY);
+
+
 }

@@ -1,4 +1,5 @@
 #include "..\Public\SceneSerializer.h"
+#include "Engine.h"
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
 #include "Layer.h"
@@ -188,7 +189,6 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 		out << YAML::EndMap;
 	}
-
 }
 
 void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
@@ -227,9 +227,29 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 		_float4 color = buffer->GetColor();
 		out << YAML::Key << "Color";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << color.x << color.y << color.z << color.z << YAML::EndSeq;
+		out << YAML::BeginSeq << color.x << color.y << color.z << color.w << YAML::EndSeq;
 
 		out << YAML::EndMap;
+	}
+	if (obj->GetComponent("Com_Text"))
+	{
+		CText* text = dynamic_cast<CText*>(obj->GetComponent("Com_Text"));
+
+		out << YAML::Key << "Com_Text";
+		out << YAML::BeginMap;
+
+		out << YAML::Key << "Text" << YAML::Value << text->GetText();
+
+		_float4 color = text->GetColor();
+
+		out << YAML::Key << "Color";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << color.x << color.y << color.z << color.w << YAML::EndSeq;
+
+		out << YAML::Key << "LayerDepth" << YAML::Value << text->GetLayerDepth();
+
+		out << YAML::EndMap;
+
 	}
 
 }
@@ -263,7 +283,7 @@ void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 	{
 		CComponent* pTransform = deserializedObject->GetComponent("Com_Transform");
 		deserializedObject->AddComponent(0, "Prototype_VIBuffer_RectUI", "Com_VIBuffer", pTransform);
-		CComponent* pVIBuffer = deserializedObject->GetComponent("Com_VIBuffer");;
+		CComponent* pVIBuffer = deserializedObject->GetComponent("Com_VIBuffer");
 
 		string texturePath = viBuffer["TexturePath"].as<string>();
 		if ("" != texturePath)
@@ -278,6 +298,26 @@ void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 		color.z = sequence[2].as<float>();
 		color.w = sequence[3].as<float>();
 		dynamic_cast<CVIBuffer_RectUI*>(pVIBuffer)->SetColor(color);
+	}
+	auto text = obj["Com_Text"];
+	if (text)
+	{
+		CComponent* pTransform = deserializedObject->GetComponent("Com_Transform");
+		deserializedObject->AddComponent(0, "Prototype_Text", "Com_Text", pTransform);
+		CText* pText = dynamic_cast<CText*>(deserializedObject->GetComponent("Com_Text"));
+
+		string strText = text["Text"].as<string>();
+
+		_float4 color;
+		auto sequence = text["Color"];
+		color.x = sequence[0].as<float>();
+		color.y = sequence[1].as<float>();
+		color.z = sequence[2].as<float>();
+		color.w = sequence[3].as<float>();
+
+		_float	layerDepth = text["LayerDepth"].as<float>();
+
+		pText->SetTextInfo(strText, layerDepth, color);
 	}
 }
 

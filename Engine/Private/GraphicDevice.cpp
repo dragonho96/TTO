@@ -56,6 +56,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	Initialize(iWidth, iHeight);
 
+	m_currentWindowSize.x = iWidth; m_currentWindowSize.y = iHeight;
 	return S_OK;
 }
 
@@ -250,7 +251,14 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	ReadyDepthStencilRenderTargetView(mode.Width, mode.Height);
 	ReadyViewport(mode.Width, mode.Height);
 
+	m_currentWindowSize.x = iWidth; m_currentWindowSize.y = iHeight;
 	Initialize(mode.Width, mode.Height);
+
+	m_pSpriteBatch.release();
+	m_pSpriteFont.release();
+	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
+	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
+
 	return S_OK;
 }
 

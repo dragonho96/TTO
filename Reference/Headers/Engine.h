@@ -39,6 +39,8 @@ public:
 	SpriteBatch*				GetSpriteBatch();
 	SpriteFont*					GetSpriteFont();
 
+	_float2						GetCurrentWindowSize();
+
 
 	XMMATRIX					GetViewMatrix();
 	XMMATRIX					GetProjectionMatrix();

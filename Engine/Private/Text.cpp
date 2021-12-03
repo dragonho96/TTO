@@ -67,8 +67,12 @@ HRESULT CText::Initialize(void * pArg)
 HRESULT CText::Render()
 {
 	CRectTransform::RECTTRANSFORMDESC desc = m_pTransform->GetTransformDesc();
-	_float2 vPos = { desc.posX - (desc.sizeX / 2.f), desc.posY - (desc.sizeY / 2.f) };
-	CD3D11_RECT rt(desc.posX - (desc.sizeX / 2.f), desc.posY - (desc.sizeY / 2.f) , desc.posX + (desc.sizeX / 2.f),  desc.posY + (desc.sizeY / 2.f));
+	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
+	float xFactor = winSize.x / 1280.f;
+	float yFactor = winSize.y / 720.f;
+	_float2 vPos = { (desc.posX - (desc.sizeX / 2.f)) * xFactor, (desc.posY - (desc.sizeY / 2.f)) * yFactor };
+	CD3D11_RECT rt((desc.posX - (desc.sizeX / 2.f)) * xFactor, (desc.posY - (desc.sizeY / 2.f)) * yFactor, 
+		(desc.posX + (desc.sizeX / 2.f)) * xFactor,  (desc.posY + (desc.sizeY / 2.f)) * yFactor);
 	
 	ComRef<ID3D11RasterizerState> scissorState = nullptr;
 	CD3D11_RASTERIZER_DESC rsDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE,
@@ -101,20 +105,20 @@ HRESULT CText::Render()
 
 		_float4 newStrSize;
 		XMStoreFloat4(&newStrSize, m_pSpriteFont->MeasureString(strCheck.c_str()));
-		if (newStrSize.x >= textWidth)
+		if (newStrSize.x * m_vScale.x >= textWidth)
 		{
 			newStr += '\n';
 			strCheck = "";
 		}
 	}
 
-	m_pSpriteFont->DrawString(m_pSpriteBatch, newStr.c_str(), vPos, m_vColor, 0.f, XMFLOAT2(0.f, 0.f), XMFLOAT2(1.f, 1.f), DirectX::SpriteEffects_None, m_fLayerDepth);
+	m_pSpriteFont->DrawString(m_pSpriteBatch, newStr.c_str(), vPos, XMLoadFloat4(&m_vColor), 0.f, XMFLOAT2(0.f, 0.f), m_vScale, DirectX::SpriteEffects_None, m_fLayerDepth);
 	m_pSpriteBatch->End();
 
 	return S_OK;
 }
 
-void CText::SetTextInfo(string text, _float layerDepth, _vector color)
+void CText::SetTextInfo(string text, _float layerDepth, _float4 color)
 {
 	m_strText = text;
 	m_fLayerDepth = layerDepth;

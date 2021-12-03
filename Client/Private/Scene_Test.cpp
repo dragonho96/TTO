@@ -123,6 +123,10 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_CapsuleCollider", CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	/* Text */
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	/* Prototype_BackGround */
 	if (FAILED(m_pEngine->AddPrototype("Prototype_Terrain", CTerrain::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
@@ -131,6 +135,8 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyUI", CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+
+
 
 	/* PathFinding*/
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))

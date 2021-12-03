@@ -39,6 +39,7 @@ public:
 	SpriteBatch*				GetSpriteBatch() { return m_pSpriteBatch.get(); }
 	SpriteFont*					GetSpriteFont() { return m_pSpriteFont.get(); }
 
+	_float2						GetCurrentWindowSize() { return m_currentWindowSize; }
 	// Take this to camera later
 public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
@@ -75,6 +76,7 @@ private:
 	XMMATRIX					g_View;
 	XMMATRIX					g_Projection;
 
+	_float2						m_currentWindowSize;
 
 public:
 	HRESULT ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight);

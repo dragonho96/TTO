@@ -161,6 +161,11 @@ SpriteFont * CEngine::GetSpriteFont()
 	return m_pGraphicDevice->GetSpriteFont();;
 }
 
+_float2 CEngine::GetCurrentWindowSize()
+{
+	return m_pGraphicDevice->GetCurrentWindowSize();
+}
+
 XMMATRIX CEngine::GetViewMatrix()
 {
 	return m_pGraphicDevice->GetViewMatrix();
