@@ -64,7 +64,10 @@
     <ClInclude Include="..\Public\Node.h">
       <Filter>PathFinding\Node</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PathFinding.h" />
+    <ClInclude Include="..\Public\PathFinding.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EquipButtonManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -121,7 +124,10 @@
     <ClCompile Include="..\Private\Node.cpp">
       <Filter>PathFinding\Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PathFinding.cpp" />
+    <ClCompile Include="..\Private\PathFinding.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EquipButtonManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -191,6 +197,9 @@
     </Filter>
     <Filter Include="PathFinding\Node">
       <UniqueIdentifier>{b89def4f-662e-4fe3-a8de-8777d9237882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EquipButtonManager">
+      <UniqueIdentifier>{f60c43d0-b6bb-4939-875a-ffc94f97533b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

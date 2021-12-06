@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Camera_Fly.h"
 #include "Engine.h"
-#include "Transform.h"
 
 USING(Client)
 CCamera_Fly::CCamera_Fly(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
@@ -24,9 +23,8 @@ HRESULT CCamera_Fly::InitializePrototype()
 
 HRESULT CCamera_Fly::Initialize(void * pArg)
 {
-	//if (FAILED(__super::Initialize(pArg)))
-	//	return E_FAIL;
-	__super::Initialize(pArg);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -76,6 +74,15 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 		}
 	}
 
+	string str = "";
+	_vector		vPosition = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	_float4 pos;
+	XMStoreFloat4(&pos, vPosition);
+	str = "" + to_string(pos.x) + ", " + to_string(pos.y) + ", " + to_string(pos.z);
+	ADDLOG(str.c_str());
+
+
+	
 	return __super::Update(TimeDelta);
 }
 

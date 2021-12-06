@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Player.h"
+#include "PxManager.h"
+#include "BoxCollider.h"
 
 USING(Client)
 
@@ -71,10 +73,48 @@ void CPlayer::Update(_double deltaTime)
 		}
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 
-		//PxExtendedVec3 pos = m_pController->getPosition();
-		//_float3 newPos = { (float)pos.x, (float)pos.y, (float)pos.z };
-		//m_pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&newPos));
 
+
+		//// Filter Raycast
+		//PxScene* scene;
+		//PxVec3 origin = ...;                 // [in] Ray origin
+		//PxVec3 unitDir = ...;                // [in] Normalized ray direction
+		//PxReal maxDistance = ...;            // [in] Raycast max distance
+		//PxRaycastBuffer hit;                 // [out] Raycast results
+
+		//									 // [in] Define filter for static objects only
+		//PxQueryFilterData filterData(PxQueryFlag::eSTATIC);
+
+		//// Raycast against static objects only
+		//// The main result from this call is the boolean 'status'
+		//bool status = scene->raycast(origin, unitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
+
+		if (CEngine::GetInstance()->IsKeyPressed('O'))
+		{
+			const PxU32 bufferSize = 256;
+	
+			PxOverlapHit hitBuffer[bufferSize];
+			PxOverlapBuffer hit(hitBuffer, bufferSize);            // [out] Overlap results
+			PxGeometry overlapShape = PxSphereGeometry(5.f);  // [in] shape to test for overlaps
+			PxTransform shapePose;    // [in] initial shape pose (at distance=0)
+			_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+			shapePose.q = PxIdentity;
+			memcpy(&shapePose.p, &position, sizeof(_float3));
+			PxQueryFilterData fd; 
+			//fd.flags = PxQueryFlag::eSTATIC;
+			fd.data.word0 = CPxManager::GROUP1;
+			bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
+			if (status)
+			{
+				for (PxU32 i = 0; i < hit.nbTouches; ++i)
+				{
+					if (static_cast<CBoxCollider*>(hit.touches[i].actor->userData))
+					{
+						int i = 0;
+					}
+				}
+			}
+		}
 	}
 }
 

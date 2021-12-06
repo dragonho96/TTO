@@ -5,6 +5,7 @@ USING(Client)
 IMPLEMENT_SINGLETON(CPathFinding)
 
 CPathFinding::CPathFinding()
+	: m_pGrid(nullptr), m_pPlayerTransform(nullptr)
 {
 }
 
@@ -27,7 +28,7 @@ void CPathFinding::Update()
 {
 	if (!m_pGrid)
 		return;
-	if (CEngine::GetInstance()->IsKeyDown('A'))
+	if (CEngine::GetInstance()->IsKeyDown('F'))
 	{
 		CEngine::GetInstance()->AddTimers("Timer_PathFinding");
 		CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");

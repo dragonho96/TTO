@@ -47,6 +47,8 @@ void CGameObject::SetInfo(string name, string layer, uint64_t uuid)
 	m_Name = name;
 	m_Layer = layer;
 	m_UUID = uuid;
+	m_pEngine->AddGameObjectWithName(name, this);
+	m_pEngine->AddGameObjectWithUUID(uuid, this);
 }
 
 void CGameObject::AddChild(CGameObject* pChild)

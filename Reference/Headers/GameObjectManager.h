@@ -27,10 +27,13 @@ public:
 	CGameObject* AddGameObject(_uint iSceneIndex, string sPrototypeTag, string pLayerTag, void* pArg);
 	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag);
 	unordered_map<string, CLayer*>* GetLayers() { return m_pGameObjects; }
+	void AddGameObjectWithUUID(uint64_t uuid, CGameObject* pObj) { m_pUUIDObjects.insert({ uuid, pObj }); }
+	void AddGameObjectWithName(string name, CGameObject* pObj) { m_pNameObjects.insert({ name, pObj }); }
 public:
 	CGameObject*	FindPrototype(string pPrototypeTag);
 	CLayer*			FindLayer(_uint iSceneIndex, string pLayerTag);
-
+	CGameObject*	FindGameObjectWithUUID(uint64_t uuid);
+	CGameObject*	FindGameObjectWithName(string name);
 private:
 	_uint		m_iNumScenes = 0;
 
@@ -39,6 +42,9 @@ private:
 
 	typedef unordered_map<string, CLayer*>		GAMEOBJECTS;
 	GAMEOBJECTS*										m_pGameObjects = nullptr;
+
+	unordered_map<uint64_t, CGameObject*>		m_pUUIDObjects;
+	unordered_map<string, CGameObject*>			m_pNameObjects;
 };
 
 END

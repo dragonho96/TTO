@@ -13,6 +13,7 @@
 #include "VIBuffer_RectUI.h"
 #include "VIBuffer_Terrain.h"
 #include "Text.h"
+#include "Model.h"
 #pragma endregion 
 
 #pragma region OBJECTS
@@ -88,6 +89,9 @@ HRESULT CScene_Tool::ReadyPrototypeComponent()
 		return E_FAIL;
 
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	return S_OK;

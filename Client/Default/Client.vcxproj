@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Fly.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\EquipButtonManager.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Log.h" />
@@ -209,6 +210,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
+    <ClCompile Include="..\Private\EquipButtonManager.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />

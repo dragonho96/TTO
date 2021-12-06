@@ -25,8 +25,8 @@ public:
 public:
 	virtual void Free() override;
 private:
-	CGrid*			m_pGrid;
-	CTransform*		m_pPlayerTransform;
+	CGrid*			m_pGrid = nullptr;
+	CTransform*		m_pPlayerTransform = nullptr;
 	_double			m_dTimeElapsed = 0;
 	list<CNode*> openSet;
 	list<CNode*> closedSet;

@@ -121,9 +121,10 @@ HRESULT CText::Render()
 	return S_OK;
 }
 
-void CText::SetTextInfo(string text, _float layerDepth, _float4 color)
+void CText::SetTextInfo(string text, _float layerDepth, _float4 color, _float2 scale)
 {
 	m_strText = text;
 	m_fLayerDepth = layerDepth;
 	m_vColor = color;
+	m_vScale = scale;
 }

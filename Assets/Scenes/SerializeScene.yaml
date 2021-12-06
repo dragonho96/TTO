@@ -5,18 +5,21 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [13.503088, 20.5211258, 24.7535439]
+      Translation: [4.5999999, 7, 3.5999999]
       Rotation: [-0, 0, -0]
-      Scale: [1, 1, 1]
+      Scale: [0.999999821, 1, 0.999999821]
     Com_Collider:
       Type: Capsule
-      Radius: 0.5
-      Height: 1
+      Radius: 1.60000002
+      Height: 0.5
       RigidBody:
         Enabled: true
         Gravity: true
         Kinematic: false
         CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\test\
+      MeshFileName: untitled.fbx
   - Name: Empty Object
     UUID: 4963114123050138202
     Layer: Default
@@ -61,17 +64,62 @@ GameObjects:
         Gravity: false
         Kinematic: false
         CharacterController: false
-  - Name: Empty Object
-    UUID: 4007425820099043778
+  - Name: ItemCost
+    UUID: 16820890862738287227
     Layer: Default
     Type: UI
     Com_Transform:
-      Position: [406.585663, 362.467163]
-      Size: [123.599998, 147.899994]
+      Position: [257.748535, 100.25116]
+      Size: [70, 50]
     Com_VIBuffer:
       TexturePath: ""
-      Color: [0, 0, 0, 0]
+      Color: [0, 0, 0, 1]
     Com_Text:
-      Text: sdfhgjgjhgjg
+      Text: Cost
       Color: [1, 1, 1, 1]
+      Scale: [0.699999988, 0.699999988]
+      LayerDepth: 0
+  - Name: ItemName
+    UUID: 11681077865233003353
+    Layer: UI
+    Type: UI
+    Com_Transform:
+      Position: [145.438568, 100.204109]
+      Size: [120, 50]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.699999988, 0.699999988]
+      LayerDepth: 0
+  - Name: Primary
+    UUID: 969070893339113449
+    Layer: UI
+    Type: UI
+    Com_Transform:
+      Position: [170, 130]
+      Size: [300, 200]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\Folder.png
+      Color: [0.5289855, 0.35265699, 0.35265699, 1]
+    Children:
+      - 11681077865233003353
+      - 16820890862738287227
+      - 11702305349536459415
+  - Name: ItemType
+    UUID: 11702305349536459415
+    Layer: UI
+    Type: UI
+    Com_Transform:
+      Position: [123.259949, 181.6129]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [1, 0.617202282, 0.0217391253, 1]
+    Com_Text:
+      Text: Type
+      Color: [1, 1, 1, 1]
+      Scale: [0.699999988, 0.699999988]
       LayerDepth: 0

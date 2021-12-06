@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Transform.h"
 
 BEGIN(Engine)
 class ENGINE_DLL CCamera abstract : public CGameObject
@@ -11,7 +12,8 @@ public:
 		/* 카메라 복제본에게 필요한 정보들. */
 		_float3		vEye;
 		_float3		vAt;
-		_float3		vAxisY;
+		_float3		vAxisY = _float3(0.f, 1.f, 0.f);
+		CTransform::TRANSFORMDESC		TransformDesc;
 
 		///* 투영관련 정보. */
 		//_float		fAspect;

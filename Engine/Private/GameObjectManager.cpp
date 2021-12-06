@@ -126,6 +126,24 @@ CLayer * CGameObjectManager::FindLayer(_uint iSceneIndex, string pLayerTag)
 	return iter->second;
 }
 
+CGameObject * CGameObjectManager::FindGameObjectWithUUID(uint64_t uuid)
+{
+	auto find = m_pUUIDObjects.find(uuid);
+	if (find != m_pUUIDObjects.end())
+		return find->second;
+
+	return nullptr;
+}
+
+CGameObject * CGameObjectManager::FindGameObjectWithName(string name)
+{
+	auto find = m_pNameObjects.find(name);
+	if (find != m_pNameObjects.end())
+		return find->second;
+
+	return nullptr;
+}
+
 void CGameObjectManager::Free()
 {
 	for (_uint i = 0; i < m_iNumScenes; ++i)

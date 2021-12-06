@@ -63,8 +63,10 @@ void CTransform::GoStraight(_double TimeDelta)
 
 void CTransform::GoLeft(_double TimeDelta)
 {
-	_vector		vRight = GetState(CTransform::STATE_RIGHT);
-	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector			vPosition = _vector();
+	_vector			vRight = _vector();
+	vRight = GetState(CTransform::STATE_RIGHT);
+	vPosition = GetState(CTransform::STATE_POSITION);
 
 	vPosition += XMVector3Normalize(vRight) * m_TransformDesc.fSpeedPerSec * (_float)TimeDelta * -1.0f;
 
