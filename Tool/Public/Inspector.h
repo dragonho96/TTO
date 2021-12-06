@@ -23,6 +23,7 @@ public:
 	void DrawCollider();
 	void DrawTransform();
 	void DrawBuffer();
+	void DrawModel();
 
 public:
 	void DrawRectTransform();

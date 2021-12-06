@@ -10,6 +10,8 @@
 #include "EmptyGameObject.h"
 #include "RectTransform.h"
 #include "Engine.h"
+#include "Log.h"
+
 USING(Tool)
 CInspector::CInspector()
 {
@@ -94,6 +96,14 @@ void CInspector::UpdateGameObject()
 				MSG_BOX("Failed to AddComponent");
 		}
 
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Model"))
+		{
+			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_Model", "Com_Model", g_pObjFocused->GetComponent("Com_Transform"))))
+				MSG_BOX("Failed to AddComponent Model");
+		}
+
 		ImGui::EndPopup();
 	}
 
@@ -104,6 +114,10 @@ void CInspector::UpdateGameObject()
 	ImGui::Separator();
 
 	DrawBuffer();
+
+	ImGui::Separator();
+
+	DrawModel();
 
 	ImGui::Separator();
 
@@ -445,6 +459,54 @@ void CInspector::DrawBuffer()
 
 		if (bDelete)
 			g_pObjFocused->RemoveComponent("Com_VIBuffer");
+	}
+}
+
+void CInspector::DrawModel()
+{
+	CComponent* pModel = nullptr;
+	if (pModel = g_pObjFocused->GetComponent("Com_Model"))
+	{
+		bool bDelete = false;
+
+		if (dynamic_cast<CModel*>(pModel))
+		{
+			bool open = ImGui::TreeNodeEx("Model");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+			if (ImGui::Button("X##RemoveComponent"))
+				bDelete = true;
+
+			if (open)
+			{
+				string meshFileName = dynamic_cast<CModel*>(pModel)->GetMeshFileName().c_str();
+				meshFileName = meshFileName == "" ? "None" : meshFileName;
+				ImGui::Text(meshFileName.c_str());
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+					{
+						const char* s = (const char*)(payload->Data);
+
+						char	szTextureFileName[MAX_PATH] = "";
+						char	szExt[MAX_PATH] = "";
+						char	szDir[MAX_PATH] = "";
+						_splitpath(s, nullptr, szDir, szTextureFileName, szExt);
+
+						if (!strcmp(szExt, ".fbx") || !strcmp(szExt, ".Fbx") || !strcmp(szExt, ".FBX"))
+						{
+							strcat_s(szTextureFileName, szExt);
+							dynamic_cast<CModel*>(pModel)->CreateBuffer(szDir, szTextureFileName);
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (bDelete)
+			g_pObjFocused->RemoveComponent("Com_Model");
 	}
 }
 

@@ -58,6 +58,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 
 	m_currentWindowSize.x = iWidth; m_currentWindowSize.y = iHeight;
 	return S_OK;
+	
 }
 
 HRESULT CGraphicDevice::Clear_BackBufferView(_float4 vColor)

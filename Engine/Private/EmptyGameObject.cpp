@@ -89,6 +89,21 @@ HRESULT CEmptyGameObject::Render()
 	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
 		dynamic_cast<CVIBuffer*>(buffer)->Render();
+
+	CComponent* modelCom = GetComponent("Com_Model");
+	if (modelCom)
+	{
+		CModel* pModel = dynamic_cast<CModel*>(modelCom);
+		pModel->Bind_Buffers();
+
+		for (_uint i = 0; i < pModel->Get_NumMaterials(); ++i)
+		{
+			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+
+			// TODO: Handle passIndex
+			pModel->Render(i, 0);
+		}
+	}
 		
 	CComponent* collider = GetComponent("Com_Collider");
 	if (collider)

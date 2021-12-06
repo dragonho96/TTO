@@ -189,6 +189,19 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 		out << YAML::EndMap;
 	}
+
+	if (obj->GetComponent("Com_Model"))
+	{
+		CModel* pModel = dynamic_cast<CModel*>(obj->GetComponent("Com_Model"));
+
+		out << YAML::Key << "Com_Model";
+		out << YAML::BeginMap;
+
+		out << YAML::Key << "MeshFilePath" << YAML::Value << pModel->GetMeshFilePath();
+		out << YAML::Key << "MeshFileName" << YAML::Value << pModel->GetMeshFileName();
+
+		out << YAML::EndMap;
+	}
 }
 
 void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
@@ -423,5 +436,18 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			pTerrainBuffer->SetHeightMapPath(heightMapPath);
 			pTerrainBuffer->SetTexturePath(texturePath);
 		}
+	}
+
+	auto modelCom = obj["Com_Model"];
+	if (modelCom)
+	{
+		string meshFilePath = modelCom["MeshFilePath"].as<string>();
+		string meshFileName = modelCom["MeshFileName"].as<string>();
+
+		if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
+			MSG_BOX("Failed to AddComponent Prototype_Model");
+
+		CModel* pTerrainBuffer = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
+		pTerrainBuffer->CreateBuffer(meshFilePath, meshFileName);
 	}
 }

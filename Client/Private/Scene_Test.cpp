@@ -63,7 +63,7 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
-	//ReadyModel();
+	ReadyModel();
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
@@ -71,7 +71,6 @@ HRESULT CScene_Test::Initialize()
 
 	//if (FAILED(ReadyLayerGrid("LAYER_GRID")))
 	//	return E_FAIL;
-
 	m_pPathFinding = CPathFinding::GetInstance();
 	m_pPathFinding->Initialize();
 
@@ -125,6 +124,9 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 
 	/* Text */
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Prototype_BackGround */
@@ -193,8 +195,8 @@ HRESULT CScene_Test::ReadyScript()
 
 HRESULT CScene_Test::ReadyModel()
 {
-	if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../../Assets/Meshes/Kaelthas/", "Kaelthas.fbx", "../../Assets/Shader/Shader_Mesh.fx"))))
-		return E_FAIL;
+	//if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../../Assets/Meshes/Kaelthas/", "Kaelthas.fbx", "../../Assets/Shader/Shader_Mesh.fx"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

@@ -5,18 +5,21 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [13.503088, 20.5211258, 24.7535439]
+      Translation: [4.5999999, 7, 3.5999999]
       Rotation: [-0, 0, -0]
       Scale: [1, 1, 1]
     Com_Collider:
       Type: Capsule
-      Radius: 0.5
-      Height: 1
+      Radius: 1.60000002
+      Height: 0.5
       RigidBody:
         Enabled: true
         Gravity: true
         Kinematic: false
         CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Spongebob\
+      MeshFileName: Spongebob.FBX
   - Name: Empty Object
     UUID: 4963114123050138202
     Layer: Default
@@ -61,17 +64,3 @@ GameObjects:
         Gravity: false
         Kinematic: false
         CharacterController: false
-  - Name: Empty Object
-    UUID: 4007425820099043778
-    Layer: Default
-    Type: UI
-    Com_Transform:
-      Position: [406.585663, 362.467163]
-      Size: [123.599998, 147.899994]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 0]
-    Com_Text:
-      Text: sdfhgjgjhgjg
-      Color: [1, 1, 1, 1]
-      LayerDepth: 0

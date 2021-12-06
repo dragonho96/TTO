@@ -1,6 +1,6 @@
 #include "..\Public\BoxCollider.h"
 #include "Transform.h"
-
+#include "PxManager.h"
 
 CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
@@ -113,7 +113,9 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	geoSize = geoSize / 2;
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
 	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxBoxGeometry(geoSize), *pMaterial);
-
+	PxFilterData filterData;
+	filterData.word0 = CPxManager::GROUP2;
+	meshShape->setQueryFilterData(filterData);
 	// Make Dynamic
 	if (desc.bEnabled)
 	{
@@ -127,6 +129,7 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
 	}
 
+	m_pRigidActor->userData = this;
 	m_pRigidActor->attachShape(*meshShape);
 	m_pEngine->AddActor(m_pRigidActor);
 
