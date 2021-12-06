@@ -334,6 +334,26 @@ unordered_map<string, CLayer*>* CEngine::GetLayers()
 	return m_pGameObjectManager->GetLayers();
 }
 
+void CEngine::AddGameObjectWithName(string name, CGameObject * pObj)
+{
+	m_pGameObjectManager->AddGameObjectWithName(name, pObj);
+}
+
+void CEngine::AddGameObjectWithUUID(uint64_t uuid, CGameObject * pObj)
+{
+	m_pGameObjectManager->AddGameObjectWithUUID(uuid, pObj);
+}
+
+CGameObject * CEngine::FindGameObjectWithName(string name)
+{
+	return m_pGameObjectManager->FindGameObjectWithName(name);
+}
+
+CGameObject * CEngine::FindGameObjectWithUUID(uint64_t uuid)
+{
+	return m_pGameObjectManager->FindGameObjectWithUUID(uuid);
+}
+
 void CEngine::AddScriptObject(IScriptObject * pObj)
 {
 	m_pScriptObjectManager->AddObject(pObj);

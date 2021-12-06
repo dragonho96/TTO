@@ -53,6 +53,18 @@ void CSceneSerializer::Serialize(const string & filePath)
 			else
 				SerializeUI(out, obj);
 
+			if (0 < obj->GetChildren().size())
+			{
+				out << YAML::Key << "Children";
+				out << YAML::BeginSeq;
+
+				list<CGameObject*> children = obj->GetChildren();
+				for (auto& child : children)
+					out << child->GetUUID();
+
+				out << YAML::EndSeq;
+			}
+
 			out << YAML::EndMap;
 
 		}
@@ -83,13 +95,37 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 	{
 		for (auto obj : gameObjects)
 		{
+			CGameObject* deserializedObject = nullptr;
+
 			if (obj["Type"].as<string>() == "UI")
-				DeserializeUI(obj);
+				deserializedObject = DeserializeUI(obj);
 			else
-				DeserializeObject(obj);
+				deserializedObject = DeserializeObject(obj);
+
+
+		}
+
+		
+	}
+	if (gameObjects)
+	{
+		for (auto obj : gameObjects)
+		{
+			auto children = obj["Children"];
+			if (children)
+			{
+				CGameObject* parent = m_pEngine->FindGameObjectWithUUID(obj["UUID"].as<uint64_t>());
+				int seqSize = children.size();
+				for (int i = 0; i < children.size(); ++i)
+				{
+					uint64_t uuid = children[i].as<uint64_t>();
+					CGameObject* child = nullptr;
+					if (child = m_pEngine->FindGameObjectWithUUID(uuid))
+						parent->AddChild(child);
+				}
+			}
 		}
 	}
-
 	return true;
 }
 
@@ -167,7 +203,7 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::Key << "CharacterController" << YAML::Value << desc.bCC;
 
 		out << YAML::EndMap;
-		
+
 		out << YAML::EndMap;
 
 	}
@@ -201,6 +237,18 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::Key << "MeshFileName" << YAML::Value << pModel->GetMeshFileName();
 
 		out << YAML::EndMap;
+	}
+
+	if (0 < obj->GetChildren().size())
+	{
+		out << YAML::Key << "Children";
+		out << YAML::BeginSeq;
+
+		list<CGameObject*> children = obj->GetChildren();
+		for (auto& child : children)
+			out << child->GetUUID();
+
+		out << YAML::EndSeq;
 	}
 }
 
@@ -254,10 +302,14 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::Key << "Text" << YAML::Value << text->GetText();
 
 		_float4 color = text->GetColor();
+		_float2 scale = text->GetScale();
 
 		out << YAML::Key << "Color";
 		out << YAML::Value << YAML::Flow;
 		out << YAML::BeginSeq << color.x << color.y << color.z << color.w << YAML::EndSeq;
+
+		out << YAML::Key << "Scale" << YAML::Flow;
+		out << YAML::BeginSeq << scale.x << scale.y << YAML::EndSeq;
 
 		out << YAML::Key << "LayerDepth" << YAML::Value << text->GetLayerDepth();
 
@@ -267,7 +319,7 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 
 }
 
-void CSceneSerializer::DeserializeUI(YAML::Node& obj)
+CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 {
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
@@ -322,19 +374,27 @@ void CSceneSerializer::DeserializeUI(YAML::Node& obj)
 		string strText = text["Text"].as<string>();
 
 		_float4 color;
-		auto sequence = text["Color"];
-		color.x = sequence[0].as<float>();
-		color.y = sequence[1].as<float>();
-		color.z = sequence[2].as<float>();
-		color.w = sequence[3].as<float>();
+		auto sequenceColor = text["Color"];
+		color.x = sequenceColor[0].as<float>();
+		color.y = sequenceColor[1].as<float>();
+		color.z = sequenceColor[2].as<float>();
+		color.w = sequenceColor[3].as<float>();
+
+		_float2 scale;
+		auto sequenceScale = text["Scale"];
+		scale.x = sequenceScale[0].as<float>();
+		scale.y = sequenceScale[1].as<float>();
 
 		_float	layerDepth = text["LayerDepth"].as<float>();
 
-		pText->SetTextInfo(strText, layerDepth, color);
+		pText->SetTextInfo(strText, layerDepth, color, scale);
 	}
+
+	return deserializedObject;
+
 }
 
-void CSceneSerializer::DeserializeObject(YAML::Node & obj)
+CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 {
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
@@ -383,7 +443,7 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		string type = colliderCom["Type"].as<string>();
 		if (type == "Box")
 		{
-			if(deserializedObject->AddComponent(0, "Prototype_BoxCollider", "Com_Collider", deserializedObject->GetComponent("Com_Transform")))
+			if (deserializedObject->AddComponent(0, "Prototype_BoxCollider", "Com_Collider", deserializedObject->GetComponent("Com_Transform")))
 				MSG_BOX("Failed to AddComponent BoxCollider");
 
 			auto sequence = colliderCom["Size"];
@@ -450,4 +510,6 @@ void CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		CModel* pTerrainBuffer = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
 		pTerrainBuffer->CreateBuffer(meshFilePath, meshFileName);
 	}
+
+	return deserializedObject;
 }

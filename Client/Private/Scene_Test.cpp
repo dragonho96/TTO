@@ -27,6 +27,7 @@
 #pragma endregion
 
 #include "Player.h"
+#include "EquipButtonManager.h"
 USING(Client)
 
 CScene_Test::CScene_Test(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -190,6 +191,7 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
+	m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 	return S_OK;
 }
 

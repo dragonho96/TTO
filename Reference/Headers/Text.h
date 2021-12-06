@@ -19,7 +19,9 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	HRESULT		Render();
 public:
-	void SetTextInfo(string text, _float layerDepth = 0.f, _float4 color = {1.f, 1.f, 1.f, 1.f});
+	void SetTextInfo(string text, _float layerDepth = 0.f, _float4 color = { 1.f, 1.f, 1.f, 1.f }, _float2 scale = { 1.f, 1.f });
+	void SetString(string text) { m_strText = text; }
+
 public:
 	string& GetText() { return m_strText; }
 	_float4& GetColor() { return m_vColor; }

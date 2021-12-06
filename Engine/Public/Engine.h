@@ -80,6 +80,10 @@ public:
 	void	ClearGameObjectManager(_uint iSceneIndex);
 	list<class CGameObject*> GetGameObjectInLayer(_uint iSceneIndex, string pLayerTag);
 	unordered_map<string, CLayer*>* GetLayers();
+	void AddGameObjectWithName(string name, CGameObject* pObj);
+	void AddGameObjectWithUUID(uint64_t uuid, CGameObject* pObj);
+	CGameObject* FindGameObjectWithName(string name);
+	CGameObject* FindGameObjectWithUUID(uint64_t uuid);
 #pragma endregion
 
 #pragma region SCRIPTOBJECT
