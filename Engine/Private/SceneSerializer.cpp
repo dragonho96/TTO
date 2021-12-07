@@ -46,6 +46,7 @@ void CSceneSerializer::Serialize(const string & filePath)
 
 			out << YAML::Key << "Name" << YAML::Value << obj->GetName();
 			out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
+			out << YAML::Key << "Active" << YAML::Value << obj->IsActive();
 			out << YAML::Key << "Layer" << YAML::Value << obj->GetLayer();
 
 			if (dynamic_cast<CEmptyGameObject*>(obj))
@@ -256,6 +257,7 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 {
 
 	out << YAML::Key << "Type" << YAML::Value << "UI";
+	out << YAML::Key << "SortingOrder" << YAML::Value << dynamic_cast<CEmptyUI*>(obj)->GetSortingOrder();
 
 	if (obj->GetComponent("Com_Transform"))
 	{
@@ -324,9 +326,14 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
+	auto active = obj["Active"].as<_bool>();
+
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyUI", layer);
 
-	deserializedObject->SetInfo(name, layer, uuid);
+	deserializedObject->SetInfo(name, layer, uuid, active);
+
+	auto sortingOrder = obj["SortingOrder"].as<_int>();
+	dynamic_cast<CEmptyUI*>(deserializedObject)->SetSortingOrder(sortingOrder);
 
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
@@ -399,9 +406,11 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
+	auto active = obj["Active"].as<_bool>();
+
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyGameObject", layer);
 
-	deserializedObject->SetInfo(name, layer, uuid);
+	deserializedObject->SetInfo(name, layer, uuid, active);
 
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)

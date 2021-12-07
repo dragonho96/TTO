@@ -33,15 +33,24 @@ void CEquipButtonManager::Initialize()
 		}
 
 	}
+	m_pHoverInfo = CEngine::GetInstance()->FindGameObjectWithName("HoverInfo");
+
 }
 
 void CEquipButtonManager::Update(_double deltaTime)
 {
 	if (dynamic_cast<CEmptyUI*>(m_pPrimaryWeaponButton)->IsHovered())
 	{
-		int i = 0;
-		
+		m_pHoverInfo->SetActive(true);
+		_float3 mouse = CEngine::GetInstance()->GetMousePosition();
+		dynamic_cast<CEmptyUI*>(m_pHoverInfo)->SetPosition(mouse.x, mouse.y);
 	}
+	else
+	{
+		m_pHoverInfo->SetActive(false);
+	}
+
+	
 		return;
 }
 

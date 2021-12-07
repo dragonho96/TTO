@@ -11,6 +11,7 @@
 #include "RectTransform.h"
 #include "Engine.h"
 #include "Log.h"
+#include "EmptyUI.h"
 
 USING(Tool)
 CInspector::CInspector()
@@ -36,6 +37,13 @@ void CInspector::Update()
 		sprintf_s(buf, g_pObjFocused->GetName().c_str());
 		ImGui::InputText("##Name", buf, IM_ARRAYSIZE(buf));
 		g_pObjFocused->SetName(string(buf));
+
+		ImGui::SameLine();
+		//_bool& active = g_pObjFocused->IsActive();
+		//ImGui::Checkbox("##IsActive", &active);
+		_bool active = g_pObjFocused->IsActive();
+		ImGui::Checkbox("##IsActive", &active);
+		g_pObjFocused->SetActive(active);
 
 		ImGui::Separator();
 
@@ -273,7 +281,13 @@ void CInspector::DrawImage()
 	{
 		ImGui::Separator();
 
-		if (ImGui::TreeNodeEx("Image"))
+		bool bDelete = false;
+		bool open = ImGui::TreeNodeEx("Image");
+		ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+		if (ImGui::Button("X##RemoveComponent"))
+			bDelete = true;
+
+		if (open)
 		{
 			// TODO: Check if it has image source
 			string imageName = dynamic_cast<CVIBuffer_RectUI*>(pComponent)->GetTextureFilePath().c_str();
@@ -299,6 +313,8 @@ void CInspector::DrawImage()
 			ImGui::TreePop();
 		}
 
+		if (bDelete)
+			g_pObjFocused->RemoveComponent("Com_VIBuffer");
 	}
 }
 
@@ -309,7 +325,15 @@ void CInspector::DrawTextUI()
 	{
 		CText* pText = dynamic_cast<CText*>(pComponent);
 		ImGui::Separator();
-		if (ImGui::TreeNodeEx("Text"))
+
+
+		bool bDelete = false;
+		bool open = ImGui::TreeNodeEx("Text");
+		ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+		if (ImGui::Button("X##RemoveComponent"))
+			bDelete = true;
+
+		if (open)
 		{
 			ImGui::InputTextMultiline("Text", &pText->GetText());
 
@@ -320,6 +344,10 @@ void CInspector::DrawTextUI()
 			ImGui::ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags_Float);
 			ImGui::TreePop();
 		}
+
+
+		if (bDelete)
+			g_pObjFocused->RemoveComponent("Com_Text");
 	}
 }
 
@@ -377,8 +405,8 @@ void CInspector::DrawCollider()
 			ImGui::TreePop();
 		}
 
-		//if (bDelete)
-		//	g_pObjFocused->RemoveComponent(TEXT("Com_Collider"));
+		if (bDelete)
+			g_pObjFocused->RemoveComponent("Com_Collider");
 	}
 }
 
@@ -524,6 +552,8 @@ void CInspector::DrawRectTransform()
 		DrawRectDesc("Position", desc.posX, desc.posY);
 		DrawRectDesc("Size", desc.sizeX, desc.sizeY);
 
+		_int& order = dynamic_cast<CEmptyUI*>(g_pObjFocused)->GetSortingOrder();
+		ImGui::DragInt("Sortring Order", &order, 0.1f, 0, 10);
 		ImGui::TreePop();
 	}
 

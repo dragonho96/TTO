@@ -143,7 +143,6 @@ void CGizmo::LateUpdate()
 			ManipulateGameObject();
 		else
 			ManipulateUI();
-
 	}
 
 	ImGui::End();
@@ -175,14 +174,6 @@ void CGizmo::ManipulateUI()
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
 
-	//XMMATRIX viewMatrix = XMMatrixIdentity();
-	//XMFLOAT4X4 fView;
-	//viewMatrix = XMMatrixInverse(nullptr, viewMatrix);
-	//XMStoreFloat4x4(&fView, viewMatrix);
-	//memcpy(_view, &fView, sizeof(XMFLOAT4X4));
-
-
-
 	/* TODO : Get WinSize */
 	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
 	XMMATRIX projMatrix = XMMatrixOrthographicLH(winSize.x, winSize.y, 0.0f, 1.f);
@@ -190,7 +181,6 @@ void CGizmo::ManipulateUI()
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, projMatrix);
 	memcpy(_projection, &projection, sizeof(XMFLOAT4X4));
-
 
 	ImGuizmo::Manipulate(_viewUI, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 
@@ -202,37 +192,13 @@ void CGizmo::ManipulateUI()
 		MSG_BOX("Failed to Get Transform");
 
 	dynamic_cast<CRectTransform*>(pObjTransform)->SetTransformMat(objMat);
-
+	g_pObjFocused->LinkTranformWithParent();
 }
 
 void CGizmo::SetObjMat(float* mat)
 {
 	memcpy(_objMat, mat, sizeof(float) * 16);
-
-	//if (ImGui::IsWindowFocused())
-	//{
-	//	m_pGUIManager->AddLog("Gizmo Focused");
-	//}
-
-	//CEngine::GetInstance()->SetObjectMatrix(objMat);
-
-
-	//if (ImGui::BeginDragDropTarget())
-	//{
-	//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
-	//	{
-	//		//string s = *(static_cast<std::string *>(payload->Data));
-	//		//const int s = *(const int*)(payload->Data);
-	//		const char* s = (const char*)(payload->Data);
-	//		//string sdf = "ss" + to_string(s);
-
-	//		m_pGUIManager->AddLog(s);
-	//	}
-	//	ImGui::EndDragDropTarget();
-	//}
 }
-
-
 
 void CGizmo::SetNewGizmoMatrix(const GIZMOMATRIX & tMat)
 {

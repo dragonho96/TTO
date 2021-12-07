@@ -80,6 +80,7 @@ HRESULT CText::Render()
 		0, 0.f, 0.f, TRUE, TRUE, TRUE, FALSE);
 	if (FAILED(CEngine::GetInstance()->GetDevice()->CreateRasterizerState(&rsDesc, &scissorState)))
 		return E_FAIL;
+
 	m_pSpriteBatch->Begin(SpriteSortMode_Deferred,
 		nullptr, nullptr, nullptr, scissorState.Get(),
 		[&]()

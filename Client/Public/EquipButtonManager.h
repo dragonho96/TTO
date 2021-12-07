@@ -19,6 +19,7 @@ public:
 
 private:
 	class CGameObject* m_pPrimaryWeaponButton = nullptr;
+	class CGameObject* m_pHoverInfo = nullptr;
 };
 
 END

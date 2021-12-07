@@ -1,8 +1,9 @@
-#include "..\public\Model.h"
+﻿#include "..\public\Model.h"
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "Engine.h"
+#include "HierarchyNode.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -221,6 +222,23 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 	return S_OK;
 }
 
+HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, _uint iDepth)
+{
+	_matrix		TransformationMatrix;
+	memcpy(&TransformationMatrix, &pNode->mTransformation, sizeof(_matrix));
+
+	CHierarchyNode*		pHierarchyNode = CHierarchyNode::Create(pNode->mName.data, TransformationMatrix, pParent, iDepth);
+	if (nullptr == pHierarchyNode)
+		return E_FAIL;
+
+	m_HierarchyNodes.push_back(pHierarchyNode);
+
+	for (_uint i = 0; i < pNode->mNumChildren; ++i)
+		Create_HierarchyNodes(pNode->mChildren[i], pHierarchyNode, iDepth + 1);
+
+	return S_OK;
+}
+
 HRESULT CModel::Sort_MeshesByMaterial()
 {
 	{
@@ -238,6 +256,48 @@ HRESULT CModel::Sort_MeshesByMaterial()
 		}
 		return S_OK;
 	}
+}
+
+HRESULT CModel::SetUp_SkinnedInfo()
+{
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
+	{
+		aiMesh*		pMesh = m_pScene->mMeshes[i];
+		CMeshContainer*	pMeshContainer = m_MeshContainers[i];
+
+		for (_uint j = 0; j < pMesh->mNumBones; ++j)
+		{
+			aiBone*		pBone = pMesh->mBones[j];
+			if (nullptr == pBone)
+				return E_FAIL;
+
+			BONEDESC*	pBoneDesc = new BONEDESC;
+			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
+
+			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
+			memcpy(&pBoneDesc->OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
+
+
+
+			pMeshContainer->Add_Bones(pBoneDesc);
+		}
+	}
+
+
+	return S_OK;
+}
+
+CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
+	{
+		return !strcmp(pNode->Get_Name(), pBoneName);
+	});
+
+	if (iter == m_HierarchyNodes.end())
+		return nullptr;
+
+	return *iter;
 }
 
 
@@ -304,7 +364,22 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(Sort_MeshesByMaterial()))
 		return E_FAIL;
 
-	//CreatePxMesh();
+
+	if (false == m_pScene->HasAnimations())
+		return S_OK;
+
+	Create_HierarchyNodes(m_pScene->mRootNode);
+
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest) {
+		return pSour->Get_Depth() < pDest->Get_Depth();
+	});
+
+	SetUp_SkinnedInfo();
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		//CreatePxMesh();
+	}
+
 
 	return S_OK;
 }
@@ -328,6 +403,11 @@ void CModel::RemoveBuffer()
 	for (auto& mesh : m_SortByMaterialMesh)
 		mesh.clear();
 	m_SortByMaterialMesh.clear();
+
+	for (auto& node : m_HierarchyNodes)
+		SafeRelease(node);
+	m_HierarchyNodes.clear();
+
 
 	SafeDeleteArray(m_pVertices);
 	SafeDeleteArray(m_pPolygonIndices);

@@ -122,3 +122,7 @@ HRESULT CEmptyGameObject::SetUpComponents()
 
 	return S_OK;
 }
+
+void CEmptyGameObject::LinkTranformWithParent()
+{
+}

@@ -2,6 +2,7 @@ Scene: Untitled
 GameObjects:
   - Name: Player
     UUID: 7627985759431099672
+    Active: true
     Layer: Player
     Type: Object
     Com_Transform:
@@ -18,10 +19,11 @@ GameObjects:
         Kinematic: false
         CharacterController: true
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\test\
-      MeshFileName: untitled.fbx
+      MeshFilePath: ..\..\Assets\Meshes\Kaelthas\
+      MeshFileName: Kaelthas.FBX
   - Name: Empty Object
     UUID: 4963114123050138202
+    Active: true
     Layer: Default
     Type: Object
     Com_Transform:
@@ -34,6 +36,7 @@ GameObjects:
       TexturePath: ../../Assets/Texture/Folder.png
   - Name: Box
     UUID: 4195299383995526939
+    Active: true
     Layer: Default
     Type: Object
     Com_Transform:
@@ -50,6 +53,7 @@ GameObjects:
         CharacterController: false
   - Name: Box2
     UUID: 14067183976447641020
+    Active: true
     Layer: Default
     Type: Object
     Com_Transform:
@@ -66,14 +70,13 @@ GameObjects:
         CharacterController: false
   - Name: ItemCost
     UUID: 16820890862738287227
+    Active: true
     Layer: Default
     Type: UI
+    SortingOrder: 1
     Com_Transform:
-      Position: [257.748535, 100.25116]
+      Position: [336.676666, 126.024887]
       Size: [70, 50]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 1]
     Com_Text:
       Text: Cost
       Color: [1, 1, 1, 1]
@@ -81,14 +84,13 @@ GameObjects:
       LayerDepth: 0
   - Name: ItemName
     UUID: 11681077865233003353
+    Active: true
     Layer: UI
     Type: UI
+    SortingOrder: 1
     Com_Transform:
-      Position: [145.438568, 100.204109]
-      Size: [120, 50]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 1]
+      Position: [195.145782, 121.074783]
+      Size: [50, 50]
     Com_Text:
       Text: Name
       Color: [1, 1, 1, 1]
@@ -96,10 +98,12 @@ GameObjects:
       LayerDepth: 0
   - Name: Primary
     UUID: 969070893339113449
+    Active: true
     Layer: UI
     Type: UI
+    SortingOrder: 0
     Com_Transform:
-      Position: [170, 130]
+      Position: [249.37384, 146.493362]
       Size: [300, 200]
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Texture\Folder.png
@@ -110,16 +114,43 @@ GameObjects:
       - 11702305349536459415
   - Name: ItemType
     UUID: 11702305349536459415
+    Active: true
     Layer: UI
     Type: UI
+    SortingOrder: 1
     Com_Transform:
-      Position: [123.259949, 181.6129]
+      Position: [195.304871, 178.393448]
       Size: [100, 20]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [1, 0.617202282, 0.0217391253, 1]
     Com_Text:
       Text: Type
       Color: [1, 1, 1, 1]
       Scale: [0.699999988, 0.699999988]
+      LayerDepth: 0
+  - Name: HoverInfo
+    UUID: 13193214941280318446
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [522.403259, 394.86615]
+      Size: [200, 300]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\Folder.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 1253572750339471728
+  - Name: Title
+    UUID: 1253572750339471728
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [495.007141, 341.54303]
+      Size: [50, 50]
+    Com_Text:
+      Text: Title
+      Color: [1, 1, 1, 1]
+      Scale: [1, 1]
       LayerDepth: 0

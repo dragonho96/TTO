@@ -23,7 +23,11 @@ private:
 	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex);
 	HRESULT Create_VertexIndexBuffer(string pShaderFilePath);
 	HRESULT Create_Materials(aiMaterial*	pMaterial, string pMeshFilePath);
+	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0);
 	HRESULT Sort_MeshesByMaterial();
+	HRESULT SetUp_SkinnedInfo();
+	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
+
 
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
@@ -55,6 +59,7 @@ private:
 
 	vector<vector<class CMeshContainer*>>	m_SortByMaterialMesh;
 	vector<MODELTEXTURES*>					m_ModelTextures;
+	vector<class CHierarchyNode*>			m_HierarchyNodes;
 
 private:
 	ComRef<ID3D11Buffer>			m_pVB = nullptr;

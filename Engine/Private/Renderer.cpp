@@ -1,5 +1,6 @@
 #include "..\public\Renderer.h"
 #include "GameObject.h"
+#include "EmptyUI.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -134,6 +135,10 @@ HRESULT CRenderer::RenderUI()
 	//	return E_FAIL;
 
 	//m_pDeviceContext->OMSetBlendState(d3dBlendState.Get(), 0, 0xffffffff);
+
+	m_RenderGroups[RENDER_UI].sort([](CGameObject* pFirst, CGameObject* pSecond) {
+		return dynamic_cast<CEmptyUI*>(pFirst)->GetSortingOrder() < dynamic_cast<CEmptyUI*>(pSecond)->GetSortingOrder();
+	});
 
 	for (auto& pGameObject : m_RenderGroups[RENDER_UI])
 	{

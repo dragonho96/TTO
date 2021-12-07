@@ -27,16 +27,23 @@ public:
 
 public:
 	void SetRectTransform(CRectTransform::RECTTRANSFORMDESC _desc);
+	void SetPosition(_float x, _float y);
+	virtual void LinkTranformWithParent();
 
 public:
 	void InteractMouse();
 	bool IsHovered() { return m_bHover; }
 	bool IsSelected() { return m_bSelect; }
 
+public:
+	_int& GetSortingOrder() { return m_iSortingOrder; }
+	void SetSortingOrder(_int order) { m_iSortingOrder = order; }
+
 protected:
 	_bool m_bHover = false;
 	_bool m_bSelect = false;
-
+	_int	m_iSortingOrder = 0;
+	_float2	m_vTransformOffSet = { 0.f, 0.f };
 private:
 	HRESULT SetUpComponents();
 

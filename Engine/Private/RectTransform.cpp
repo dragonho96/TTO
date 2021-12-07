@@ -121,3 +121,9 @@ void CRectTransform::SetTransformMat(_float4x4 _mat)
 
 
 }
+
+void CRectTransform::SetPosition(_float x, _float y)
+{
+	RECTTRANSFORMDESC newDesc = { x, y, m_TransformDesc.sizeX, m_TransformDesc.sizeY };
+	SetTransformMat(newDesc);
+}

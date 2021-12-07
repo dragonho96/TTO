@@ -196,6 +196,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\GameObjectManager.h" />
     <ClInclude Include="..\Public\GlobalBuffers.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
+    <ClInclude Include="..\Public\HierarchyNode.h" />
     <ClInclude Include="..\Public\ImGuiManager.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
     <ClInclude Include="..\Public\IScriptObject.h" />
@@ -252,6 +253,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
     <ClCompile Include="..\Private\GraphicDevice.cpp" />
+    <ClCompile Include="..\Private\HierarchyNode.cpp" />
     <ClCompile Include="..\Private\ImGuiManager.cpp" />
     <ClCompile Include="..\Private\ImGuiWindow.cpp" />
     <ClCompile Include="..\Private\IScriptObject.cpp" />

@@ -69,6 +69,19 @@ _uint CEmptyUI::Update(_double TimeDelta)
 	if (__super::Update(TimeDelta))
 		return E_FAIL;
 
+	if (m_pParent || dynamic_cast<CEmptyUI*>(m_pParent))
+	{
+		CRectTransform* pParentTransform = dynamic_cast<CRectTransform*>(m_pParent->GetComponent("Com_Transform"));
+		CRectTransform::RECTTRANSFORMDESC parentDesc = pParentTransform->GetTransformDesc();
+		CRectTransform::RECTTRANSFORMDESC desc =  m_pRectTransformCom->GetTransformDesc();
+		CRectTransform::RECTTRANSFORMDESC newDesc = {
+			parentDesc.posX + m_vTransformOffSet.x,
+			parentDesc.posY + m_vTransformOffSet.y,
+			desc.sizeX, desc.sizeY
+		};
+
+		m_pRectTransformCom->SetTransformMat(newDesc);
+	}
 	InteractMouse();
 
 	return S_OK;
@@ -79,9 +92,8 @@ _uint CEmptyUI::LateUpdate(_double TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
-	CComponent* buffer = GetComponent("Com_Text");
-	if (buffer)
-		return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_TEXT, this);
+	if (!m_bIsActive)
+		return 1;
 
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_UI, this);
 }
@@ -102,6 +114,24 @@ HRESULT CEmptyUI::Render()
 void CEmptyUI::SetRectTransform(CRectTransform::RECTTRANSFORMDESC _desc)
 {
 	m_pRectTransformCom->SetTransformMat(_desc);
+}
+
+void CEmptyUI::SetPosition(_float x, _float y)
+{
+	m_pRectTransformCom->SetPosition(x, y);
+}
+
+void CEmptyUI::LinkTranformWithParent()
+{
+	if (m_pParent || dynamic_cast<CEmptyUI*>(m_pParent))
+	{
+		CRectTransform* pParentTransform = dynamic_cast<CRectTransform*>(m_pParent->GetComponent("Com_Transform"));
+		CRectTransform::RECTTRANSFORMDESC parentDesc = pParentTransform->GetTransformDesc();
+		CRectTransform::RECTTRANSFORMDESC desc = m_pRectTransformCom->GetTransformDesc();
+
+		m_vTransformOffSet.x = desc.posX - parentDesc.posX;
+		m_vTransformOffSet.y = desc.posY - parentDesc.posY;
+	}
 }
 
 void CEmptyUI::InteractMouse()

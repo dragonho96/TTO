@@ -17,6 +17,13 @@ HRESULT CMeshContainer::Initialize(const char* pName, _uint iNumFaces, _uint iSt
 	return S_OK;
 }
 
+HRESULT CMeshContainer::Add_Bones(BONEDESC * pBoneDesc)
+{
+	m_Bones.push_back(pBoneDesc);
+
+	return S_OK;
+}
+
 CMeshContainer * CMeshContainer::Create(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex)
 {
 	CMeshContainer*	pInstance = new CMeshContainer();
@@ -31,4 +38,7 @@ CMeshContainer * CMeshContainer::Create(const char* pName, _uint iNumFaces, _uin
 
 void CMeshContainer::Free()
 {
+	for (auto& bone : m_Bones)
+		SafeDelete(bone);
+	m_Bones.clear();
 }

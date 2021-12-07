@@ -28,14 +28,20 @@ public:
 public:
 	uint64_t GetUUID() { return m_UUID(); }
 public:
-	void SetInfo(string name, string layer, uint64_t uuid);
+	void SetInfo(string name, string layer, uint64_t uuid, _bool active);
 public:
-	void SetParent(CGameObject* pParent) { m_pParent = pParent; }
+	virtual void LinkTranformWithParent();
+public:
+	void SetParent(CGameObject* pParent);
 	void AddChild(CGameObject* pChild);
 	void RemoveChild(CGameObject* pChild);
 	void ClearChildren();
 	CGameObject* GetParent() { return m_pParent; }
 	list<CGameObject*> GetChildren() { return m_listChildren; }
+
+public:
+	_bool&	IsActive() { return m_bIsActive; }
+	void	SetActive(_bool value);
 
 protected:
 	class CEngine*				m_pEngine = nullptr;
@@ -46,7 +52,8 @@ protected:
 	string					m_Name = "Empty Object";
 	string					m_Layer = "Default";
 	CUUID					m_UUID;
-	bool					m_bDead = false;
+	_bool					m_bDead = false;
+	_bool					m_bIsActive = true;
 
 protected:
 	unordered_map<string, class CComponent*>			m_Components;
