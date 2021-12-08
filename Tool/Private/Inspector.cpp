@@ -364,6 +364,9 @@ void CInspector::DrawCollider()
 
 		if (open)
 		{
+			_float3& center = dynamic_cast<CCollider*>(pComponent)->GetRelativePos();
+			DrawVec3("Center", center);
+
 			if (dynamic_cast<CSphereCollider*>(pComponent))
 			{
 				float radius = dynamic_cast<CSphereCollider*>(pComponent)->GetSize();

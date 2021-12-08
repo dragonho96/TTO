@@ -40,7 +40,11 @@ public:
 	PxRigidActor*	GetRigidActor() { return m_pRigidActor; }
 	PxController* GetController() { return m_pController; }
 
+public:
+	_float3&	GetRelativePos() { return m_vRelativePos; }
+	void		SetRelativePos(_float3 center) { m_vRelativePos = center; }
 protected:
+	_float3			m_vRelativePos = { 0.f, 0.f, 0.f };
 	RIGIDBODYDESC	m_RigidBodyDesc;
 
 	CComponent*		m_pDebugLine = nullptr;
@@ -48,6 +52,7 @@ protected:
 
 	PxRigidActor*	m_pRigidActor = nullptr;
 	PxController*	m_pController = nullptr;
+	_float4x4		m_pxMat;
 	//protected:
 	//	PxPhysics*					m_pPhysics;
 	//	PxControllerManager*		m_pControllerManager;

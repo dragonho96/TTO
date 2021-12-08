@@ -5,6 +5,9 @@
 #include "Engine.h"
 #include "HierarchyNode.h"
 
+#include "Animation.h"
+#include "Channel.h"
+
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
@@ -187,7 +190,7 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 	for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
 	{
 		aiString		strTexturePath;
-
+		aiString		strMatName = pMaterial->GetName();
 		if (FAILED(pMaterial->GetTexture(aiTextureType(i), 0, &strTexturePath)))
 			continue;
 
@@ -208,9 +211,9 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 		string strFullPath = pMeshFilePath + szTextureFileName;
 		//MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szWideFullPath, MAX_PATH);
 
-		if (!strcmp(szExt, ".dds"))
+		if (!strcmp(szExt, ".dds") || !strcmp(szExt, ".DDS"))
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_DDS, strFullPath);
-		else if (!strcmp(szExt, ".tga"))
+		else if (!strcmp(szExt, ".tga") || !strcmp(szExt, ".TGA") || !strcmp(szExt, ".Tga"))
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, strFullPath);
 		else
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, strFullPath);
@@ -277,12 +280,34 @@ HRESULT CModel::SetUp_SkinnedInfo()
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
 			memcpy(&pBoneDesc->OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
 
+			for (_uint k = 0; k < pBone->mNumWeights; ++k)
+			{
+				_uint	iVertexIndex = pBone->mWeights[k].mVertexId + pMeshContainer->Get_StartVertexIndex();
 
-
+				if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.x)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.x = j;
+					m_pVertices[iVertexIndex].vBlendWeight.x = pBone->mWeights[k].mWeight;
+				}
+				else if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.y)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.y = j;
+					m_pVertices[iVertexIndex].vBlendWeight.y = pBone->mWeights[k].mWeight;
+				}
+				else if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.z)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.z = j;
+					m_pVertices[iVertexIndex].vBlendWeight.z = pBone->mWeights[k].mWeight;
+				}
+				else
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.w = j;
+					m_pVertices[iVertexIndex].vBlendWeight.w = pBone->mWeights[k].mWeight;
+				}
+			}
 			pMeshContainer->Add_Bones(pBoneDesc);
 		}
 	}
-
 
 	return S_OK;
 }
@@ -298,6 +323,70 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
 		return nullptr;
 
 	return *iter;
+}
+
+HRESULT CModel::SetUp_AnimationInfo()
+{
+	_uint		iNumAnimation = m_pScene->mNumAnimations;
+
+	for (_uint i = 0; i < iNumAnimation; ++i)
+	{
+		aiAnimation*	pAnim = m_pScene->mAnimations[i];
+		if (nullptr == pAnim)
+			return E_FAIL;
+
+		CAnimation*		pAnimation = CAnimation::Create(pAnim->mName.data, pAnim->mDuration, pAnim->mTicksPerSecond);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		for (_uint j = 0; j < pAnim->mNumChannels; ++j)
+		{
+			aiNodeAnim*		pNodeAnim = pAnim->mChannels[j];
+			if (nullptr == pNodeAnim)
+				return E_FAIL;
+
+			CChannel*		pChannel = CChannel::Create(pNodeAnim->mNodeName.data);
+			if (nullptr == pChannel)
+				return E_FAIL;
+
+			_uint		iMaxKeyFrame = max(pNodeAnim->mNumScalingKeys, pNodeAnim->mNumRotationKeys);
+			iMaxKeyFrame = max(iMaxKeyFrame, pNodeAnim->mNumPositionKeys);
+
+
+			for (_uint k = 0; k < iMaxKeyFrame; ++k)
+			{
+				KEYFRAMEDESC*		pKeyFrame = new KEYFRAMEDESC;
+				ZeroMemory(pKeyFrame, sizeof(KEYFRAMEDESC));
+
+				if (k < pNodeAnim->mNumScalingKeys)
+				{
+					memcpy(&pKeyFrame->vScale, &pNodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mScalingKeys[k].mTime;
+				}
+
+				if (k < pNodeAnim->mNumRotationKeys)
+				{
+					pKeyFrame->vRotation.x = pNodeAnim->mRotationKeys[k].mValue.x;
+					pKeyFrame->vRotation.y = pNodeAnim->mRotationKeys[k].mValue.y;
+					pKeyFrame->vRotation.z = pNodeAnim->mRotationKeys[k].mValue.z;
+					pKeyFrame->vRotation.w = pNodeAnim->mRotationKeys[k].mValue.w;
+					pKeyFrame->Time = pNodeAnim->mRotationKeys[k].mTime;
+				}
+
+				if (k < pNodeAnim->mNumPositionKeys)
+				{
+					memcpy(&pKeyFrame->vPosition, &pNodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mPositionKeys[k].mTime;
+				}
+
+				pChannel->Add_KeyFrameDesc(pKeyFrame);
+			}
+
+			pAnimation->Add_Channel(pChannel);
+		}
+		/* �ִϸ��̼��� ����. */
+		m_Animations.push_back(pAnimation);
+	}
 }
 
 
@@ -350,8 +439,6 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 
 	m_iStride = sizeof(VTXMESH);
 
-	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
-		return E_FAIL;
 
 	m_ModelTextures.reserve(m_pScene->mNumMaterials);
 
@@ -366,15 +453,30 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 
 
 	if (false == m_pScene->HasAnimations())
-		return S_OK;
+	{
+		if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
+			return E_FAIL;
 
+		return S_OK;
+	}
+
+	int numAnim = m_pScene->mNumAnimations;
 	Create_HierarchyNodes(m_pScene->mRootNode);
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest) {
 		return pSour->Get_Depth() < pDest->Get_Depth();
 	});
 
-	SetUp_SkinnedInfo();
+
+	if (FAILED(SetUp_SkinnedInfo()))
+		return E_FAIL;
+
+	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
+		return E_FAIL;
+
+	if (FAILED(SetUp_AnimationInfo()))
+		return E_FAIL;
+
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	{
 		//CreatePxMesh();
@@ -387,6 +489,10 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 void CModel::RemoveBuffer()
 {
 	m_pShader.reset();
+
+	for (auto& anim : m_Animations)
+		SafeRelease(anim);
+	m_MeshContainers.clear();
 
 	for (auto& container : m_MeshContainers)
 		SafeRelease(container);

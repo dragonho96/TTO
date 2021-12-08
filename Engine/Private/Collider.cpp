@@ -40,15 +40,31 @@ _uint CCollider::LateUpdate(double deltaTime)
 	{
 		if (m_pController)
 		{
+			/* Adjusting mesh position */
 			PxExtendedVec3 pos = m_pController->getPosition();
+			pos.x -= m_vRelativePos.x;
+			pos.y -= m_vRelativePos.y;
+			pos.z -= m_vRelativePos.z;
 			m_pObjTransform->SetPxPosition(pos);
+
+			/* Back to px transform */
+			_float4x4 childMat;
+			XMStoreFloat4x4(&childMat, XMMatrixIdentity());
+			memcpy(&childMat.m[3][0], &m_vRelativePos, sizeof(_float3));
+			_matrix newMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+			memcpy(&m_pxMat, &newMat, sizeof(_float4x4));
 		}
 		// Check if its dynamic or static
 		else if (m_pRigidActor)
 		{
+			/* for static actor */
 			PxTransform actorTransform = m_pRigidActor->getGlobalPose();
 			PxMat44 pxMat = PxMat44(actorTransform);
-			m_pObjTransform->SetPxMatrix(pxMat);
+			//pxMat.column3.x -= m_vRelativePos.x;
+			//pxMat.column3.y -= m_vRelativePos.y;
+			//pxMat.column3.z -= m_vRelativePos.z;
+			// m_pObjTransform->SetPxMatrix(pxMat);
+			memcpy(&m_pxMat, &pxMat, sizeof(_float4x4));
 		}
 	}
 
@@ -58,7 +74,12 @@ _uint CCollider::LateUpdate(double deltaTime)
 HRESULT CCollider::Render()
 {
 	if (m_pDebugLine)
-		dynamic_cast<CVIBuffer*>(m_pDebugLine)->Render();
+	{
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+			dynamic_cast<CVIBuffer*>(m_pDebugLine)->RenderDebug(m_pxMat);
+		else
+			dynamic_cast<CVIBuffer*>(m_pDebugLine)->RenderDebug(m_vRelativePos);
+	}
 	return S_OK;
 }
 

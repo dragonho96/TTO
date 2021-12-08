@@ -6,21 +6,22 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [4.5999999, 7, 3.5999999]
-      Rotation: [-0, 0, -0]
-      Scale: [0.999999821, 1, 0.999999821]
+      Translation: [3.68886209, 9.2824316, 3.5999999]
+      Rotation: [0, -0, 0]
+      Scale: [0.999993801, 0.999999881, 0.999994278]
     Com_Collider:
+      Center: [0, 0.5, 0]
       Type: Capsule
-      Radius: 1.60000002
-      Height: 0.5
+      Radius: 0.200000003
+      Height: 0.699999988
       RigidBody:
         Enabled: true
         Gravity: true
         Kinematic: false
         CharacterController: true
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Kaelthas\
-      MeshFileName: Kaelthas.FBX
+      MeshFilePath: ..\..\Assets\Meshes\Advent\
+      MeshFileName: AdvCap10.fbx
   - Name: Empty Object
     UUID: 4963114123050138202
     Active: true
@@ -28,7 +29,7 @@ GameObjects:
     Type: Object
     Com_Transform:
       Translation: [0, 0.272737265, 0]
-      Rotation: [-0, 0, -0]
+      Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_VIBuffer:
       Type: Terrain
@@ -40,27 +41,32 @@ GameObjects:
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [11.8143559, 1.96918488, 9.94271278]
-      Rotation: [-0, 0, -0]
-      Scale: [1, 1, 1]
+      Translation: [13.4249611, 0.815568209, 6.95922852]
+      Rotation: [0, 48.0699997, 0]
+      Scale: [0.999838769, 0.999921441, 0.999860466]
     Com_Collider:
+      Center: [2, 3.79999995, 3.29999995]
       Type: Box
-      Size: [3.29999995, 1.70000005, 6.4000001]
+      Size: [4.5999999, 1.70000005, 6.4000001]
       RigidBody:
         Enabled: false
         Gravity: true
         Kinematic: false
         CharacterController: false
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Advent\
+      MeshFileName: AdvCap10.fbx
   - Name: Box2
     UUID: 14067183976447641020
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [8.13800335, 1.25642669, 16.4694252]
-      Rotation: [-0, 0, -0]
-      Scale: [1, 1, 1]
+      Translation: [8.13800335, 0.898834348, 16.4694252]
+      Rotation: [-1.88678495e-09, -49.1909904, -1.88681137e-09]
+      Scale: [0.999859989, 0.999992013, 0.999916792]
     Com_Collider:
+      Center: [0, 0, 0]
       Type: Box
       Size: [4.5999999, 1, 7.19999981]
       RigidBody:

@@ -106,6 +106,10 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
 	PxTransform transform;
 	memcpy(&transform.p, &position, sizeof(_float3));
+	transform.p.x += m_vRelativePos.x;
+	transform.p.y += m_vRelativePos.y;
+	transform.p.z += m_vRelativePos.z;
+
 	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
 	memcpy(&transform.q, &quat, sizeof(_float4));
 	PxVec3 geoSize;

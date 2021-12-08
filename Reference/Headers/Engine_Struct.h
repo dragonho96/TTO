@@ -2,6 +2,14 @@
 
 namespace Engine
 {
+	typedef struct tagKeyFrameDesc
+	{
+		XMFLOAT3		vScale;
+		XMFLOAT4		vRotation;
+		XMFLOAT3		vPosition;
+		double			Time; 
+	}KEYFRAMEDESC;
+
 	typedef struct tagBoneDesc
 	{
 		class CHierarchyNode*	pHierarchyNode = nullptr;

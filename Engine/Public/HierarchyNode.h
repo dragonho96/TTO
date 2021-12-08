@@ -24,6 +24,7 @@ public:
 private:
 	char				m_szNodeName[MAX_PATH] = "";
 	_float4x4			m_TransformationMatrix;
+	_float4x4			m_CombinedTransformationMatrix;
 	CHierarchyNode*		m_pParent = nullptr;
 	_uint				m_iDepth = 0;
 

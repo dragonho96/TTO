@@ -89,7 +89,7 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	pair<float, float> capsuleSize;
 	memcpy(&capsuleSize, pShapeInfo, sizeof(pair<float, float>));
 	PxReal radius = capsuleSize.first;
-	PxReal height = capsuleSize.second;
+	PxReal height = capsuleSize.second + (radius * 2);
 	PxMaterial* pMaterial = m_pEngine->GetMaterial();
 	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
 	PxTransform transform;
@@ -105,8 +105,9 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		//desc.stepOffset = 0.2f;
 		desc.upDirection = PxVec3(0.0, 1.0, 0.0);
 		desc.material = pMaterial;
+
 		desc.position = PxExtendedVec3(transform.p.x, transform.p.y, transform.p.z);
-		desc.contactOffset = 0.001f;
+		desc.contactOffset = 0.1f;
 		//desc.behaviorCallback = 
 		//desc.reportCallback = &m_callback;
 		//CE_ASSERT(desc.isValid(), "Capsule is not valid");
@@ -124,6 +125,9 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxCapsuleGeometry(radius, height), *pMaterial);
 	/* Fix to upright standing capsule */
 	PxTransform relativePose(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+	relativePose.p.x += m_vRelativePos.x;
+	relativePose.p.y += m_vRelativePos.y;
+	relativePose.p.z += m_vRelativePos.z;
 	meshShape->setLocalPose(relativePose);
 
 	if (desc.bEnabled)

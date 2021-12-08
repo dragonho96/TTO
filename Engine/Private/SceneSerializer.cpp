@@ -137,25 +137,34 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 	if (obj->GetComponent("Com_Transform"))
 	{
+
+
 		CTransform* transform = dynamic_cast<CTransform*>(obj->GetComponent("Com_Transform"));
 
 		out << YAML::Key << "Com_Transform";
 		out << YAML::BeginMap;
 
 		XMMATRIX matrix = XMLoadFloat4x4(&transform->GetMatrix());
-		XMVECTOR tr, rt, sc;
-		XMMatrixDecompose(&sc, &rt, &tr, matrix);
+		//XMVECTOR tr, rt, sc;
+		//XMMatrixDecompose(&sc, &rt, &tr, matrix);
+
+		float _objMat[16];
+		memcpy(_objMat, &matrix, sizeof(XMMATRIX));
+		float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+		ImGuizmo::DecomposeMatrixToComponents(_objMat, matrixTranslation, matrixRotation, matrixScale);
+
+
 		out << YAML::Key << "Translation";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(tr) << XMVectorGetY(tr) << XMVectorGetZ(tr) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixTranslation[0] << matrixTranslation[1] << matrixTranslation[2] << YAML::EndSeq;
 
 		out << YAML::Key << "Rotation";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(rt) << XMVectorGetY(rt) << XMVectorGetZ(rt) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixRotation[0] << matrixRotation[1] << matrixRotation[2] << YAML::EndSeq;
 
 		out << YAML::Key << "Scale";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(sc) << XMVectorGetY(sc) << XMVectorGetZ(sc) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixScale[0] << matrixScale[1] << matrixScale[2] << YAML::EndSeq;
 
 
 		out << YAML::EndMap;
@@ -168,6 +177,11 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		// Check if RB exist
 		out << YAML::Key << "Com_Collider";
 		out << YAML::BeginMap;
+
+		_float3 center = collider->GetRelativePos();
+		out << YAML::Key << "Center";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << center.x << center.y << center.z << YAML::EndSeq;
 
 		if (dynamic_cast<CBoxCollider*>(collider))
 		{
@@ -440,6 +454,12 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	auto colliderCom = obj["Com_Collider"];
 	if (colliderCom)
 	{
+		auto centerInfo = colliderCom["Center"];
+		_float3 center = { 0, 0, 0 };
+		center.x = centerInfo[0].as<float>();
+		center.y = centerInfo[1].as<float>();
+		center.z = centerInfo[2].as<float>();
+
 		CCollider::RIGIDBODYDESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 
@@ -462,6 +482,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			size.z = sequence[2].as<float>();
 
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
 			dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
@@ -472,6 +493,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 
 			_float radius = colliderCom["Radius"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
 			dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
 			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
 		}
@@ -484,6 +506,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			capsuleSize.first = colliderCom["Radius"].as<float>();
 			capsuleSize.second = colliderCom["Height"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
 			dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
 			dynamic_cast<CCapsuleCollider*>(pCollider)->SetUpRigidActor(&capsuleSize, desc);
 		}

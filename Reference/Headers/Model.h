@@ -28,6 +28,7 @@ private:
 	HRESULT SetUp_SkinnedInfo();
 	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
 
+	HRESULT SetUp_AnimationInfo();
 
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
@@ -60,6 +61,8 @@ private:
 	vector<vector<class CMeshContainer*>>	m_SortByMaterialMesh;
 	vector<MODELTEXTURES*>					m_ModelTextures;
 	vector<class CHierarchyNode*>			m_HierarchyNodes;
+
+	vector<class CAnimation*>				m_Animations;
 
 private:
 	ComRef<ID3D11Buffer>			m_pVB = nullptr;
