@@ -54,7 +54,7 @@ HRESULT CModel::Bind_Buffers()
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
-	
+
 	_uint		iOffSet = 0;
 	m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVB.GetAddressOf(), &m_iStride, &iOffSet);
 	m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -78,6 +78,8 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 		return E_FAIL;
 
 	m_pShader->Render(iPassIndex);
+
+	_matrix			BoneMatrices[128];
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
@@ -125,10 +127,10 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 
 
 	CMeshContainer*			pMeshContainer = CMeshContainer::Create(
-		pMesh->mName.data, 
-		pMesh->mNumFaces, 
-		iStartFaceIndex, 
-		iStartVertexIndex, 
+		pMesh->mName.data,
+		pMesh->mNumFaces,
+		iStartFaceIndex,
+		iStartVertexIndex,
 		pMesh->mMaterialIndex
 	);
 
@@ -234,6 +236,8 @@ HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, 
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
+	pHierarchyNode->Reserve_Channels(m_pScene->mNumAnimations);
+
 	m_HierarchyNodes.push_back(pHierarchyNode);
 
 	for (_uint i = 0; i < pNode->mNumChildren; ++i)
@@ -278,7 +282,9 @@ HRESULT CModel::SetUp_SkinnedInfo()
 			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
 
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
-			memcpy(&pBoneDesc->OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
+			memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
+
+			SetRagdollBoneDesc(pBone->mName.data, pBoneDesc);
 
 			for (_uint k = 0; k < pBone->mNumWeights; ++k)
 			{
@@ -381,14 +387,47 @@ HRESULT CModel::SetUp_AnimationInfo()
 
 				pChannel->Add_KeyFrameDesc(pKeyFrame);
 			}
+			Add_ChannelToHierarchyNode(i, pChannel);
 
 			pAnimation->Add_Channel(pChannel);
 		}
-		/* �ִϸ��̼��� ����. */
 		m_Animations.push_back(pAnimation);
 	}
 }
 
+HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
+{
+	if (iAnimationIndex >= m_Animations.size())
+		return E_FAIL;
+
+	m_iAnimationIndex = iAnimationIndex;
+
+	return S_OK;
+}
+
+HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
+{
+	if (m_Animations.empty())
+		return E_FAIL;
+
+	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+
+	for (auto& pHierarchyNodes : m_HierarchyNodes)
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex);
+
+	return S_OK;
+}
+
+void CModel::Add_ChannelToHierarchyNode(_uint iAnimationindex, CChannel * pChannel)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)->bool
+	{
+		return !strcmp(pNode->Get_Name(), pChannel->Get_Name());
+	});
+
+	if (iter != m_HierarchyNodes.end())
+		(*iter)->Add_Channel(iAnimationindex, pChannel);
+}
 
 
 HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
@@ -451,6 +490,8 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(Sort_MeshesByMaterial()))
 		return E_FAIL;
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
+		CreatePxMesh();
 
 	if (false == m_pScene->HasAnimations())
 	{
@@ -467,7 +508,6 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 		return pSour->Get_Depth() < pDest->Get_Depth();
 	});
 
-
 	if (FAILED(SetUp_SkinnedInfo()))
 		return E_FAIL;
 
@@ -477,10 +517,10 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(SetUp_AnimationInfo()))
 		return E_FAIL;
 
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
-	{
-		//CreatePxMesh();
-	}
+	if (FAILED(Update_CombinedTransformationMatrices(0.0)))
+		return E_FAIL;
+
+	CreateRagdollRbs();
 
 
 	return S_OK;
@@ -492,7 +532,7 @@ void CModel::RemoveBuffer()
 
 	for (auto& anim : m_Animations)
 		SafeRelease(anim);
-	m_MeshContainers.clear();
+	m_Animations.clear();
 
 	for (auto& container : m_MeshContainers)
 		SafeRelease(container);
@@ -524,6 +564,175 @@ void CModel::RemoveBuffer()
 	m_Importer.FreeScene();
 }
 
+void CModel::SetRagdollBoneDesc(string name, BONEDESC* desc)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
+	{
+		return !strcmp(pNode->Get_Name(), name.c_str());
+	});
+
+	if (iter == m_HierarchyNodes.end())
+		return;
+
+	if (name == "Pelvis" ||
+		name == "LArm" || name == "LElbowSplitter" || name == "LHand" ||
+		name == "LLeg" || name == "LKneeSplitter" || name == "LFoot" ||
+		name == "RArm" || name == "RElbowSplitter" || name == "RHand" ||
+		name == "RLeg" || name == "RKneeSplitter" || name == "RFoot" ||
+		name == "Neck" || name == "Head")
+		m_RagdollBones.emplace(name, desc);
+}
+
+void CModel::CreateRagdollRbs()
+{
+	BONEDESC* Pelvis = m_RagdollBones["Pelvis"];
+
+	BONEDESC* LArm = m_RagdollBones["LArm"];
+	BONEDESC* LElbowSplitter = m_RagdollBones["LElbowSplitter"];
+	BONEDESC* LHand = m_RagdollBones["LHand"];
+
+	BONEDESC* LLeg = m_RagdollBones["LLeg"];
+	BONEDESC* LKneeSplitter = m_RagdollBones["LKneeSplitter"];
+	BONEDESC* LFoot = m_RagdollBones["LFoot"];
+
+	BONEDESC* RLeg = m_RagdollBones["RLeg"];
+	BONEDESC* RKneeSplitter = m_RagdollBones["RKneeSplitter"];
+	BONEDESC* RFoot = m_RagdollBones["RFoot"];
+
+	BONEDESC* RArm = m_RagdollBones["RArm"];
+	BONEDESC* RElbowSplitter = m_RagdollBones["RElbowSplitter"];
+	BONEDESC* RHand = m_RagdollBones["RHand"];
+
+	BONEDESC* Neck = m_RagdollBones["Neck"];
+	BONEDESC* Head = m_RagdollBones["Head"];
+
+	CreateCapsuleRb(LLeg, LKneeSplitter, "LThigh");
+	CreateCapsuleRb(LKneeSplitter, LFoot, "LCalf");
+	CreateCapsuleRb(RLeg, RKneeSplitter, "RThigh");
+	CreateCapsuleRb(RKneeSplitter, RFoot, "RCalf");
+	CreateCapsuleRb(LArm, LElbowSplitter, "LArm");
+	CreateCapsuleRb(LElbowSplitter, LHand, "LForearm");
+	CreateCapsuleRb(RArm, RElbowSplitter, "RArm");
+	CreateCapsuleRb(RElbowSplitter, RHand, "RForearm");
+	CreateCapsuleRb(Pelvis, Neck, "Body");
+
+
+	CreateD6Joint("LThigh", "LCalf", "LKneeSplitter");
+	CreateD6Joint("RThigh", "RCalf", "RKneeSplitter");
+	CreateD6Joint("Body", "LThigh", "Pelvis");
+	CreateD6Joint("Body", "RThigh", "Pelvis");
+	CreateD6Joint("Body", "LArm", "LArm");
+	CreateD6Joint("Body", "RArm", "RArm");
+	CreateD6Joint("LArm", "LForearm", "LElbowSplitter");
+	CreateD6Joint("RArm", "RForearm", "RElbowSplitter");
+
+
+	for (auto& rb : m_RagdollRbs)
+		rb.second->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+}
+
+void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
+{
+	_float radius = 0.05f;
+	_vector scale, rotation, pos;
+	_vector cscale, crotation, cpos;
+
+	_float4x4 parentMat = parent->pHierarchyNode->Get_CombinedTransformationMatrix();
+	_float4x4 childMat = child->pHierarchyNode->Get_CombinedTransformationMatrix();
+
+	_float4x4 parentOffset = parent->OffsetMatrix;
+	_float4x4 childOffset = child->OffsetMatrix;
+
+	XMMatrixDecompose(&scale, &rotation, &pos, XMLoadFloat4x4(&parentMat));
+	XMMatrixDecompose(&cscale, &crotation, &cpos, XMLoadFloat4x4(&childMat));
+	//_matrix newParentMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&parentMat)));
+	//_matrix newChildMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&childMat)));
+	//_matrix newParentMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&parentMat)), m_pTransform->GetWorldMatrix());
+	//_matrix newChildMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&childMat)), m_pTransform->GetWorldMatrix());
+	//_matrix newParentMat = XMMatrixMultiply(XMLoadFloat4x4(&parentMat), m_pTransform->GetWorldMatrix());
+	//_matrix newChildMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), m_pTransform->GetWorldMatrix());
+
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&parentOffset)), m_pTransform->GetWorldMatrix());
+	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&childOffset)), m_pTransform->GetWorldMatrix());
+	
+
+	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
+	XMMatrixDecompose(&cscale, &crotation, &cpos, newChildMat);
+
+	_float4x4 newChildFloat4x4;
+	_float4x4 newParentFloat4x4;
+	_vector pVec, cVec;
+	XMStoreFloat4x4(&newChildFloat4x4, newChildMat);
+	XMStoreFloat4x4(&newParentFloat4x4, newParentMat);
+	memcpy(&pVec, newParentFloat4x4.m[3], sizeof(_vector));
+	memcpy(&cVec, newChildFloat4x4.m[3], sizeof(_vector));
+	_vector length = XMVector3Length(XMVectorSubtract(pVec, cVec));
+	XMVECTOR midPos = XMVectorDivide(XMVectorAdd(pVec, cVec), FXMVECTOR{ 2.f, 2.f, 2.f, 2.f });
+	_float len = XMVectorGetX(length) * .9f;
+
+	_float len_minus_2r = len - (2.f * radius);
+	_float half_height = abs(len_minus_2r / 2.f);
+
+	PxShape* shape = CEngine::GetInstance()->GetPhysics()->createShape(PxCapsuleGeometry(radius, half_height), *CEngine::GetInstance()->GetMaterial());
+	//PxTransform local;
+	//local.p = { XMVectorGetX(midPos), XMVectorGetY(midPos) , XMVectorGetZ(midPos)};
+	//local.q = PxIdentity;
+	//shape->setLocalPose(local);
+
+	_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+	PxTransform transform;
+	memcpy(&transform.p, &midPos, sizeof(_float3));
+	//XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+	XMVECTOR quat = XMQuaternionRotationMatrix(newParentMat);
+	memcpy(&transform.q, &quat, sizeof(_float4));
+	//transform.p.x *= -1;
+	//transform.p.z *= -1;
+	PxRigidDynamic* body = CEngine::GetInstance()->GetPhysics()->createRigidDynamic(transform);
+	body->setMass(1.f);
+	body->attachShape(*shape);
+	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+	CEngine::GetInstance()->AddActor(body);
+
+	m_RagdollRbs.emplace(name, body);
+}
+
+void CModel::CreateD6Joint(string parent, string child, string jointBone)
+{
+	BONEDESC* pJointBone = m_RagdollBones[jointBone];
+
+	PxRigidDynamic* parentRb = m_RagdollRbs[parent];
+	PxRigidDynamic* childRb = m_RagdollRbs[child];
+
+	_float4x4 joingOffset = pJointBone->OffsetMatrix;
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&joingOffset)), m_pTransform->GetWorldMatrix());
+	_vector scale, rotation, pos;
+	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
+
+	PxTransform transform;
+	memcpy(&transform.p, &pos, sizeof(_float3));
+	memcpy(&transform.q, &rotation, sizeof(_float4));
+
+	PxD6Joint* joint = PxD6JointCreate(*CEngine::GetInstance()->GetPhysics(),
+		parentRb,
+		parentRb->getGlobalPose().transformInv(transform),
+		childRb,
+		childRb->getGlobalPose().transformInv(transform));
+
+	joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
+
+	ConfigD6Joint(3.14 / 4.f, 3.14f / 4.f, -3.14f / 8.f, 3.14f / 8.f, joint);
+}
+
+void CModel::ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint * joint)
+{
+	joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
+	joint->setMotion(physx::PxD6Axis::eSWING2, physx::PxD6Motion::eLIMITED);
+	joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
+
+	joint->setSwingLimit(physx::PxJointLimitCone(swing0, swing1));
+	joint->setTwistLimit(physx::PxJointAngularLimitPair(twistLo, twistHi));
+}
+
 void CModel::CreatePxMesh()
 {
 	CEngine* pEngine = CEngine::GetInstance();
@@ -546,9 +755,13 @@ void CModel::CreatePxMesh()
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	m_pPxMesh = pEngine->GetPhysics()->createTriangleMesh(readBuffer);
 
+
 	PxTransform transform;
-	transform.q = PxIdentity;
-	transform.p = { 0, 0, 0 };
+	_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+	memcpy(&transform.p, &position, sizeof(_float3));
+	memcpy(&transform.q, &quat, sizeof(_float4));
+
 	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);

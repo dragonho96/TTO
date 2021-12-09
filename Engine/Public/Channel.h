@@ -12,9 +12,28 @@ private:
 public:
 	HRESULT Initialize(const char* pChannelName);
 	HRESULT Add_KeyFrameDesc(KEYFRAMEDESC* pKeyFrameDesc);
+
+public:
+	vector<KEYFRAMEDESC*> Get_KeyFrames() {
+		return m_KeyFrames;
+	}
+
+	const char* Get_Name() const {
+		return m_szChannelName;
+	}
+
+	_matrix Get_TransformationMatrix() {
+		return XMLoadFloat4x4(&m_TransformationMatrix);
+	}
+
+	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
+		XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
+	}
+
 private:
-	char					m_szChannelName[MAX_PATH] = "";
+	char						m_szChannelName[MAX_PATH] = "";
 	vector<KEYFRAMEDESC*>		m_KeyFrames;
+	_float4x4					m_TransformationMatrix;
 
 public:
 	static CChannel* Create(const char* pChannelName);

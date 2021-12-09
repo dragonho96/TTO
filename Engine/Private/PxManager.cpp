@@ -28,7 +28,7 @@ void CPxManager::Free()
 HRESULT CPxManager::Initialize()
 {
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
-
+	
 	m_pPvd = PxCreatePvd(*m_pFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
@@ -39,7 +39,7 @@ HRESULT CPxManager::Initialize()
 
 	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, m_pPvd);
 	//m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true);
-
+	PxInitExtensions(*m_pPhysics, m_pPvd);
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(scale));
 	//if (!mCooking)
 	//	throw("PxCreateCooking failed!");

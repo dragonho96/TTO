@@ -122,6 +122,7 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
 	memcpy(&transform.q, &quat, sizeof(_float4));
 
+	/* TODO: take half height?? */
 	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxCapsuleGeometry(radius, height), *pMaterial);
 	/* Fix to upright standing capsule */
 	PxTransform relativePose(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));

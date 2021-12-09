@@ -6,9 +6,9 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [3.68886209, 9.2824316, 3.5999999]
-      Rotation: [0, -0, 0]
-      Scale: [0.999993801, 0.999999881, 0.999994278]
+      Translation: [3.68886209, 5.02683115, 3.5999999]
+      Rotation: [0, 23.2999992, 0]
+      Scale: [0.999990106, 0.999999881, 0.999990106]
     Com_Collider:
       Center: [0, 0.5, 0]
       Type: Capsule
@@ -21,8 +21,9 @@ GameObjects:
         CharacterController: true
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: AdvCap10.fbx
-  - Name: Empty Object
+      MeshFileName: anotherAdv5.fbx
+      HasCollider: true
+  - Name: Terrain
     UUID: 4963114123050138202
     Active: true
     Layer: Default
@@ -35,27 +36,6 @@ GameObjects:
       Type: Terrain
       HeightMapPath: ..\..\Assets\Texture\Height.bmp
       TexturePath: ../../Assets/Texture/Folder.png
-  - Name: Box
-    UUID: 4195299383995526939
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [13.4249611, 0.815568209, 6.95922852]
-      Rotation: [0, 48.0699997, 0]
-      Scale: [0.999838769, 0.999921441, 0.999860466]
-    Com_Collider:
-      Center: [2, 3.79999995, 3.29999995]
-      Type: Box
-      Size: [4.5999999, 1.70000005, 6.4000001]
-      RigidBody:
-        Enabled: false
-        Gravity: true
-        Kinematic: false
-        CharacterController: false
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: AdvCap10.fbx
   - Name: Box2
     UUID: 14067183976447641020
     Active: true
@@ -88,6 +68,19 @@ GameObjects:
       Color: [1, 1, 1, 1]
       Scale: [0.699999988, 0.699999988]
       LayerDepth: 0
+  - Name: Barrel
+    UUID: 3672521761929607806
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [7.74674511, 0.499028146, 6.62822914]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StaticMesh\
+      MeshFileName: Barrel1.fbx
+      HasCollider: true
   - Name: ItemName
     UUID: 11681077865233003353
     Active: true

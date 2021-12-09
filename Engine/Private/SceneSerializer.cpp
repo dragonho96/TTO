@@ -250,6 +250,7 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 		out << YAML::Key << "MeshFilePath" << YAML::Value << pModel->GetMeshFilePath();
 		out << YAML::Key << "MeshFileName" << YAML::Value << pModel->GetMeshFileName();
+		out << YAML::Key << "HasCollider" << YAML::Value << pModel->HasMeshCollider();
 
 		out << YAML::EndMap;
 	}
@@ -535,12 +536,14 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	{
 		string meshFilePath = modelCom["MeshFilePath"].as<string>();
 		string meshFileName = modelCom["MeshFileName"].as<string>();
+		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
 		if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
 			MSG_BOX("Failed to AddComponent Prototype_Model");
 
-		CModel* pTerrainBuffer = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
-		pTerrainBuffer->CreateBuffer(meshFilePath, meshFileName);
+		CModel* pMesh = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
+		pMesh->SetMeshCollider(hasCollider);
+		pMesh->CreateBuffer(meshFilePath, meshFileName);
 	}
 
 	return deserializedObject;

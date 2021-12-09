@@ -364,6 +364,8 @@ void CInspector::DrawCollider()
 
 		if (open)
 		{
+
+
 			_float3& center = dynamic_cast<CCollider*>(pComponent)->GetRelativePos();
 			DrawVec3("Center", center);
 
@@ -509,6 +511,9 @@ void CInspector::DrawModel()
 
 			if (open)
 			{
+				_bool& hasCollider = dynamic_cast<CModel*>(pModel)->HasMeshCollider();
+				ImGui::Checkbox("Mesh Collider", &hasCollider);
+
 				string meshFileName = dynamic_cast<CModel*>(pModel)->GetMeshFileName().c_str();
 				meshFileName = meshFileName == "" ? "None" : meshFileName;
 				ImGui::Text(meshFileName.c_str());

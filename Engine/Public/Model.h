@@ -26,15 +26,28 @@ private:
 	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo();
-	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
-
 	HRESULT SetUp_AnimationInfo();
+	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
+	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
+	void Add_ChannelToHierarchyNode(_uint iAnimationindex, class CChannel* pChannel);
+	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
 
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
 	void RemoveBuffer();
+public:
+	_bool& HasMeshCollider() { return m_bMeshCollider; }
+	void SetMeshCollider(_bool value) { m_bMeshCollider = value; }
+
+public:
+	void SetRagdollBoneDesc(string name, BONEDESC* desc);
+	void CreateRagdollRbs();
+	void CreateCapsuleRb(BONEDESC* parent, BONEDESC* child, string name);
+	void CreateD6Joint(string parent, string child, string jointBone);
+	void ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint* joint);
 private:
 	void CreatePxMesh();
+
 
 public:
 	_uint Get_NumMaterials() const {
@@ -63,6 +76,7 @@ private:
 	vector<class CHierarchyNode*>			m_HierarchyNodes;
 
 	vector<class CAnimation*>				m_Animations;
+	_uint									m_iAnimationIndex = 0;
 
 private:
 	ComRef<ID3D11Buffer>			m_pVB = nullptr;
@@ -85,6 +99,11 @@ private:
 	PxVec3*				m_pxVertices = nullptr;
 	PxU32*				m_pxIndices = nullptr;
 	PxTriangleMesh*		m_pPxMesh = nullptr;
+	_bool				m_bMeshCollider = false;
+
+private:
+	unordered_map<string, BONEDESC*>	m_RagdollBones;
+	unordered_map<string, PxRigidDynamic*> m_RagdollRbs;
 
 
 public:
