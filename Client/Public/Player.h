@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Transform.h"
 #include "Collider.h"
+#include "Model.h"
 BEGIN(Client)
 
 class CPlayer : public IScriptObject
@@ -23,6 +24,7 @@ private:
 	CGameObject*	m_pGameObject;
 	CTransform*		m_pTransform;
 	CCollider*		m_pCollider;
+	CModel*			m_pModel;
 	PxController*	m_pController;
 	// Inherited via IScriptObject
 

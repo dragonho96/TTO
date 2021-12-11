@@ -16,6 +16,8 @@ public:
 	HRESULT Add_Bones(BONEDESC* pBoneDesc);
 
 public:
+	void Get_BoneMatrices(_matrix* pBoneMatrices);
+
 	_uint Get_MeshMaterialIndex() const {
 		return m_iMaterialIndex;
 	}

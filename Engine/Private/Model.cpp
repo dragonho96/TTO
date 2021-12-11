@@ -27,6 +27,9 @@ CModel::CModel(const CModel & rhs)
 	, m_iStride(rhs.m_iStride)
 	, m_EffectDescs(rhs.m_EffectDescs)
 	, m_pEffect(rhs.m_pEffect)
+	, m_iAnimationIndex(rhs.m_iAnimationIndex)
+	, m_Animations(rhs.m_Animations)
+	, m_HierarchyNodes(rhs.m_HierarchyNodes)
 {
 }
 
@@ -77,12 +80,21 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
+	if (0 < m_Animations.size())
+		iPassIndex = 1;
+
 	m_pShader->Render(iPassIndex);
 
-	_matrix			BoneMatrices[128];
+	_matrix			BoneMatrices[256];
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
+		ZeroMemory(BoneMatrices, sizeof(_matrix) * 256);
+
+		pMeshContainer->Get_BoneMatrices(BoneMatrices);
+
+		m_pShader->SetUp_ValueOnShader("g_BoneMatrices", BoneMatrices, sizeof(_matrix) * 256);
+
 		m_pDeviceContext->DrawIndexed(pMeshContainer->Get_NumFaces() * 3,
 			pMeshContainer->Get_StartFaceIndex() * 3,
 			pMeshContainer->Get_StartVertexIndex());
@@ -331,6 +343,13 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
 	return *iter;
 }
 
+HRESULT CModel::Play_Animation(_double TimeDelta)
+{
+	Update_CombinedTransformationMatrices(TimeDelta);
+
+	return S_OK;
+}
+
 HRESULT CModel::SetUp_AnimationInfo()
 {
 	_uint		iNumAnimation = m_pScene->mNumAnimations;
@@ -407,7 +426,7 @@ HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
 
 HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 {
-	if (m_Animations.empty())
+	if (m_Animations.empty() || m_iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
 	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
@@ -517,10 +536,11 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(SetUp_AnimationInfo()))
 		return E_FAIL;
 
-	if (FAILED(Update_CombinedTransformationMatrices(0.0)))
-		return E_FAIL;
+	//if (FAILED(Update_CombinedTransformationMatrices(0.0)))
+	//	return E_FAIL;
 
-	CreateRagdollRbs();
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
+	//	CreateRagdollRbs();
 
 
 	return S_OK;
@@ -637,14 +657,14 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	_vector scale, rotation, pos;
 	_vector cscale, crotation, cpos;
 
-	_float4x4 parentMat = parent->pHierarchyNode->Get_CombinedTransformationMatrix();
-	_float4x4 childMat = child->pHierarchyNode->Get_CombinedTransformationMatrix();
+	_matrix parentMat = parent->pHierarchyNode->Get_CombinedTransformationMatrix();
+	_matrix childMat = child->pHierarchyNode->Get_CombinedTransformationMatrix();
 
-	_float4x4 parentOffset = parent->OffsetMatrix;
-	_float4x4 childOffset = child->OffsetMatrix;
+	_matrix parentOffset = XMLoadFloat4x4(&parent->OffsetMatrix);
+	_matrix childOffset = XMLoadFloat4x4(&child->OffsetMatrix);
 
-	XMMatrixDecompose(&scale, &rotation, &pos, XMLoadFloat4x4(&parentMat));
-	XMMatrixDecompose(&cscale, &crotation, &cpos, XMLoadFloat4x4(&childMat));
+	XMMatrixDecompose(&scale, &rotation, &pos, parentMat);
+	XMMatrixDecompose(&cscale, &crotation, &cpos, childMat);
 	//_matrix newParentMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&parentMat)));
 	//_matrix newChildMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&childMat)));
 	//_matrix newParentMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&parentMat)), m_pTransform->GetWorldMatrix());
@@ -652,8 +672,8 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	//_matrix newParentMat = XMMatrixMultiply(XMLoadFloat4x4(&parentMat), m_pTransform->GetWorldMatrix());
 	//_matrix newChildMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), m_pTransform->GetWorldMatrix());
 
-	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&parentOffset)), m_pTransform->GetWorldMatrix());
-	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&childOffset)), m_pTransform->GetWorldMatrix());
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, parentOffset), m_pTransform->GetWorldMatrix());
+	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, childOffset), m_pTransform->GetWorldMatrix());
 	
 
 	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);

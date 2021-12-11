@@ -26,14 +26,23 @@ public:
 		return XMLoadFloat4x4(&m_TransformationMatrix);
 	}
 
+	_uint Get_CurrentKeyFrame() const {
+		return m_iCurrentKeyFrame;
+	}
+
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
 		XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
+	}
+
+	void Set_CurrentKeyFrame(_uint iCurrentKeyFrame) {
+		m_iCurrentKeyFrame = iCurrentKeyFrame;
 	}
 
 private:
 	char						m_szChannelName[MAX_PATH] = "";
 	vector<KEYFRAMEDESC*>		m_KeyFrames;
 	_float4x4					m_TransformationMatrix;
+	_uint						m_iCurrentKeyFrame = 0;
 
 public:
 	static CChannel* Create(const char* pChannelName);

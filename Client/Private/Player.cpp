@@ -36,6 +36,7 @@ HRESULT CPlayer::Initialize()
 	m_pGameObject = list.front();
 	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
+	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
 	m_pController = m_pCollider->GetController();
 	return S_OK;
 }
@@ -120,5 +121,12 @@ void CPlayer::Update(_double deltaTime)
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
+	static int anim = 0;
+	if (CEngine::GetInstance()->IsKeyDown('0'))
+		anim = 0;
+	if (CEngine::GetInstance()->IsKeyDown('1'))
+		anim = 1;
 
+	m_pModel->SetUp_AnimationIndex(anim);
+	m_pModel->Play_Animation(deltaTime);
 }

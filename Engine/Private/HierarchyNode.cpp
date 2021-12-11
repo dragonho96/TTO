@@ -10,8 +10,7 @@ CHierarchyNode::CHierarchyNode()
 HRESULT CHierarchyNode::Initialize(const char * pNodeName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth)
 {
 	strcpy_s(m_szNodeName, pNodeName);
-	//XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(TransformationMatrix));
-	XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
+	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(TransformationMatrix));
 	m_pParent = pParent;
 	m_iDepth = iDepth;
 

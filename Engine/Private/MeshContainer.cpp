@@ -1,5 +1,5 @@
 #include "..\Public\MeshContainer.h"
-
+#include "HierarchyNode.h"
 
 
 CMeshContainer::CMeshContainer()
@@ -22,6 +22,17 @@ HRESULT CMeshContainer::Add_Bones(BONEDESC * pBoneDesc)
 	m_Bones.push_back(pBoneDesc);
 
 	return S_OK;
+}
+
+void CMeshContainer::Get_BoneMatrices(_matrix * pBoneMatrices)
+{
+	_uint		iNumBones = m_Bones.size();
+
+	for (_uint i = 0; i < iNumBones; ++i)
+	{
+		//pBoneMatrices[i] = XMMatrixTranspose(XMLoadFloat4x4(&m_Bones[i]->OffsetMatrix) * m_Bones[i]->pHierarchyNode->Get_CombinedTransformationMatrix());
+		pBoneMatrices[i] = XMMatrixTranspose(XMMatrixMultiply(XMLoadFloat4x4(&m_Bones[i]->OffsetMatrix), m_Bones[i]->pHierarchyNode->Get_CombinedTransformationMatrix()));
+	}
 }
 
 CMeshContainer * CMeshContainer::Create(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex)

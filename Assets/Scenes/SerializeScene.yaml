@@ -7,8 +7,8 @@ GameObjects:
     Type: Object
     Com_Transform:
       Translation: [3.68886209, 5.02683115, 3.5999999]
-      Rotation: [0, 23.2999992, 0]
-      Scale: [0.999990106, 0.999999881, 0.999990106]
+      Rotation: [0, -0, 0]
+      Scale: [0.999981165, 0.999999702, 0.999981165]
     Com_Collider:
       Center: [0, 0.5, 0]
       Type: Capsule
@@ -21,7 +21,7 @@ GameObjects:
         CharacterController: true
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: anotherAdv5.fbx
+      MeshFileName: ExportScale9.fbx
       HasCollider: true
   - Name: Terrain
     UUID: 4963114123050138202

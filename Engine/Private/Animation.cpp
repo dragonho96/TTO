@@ -29,7 +29,8 @@ HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
 
 	if (m_CurrrentTime > m_Duration)
 	{
-		m_CurrrentTime = fmod(m_TickPerSecond * TimeDelta, m_Duration);
+		//m_CurrrentTime = fmod(m_TickPerSecond * TimeDelta, m_Duration);
+		m_CurrrentTime = 0.0;
 		m_isFinished = true;
 	}
 	else
@@ -52,8 +53,14 @@ HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
 		vRotation = XMVectorZero();
 		vPosition = XMVectorZero();
 
-		_uint		iCurrentKeyFrame = 0;
+		_uint		iCurrentKeyFrame = pAnimChannel->Get_CurrentKeyFrame();;
 		_float		fRatio = 0.f;
+
+		if (m_isFinished)
+		{
+			iCurrentKeyFrame = 0;
+			pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
+		}
 
 		if (m_CurrrentTime <= pFirst->Time)
 		{
@@ -72,7 +79,7 @@ HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
 		else
 		{
 			if (m_CurrrentTime > KeyFrames[iCurrentKeyFrame + 1]->Time)
-				++iCurrentKeyFrame;
+				pAnimChannel->Set_CurrentKeyFrame(++iCurrentKeyFrame);
 
 
 			_float		fRatio = (m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /

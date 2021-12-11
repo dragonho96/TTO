@@ -17,6 +17,9 @@ public:
 	HRESULT Render(_uint iMaterialIndex, _uint iPassIndex);
 
 public:
+	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
+	HRESULT Play_Animation(_double TimeDelta);
+public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
 private:
@@ -27,11 +30,9 @@ private:
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo();
 	HRESULT SetUp_AnimationInfo();
-	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
 	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
 	void Add_ChannelToHierarchyNode(_uint iAnimationindex, class CChannel* pChannel);
 	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
-
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
 	void RemoveBuffer();
