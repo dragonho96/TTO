@@ -30,8 +30,17 @@ void CMeshContainer::Get_BoneMatrices(_matrix * pBoneMatrices)
 
 	for (_uint i = 0; i < iNumBones; ++i)
 	{
-		//pBoneMatrices[i] = XMMatrixTranspose(XMLoadFloat4x4(&m_Bones[i]->OffsetMatrix) * m_Bones[i]->pHierarchyNode->Get_CombinedTransformationMatrix());
 		pBoneMatrices[i] = XMMatrixTranspose(XMMatrixMultiply(XMLoadFloat4x4(&m_Bones[i]->OffsetMatrix), m_Bones[i]->pHierarchyNode->Get_CombinedTransformationMatrix()));
+	}
+}
+
+void CMeshContainer::Get_BoneMatrices_Ragdoll(_matrix * pBoneMatrices)
+{
+	_uint		iNumBones = m_Bones.size();
+
+	for (_uint i = 0; i < iNumBones; ++i)
+	{
+		pBoneMatrices[i] = XMMatrixTranspose(m_Bones[i]->pHierarchyNode->Get_CombinedTransformationMatrix());
 	}
 }
 

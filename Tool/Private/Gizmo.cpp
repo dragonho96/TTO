@@ -156,7 +156,7 @@ void CGizmo::ManipulateGameObject()
 {
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(winPos.x, winPos.y + ImGui::GetFontSize(), imageRect.x, imageRect.y);
-
+	
 	ImGuizmo::Manipulate(_view, _projection, m_CurrentGizmoOperation, mCurrentGizmoMode, _objMat, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 	XMFLOAT4X4 objMat;
 	memcpy(&objMat, _objMat, sizeof(XMFLOAT4X4));

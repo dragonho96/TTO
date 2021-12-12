@@ -7,6 +7,13 @@ BEGIN(Engine)
 
 class ENGINE_DLL CModel final : public CComponent
 {
+public:
+	typedef struct tagRagdollBoneDesc
+	{
+		PxRigidDynamic* pRb;
+		BONEDESC*		pParentBone;
+		BONEDESC*		pChildBone;
+	}RAGDOLLBONEDESC;
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CModel(const CModel& rhs);
@@ -31,7 +38,9 @@ private:
 	HRESULT SetUp_SkinnedInfo();
 	HRESULT SetUp_AnimationInfo();
 	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
+	HRESULT Update_CombinedTransformationMatrix_Ragdoll();
 	void Add_ChannelToHierarchyNode(_uint iAnimationindex, class CChannel* pChannel);
+public:
 	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
@@ -42,10 +51,14 @@ public:
 
 public:
 	void SetRagdollBoneDesc(string name, BONEDESC* desc);
-	void CreateRagdollRbs();
+	HRESULT CreateRagdollRbs();
 	void CreateCapsuleRb(BONEDESC* parent, BONEDESC* child, string name);
 	void CreateD6Joint(string parent, string child, string jointBone);
 	void ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint* joint);
+	void SetRagdollRbTransform(RAGDOLLBONEDESC* ragdollBoneDesc);
+	void SetRagdollSimulate(_bool result);
+
+	PxRigidDynamic* GetRagdollRb(string name);
 private:
 	void CreatePxMesh();
 
@@ -91,6 +104,7 @@ protected:
 	Scope<class CShader>			m_pShader = nullptr;
 	class CTransform*				m_pTransform = nullptr;
 
+	_bool							m_bSimulateRagdoll = false;
 protected:
 	string m_pMeshFilePath = "";
 	string m_pMeshFileName = "";
@@ -104,7 +118,7 @@ private:
 
 private:
 	unordered_map<string, BONEDESC*>	m_RagdollBones;
-	unordered_map<string, PxRigidDynamic*> m_RagdollRbs;
+	unordered_map<string, RAGDOLLBONEDESC*> m_RagdollRbs;
 
 
 public:

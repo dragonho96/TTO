@@ -82,8 +82,8 @@ HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
 				pAnimChannel->Set_CurrentKeyFrame(++iCurrentKeyFrame);
 
 
-			_float		fRatio = (m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /
-				(KeyFrames[iCurrentKeyFrame + 1]->Time - KeyFrames[iCurrentKeyFrame]->Time);
+			_float		fRatio = (_float)(m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /
+				(_float)(KeyFrames[iCurrentKeyFrame + 1]->Time - KeyFrames[iCurrentKeyFrame]->Time);
 
 			vSourScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vScale);
 			vSourRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame]->vRotation);

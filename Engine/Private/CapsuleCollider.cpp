@@ -1,6 +1,6 @@
 #include "..\Public\CapsuleCollider.h"
 #include "Transform.h"
-
+#include "PxManager.h"
 
 CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
@@ -111,8 +111,18 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		//desc.behaviorCallback = 
 		//desc.reportCallback = &m_callback;
 		//CE_ASSERT(desc.isValid(), "Capsule is not valid");
-
 		m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
+		//PxShape* shape = nullptr;
+		//m_pController->getActor()->getShapes(&shape, 1);
+		//PxFilterData filterData;
+		//filterData.word0 = CPxManager::GROUP2;
+		//filterData.word1 = CPxManager::GROUP1;
+		//shape->setSimulationFilterData(filterData);
+		//filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
+		//filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID
+		//shape->setSimulationFilterData(filterData);
+		//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+		//shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 		return;
 	}
 

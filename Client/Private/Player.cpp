@@ -2,6 +2,8 @@
 #include "..\Public\Player.h"
 #include "PxManager.h"
 #include "BoxCollider.h"
+#include "HierarchyNode.h"
+#include "Engine.h"
 
 USING(Client)
 
@@ -93,7 +95,7 @@ void CPlayer::Update(_double deltaTime)
 		if (CEngine::GetInstance()->IsKeyPressed('O'))
 		{
 			const PxU32 bufferSize = 256;
-	
+
 			PxOverlapHit hitBuffer[bufferSize];
 			PxOverlapBuffer hit(hitBuffer, bufferSize);            // [out] Overlap results
 			PxGeometry overlapShape = PxSphereGeometry(5.f);  // [in] shape to test for overlaps
@@ -101,7 +103,7 @@ void CPlayer::Update(_double deltaTime)
 			_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
 			shapePose.q = PxIdentity;
 			memcpy(&shapePose.p, &position, sizeof(_float3));
-			PxQueryFilterData fd; 
+			PxQueryFilterData fd;
 			//fd.flags = PxQueryFlag::eSTATIC;
 			fd.data.word0 = CPxManager::GROUP1;
 			bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
@@ -117,15 +119,46 @@ void CPlayer::Update(_double deltaTime)
 			}
 		}
 	}
+
+	if (CEngine::GetInstance()->IsKeyDown('9'))
+	{
+		m_pModel->SetRagdollSimulate(true);
+	}
+	if (CEngine::GetInstance()->IsKeyDown('8'))
+	{
+		m_pModel->SetRagdollSimulate(false);
+	}
+
+	//CHierarchyNode* pelvis = m_pModel->Find_HierarchyNode("Pelvis");
+	//if (pelvis)
+	//{
+	//	_matrix pelvisMat = pelvis->Get_CombinedTransformationMatrix();
+
+	//	_vector scale, rotation, pos;
+	//	XMMatrixDecompose(&scale, &rotation, &pos, pelvisMat);
+	//	_float4 vpos;
+	//	XMStoreFloat4(&vpos, pos);
+	//	string str = "" + to_string(vpos.x) + ", " + to_string(vpos.y) + ", " + to_string(vpos.z);
+	//	ADDLOG(str.c_str());
+	//}
+
+	PxRigidDynamic* pelvisRb = m_pModel->GetRagdollRb("Body");
+	PxTransform transform = pelvisRb->getGlobalPose();
+	string str = "" + to_string(transform.p.x) + ", " + to_string(transform.p.y) + ", " + to_string(transform.p.z);
+	ADDLOG(str.c_str());
 }
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
+	// Ragdoll Anim
+
 	static int anim = 0;
 	if (CEngine::GetInstance()->IsKeyDown('0'))
 		anim = 0;
 	if (CEngine::GetInstance()->IsKeyDown('1'))
 		anim = 1;
+
+
 
 	m_pModel->SetUp_AnimationIndex(anim);
 	m_pModel->Play_Animation(deltaTime);

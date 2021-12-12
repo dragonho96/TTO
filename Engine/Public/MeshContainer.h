@@ -17,6 +17,7 @@ public:
 
 public:
 	void Get_BoneMatrices(_matrix* pBoneMatrices);
+	void Get_BoneMatrices_Ragdoll(_matrix* pBoneMatrices);
 
 	_uint Get_MeshMaterialIndex() const {
 		return m_iMaterialIndex;

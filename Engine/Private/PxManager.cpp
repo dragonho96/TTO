@@ -4,15 +4,64 @@
 
 IMPLEMENT_SINGLETON(CPxManager)
 
+
+PxFilterFlags myFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0, PxFilterObjectAttributes attributes1, PxFilterData filterData1, PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+	//let triggers through
+	//if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1))
+	//{
+	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+	//	return PxFilterFlag::eDEFAULT;
+	//}
+
+	//generate contacts for all that were not filtered above
+	//pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+
+	//trigger the contact callBack for pairs (A, B) where
+	//the filtermask of A contains the ID of B and vice versa
+	if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
+	{
+		//pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else
+	{
+		return PxFilterFlag::eDEFAULT;
+	}
+
+	// return PxFilterFlag::eDEFAULT;
+
+
+	//bool s0 = PxGetFilterObjectType(attributes0) == PxFilterObjectType::eARTICULATION;
+	//bool s1 = PxGetFilterObjectType(attributes1) == PxFilterObjectType::eRIGID_STATIC;
+
+	//if (filterData0.word0 == PxFilterObjectFlag::eKINEMATIC && filterData1.word0 == PxFilterObjectFlag::eKINEMATIC)
+	//	return PxFilterFlag::eSUPPRESS;	//NOTE: Waiting on physx fix for refiltering on aggregates. For now use supress which automatically tests when changes to simulation happen
+
+		// Find out which channels the objects are in
+
+	// ignore kinematic-kinematic interactions which don't involve a destructible
+	//if (k0 && k1)
+	//{
+	//	return PxFilterFlag::eSUPPRESS;	//NOTE: Waiting on physx fix for refiltering on aggregates. For now use supress which automatically tests when changes to simulation happen
+	//}
+
+	return PxFilterFlag::eDEFAULT;
+}
+
+
 CPxManager::CPxManager()
 {
 }
 
 void CPxManager::Free()
 {
+	m_pScene->flushQueryUpdates();
+	SafeDelete(m_pMyCallback);
 	PX_RELEASE(m_pMaterial);
 	PX_RELEASE(m_pCooking);
 	PX_RELEASE(m_pControllerManager);
+	// PX_RELEASE(m_pAggregate);
 	PX_RELEASE(m_pScene);
 	PX_RELEASE(m_pDispatcher);
 	PX_RELEASE(m_pPhysics);
@@ -28,33 +77,65 @@ void CPxManager::Free()
 HRESULT CPxManager::Initialize()
 {
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
-	
-	m_pPvd = PxCreatePvd(*m_pFoundation);
-	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
-	bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-
 	PxTolerancesScale scale;
 	scale.length = 1;        // typical length of an object
 	scale.speed = 9.81f;         // typical speed of an object, gravity*1s is a reasonable choice
 
+#ifdef _DEBUG
+	m_pPvd = PxCreatePvd(*m_pFoundation);
+	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	// bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, m_pPvd);
-	//m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true);
 	PxInitExtensions(*m_pPhysics, m_pPvd);
+#else
+	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, nullptr);
+	PxInitExtensions(*m_pPhysics, nullptr);
+#endif
+
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(scale));
+
+
+	//m_pPvd = PxCreatePvd(*m_pFoundation);
+	//PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	//// bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	//bool status = m_pPvd->connect(*transport, PxPvdInstrumentationFlag::ePROFILE);
+	//m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true, m_pPvd);
+	//PxInitExtensions(*m_pPhysics, m_pPvd);
+
+	////m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, scale, true);
+	//	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(scale));
+
 	//if (!mCooking)
 	//	throw("PxCreateCooking failed!");
 
+
+
+
 	PxSceneDesc sceneDesc(m_pPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -1.f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 	m_pDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = m_pDispatcher;
+	sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+	sceneDesc.flags |= PxSceneFlag::eENABLE_STABILIZATION;
+	sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+	sceneDesc.gpuMaxNumPartitions = 8;
+
+	// sceneDesc.filterShader = myFilterShader;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 	m_pScene = m_pPhysics->createScene(sceneDesc);
-	
+
 	m_pScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 100.0f);
 	m_pScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 2.0f);
 	m_pScene->setVisualizationParameter(PxVisualizationParameter::eCULL_BOX, 2.0f);
 
+
+
+	//m_pAggregate = m_pPhysics->createAggregate(PxU32(128), false);
+	//m_pScene->addAggregate(*m_pAggregate);
+
+	m_pMyCallback = new MyCollisionCallBack();
+	m_pScene->setSimulationEventCallback(m_pMyCallback);
 	PxPvdSceneClient* pvdClient = m_pScene->getScenePvdClient();
 	if (pvdClient)
 	{
@@ -66,7 +147,7 @@ HRESULT CPxManager::Initialize()
 	PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, PxPlane(0, 1, 0, 0), *m_pMaterial);
 	groundPlane->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
 	m_pScene->addActor(*groundPlane);
-	
+
 
 	m_pControllerManager = PxCreateControllerManager(*m_pScene);
 	return S_OK;
@@ -76,8 +157,8 @@ void CPxManager::Update(_double DeltaTime)
 {
 	if (m_pScene)
 	{
-		//m_pScene->simulate((physx::PxReal)DeltaTime);
-		m_pScene->simulate((physx::PxReal)1/60.f);
+		m_pScene->simulate((physx::PxReal)DeltaTime);
+		// m_pScene->simulate((physx::PxReal)1/60.f);
 		m_pScene->fetchResults(true);
 	}
 }
@@ -92,3 +173,15 @@ void CPxManager::AddActor(PxRigidActor * pActor)
 
 	m_pScene->addActor(*pActor);
 }
+
+void CPxManager::AddAggregateActor(PxRigidActor * pActor)
+{
+	if (nullptr == pActor)
+	{
+		MSG_BOX("Failed To Creating CSphereCollider");
+		return;
+	}
+
+	// m_pAggregate->addActor(*pActor);
+}
+

@@ -7,6 +7,7 @@
 
 #include "Animation.h"
 #include "Channel.h"
+#include "PxManager.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -43,6 +44,7 @@ HRESULT CModel::Initialize(void * pArg)
 	if (pArg)
 		m_pTransform = (CTransform*)pArg;
 
+	m_bSimulateRagdoll = false;
 	return S_OK;
 }
 
@@ -80,8 +82,17 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
-	if (0 < m_Animations.size())
-		iPassIndex = 1;
+	//if (0 < m_Animations.size())
+	//	iPassIndex = 1;
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		if (m_bSimulateRagdoll)
+			iPassIndex = 2;
+		else
+			iPassIndex = 1;
+	}
+	else
+		iPassIndex = 0;
 
 	m_pShader->Render(iPassIndex);
 
@@ -89,11 +100,16 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
-		ZeroMemory(BoneMatrices, sizeof(_matrix) * 256);
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+		{
+			ZeroMemory(BoneMatrices, sizeof(_matrix) * 256);
 
-		pMeshContainer->Get_BoneMatrices(BoneMatrices);
+			pMeshContainer->Get_BoneMatrices(BoneMatrices);
+			// pMeshContainer->Get_BoneMatrices_Ragdoll(BoneMatrices);
 
-		m_pShader->SetUp_ValueOnShader("g_BoneMatrices", BoneMatrices, sizeof(_matrix) * 256);
+			m_pShader->SetUp_ValueOnShader("g_BoneMatrices", BoneMatrices, sizeof(_matrix) * 256);
+		}
+
 
 		m_pDeviceContext->DrawIndexed(pMeshContainer->Get_NumFaces() * 3,
 			pMeshContainer->Get_StartFaceIndex() * 3,
@@ -292,9 +308,10 @@ HRESULT CModel::SetUp_SkinnedInfo()
 
 			BONEDESC*	pBoneDesc = new BONEDESC;
 			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
-
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
 			memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
+			CHierarchyNode* h = pBoneDesc->pHierarchyNode;
+			memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
 
 			SetRagdollBoneDesc(pBone->mName.data, pBoneDesc);
 
@@ -345,7 +362,10 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
 
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
-	Update_CombinedTransformationMatrices(TimeDelta);
+	if (m_bSimulateRagdoll)
+		Update_CombinedTransformationMatrix_Ragdoll();
+	else
+		Update_CombinedTransformationMatrices(TimeDelta);
 
 	return S_OK;
 }
@@ -412,6 +432,8 @@ HRESULT CModel::SetUp_AnimationInfo()
 		}
 		m_Animations.push_back(pAnimation);
 	}
+
+	return S_OK;
 }
 
 HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
@@ -433,6 +455,18 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 
 	for (auto& pHierarchyNodes : m_HierarchyNodes)
 		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex);
+
+	// Set ragdoll rb position
+	for (auto& ragdollRb : m_RagdollRbs)
+		SetRagdollRbTransform(ragdollRb.second);
+
+	return S_OK;
+}
+
+HRESULT CModel::Update_CombinedTransformationMatrix_Ragdoll()
+{
+	for (auto& pHierarchyNodes : m_HierarchyNodes)
+		pHierarchyNodes->Update_CombinedTransformationMatrix_Ragdoll();
 
 	return S_OK;
 }
@@ -509,8 +543,8 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(Sort_MeshesByMaterial()))
 		return E_FAIL;
 
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
-		CreatePxMesh();
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
+	//	CreatePxMesh();
 
 	if (false == m_pScene->HasAnimations())
 	{
@@ -533,22 +567,30 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
 		return E_FAIL;
 
+	HRESULT result = CreateRagdollRbs();
+
 	if (FAILED(SetUp_AnimationInfo()))
 		return E_FAIL;
 
-	//if (FAILED(Update_CombinedTransformationMatrices(0.0)))
+	
+	//if (FAILED(CreateRagdollRbs()))
 	//	return E_FAIL;
 
 	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
-	//	CreateRagdollRbs();
 
 
-	return S_OK;
+	return result;
 }
 
 void CModel::RemoveBuffer()
 {
 	m_pShader.reset();
+
+	m_RagdollBones.clear();
+
+	for (auto& rb : m_RagdollRbs)
+		SafeDelete(rb.second);
+	m_RagdollRbs.clear();
 
 	for (auto& anim : m_Animations)
 		SafeRelease(anim);
@@ -603,7 +645,7 @@ void CModel::SetRagdollBoneDesc(string name, BONEDESC* desc)
 		m_RagdollBones.emplace(name, desc);
 }
 
-void CModel::CreateRagdollRbs()
+HRESULT CModel::CreateRagdollRbs()
 {
 	BONEDESC* Pelvis = m_RagdollBones["Pelvis"];
 
@@ -647,8 +689,10 @@ void CModel::CreateRagdollRbs()
 	CreateD6Joint("RArm", "RForearm", "RElbowSplitter");
 
 
-	for (auto& rb : m_RagdollRbs)
-		rb.second->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+	//for (auto& rb : m_RagdollRbs)
+	//	rb.second->pRb->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, !m_bSimulateRagdoll);
+
+	return S_OK;
 }
 
 void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
@@ -674,7 +718,7 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 
 	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, parentOffset), m_pTransform->GetWorldMatrix());
 	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, childOffset), m_pTransform->GetWorldMatrix());
-	
+
 
 	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
 	XMMatrixDecompose(&cscale, &crotation, &cpos, newChildMat);
@@ -694,34 +738,47 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	_float half_height = abs(len_minus_2r / 2.f);
 
 	PxShape* shape = CEngine::GetInstance()->GetPhysics()->createShape(PxCapsuleGeometry(radius, half_height), *CEngine::GetInstance()->GetMaterial());
-	//PxTransform local;
-	//local.p = { XMVectorGetX(midPos), XMVectorGetY(midPos) , XMVectorGetZ(midPos)};
-	//local.q = PxIdentity;
-	//shape->setLocalPose(local);
+	// shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 
-	_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+	//PxFilterData filterData;
+	////filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
+	////filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID
+	//filterData.word0 = CPxManager::GROUP1;
+	//filterData.word1 = CPxManager::GROUP2;
+	//shape->setSimulationFilterData(filterData);
+	//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+
+
+	////shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 	PxTransform transform;
 	memcpy(&transform.p, &midPos, sizeof(_float3));
-	//XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pTransform->GetMatrix()));
-	XMVECTOR quat = XMQuaternionRotationMatrix(newParentMat);
-	memcpy(&transform.q, &quat, sizeof(_float4));
-	//transform.p.x *= -1;
-	//transform.p.z *= -1;
+	memcpy(&transform.q, &rotation, sizeof(_float4));
 	PxRigidDynamic* body = CEngine::GetInstance()->GetPhysics()->createRigidDynamic(transform);
-	body->setMass(1.f);
+	body->setMass(10.f);
 	body->attachShape(*shape);
 	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+	// body->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
+
 	CEngine::GetInstance()->AddActor(body);
 
-	m_RagdollRbs.emplace(name, body);
+	RAGDOLLBONEDESC* ragdollBoneDesc = new RAGDOLLBONEDESC();
+	ragdollBoneDesc->pRb = body;
+	ragdollBoneDesc->pParentBone = parent;
+	ragdollBoneDesc->pChildBone = child;
+
+	m_RagdollRbs.emplace(name, ragdollBoneDesc);
+	parent->pHierarchyNode->AddRagdollRb(body);
+
+
 }
 
 void CModel::CreateD6Joint(string parent, string child, string jointBone)
 {
 	BONEDESC* pJointBone = m_RagdollBones[jointBone];
 
-	PxRigidDynamic* parentRb = m_RagdollRbs[parent];
-	PxRigidDynamic* childRb = m_RagdollRbs[child];
+	PxRigidDynamic* parentRb = m_RagdollRbs[parent]->pRb;
+	PxRigidDynamic* childRb = m_RagdollRbs[child]->pRb;
 
 	_float4x4 joingOffset = pJointBone->OffsetMatrix;
 	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&joingOffset)), m_pTransform->GetWorldMatrix());
@@ -751,6 +808,59 @@ void CModel::ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::Px
 
 	joint->setSwingLimit(physx::PxJointLimitCone(swing0, swing1));
 	joint->setTwistLimit(physx::PxJointAngularLimitPair(twistLo, twistHi));
+}
+
+void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
+{
+	PxTransform transform;
+	XMMATRIX matParent = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pParentBone->OffsetMatrix), ragdollBoneDesc->pParentBone->pHierarchyNode->Get_CombinedTransformationMatrix());
+	XMMATRIX matChild = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pChildBone->OffsetMatrix), ragdollBoneDesc->pChildBone->pHierarchyNode->Get_CombinedTransformationMatrix());
+	matParent = XMMatrixMultiply(matParent, XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+	matChild = XMMatrixMultiply(matChild, XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+
+	_vector scale, rotation, pos;
+	XMMatrixDecompose(&scale, &rotation, &pos, matParent);
+
+	_float4x4 newChildFloat4x4;
+	_float4x4 newParentFloat4x4;
+	_vector pVec, cVec;
+	XMStoreFloat4x4(&newParentFloat4x4, matParent);
+	XMStoreFloat4x4(&newChildFloat4x4, matChild);
+	memcpy(&pVec, newParentFloat4x4.m[3], sizeof(_vector));
+	memcpy(&cVec, newChildFloat4x4.m[3], sizeof(_vector));
+	XMVECTOR midPos = XMVectorDivide(XMVectorAdd(pVec, cVec), FXMVECTOR{ 2.f, 2.f, 2.f, 2.f });
+
+	memcpy(&transform.p, &midPos, sizeof(_float3));
+	memcpy(&transform.q, &rotation, sizeof(_float4));
+	ragdollBoneDesc->pRb->setGlobalPose(transform, false);
+	ragdollBoneDesc->pRb->setKinematicTarget(transform);
+	ragdollBoneDesc->pRb->putToSleep();
+}
+
+void CModel::SetRagdollSimulate(_bool result)
+{
+	m_bSimulateRagdoll = result;
+
+	for (auto& rb : m_RagdollRbs)
+	{
+		rb.second->pRb->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, !result);
+		rb.second->pRb->setLinearVelocity(PxVec3(PxZero));
+		rb.second->pRb->setAngularVelocity(PxVec3(PxZero));
+		rb.second->pRb->wakeUp();
+	}
+		//if (m_bSimulateRagdoll)
+		//{
+		//	PxShape* shape = nullptr;
+		//	rb.second->pRb->getShapes(&shape, 1);
+		//	// shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+		//}
+
+
+}
+
+PxRigidDynamic * CModel::GetRagdollRb(string name)
+{
+	return m_RagdollRbs[name]->pRb;
 }
 
 void CModel::CreatePxMesh()

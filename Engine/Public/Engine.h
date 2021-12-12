@@ -144,6 +144,7 @@ public:
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
 	void					AddActor(PxRigidActor* pActor);
+	void					AddAggregateActor(PxRigidActor* pActor);
 	PxScene*				GetScene();
 	PxCooking*				GetCooking();
 #pragma endregion

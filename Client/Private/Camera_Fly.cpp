@@ -79,7 +79,7 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 	_float4 pos;
 	XMStoreFloat4(&pos, vPosition);
 	str = "" + to_string(pos.x) + ", " + to_string(pos.y) + ", " + to_string(pos.z);
-	ADDLOG(str.c_str());
+	// ADDLOG(str.c_str());
 
 
 	

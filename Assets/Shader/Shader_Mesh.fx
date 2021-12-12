@@ -78,6 +78,26 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 
 }
 
+VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+    
+    matrix BoneMatrix = g_BoneMatrices.BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+
+    matWV = mul(BoneMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexUV = In.vTexUV;
+
+    return Out;
+}
+
 
 struct PS_IN
 {
@@ -114,6 +134,15 @@ technique11		DefaultDevice
         SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN_ANIM();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+    pass RagdollAnimation
+    {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_ANIM_RAGDOLL();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

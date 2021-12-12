@@ -74,8 +74,7 @@ void CEngine::ReleaseEngine()
 	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CImGuiManager");
 
-	if (0 != CPxManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CPhysX");
+
 
 	if (0 != CInputManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CInputManager");
@@ -97,6 +96,9 @@ void CEngine::ReleaseEngine()
 
 	if (0 != CComponentManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CComponentManager");
+
+	if (0 != CPxManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CPhysX");
 
 	if (0 != CLightManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CLightManager");
@@ -533,6 +535,11 @@ PxControllerManager * CEngine::GetControllerManager()
 void CEngine::AddActor(PxRigidActor * pActor)
 {
 	m_pPxManager->AddActor(pActor);
+}
+
+void CEngine::AddAggregateActor(PxRigidActor * pActor)
+{
+	m_pPxManager->AddAggregateActor(pActor);
 }
 
 PxScene * CEngine::GetScene()
