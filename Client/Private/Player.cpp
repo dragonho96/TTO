@@ -122,6 +122,9 @@ void CPlayer::Update(_double deltaTime)
 
 	if (CEngine::GetInstance()->IsKeyDown('9'))
 	{
+
+		m_pCollider->ReleaseController();
+		m_pController = nullptr;
 		m_pModel->SetRagdollSimulate(true);
 	}
 	if (CEngine::GetInstance()->IsKeyDown('8'))

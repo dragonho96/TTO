@@ -43,6 +43,9 @@ public:
 public:
 	_float3&	GetRelativePos() { return m_vRelativePos; }
 	void		SetRelativePos(_float3 center) { m_vRelativePos = center; }
+
+public:
+	void ReleaseController();
 protected:
 	_float3			m_vRelativePos = { 0.f, 0.f, 0.f };
 	RIGIDBODYDESC	m_RigidBodyDesc;

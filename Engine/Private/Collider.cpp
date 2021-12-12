@@ -83,3 +83,12 @@ HRESULT CCollider::Render()
 	return S_OK;
 }
 
+void CCollider::ReleaseController()
+{
+	if (m_pController)
+	{
+		m_pController->release();
+		m_pController = nullptr;
+	}
+}
+
