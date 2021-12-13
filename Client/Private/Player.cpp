@@ -145,10 +145,10 @@ void CPlayer::Update(_double deltaTime)
 	//	ADDLOG(str.c_str());
 	//}
 
-	PxRigidDynamic* pelvisRb = m_pModel->GetRagdollRb("Body");
-	PxTransform transform = pelvisRb->getGlobalPose();
-	string str = "" + to_string(transform.p.x) + ", " + to_string(transform.p.y) + ", " + to_string(transform.p.z);
-	ADDLOG(str.c_str());
+	//PxRigidDynamic* pelvisRb = m_pModel->GetRagdollRb("Body");
+	//PxTransform transform = pelvisRb->getGlobalPose();
+	//string str = "" + to_string(transform.p.x) + ", " + to_string(transform.p.y) + ", " + to_string(transform.p.z);
+	//ADDLOG(str.c_str());
 }
 
 void CPlayer::LapteUpdate(_double deltaTime)

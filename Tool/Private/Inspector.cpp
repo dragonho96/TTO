@@ -108,6 +108,7 @@ void CInspector::UpdateGameObject()
 
 		if (ImGui::MenuItem("Model"))
 		{
+			// TODO: FIX HERE
 			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_Model", "Com_Model", g_pObjFocused->GetComponent("Com_Transform"))))
 				MSG_BOX("Failed to AddComponent Model");
 		}

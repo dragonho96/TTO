@@ -11,7 +11,8 @@ public:
 
 public:
 	HRESULT Render(_uint iPassIndex = 0);
-
+	HRESULT SetInputLayout(_uint iPassIndex = 0);
+	HRESULT Apply(_uint iPassIndex = 0);
 private:
 	//HRESULT CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut);
 

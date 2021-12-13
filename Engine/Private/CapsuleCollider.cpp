@@ -111,7 +111,8 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		//desc.behaviorCallback = 
 		//desc.reportCallback = &m_callback;
 		//CE_ASSERT(desc.isValid(), "Capsule is not valid");
-		m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
+		if (CEngine::GetInstance()->GetControllerManager())
+			m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
 		//PxShape* shape = nullptr;
 		//m_pController->getActor()->getShapes(&shape, 1);
 		//PxFilterData filterData;

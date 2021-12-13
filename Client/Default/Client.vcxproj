@@ -239,6 +239,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

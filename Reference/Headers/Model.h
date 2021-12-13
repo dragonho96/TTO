@@ -30,10 +30,10 @@ public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
 private:
-	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex);
+	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex, _fmatrix PivotMatrix);
 	HRESULT Create_VertexIndexBuffer(string pShaderFilePath);
 	HRESULT Create_Materials(aiMaterial*	pMaterial, string pMeshFilePath);
-	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0);
+	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0, _fmatrix PivotMatrix = XMMatrixIdentity());
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo();
 	HRESULT SetUp_AnimationInfo();
@@ -95,13 +95,14 @@ private:
 private:
 	ComRef<ID3D11Buffer>			m_pVB = nullptr;
 	ComRef<ID3D11Buffer>			m_pIB = nullptr;
+
 	_uint					m_iStride = 0;
 
 protected:
 	vector<EFFECTDESC>			m_EffectDescs;
 	ID3DX11Effect*				m_pEffect = nullptr;
 
-	Scope<class CShader>			m_pShader = nullptr;
+	Ref<class CShader>			m_pShader = nullptr;
 	class CTransform*				m_pTransform = nullptr;
 
 	_bool							m_bSimulateRagdoll = false;
@@ -123,7 +124,7 @@ private:
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

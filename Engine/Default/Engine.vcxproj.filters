@@ -187,6 +187,9 @@
     <Filter Include="01.Utility\03.Components\Model\Channel">
       <UniqueIdentifier>{bc5ba985-ca3e-417a-af94-803576f77bdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\Model\ModelManager">
+      <UniqueIdentifier>{037931c9-486a-47e7-b6ea-b96597a81e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -372,7 +375,10 @@
     <ClInclude Include="..\Public\Channel.h">
       <Filter>01.Utility\03.Components\Model\Channel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Animation.h" />
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -540,6 +546,9 @@
     <ClCompile Include="..\Private\Channel.cpp">
       <Filter>01.Utility\03.Components\Model\Channel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelManager.cpp" />
   </ItemGroup>
 </Project>

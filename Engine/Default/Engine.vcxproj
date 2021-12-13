@@ -209,6 +209,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\MeshContainer.h" />
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\ModelManager.h" />
     <ClInclude Include="..\Public\Pipeline.h" />
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\RectTransform.h" />
@@ -268,6 +269,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\MeshContainer.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\ModelManager.cpp" />
     <ClCompile Include="..\Private\Pipeline.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\RectTransform.cpp" />

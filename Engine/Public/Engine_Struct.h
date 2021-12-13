@@ -12,6 +12,7 @@ namespace Engine
 
 	typedef struct tagBoneDesc
 	{
+		char*		pName = nullptr;
 		class CHierarchyNode*	pHierarchyNode = nullptr;
 		// XMFLOAT4X4		OffsetMatrix * CombindMatrix(TransformationMatrix * pParent->CombindMatrix);
 		XMFLOAT4X4		OffsetMatrix;

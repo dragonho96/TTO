@@ -56,7 +56,7 @@ void CGameObject::LinkTranformWithParent()
 {
 }
 
-void CGameObject::SetActive(_bool value) 
+void CGameObject::SetActive(_bool value)
 {
 	m_bIsActive = value;
 	for (auto& child : m_listChildren)
@@ -145,6 +145,15 @@ HRESULT CGameObject::AddComponent(_uint iSceneIndex, string pPrototypeTag, strin
 	else
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CGameObject::AddModelComponent(_uint iSceneIndex, CComponent * pModel)
+{
+	if (nullptr != GetComponent("Com_Model"))
+		return E_FAIL;
+
+	m_Components.emplace("Com_Model", pModel);
 	return S_OK;
 }
 

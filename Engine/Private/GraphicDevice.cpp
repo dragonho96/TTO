@@ -48,7 +48,7 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	if (FAILED(ReadyConstantBuffer()))
 		return E_FAIL;
 
-	////m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
 	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
@@ -154,7 +154,7 @@ void CGraphicDevice::Render()
 
 void CGraphicDevice::RenderClient()
 {
-	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	// m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 }
 
@@ -386,13 +386,16 @@ HRESULT CGraphicDevice::ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iH
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
 		return E_FAIL;
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	ZeroMemory(&descDSV, sizeof(descDSV));
-	descDSV.Format = TextureDesc.Format;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0;
+	//D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+	//ZeroMemory(&descDSV, sizeof(descDSV));
+	//descDSV.Format = TextureDesc.Format;
+	//descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	//descDSV.Texture2D.MipSlice = 0;
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, &descDSV, &m_pDepthStencilRTV)))
+	//if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, &descDSV, &m_pDepthStencilRTV)))
+	//	return E_FAIL;
+
+	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilRTV)))
 		return E_FAIL;
 
 	pDepthStencilTexture->Release();

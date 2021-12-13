@@ -112,6 +112,7 @@ public:
 	HRESULT AddPrototype(_uint iSceneIndex, string pPrototypeTag, class CComponent* pPrototype);
 	class CComponent* CloneComponent(_uint iSceneIndex, string pPrototypeTag, void* pArg = nullptr);
 	void ClearComponentManager(_uint iSceneIndex);
+	CComponent* CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg = nullptr);
 #pragma endregion
 
 #pragma region LIGHT
@@ -139,6 +140,7 @@ public:
 #pragma endregion
 
 #pragma region PHYSX
+	void					PxInitalize();
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
@@ -159,6 +161,7 @@ private:
 	class CPipeline*				m_pPipeline = nullptr;
 	class CScriptObjectManager*		m_pScriptObjectManager = nullptr;
 	class CLightManager*			m_pLightManager = nullptr;
+	class CModelManager*			m_pModelManager = nullptr;
 
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;

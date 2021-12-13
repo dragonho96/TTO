@@ -56,22 +56,25 @@ CPxManager::CPxManager()
 
 void CPxManager::Free()
 {
-	m_pScene->flushQueryUpdates();
-	SafeDelete(m_pMyCallback);
-	PX_RELEASE(m_pMaterial);
-	PX_RELEASE(m_pCooking);
-	PX_RELEASE(m_pControllerManager);
-	// PX_RELEASE(m_pAggregate);
-	PX_RELEASE(m_pScene);
-	PX_RELEASE(m_pDispatcher);
-	PX_RELEASE(m_pPhysics);
-	if (m_pPvd)
-	{
-		PxPvdTransport* transport = m_pPvd->getTransport();
-		m_pPvd->release();	m_pPvd = NULL;
-		PX_RELEASE(transport);
-	}
-	PX_RELEASE(m_pFoundation);
+	if (!m_pScene)
+		return;
+
+		m_pScene->flushQueryUpdates();
+		SafeDelete(m_pMyCallback);
+		PX_RELEASE(m_pMaterial);
+		PX_RELEASE(m_pCooking);
+		PX_RELEASE(m_pControllerManager);
+		// PX_RELEASE(m_pAggregate);
+		PX_RELEASE(m_pScene);
+		PX_RELEASE(m_pDispatcher);
+		PX_RELEASE(m_pPhysics);
+		if (m_pPvd)
+		{
+			PxPvdTransport* transport = m_pPvd->getTransport();
+			m_pPvd->release();	m_pPvd = NULL;
+			PX_RELEASE(transport);
+		}
+		PX_RELEASE(m_pFoundation);
 }
 
 HRESULT CPxManager::Initialize()

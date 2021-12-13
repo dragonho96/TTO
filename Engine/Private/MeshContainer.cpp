@@ -44,6 +44,25 @@ void CMeshContainer::Get_BoneMatrices_Ragdoll(_matrix * pBoneMatrices)
 	}
 }
 
+HRESULT CMeshContainer::Clone_BoneDesc()
+{
+	vector<BONEDESC*>		OriginalBones = m_Bones;
+	m_Bones.clear();
+
+	for (auto& pOriginalBone : OriginalBones)
+	{
+		BONEDESC*		pBone = new BONEDESC();
+		ZeroMemory(pBone, sizeof(BONEDESC));
+
+		pBone->pHierarchyNode = pOriginalBone->pHierarchyNode;
+		pBone->OffsetMatrix = pOriginalBone->OffsetMatrix;
+		pBone->pName = pOriginalBone->pName;
+		m_Bones.push_back(pBone);
+	}
+
+	return S_OK;
+}
+
 CMeshContainer * CMeshContainer::Create(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex)
 {
 	CMeshContainer*	pInstance = new CMeshContainer();
@@ -53,6 +72,19 @@ CMeshContainer * CMeshContainer::Create(const char* pName, _uint iNumFaces, _uin
 		MSG_BOX("Failed To Creating CMeshContainer");
 		SafeRelease(pInstance);
 	}
+	return pInstance;
+}
+
+CMeshContainer * CMeshContainer::Clone()
+{
+	CMeshContainer*	pInstance = new CMeshContainer(*this);
+
+	if (FAILED(Clone_BoneDesc()))
+	{
+		SafeRelease(pInstance);
+	}
+
+
 	return pInstance;
 }
 

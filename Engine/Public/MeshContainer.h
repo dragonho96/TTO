@@ -14,6 +14,7 @@ public:
 	virtual HRESULT Initialize(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
 public:
 	HRESULT Add_Bones(BONEDESC* pBoneDesc);
+	HRESULT Clone_BoneDesc();
 
 public:
 	void Get_BoneMatrices(_matrix* pBoneMatrices);
@@ -46,6 +47,7 @@ private:
 
 public:
 	static CMeshContainer* Create(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
+	CMeshContainer* Clone();
 	virtual void Free() override;
 };
 

@@ -69,6 +69,7 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
 		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
 
+   
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 
     Out.vPosition = mul(vPosition, matWVP);

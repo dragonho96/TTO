@@ -127,8 +127,8 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
 
 	/* Prototype_BackGround */
 	if (FAILED(m_pEngine->AddPrototype("Prototype_Terrain", CTerrain::Create(m_pDevice, m_pDeviceContext))))

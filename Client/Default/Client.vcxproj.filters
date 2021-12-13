@@ -216,5 +216,8 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
       <Filter>FX</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
