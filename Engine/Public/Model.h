@@ -50,9 +50,10 @@ public:
 	void SetMeshCollider(_bool value) { m_bMeshCollider = value; }
 
 public:
-	void SetRagdollBoneDesc(string name, BONEDESC* desc);
+	void SetRagdollBoneDesc(BONEDESC* desc);
 	HRESULT CreateRagdollRbs();
 	void CreateCapsuleRb(BONEDESC* parent, BONEDESC* child, string name);
+	void CreateSphereRb(BONEDESC* parent, string name);
 	void CreateD6Joint(string parent, string child, string jointBone);
 	void ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint* joint);
 	void SetRagdollRbTransform(RAGDOLLBONEDESC* ragdollBoneDesc);
@@ -93,8 +94,11 @@ private:
 	_uint									m_iAnimationIndex = 0;
 
 private:
-	ComRef<ID3D11Buffer>			m_pVB = nullptr;
-	ComRef<ID3D11Buffer>			m_pIB = nullptr;
+	//ComRef<ID3D11Buffer>			m_pVB = nullptr;
+	//ComRef<ID3D11Buffer>			m_pIB = nullptr;
+
+	ID3D11Buffer*			m_pVB = nullptr;
+	ID3D11Buffer*			m_pIB = nullptr;
 
 	_uint					m_iStride = 0;
 

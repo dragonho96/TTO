@@ -54,7 +54,7 @@ HRESULT CMeshContainer::Clone_BoneDesc()
 		BONEDESC*		pBone = new BONEDESC();
 		ZeroMemory(pBone, sizeof(BONEDESC));
 
-		pBone->pHierarchyNode = pOriginalBone->pHierarchyNode;
+		// pBone->pHierarchyNode = pOriginalBone->pHierarchyNode;
 		pBone->OffsetMatrix = pOriginalBone->OffsetMatrix;
 		pBone->pName = pOriginalBone->pName;
 		m_Bones.push_back(pBone);

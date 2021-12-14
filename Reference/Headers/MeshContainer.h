@@ -35,6 +35,9 @@ public:
 	_uint Get_StartVertexIndex() const {
 		return m_iStartVertexIndex;
 	}
+	vector<BONEDESC*> Get_BoneDesc() {
+		return m_Bones;
+	}
 
 private:
 	char		m_szName[MAX_PATH] = "";

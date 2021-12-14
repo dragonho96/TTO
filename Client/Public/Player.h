@@ -28,6 +28,7 @@ private:
 	PxController*	m_pController;
 	// Inherited via IScriptObject
 
+	CModel*			m_pModel1;
 };
 
 END

@@ -140,7 +140,7 @@ public:
 #pragma endregion
 
 #pragma region PHYSX
-	void					PxInitalize();
+	void					PxInitialize();
 	void					UpdatePx(_double dDeltaTime);
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();

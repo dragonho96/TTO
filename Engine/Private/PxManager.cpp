@@ -117,7 +117,7 @@ HRESULT CPxManager::Initialize()
 
 	PxSceneDesc sceneDesc(m_pPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
-	m_pDispatcher = PxDefaultCpuDispatcherCreate(2);
+	m_pDispatcher = PxDefaultCpuDispatcherCreate(1);
 	sceneDesc.cpuDispatcher = m_pDispatcher;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_STABILIZATION;
@@ -128,9 +128,11 @@ HRESULT CPxManager::Initialize()
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 	m_pScene = m_pPhysics->createScene(sceneDesc);
 
-	m_pScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 100.0f);
-	m_pScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 2.0f);
-	m_pScene->setVisualizationParameter(PxVisualizationParameter::eCULL_BOX, 2.0f);
+	m_pScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
+	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
+	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
+	m_pScene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
+	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eCULL_BOX, 2.0f);
 
 
 
@@ -161,7 +163,6 @@ void CPxManager::Update(_double DeltaTime)
 	if (m_pScene)
 	{
 		m_pScene->simulate((physx::PxReal)DeltaTime);
-		// m_pScene->simulate((physx::PxReal)1/60.f);
 		m_pScene->fetchResults(true);
 	}
 }

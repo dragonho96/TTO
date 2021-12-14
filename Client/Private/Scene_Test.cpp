@@ -191,7 +191,8 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
-	m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
+	
+	// m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 	return S_OK;
 }
 

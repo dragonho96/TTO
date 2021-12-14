@@ -6,7 +6,7 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [0, 0, 0]
+      Translation: [3.82906008, 2.23311734, 2.41537118]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Collider:
@@ -21,5 +21,18 @@ GameObjects:
         CharacterController: true
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: ExportScale9.fbx
+      MeshFileName: cccc.fbx
       HasCollider: false
+  - Name: Terrain
+    UUID: 10024634474122618756
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ../../Assets/Texture/Height.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp

@@ -108,9 +108,8 @@ void CInspector::UpdateGameObject()
 
 		if (ImGui::MenuItem("Model"))
 		{
-			// TODO: FIX HERE
-			if (FAILED(g_pObjFocused->AddComponent(0, "Prototype_Model", "Com_Model", g_pObjFocused->GetComponent("Com_Transform"))))
-				MSG_BOX("Failed to AddComponent Model");
+			CComponent* pModel = CEngine::GetInstance()->CloneModel("", "", "", false, g_pObjFocused->GetComponent("Com_Transform"));
+			g_pObjFocused->AddModelComponent(0, pModel);
 		}
 
 		ImGui::EndPopup();
@@ -532,7 +531,10 @@ void CInspector::DrawModel()
 						if (!strcmp(szExt, ".fbx") || !strcmp(szExt, ".Fbx") || !strcmp(szExt, ".FBX"))
 						{
 							strcat_s(szTextureFileName, szExt);
-							dynamic_cast<CModel*>(pModel)->CreateBuffer(szDir, szTextureFileName);
+							g_pObjFocused->RemoveComponent("Com_Model");
+							CComponent* pModel = CEngine::GetInstance()->CloneModel(szDir, szTextureFileName, "", false, g_pObjFocused->GetComponent("Com_Transform"));
+							g_pObjFocused->AddModelComponent(0, pModel);
+						
 						}
 					}
 					ImGui::EndDragDropTarget();

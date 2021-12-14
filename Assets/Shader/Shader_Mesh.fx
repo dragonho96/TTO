@@ -10,7 +10,7 @@ cbuffer Matrices
 
 struct MeshBoneMatrices
 {
-    matrix BoneMatrices[256];
+    matrix BoneMatrices[512];
 };
 
 MeshBoneMatrices g_BoneMatrices;

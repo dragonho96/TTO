@@ -130,8 +130,6 @@ HRESULT CVIBuffer::RenderDebug(_float3 relativePos)
 	 memcpy(&childMat.m[3][0], &relativePos, sizeof(_float3));
 	 _matrix newMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(newMat), sizeof(_matrix));
-	//}
-
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
 

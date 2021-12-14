@@ -40,6 +40,10 @@ HRESULT CPlayer::Initialize()
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
 	m_pController = m_pCollider->GetController();
+
+	// list.pop_front();
+	// CGameObject* gameObject1 = list.front();
+	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
 	return S_OK;
 }
 
@@ -122,7 +126,6 @@ void CPlayer::Update(_double deltaTime)
 
 	if (CEngine::GetInstance()->IsKeyDown('9'))
 	{
-
 		m_pCollider->ReleaseController();
 		m_pController = nullptr;
 		m_pModel->SetRagdollSimulate(true);
@@ -131,24 +134,8 @@ void CPlayer::Update(_double deltaTime)
 	{
 		m_pModel->SetRagdollSimulate(false);
 	}
-
-	//CHierarchyNode* pelvis = m_pModel->Find_HierarchyNode("Pelvis");
-	//if (pelvis)
-	//{
-	//	_matrix pelvisMat = pelvis->Get_CombinedTransformationMatrix();
-
-	//	_vector scale, rotation, pos;
-	//	XMMatrixDecompose(&scale, &rotation, &pos, pelvisMat);
-	//	_float4 vpos;
-	//	XMStoreFloat4(&vpos, pos);
-	//	string str = "" + to_string(vpos.x) + ", " + to_string(vpos.y) + ", " + to_string(vpos.z);
-	//	ADDLOG(str.c_str());
-	//}
-
-	//PxRigidDynamic* pelvisRb = m_pModel->GetRagdollRb("Body");
-	//PxTransform transform = pelvisRb->getGlobalPose();
-	//string str = "" + to_string(transform.p.x) + ", " + to_string(transform.p.y) + ", " + to_string(transform.p.z);
-	//ADDLOG(str.c_str());
+	//if (CEngine::GetInstance()->IsKeyDown('0'))
+	//	m_pModel1->SetRagdollSimulate(true);
 }
 
 void CPlayer::LapteUpdate(_double deltaTime)
@@ -161,8 +148,9 @@ void CPlayer::LapteUpdate(_double deltaTime)
 	if (CEngine::GetInstance()->IsKeyDown('1'))
 		anim = 1;
 
-
-
-	m_pModel->SetUp_AnimationIndex(anim);
+	m_pModel->SetUp_AnimationIndex(0);
 	m_pModel->Play_Animation(deltaTime);
+
+	//m_pModel1->SetUp_AnimationIndex(1);
+	//m_pModel1->Play_Animation(deltaTime);
 }

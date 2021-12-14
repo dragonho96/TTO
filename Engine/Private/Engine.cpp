@@ -524,7 +524,7 @@ void CEngine::StopAll()
 }
 
 
-void CEngine::PxInitalize()
+void CEngine::PxInitialize()
 {
 	m_pPxManager->Initialize();
 }
