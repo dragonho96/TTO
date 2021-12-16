@@ -155,4 +155,14 @@ namespace Engine
 			out = -1;
 		return out;
 	}
+
+	inline _vector ToVec3(FXMVECTOR vector)
+	{
+		return _vector{ XMVectorGetX(vector), XMVectorGetY(vector), XMVectorGetZ(vector) };
+	}
+
+	inline float Lerp(float a, float b, float f)
+	{
+		return a + f * (b - a);
+	}
 }

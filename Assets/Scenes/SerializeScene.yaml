@@ -6,17 +6,17 @@ GameObjects:
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [3.82906008, 2.23311734, 2.41537118]
+      Translation: [3.79740667, 1.39676535, 2.41537118]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Collider:
-      Center: [0, 0, 0]
+      Center: [0, 0.9, 0]
       Type: Capsule
-      Radius: 0.5
-      Height: 1
+      Radius: 0.200000003
+      Height: 0.899999976
       RigidBody:
         Enabled: true
-        Gravity: false
+        Gravity: true
         Kinematic: false
         CharacterController: true
     Com_Model:

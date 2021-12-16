@@ -31,11 +31,11 @@ void CPlayer::Free()
 
 HRESULT CPlayer::Initialize()
 {
-	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
-	if (list.size() <= 0)
+	list<class CGameObject*> objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	if (objList.size() <= 0)
 		return E_FAIL;
 
-	m_pGameObject = list.front();
+	m_pGameObject = objList.front();
 	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
@@ -44,6 +44,16 @@ HRESULT CPlayer::Initialize()
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
 	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
+
+	list<CGameObject*> camList = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
+	if (camList.size() <= 0)
+		return E_FAIL;
+
+	// TODO: Organize cameras
+	camList.pop_front();
+	CGameObject* m_pCam = camList.front();
+	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
+
 	return S_OK;
 }
 
@@ -53,11 +63,11 @@ void CPlayer::Update(_double deltaTime)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
-		_vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
+		_vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
 		PxVec3 pxLook;
 		memcpy(&pxLook, &look, sizeof(PxVec3));
 
-		_vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
+		_vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
 		PxVec3 pxRight;
 		memcpy(&pxRight, &right, sizeof(PxVec3));
 

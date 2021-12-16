@@ -1,7 +1,7 @@
 #include "..\public\Camera.h"
 #include "Pipeline.h"
 #include "Transform.h"
-
+#include <dsound.h>
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
 	, m_pPipeline(CPipeline::GetInstance())
@@ -33,8 +33,8 @@ HRESULT CCamera::Initialize(void * pArg)
 	//AddComponent(0, "Prototype_Transform", "Com_Transform");
 
 	//m_pTransformCom = dynamic_cast<CTransform*>(GetComponent("Com_Transform"));
-	m_pTransformCom = CTransform::Create(m_pDevice, m_pDeviceContext);
 
+	SetUpComponents(0, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransformCom);
 
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;

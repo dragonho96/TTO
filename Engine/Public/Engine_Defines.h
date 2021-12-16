@@ -24,6 +24,9 @@
 #include "DirectXTex.h"
 #include <DirectXMath.h>
 
+// for sound
+// #include <dsound.h>
+
 #include "DirectXTK/SpriteBatch.h"
 #include "DirectXTK/SpriteFont.h"
 

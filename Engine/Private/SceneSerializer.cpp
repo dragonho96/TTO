@@ -484,7 +484,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
+			// dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
 		else if (type == "Sphere")
@@ -495,7 +495,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			_float radius = colliderCom["Radius"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
+			//dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
 			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
 		}
 		else if (type == "Capsule")
@@ -508,7 +508,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			capsuleSize.second = colliderCom["Height"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
+			//dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
 			dynamic_cast<CCapsuleCollider*>(pCollider)->SetUpRigidActor(&capsuleSize, desc);
 		}
 	}

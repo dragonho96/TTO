@@ -28,6 +28,8 @@ private:
 	PxController*	m_pController;
 	// Inherited via IScriptObject
 
+
+	CTransform*		m_pCameraTransform;
 	CModel*			m_pModel1;
 };
 

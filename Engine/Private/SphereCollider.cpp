@@ -85,34 +85,39 @@ void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 {
 	m_RigidBodyDesc = desc;
 	memcpy(&m_fRadius, pShapeInfo, sizeof(_float));
-	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
-	PxTransform transform;
-	memcpy(&transform.p, &position, sizeof(_float3));
-	transform.p.x += m_vRelativePos.x;
-	transform.p.y += m_vRelativePos.y;
-	transform.p.z += m_vRelativePos.z;
+	SetSize(m_fRadius);
 
-	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
-	memcpy(&transform.q, &quat, sizeof(_float4));
-	PxReal radius = m_fRadius;
-	PxMaterial* pMaterial = m_pEngine->GetMaterial();
-	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxSphereGeometry(radius), *pMaterial);
-
-	// Make Dynamic
-	if (desc.bEnabled)
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	{
-		m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
-		m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
-		m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
-	}
-	// Make Static
-	else
-	{
-		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
-	}
+		_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
+		PxTransform transform;
+		memcpy(&transform.p, &position, sizeof(_float3));
+		transform.p.x += m_vRelativePos.x;
+		transform.p.y += m_vRelativePos.y;
+		transform.p.z += m_vRelativePos.z;
 
-	m_pRigidActor->attachShape(*meshShape);
-	m_pEngine->AddActor(m_pRigidActor);
+		XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+		memcpy(&transform.q, &quat, sizeof(_float4));
+		PxReal radius = m_fRadius;
+		PxMaterial* pMaterial = m_pEngine->GetMaterial();
+		PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxSphereGeometry(radius), *pMaterial);
+
+		// Make Dynamic
+		if (desc.bEnabled)
+		{
+			m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
+			m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
+			m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+		}
+		// Make Static
+		else
+		{
+			m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
+		}
+
+		m_pRigidActor->attachShape(*meshShape);
+		m_pEngine->AddActor(m_pRigidActor);
+	}
 }
 
 void CSphereCollider::SetSize(float fRadius)

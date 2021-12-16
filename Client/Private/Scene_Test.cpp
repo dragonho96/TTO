@@ -22,6 +22,7 @@
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
 #include "Camera_Fly.h"
+#include "Camera_Follow.h"
 #include "Node.h"
 #include "Grid.h"
 #pragma endregion
@@ -61,12 +62,10 @@ HRESULT CScene_Test::Initialize()
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
 
+	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
+
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
-
-	ReadyModel();
-
-	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	ReadyScript();
 
@@ -158,6 +157,9 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	if (FAILED(pEngine->AddPrototype("GameObject_Camera_Fly", CCamera_Fly::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	if (FAILED(pEngine->AddPrototype("GameObject_Camera_Follow", CCamera_Follow::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
 
@@ -166,6 +168,9 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
+		return E_FAIL;
+
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Follow", pLayerTag, &CameraDesc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
@@ -196,11 +201,5 @@ HRESULT CScene_Test::ReadyScript()
 	return S_OK;
 }
 
-HRESULT CScene_Test::ReadyModel()
-{
-	//if (FAILED(m_pEngine->AddPrototype(0, "Component_Model_Player", CModel::Create(m_pDevice, m_pDeviceContext, "../../Assets/Meshes/Kaelthas/", "Kaelthas.fbx", "../../Assets/Shader/Shader_Mesh.fx"))))
-	//	return E_FAIL;
 
-	return S_OK;
-}
 

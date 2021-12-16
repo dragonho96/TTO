@@ -937,7 +937,7 @@ void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
 		memcpy(&transform.q, &rotation, sizeof(_float4));
 		ragdollBoneDesc->pRb->setGlobalPose(transform, false);
 		ragdollBoneDesc->pRb->setKinematicTarget(transform);
-		ragdollBoneDesc->pRb->putToSleep();
+		// ragdollBoneDesc->pRb->putToSleep();
 	}
 	else
 	{

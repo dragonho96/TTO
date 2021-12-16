@@ -187,7 +187,7 @@
     <Filter Include="01.Utility\03.Components\Model\ModelManager">
       <UniqueIdentifier>{037931c9-486a-47e7-b6ea-b96597a81e56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Others\99.Defines">
+    <Filter Include="99.Defines">
       <UniqueIdentifier>{edae9fc9-d973-47a8-9c0d-b5f682223fd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -196,16 +196,16 @@
       <Filter>98.SuperClass</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Engine_Defines.h">
-      <Filter>Others\99.Defines</Filter>
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Engine_Macro.h">
-      <Filter>Others\99.Defines</Filter>
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Engine_Typedef.h">
-      <Filter>Others\99.Defines</Filter>
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Engine_Function.h">
-      <Filter>Others\99.Defines</Filter>
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Timer.h">
       <Filter>00.System\00.Timers</Filter>
@@ -223,7 +223,7 @@
       <Filter>01.Utility\01.Scene\SceneSerializer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Struct.h">
-      <Filter>Others\99.Defines</Filter>
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SceneManager.h">
       <Filter>01.Utility\01.Scene\Manager</Filter>
@@ -378,7 +378,9 @@
     <ClInclude Include="..\Public\Animation.h">
       <Filter>01.Utility\03.Components\Model\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ModelManager.h" />
+    <ClInclude Include="..\Public\ModelManager.h">
+      <Filter>01.Utility\03.Components\Model\ModelManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -549,6 +551,8 @@
     <ClCompile Include="..\Private\Animation.cpp">
       <Filter>01.Utility\03.Components\Model\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ModelManager.cpp" />
+    <ClCompile Include="..\Private\ModelManager.cpp">
+      <Filter>01.Utility\03.Components\Model\ModelManager</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

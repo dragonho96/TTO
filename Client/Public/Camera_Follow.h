@@ -5,12 +5,12 @@
 
 
 BEGIN(Client)
-class CCamera_Fly final : public CCamera
+class CCamera_Follow final : public CCamera
 {
 public:
-	explicit CCamera_Fly(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CCamera_Fly(const CCamera_Fly& rhs);
-	virtual ~CCamera_Fly() = default;
+	explicit CCamera_Follow(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CCamera_Follow(const CCamera_Follow& rhs);
+	virtual ~CCamera_Follow() = default;
 public:
 	virtual HRESULT InitializePrototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -24,7 +24,7 @@ private:
 	CTransform* m_pTargetTransform = nullptr;
 	_vector		m_pTargetLook = { 0, 0, 1};
 public:
-	static CCamera_Fly* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	static CCamera_Follow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
