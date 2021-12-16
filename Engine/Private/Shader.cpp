@@ -33,6 +33,20 @@ HRESULT CShader::Render(_uint iPassIndex)
 	//CEngine::GetInstance()->GetDeviceContext()->PSSetShader(m_PS.Get(), NULL, 0);
 }
 
+HRESULT CShader::SetInputLayout(_uint iPassIndex)
+{
+	CEngine::GetInstance()->GetDeviceContext()->IASetInputLayout(m_EffectDescs[iPassIndex].pLayout);
+	return S_OK;
+}
+
+HRESULT CShader::Apply(_uint iPassIndex)
+{
+	if (FAILED(m_EffectDescs[iPassIndex].pPass->Apply(0, CEngine::GetInstance()->GetDeviceContext())))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 #pragma region VSPSSHADER
 //HRESULT CShader::CompileShaderFromFile(const WCHAR * szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob ** ppBlobOut)
 //{

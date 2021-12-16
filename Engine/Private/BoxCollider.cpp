@@ -93,7 +93,7 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	//aScene->addActor(aCapsuleActor);
 
 	//physx::PxRigidStatic* sphere = physx::PxCreateStatic(*phy.getPhysics(), global_tf, physx::PxSphereGeometry(physx::PxReal(0.5)), *phy.getMaterial());
-	
+
 	// TODO: Add Static and Dynamic RigidBody
 	// Create Shape with input size
 	// 1. Check if it has RB
@@ -101,55 +101,48 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 	// 3. Yes RB? -> DynamicStatic
 
 	// TODO: Add Static RB First ( if there is no rb)
-
 	memcpy(&m_Size, pShapeInfo, sizeof(_float3));
-	_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
-	PxTransform transform;
-	memcpy(&transform.p, &position, sizeof(_float3));
-	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
-	memcpy(&transform.q, &quat, sizeof(_float4));
-	PxVec3 geoSize;
-	memcpy(&geoSize, &m_Size, sizeof(_float3));
-	geoSize = geoSize / 2;
-	PxMaterial* pMaterial = m_pEngine->GetMaterial();
-	PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxBoxGeometry(geoSize), *pMaterial);
-	PxFilterData filterData;
-	filterData.word0 = CPxManager::GROUP2;
-	meshShape->setQueryFilterData(filterData);
-	// Make Dynamic
-	if (desc.bEnabled)
+
+	// Set Size Here
+	SetSize(m_Size);
+
+
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	{
-		m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
-		m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
-		m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+		_vector position = m_pObjTransform->GetState(CTransform::STATE_POSITION);
+		PxTransform transform;
+		memcpy(&transform.p, &position, sizeof(_float3));
+		transform.p.x += m_vRelativePos.x;
+		transform.p.y += m_vRelativePos.y;
+		transform.p.z += m_vRelativePos.z;
+
+		XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+		memcpy(&transform.q, &quat, sizeof(_float4));
+		PxVec3 geoSize;
+		memcpy(&geoSize, &m_Size, sizeof(_float3));
+		geoSize = geoSize / 2;
+		PxMaterial* pMaterial = m_pEngine->GetMaterial();
+		PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxBoxGeometry(geoSize), *pMaterial);
+		PxFilterData filterData;
+		filterData.word0 = CPxManager::GROUP2;
+		meshShape->setQueryFilterData(filterData);
+		// Make Dynamic
+		if (desc.bEnabled)
+		{
+			m_pRigidActor = m_pEngine->GetPhysics()->createRigidDynamic(transform);
+			m_pRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !desc.bGravity);
+			m_pRigidActor->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, desc.bKinematic);
+		}
+		// Make Static
+		else
+		{
+			m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
+		}
+
+		m_pRigidActor->userData = this;
+		m_pRigidActor->attachShape(*meshShape);
+		m_pEngine->AddActor(m_pRigidActor);
 	}
-	// Make Static
-	else
-	{
-		m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
-	}
-
-	m_pRigidActor->userData = this;
-	m_pRigidActor->attachShape(*meshShape);
-	m_pEngine->AddActor(m_pRigidActor);
-
-	
-
-
-
-
-
-
-	//PxTransform transform(PxVec3(), PxQuat());
-	//PxShape* pShape = m_pEngine->GetPhysics()->createShape( PxSphereGeometry(1.f), *pMaterial, true);
-
-	//PxRigidDynamic* pActor = m_pEngine->GetPhysics()->createRigidDynamic(PxTransform(PxVec3(0, 0, 0)));
-	//pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	//pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	//pActor->attachShape(*pShape);
-
-	//m_pEngine->AddActor(pActor);
-	//pActor->Setglo
 }
 
 void CBoxCollider::SetSize(_float3 vSize)

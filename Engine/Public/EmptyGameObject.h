@@ -27,6 +27,8 @@ public:
 
 private:
 	HRESULT SetUpComponents();
+	virtual void LinkTranformWithParent();
+
 
 private:
 	CTransform*		m_pTransformCom = nullptr;

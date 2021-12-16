@@ -54,6 +54,8 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 	return S_OK;
 }
 
+
+
 HRESULT CVIBuffer::Render()
 {
 	if (nullptr == m_pDeviceContext)
@@ -64,7 +66,7 @@ HRESULT CVIBuffer::Render()
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
-	
+
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
 	if (m_IBSubResourceData.pSysMem)
@@ -80,6 +82,64 @@ HRESULT CVIBuffer::Render()
 	return S_OK;
 }
 
+HRESULT CVIBuffer::RenderDebug(_float4x4 pxMat)
+{
+	if (nullptr == m_pDeviceContext)
+		return E_FAIL;
+
+	_uint		iOffset = 0;
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	//{
+
+	//	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
+	//}
+	//else
+	//{
+		// _float4x4 childMat;
+		// XMStoreFloat4x4(&childMat, XMMatrixIdentity());
+		// memcpy(&childMat.m[3][0], &pRelativePos, sizeof(_float3));
+		// _matrix newMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+		m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&pxMat)), sizeof(_matrix));
+	//}
+
+	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
+
+	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
+	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
+	m_pShader->Render();
+	m_pDeviceContext->Draw(m_iNumVertices, 0);
+	return S_OK;
+}
+
+HRESULT CVIBuffer::RenderDebug(_float3 relativePos)
+{
+	if (nullptr == m_pDeviceContext)
+		return E_FAIL;
+
+	_uint		iOffset = 0;
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	//{
+
+	//	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pObjTransform->GetMatrix())), sizeof(_matrix));
+	//}
+	//else
+	//{
+	 _float4x4 childMat;
+	 XMStoreFloat4x4(&childMat, XMMatrixIdentity());
+	 memcpy(&childMat.m[3][0], &relativePos, sizeof(_float3));
+	 _matrix newMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), XMLoadFloat4x4(&m_pObjTransform->GetMatrix()));
+	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(newMat), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
+
+	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);
+	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
+	m_pShader->Render();
+	m_pDeviceContext->Draw(m_iNumVertices, 0);
+	return S_OK;
+}
+
 HRESULT CVIBuffer::Create_Buffers()
 {
 	if (nullptr == m_pDevice)
@@ -88,7 +148,7 @@ HRESULT CVIBuffer::Create_Buffers()
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB)))
 		return E_FAIL;
 
-	if (m_IBSubResourceData.pSysMem) 
+	if (m_IBSubResourceData.pSysMem)
 	{
 		if (FAILED(m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData, &m_pIB)))
 			return E_FAIL;
@@ -107,7 +167,7 @@ HRESULT CVIBuffer::Compile_Shader(const _tchar* pShaderFilePath, _uint iTechniqu
 #else
 	iFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
 #endif
-	
+
 	ID3DBlob*		pCompileShader = nullptr;
 	ID3DBlob*		pCompileShaderErrorMessage = nullptr;
 	if (FAILED(D3DCompileFromFile(pShaderFilePath, nullptr, nullptr, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMessage)))

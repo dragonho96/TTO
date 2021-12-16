@@ -136,7 +136,7 @@ void CToolManager::Release()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	// SafeRelease(m_pRenderer);
+	SafeRelease(m_pRenderer);
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
 }

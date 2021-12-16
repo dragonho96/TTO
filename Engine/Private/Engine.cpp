@@ -4,6 +4,7 @@
 #include "SceneSerializer.h"
 #include "PxManager.h"
 #include "InputManager.h"
+#include "ModelManager.h"
 IMPLEMENT_SINGLETON(CEngine)
 
 CEngine::CEngine()
@@ -19,6 +20,7 @@ CEngine::CEngine()
 	, m_pPipeline(CPipeline::GetInstance())
 	, m_pScriptObjectManager(CScriptObjectManager::GetInstance())
 	, m_pLightManager(CLightManager::GetInstance())
+	, m_pModelManager(CModelManager::GetInstance())
 {
 	SafeAddRef(m_pLightManager);
 	SafeAddRef(m_pScriptObjectManager);
@@ -32,6 +34,7 @@ CEngine::CEngine()
 	SafeAddRef(m_pComponentManager);
 	SafeAddRef(m_pImGuiManager);
 	SafeAddRef(m_pSoundManager);
+	SafeAddRef(m_pModelManager);
 }
 
 #pragma region TIMER_MANAGER
@@ -74,8 +77,6 @@ void CEngine::ReleaseEngine()
 	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CImGuiManager");
 
-	if (0 != CPxManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CPhysX");
 
 	if (0 != CInputManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CInputManager");
@@ -95,8 +96,14 @@ void CEngine::ReleaseEngine()
 	if (0 != CPipeline::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CPipeline");
 
+	if (0 != CModelManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CModelManager");
+
 	if (0 != CComponentManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CComponentManager");
+
+	if (0 != CPxManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Deleting CPhysX");
 
 	if (0 != CLightManager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Deleting CLightManager");
@@ -111,7 +118,7 @@ void CEngine::ReleaseEngine()
 HRESULT CEngine::ReadyDevice(HWND hWnd, _uint iWidth, _uint iHeight)
 {
 	m_pGraphicDevice->ReadyGraphicDevice(hWnd, iWidth, iHeight);
-	m_pPxManager->Initialize();
+	// m_pPxManager->Initialize();
 	InitializeImGui(hWnd, GetDevice(), GetDeviceContext());
 	return S_OK;
 }
@@ -219,13 +226,7 @@ void CEngine::RenderClient()
 	return m_pGraphicDevice->RenderClient();
 }
 
-void CEngine::RenderFont()
-{
-	if (nullptr == m_pGraphicDevice)
-		return;
 
-	return m_pGraphicDevice->RenderFont();
-}
 
 HRESULT CEngine::Present()
 {
@@ -443,6 +444,13 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 	m_pComponentManager->Clear(iSceneIndex);
 }
 
+CComponent * CEngine::CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
+{
+	string pShaderPath = "../../Assets/Shader/Shader_Mesh.fx";
+
+	return m_pModelManager->CloneModel(pMeshFilePath, pMeshFileName, pShaderPath, meshCollider, pArg);
+}
+
 const LIGHTDESC * CEngine::GetLightDesc(_uint iIndex) const
 {
 	if (nullptr == m_pLightManager)
@@ -516,6 +524,11 @@ void CEngine::StopAll()
 }
 
 
+void CEngine::PxInitialize()
+{
+	m_pPxManager->Initialize();
+}
+
 void CEngine::UpdatePx(_double dDeltaTime)
 {
 	m_pPxManager->Update(dDeltaTime);
@@ -539,6 +552,11 @@ PxControllerManager * CEngine::GetControllerManager()
 void CEngine::AddActor(PxRigidActor * pActor)
 {
 	m_pPxManager->AddActor(pActor);
+}
+
+void CEngine::AddAggregateActor(PxRigidActor * pActor)
+{
+	m_pPxManager->AddAggregateActor(pActor);
 }
 
 PxScene * CEngine::GetScene()
@@ -567,4 +585,5 @@ void CEngine::Free()
 	SafeRelease(m_pPxManager);
 	SafeRelease(m_pImGuiManager);
 	SafeRelease(m_pSoundManager);
+	SafeRelease(m_pModelManager);
 }

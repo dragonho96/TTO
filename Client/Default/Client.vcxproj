@@ -176,6 +176,7 @@
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Fly.h" />
+    <ClInclude Include="..\Public\Camera_Follow.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\EquipButtonManager.h" />
     <ClInclude Include="..\Public\Grid.h" />
@@ -210,6 +211,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
+    <ClCompile Include="..\Private\Camera_Follow.cpp" />
     <ClCompile Include="..\Private\EquipButtonManager.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
@@ -239,6 +241,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

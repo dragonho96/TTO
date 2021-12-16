@@ -101,8 +101,6 @@ void CGrid::SetUpGrid()
 			else
 				m_Nodes[index]->SetWalkable(true);
 
-
-
 		}
 	}
 	ResetColor();

@@ -274,6 +274,9 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	if (m_pTerrainActor)
 		m_pTerrainActor->release();
 
+	if (!CEngine::GetInstance()->GetPhysics())
+		return;
+
 	m_pTerrainActor = CEngine::GetInstance()->GetPhysics()->createRigidStatic(PxTransform(PxIdentity));
 	m_pTerrainActor->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
 

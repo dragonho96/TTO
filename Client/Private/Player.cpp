@@ -2,6 +2,8 @@
 #include "..\Public\Player.h"
 #include "PxManager.h"
 #include "BoxCollider.h"
+#include "HierarchyNode.h"
+#include "Engine.h"
 
 USING(Client)
 
@@ -29,14 +31,29 @@ void CPlayer::Free()
 
 HRESULT CPlayer::Initialize()
 {
-	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
-	if (list.size() <= 0)
+	list<class CGameObject*> objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	if (objList.size() <= 0)
 		return E_FAIL;
 
-	m_pGameObject = list.front();
+	m_pGameObject = objList.front();
 	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
+	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
 	m_pController = m_pCollider->GetController();
+
+	// list.pop_front();
+	// CGameObject* gameObject1 = list.front();
+	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
+
+	list<CGameObject*> camList = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
+	if (camList.size() <= 0)
+		return E_FAIL;
+
+	// TODO: Organize cameras
+	camList.pop_front();
+	CGameObject* m_pCam = camList.front();
+	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
+
 	return S_OK;
 }
 
@@ -46,11 +63,11 @@ void CPlayer::Update(_double deltaTime)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
-		_vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
+		_vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
 		PxVec3 pxLook;
 		memcpy(&pxLook, &look, sizeof(PxVec3));
 
-		_vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
+		_vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
 		PxVec3 pxRight;
 		memcpy(&pxRight, &right, sizeof(PxVec3));
 
@@ -92,7 +109,7 @@ void CPlayer::Update(_double deltaTime)
 		if (CEngine::GetInstance()->IsKeyPressed('O'))
 		{
 			const PxU32 bufferSize = 256;
-	
+
 			PxOverlapHit hitBuffer[bufferSize];
 			PxOverlapBuffer hit(hitBuffer, bufferSize);            // [out] Overlap results
 			PxGeometry overlapShape = PxSphereGeometry(5.f);  // [in] shape to test for overlaps
@@ -100,7 +117,7 @@ void CPlayer::Update(_double deltaTime)
 			_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
 			shapePose.q = PxIdentity;
 			memcpy(&shapePose.p, &position, sizeof(_float3));
-			PxQueryFilterData fd; 
+			PxQueryFilterData fd;
 			//fd.flags = PxQueryFlag::eSTATIC;
 			fd.data.word0 = CPxManager::GROUP1;
 			bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
@@ -116,9 +133,34 @@ void CPlayer::Update(_double deltaTime)
 			}
 		}
 	}
+
+	if (CEngine::GetInstance()->IsKeyDown('9'))
+	{
+		m_pCollider->ReleaseController();
+		m_pController = nullptr;
+		m_pModel->SetRagdollSimulate(true);
+	}
+	if (CEngine::GetInstance()->IsKeyDown('8'))
+	{
+		m_pModel->SetRagdollSimulate(false);
+	}
+	//if (CEngine::GetInstance()->IsKeyDown('0'))
+	//	m_pModel1->SetRagdollSimulate(true);
 }
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
+	// Ragdoll Anim
 
+	static int anim = 0;
+	if (CEngine::GetInstance()->IsKeyDown('0'))
+		anim = 0;
+	if (CEngine::GetInstance()->IsKeyDown('1'))
+		anim = 1;
+
+	m_pModel->SetUp_AnimationIndex(0);
+	m_pModel->Play_Animation(deltaTime);
+
+	//m_pModel1->SetUp_AnimationIndex(1);
+	//m_pModel1->Play_Animation(deltaTime);
 }

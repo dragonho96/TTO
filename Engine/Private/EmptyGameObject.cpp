@@ -95,8 +95,10 @@ HRESULT CEmptyGameObject::Render()
 	{
 		CModel* pModel = dynamic_cast<CModel*>(modelCom);
 		pModel->Bind_Buffers();
+		
+		_uint		iNumMaterials = pModel->Get_NumMaterials();
 
-		for (_uint i = 0; i < pModel->Get_NumMaterials(); ++i)
+		for (_uint i = 0; i < iNumMaterials; ++i)
 		{
 			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 
@@ -104,6 +106,9 @@ HRESULT CEmptyGameObject::Render()
 			pModel->Render(i, 0);
 		}
 	}
+
+	if (buffer && modelCom)
+		int i = 0;
 		
 	CComponent* collider = GetComponent("Com_Collider");
 	if (collider)
@@ -121,4 +126,8 @@ HRESULT CEmptyGameObject::SetUpComponents()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CEmptyGameObject::LinkTranformWithParent()
+{
 }

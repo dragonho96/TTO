@@ -21,7 +21,6 @@ public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight);
 	void Render();
 	void RenderClient();
-	void RenderFont();
 	void SetRTV2();
 	void SetRTV();
 	HRESULT Present();

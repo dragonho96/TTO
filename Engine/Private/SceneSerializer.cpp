@@ -46,6 +46,7 @@ void CSceneSerializer::Serialize(const string & filePath)
 
 			out << YAML::Key << "Name" << YAML::Value << obj->GetName();
 			out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
+			out << YAML::Key << "Active" << YAML::Value << obj->IsActive();
 			out << YAML::Key << "Layer" << YAML::Value << obj->GetLayer();
 
 			if (dynamic_cast<CEmptyGameObject*>(obj))
@@ -136,25 +137,34 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 	if (obj->GetComponent("Com_Transform"))
 	{
+
+
 		CTransform* transform = dynamic_cast<CTransform*>(obj->GetComponent("Com_Transform"));
 
 		out << YAML::Key << "Com_Transform";
 		out << YAML::BeginMap;
 
 		XMMATRIX matrix = XMLoadFloat4x4(&transform->GetMatrix());
-		XMVECTOR tr, rt, sc;
-		XMMatrixDecompose(&sc, &rt, &tr, matrix);
+		//XMVECTOR tr, rt, sc;
+		//XMMatrixDecompose(&sc, &rt, &tr, matrix);
+
+		float _objMat[16];
+		memcpy(_objMat, &matrix, sizeof(XMMATRIX));
+		float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+		ImGuizmo::DecomposeMatrixToComponents(_objMat, matrixTranslation, matrixRotation, matrixScale);
+
+
 		out << YAML::Key << "Translation";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(tr) << XMVectorGetY(tr) << XMVectorGetZ(tr) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixTranslation[0] << matrixTranslation[1] << matrixTranslation[2] << YAML::EndSeq;
 
 		out << YAML::Key << "Rotation";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(rt) << XMVectorGetY(rt) << XMVectorGetZ(rt) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixRotation[0] << matrixRotation[1] << matrixRotation[2] << YAML::EndSeq;
 
 		out << YAML::Key << "Scale";
 		out << YAML::Value << YAML::Flow;
-		out << YAML::BeginSeq << XMVectorGetX(sc) << XMVectorGetY(sc) << XMVectorGetZ(sc) << YAML::EndSeq;
+		out << YAML::BeginSeq << matrixScale[0] << matrixScale[1] << matrixScale[2] << YAML::EndSeq;
 
 
 		out << YAML::EndMap;
@@ -167,6 +177,11 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		// Check if RB exist
 		out << YAML::Key << "Com_Collider";
 		out << YAML::BeginMap;
+
+		_float3 center = collider->GetRelativePos();
+		out << YAML::Key << "Center";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << center.x << center.y << center.z << YAML::EndSeq;
 
 		if (dynamic_cast<CBoxCollider*>(collider))
 		{
@@ -235,6 +250,7 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 
 		out << YAML::Key << "MeshFilePath" << YAML::Value << pModel->GetMeshFilePath();
 		out << YAML::Key << "MeshFileName" << YAML::Value << pModel->GetMeshFileName();
+		out << YAML::Key << "HasCollider" << YAML::Value << pModel->HasMeshCollider();
 
 		out << YAML::EndMap;
 	}
@@ -256,6 +272,7 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 {
 
 	out << YAML::Key << "Type" << YAML::Value << "UI";
+	out << YAML::Key << "SortingOrder" << YAML::Value << dynamic_cast<CEmptyUI*>(obj)->GetSortingOrder();
 
 	if (obj->GetComponent("Com_Transform"))
 	{
@@ -324,9 +341,14 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
+	auto active = obj["Active"].as<_bool>();
+
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyUI", layer);
 
-	deserializedObject->SetInfo(name, layer, uuid);
+	deserializedObject->SetInfo(name, layer, uuid, active);
+
+	auto sortingOrder = obj["SortingOrder"].as<_int>();
+	dynamic_cast<CEmptyUI*>(deserializedObject)->SetSortingOrder(sortingOrder);
 
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
@@ -399,9 +421,11 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	auto name = obj["Name"].as<string>();
 	auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
+	auto active = obj["Active"].as<_bool>();
+
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyGameObject", layer);
 
-	deserializedObject->SetInfo(name, layer, uuid);
+	deserializedObject->SetInfo(name, layer, uuid, active);
 
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
@@ -431,6 +455,12 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	auto colliderCom = obj["Com_Collider"];
 	if (colliderCom)
 	{
+		auto centerInfo = colliderCom["Center"];
+		_float3 center = { 0, 0, 0 };
+		center.x = centerInfo[0].as<float>();
+		center.y = centerInfo[1].as<float>();
+		center.z = centerInfo[2].as<float>();
+
 		CCollider::RIGIDBODYDESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 
@@ -453,7 +483,8 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			size.z = sequence[2].as<float>();
 
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
-			dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
+			// dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
 		else if (type == "Sphere")
@@ -463,7 +494,8 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 
 			_float radius = colliderCom["Radius"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
-			dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
+			//dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
 			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
 		}
 		else if (type == "Capsule")
@@ -475,7 +507,8 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			capsuleSize.first = colliderCom["Radius"].as<float>();
 			capsuleSize.second = colliderCom["Height"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
-			dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
+			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
+			//dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
 			dynamic_cast<CCapsuleCollider*>(pCollider)->SetUpRigidActor(&capsuleSize, desc);
 		}
 	}
@@ -503,12 +536,16 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 	{
 		string meshFilePath = modelCom["MeshFilePath"].as<string>();
 		string meshFileName = modelCom["MeshFileName"].as<string>();
+		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
-		if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
-			MSG_BOX("Failed to AddComponent Prototype_Model");
+		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, "", false, deserializedObject->GetComponent("Com_Transform"));
+		deserializedObject->AddModelComponent(0, pModel);
+		//if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
+		//	MSG_BOX("Failed to AddComponent Prototype_Model");
 
-		CModel* pTerrainBuffer = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
-		pTerrainBuffer->CreateBuffer(meshFilePath, meshFileName);
+		//CModel* pMesh = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
+		//pMesh->SetMeshCollider(hasCollider);
+		//pMesh->CreateBuffer(meshFilePath, meshFileName);
 	}
 
 	return deserializedObject;

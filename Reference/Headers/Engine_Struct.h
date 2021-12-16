@@ -2,6 +2,22 @@
 
 namespace Engine
 {
+	typedef struct tagKeyFrameDesc
+	{
+		XMFLOAT3		vScale;
+		XMFLOAT4		vRotation;
+		XMFLOAT3		vPosition;
+		double			Time; 
+	}KEYFRAMEDESC;
+
+	typedef struct tagBoneDesc
+	{
+		char*		pName = nullptr;
+		class CHierarchyNode*	pHierarchyNode = nullptr;
+		// XMFLOAT4X4		OffsetMatrix * CombindMatrix(TransformationMatrix * pParent->CombindMatrix);
+		XMFLOAT4X4		OffsetMatrix;
+	}BONEDESC;
+
 	typedef struct TagModelTextures
 	{
 		class CTexture*		pModelTexture[AI_TEXTURE_TYPE_MAX];
@@ -13,8 +29,8 @@ namespace Engine
 		XMFLOAT3		vNormal;
 		XMFLOAT2		vTexUV;
 		XMFLOAT3		vTangent;
-		XMUINT4		BlendIndex;
-		XMFLOAT4	BlendWeight;
+		XMUINT4			vBlendIndex;
+		XMFLOAT4		vBlendWeight;
 	}VTXMESH;
 
 	typedef struct tagLightDesc

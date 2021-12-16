@@ -28,9 +28,9 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	//ImGui_ImplDX11_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
+	//ImGui::DestroyContext();
 
 	SafeRelease(m_pRenderer);
 
@@ -46,6 +46,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pEngine->ReadyDevice(g_hWnd, WINCX, WINCY)))
 		return E_FAIL;
 
+	m_pEngine->PxInitialize();
+	
 	m_pDevice = m_pEngine->GetDevice();
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 
@@ -58,7 +60,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(OpenScene(SCENE_TEST)))
 		return E_FAIL;
 
-	ImGuiInitialize();
+	// ImGuiInitialize();
 
 	return S_OK;
 }
@@ -78,12 +80,10 @@ _uint CMainApp::Update(_double dDeltaTime)
 	// TODO: Fix Update Order
 	m_pEngine->UpdatePx(dDeltaTime);
 
-	//if (m_pEngine->IsKeyDown('A'))
-	//	ADDLOG("hihi")
 
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplDX11_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	//ImGui::NewFrame();
 
 	return 0;
 }
@@ -99,14 +99,14 @@ HRESULT CMainApp::Render()
 	/* 필요한 객체들을 백버퍼에 그린다. */
 	m_pRenderer->DrawRenderGroup();
 	m_pEngine->RenderScene();
-	m_pEngine->RenderFont();
 	// ImGui
-	m_pEngine->UpdateImGui();
-	// ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
+
+
+	//m_pEngine->UpdateImGui();
+	//ImGui::Render();
+	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//ImGui::UpdatePlatformWindows();
+	//ImGui::RenderPlatformWindowsDefault();
 
 	m_pEngine->Present();
 

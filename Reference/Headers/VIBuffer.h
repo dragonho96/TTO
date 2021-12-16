@@ -15,6 +15,8 @@ public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual HRESULT Render();
+	virtual HRESULT RenderDebug(_float4x4 pxMat);
+	virtual HRESULT RenderDebug(_float3 relativePos);
 
 protected: /* For.Vertex Buffer */
 	//ID3D11Buffer*				m_pVB = nullptr;

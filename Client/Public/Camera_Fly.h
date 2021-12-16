@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Camera.h"
 
+
 BEGIN(Client)
 class CCamera_Fly final : public CCamera
 {
@@ -19,6 +20,9 @@ public:
 private:
 	HRESULT SetUp_Components();
 
+private:
+	CTransform* m_pTargetTransform = nullptr;
+	_vector		m_pTargetLook = { 0, 0, 1};
 public:
 	static CCamera_Fly* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;

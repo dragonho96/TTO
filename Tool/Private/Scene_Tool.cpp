@@ -90,7 +90,6 @@ HRESULT CScene_Tool::ReadyPrototypeComponent()
 
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 

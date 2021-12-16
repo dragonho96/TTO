@@ -49,9 +49,6 @@
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Fly.h">
-      <Filter>02.GameObjects\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -67,7 +64,15 @@
     <ClInclude Include="..\Public\PathFinding.h">
       <Filter>PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EquipButtonManager.h" />
+    <ClInclude Include="..\Public\EquipButtonManager.h">
+      <Filter>EquipButtonManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Fly.h">
+      <Filter>02.GameObjects\Camera\Camera_Fly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Follow.h">
+      <Filter>02.GameObjects\Camera\Camera_Follow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -112,9 +117,6 @@
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObjects\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Fly.cpp">
-      <Filter>02.GameObjects\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -127,7 +129,15 @@
     <ClCompile Include="..\Private\PathFinding.cpp">
       <Filter>PathFinding</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\EquipButtonManager.cpp" />
+    <ClCompile Include="..\Private\EquipButtonManager.cpp">
+      <Filter>EquipButtonManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Fly.cpp">
+      <Filter>02.GameObjects\Camera\Camera_Fly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Follow.cpp">
+      <Filter>02.GameObjects\Camera\Camera_Follow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -201,6 +211,12 @@
     <Filter Include="EquipButtonManager">
       <UniqueIdentifier>{f60c43d0-b6bb-4939-875a-ffc94f97533b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Camera\Camera_Fly">
+      <UniqueIdentifier>{ade715b0-6738-45c6-ad2b-7b99408ade48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\Camera_Follow">
+      <UniqueIdentifier>{650f4204-cbd2-464c-9cb6-be0c6990c006}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -214,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

@@ -13,6 +13,13 @@ public:
 public:
 	virtual HRESULT Initialize(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
 public:
+	HRESULT Add_Bones(BONEDESC* pBoneDesc);
+	HRESULT Clone_BoneDesc();
+
+public:
+	void Get_BoneMatrices(_matrix* pBoneMatrices);
+	void Get_BoneMatrices_Ragdoll(_matrix* pBoneMatrices);
+
 	_uint Get_MeshMaterialIndex() const {
 		return m_iMaterialIndex;
 	}
@@ -28,6 +35,9 @@ public:
 	_uint Get_StartVertexIndex() const {
 		return m_iStartVertexIndex;
 	}
+	vector<BONEDESC*> Get_BoneDesc() {
+		return m_Bones;
+	}
 
 private:
 	char		m_szName[MAX_PATH] = "";
@@ -36,8 +46,11 @@ private:
 	_uint		m_iStartVertexIndex = 0;
 	_uint		m_iMaterialIndex = 0;
 
+	vector<BONEDESC*>		m_Bones;
+
 public:
 	static CMeshContainer* Create(const char* pName, _uint iNumFaces, _uint iStartFaceIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
+	CMeshContainer* Clone();
 	virtual void Free() override;
 };
 

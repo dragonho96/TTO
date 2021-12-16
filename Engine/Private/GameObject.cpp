@@ -42,13 +42,31 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-void CGameObject::SetInfo(string name, string layer, uint64_t uuid)
+void CGameObject::SetInfo(string name, string layer, uint64_t uuid, _bool active)
 {
 	m_Name = name;
 	m_Layer = layer;
 	m_UUID = uuid;
+	m_bIsActive = active;
 	m_pEngine->AddGameObjectWithName(name, this);
 	m_pEngine->AddGameObjectWithUUID(uuid, this);
+}
+
+void CGameObject::LinkTranformWithParent()
+{
+}
+
+void CGameObject::SetActive(_bool value)
+{
+	m_bIsActive = value;
+	for (auto& child : m_listChildren)
+		child->SetActive(value);
+}
+
+void CGameObject::SetParent(CGameObject* pParent)
+{
+	m_pParent = pParent;
+	LinkTranformWithParent();
 }
 
 void CGameObject::AddChild(CGameObject* pChild)
@@ -127,6 +145,15 @@ HRESULT CGameObject::AddComponent(_uint iSceneIndex, string pPrototypeTag, strin
 	else
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CGameObject::AddModelComponent(_uint iSceneIndex, CComponent * pModel)
+{
+	if (nullptr != GetComponent("Com_Model"))
+		return E_FAIL;
+
+	m_Components.emplace("Com_Model", pModel);
 	return S_OK;
 }
 

@@ -1,8 +1,13 @@
-#include "..\public\Model.h"
+﻿#include "..\public\Model.h"
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "Engine.h"
+#include "HierarchyNode.h"
+
+#include "Animation.h"
+#include "Channel.h"
+#include "PxManager.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -11,19 +16,36 @@ CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 
 CModel::CModel(const CModel & rhs)
 	: CComponent(rhs)
+	, m_pScene(rhs.m_pScene)
+	, m_pMeshFilePath(rhs.m_pMeshFilePath)
+	, m_pMeshFileName(rhs.m_pMeshFileName)
+	, m_bMeshCollider(rhs.m_bMeshCollider)
 	, m_iNumVertices(rhs.m_iNumVertices)
 	, m_iNumFaces(rhs.m_iNumFaces)
 	, m_pVertices(rhs.m_pVertices)
 	, m_pPolygonIndices(rhs.m_pPolygonIndices)
-	, m_MeshContainers(rhs.m_MeshContainers)
-	, m_SortByMaterialMesh(rhs.m_SortByMaterialMesh)
+	, m_pxVertices(rhs.m_pxVertices)
+	, m_pxIndices(rhs.m_pxIndices)
 	, m_ModelTextures(rhs.m_ModelTextures)
 	, m_pVB(rhs.m_pVB)
 	, m_pIB(rhs.m_pIB)
 	, m_iStride(rhs.m_iStride)
-	, m_EffectDescs(rhs.m_EffectDescs)
-	, m_pEffect(rhs.m_pEffect)
+	, m_iAnimationIndex(rhs.m_iAnimationIndex)
 {
+	for (auto& pPrototypeMeshContainer : rhs.m_MeshContainers)
+	{
+		CMeshContainer*	pMeshContainer = pPrototypeMeshContainer->Clone();
+
+		m_MeshContainers.push_back(pMeshContainer);
+
+		vector<BONEDESC*> bones = pMeshContainer->Get_BoneDesc();
+		for (auto& bone : bones)
+		{
+			SetRagdollBoneDesc(bone);
+		}
+	}
+
+
 }
 
 HRESULT CModel::InitializePrototype()
@@ -33,9 +55,147 @@ HRESULT CModel::InitializePrototype()
 
 HRESULT CModel::Initialize(void * pArg)
 {
+	if (!m_pScene || m_pMeshFileName.length() <= 0)
+		return S_OK;
+
 	if (pArg)
 		m_pTransform = (CTransform*)pArg;
 
+	m_bSimulateRagdoll = false;
+
+	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Mesh.fx"); 
+
+	_uint		iStartVertexIndex = 0;
+	_uint		iStartFaceIndex = 0;
+
+	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
+
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest)
+	{
+		return pSour->Get_Depth() < pDest->Get_Depth();
+	});
+
+	for (auto& pMeshContainer : m_MeshContainers)
+	{
+		vector<BONEDESC*>	Bones = pMeshContainer->Get_BoneDesc();
+
+		for (auto& pBoneDesc : Bones)
+			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
+	}
+
+	if (FAILED(Sort_MeshesByMaterial()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_AnimationInfo()))
+		return E_FAIL;
+
+	Update_CombinedTransformationMatrices(0.0);
+
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
+		CreateRagdollRbs();
+
+	return S_OK;
+}
+
+HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
+{
+	if (pMeshFileName.length() == 0 || pMeshFileName.length() == 0)
+		return S_OK;
+
+	RemoveBuffer();
+
+	// TODO: Shader Copy?
+	m_pShader = make_unique<CShader>(pShaderFilePath);
+
+	m_pMeshFilePath = pMeshFilePath;
+	m_pMeshFileName = pMeshFileName;
+	m_pShaderFilePath = pShaderFilePath;
+
+	string strFullPath = pMeshFilePath + pMeshFileName;
+
+	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	if (nullptr == m_pScene)
+		return E_FAIL;
+
+
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
+	{
+		m_iNumVertices += m_pScene->mMeshes[i]->mNumVertices;
+		m_iNumFaces += m_pScene->mMeshes[i]->mNumFaces;
+	}
+
+	m_pVertices = new VTXMESH[m_iNumVertices];
+	ZeroMemory(m_pVertices, sizeof(VTXMESH) * m_iNumVertices);
+	m_pxVertices = new PxVec3[m_iNumVertices];
+	ZeroMemory(m_pxVertices, sizeof(PxVec3) * m_iNumVertices);
+
+	m_pPolygonIndices = new POLYGONINDICES32[m_iNumFaces];
+	ZeroMemory(m_pPolygonIndices, sizeof(POLYGONINDICES32) * m_iNumFaces);
+	m_pxIndices = new PxU32[m_iNumFaces * 3];
+	ZeroMemory(m_pxIndices, sizeof(PxU32) * m_iNumFaces * 3);
+	
+	m_iStride = sizeof(VTXMESH);
+
+	_uint		iStartVertexIndex = 0;
+	_uint		iStartFaceIndex = 0;
+
+	m_ModelTextures.reserve(m_pScene->mNumMaterials);
+
+	for (_uint i = 0; i < m_pScene->mNumMaterials; ++i)
+	{
+		if (FAILED(Create_Materials(m_pScene->mMaterials[i], pMeshFilePath)))
+			return E_FAIL;
+	}
+
+	// ADDED
+	m_MeshContainers.reserve(m_pScene->mNumMeshes);
+
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
+	{
+		if (FAILED(Create_MeshContainer(m_pScene->mMeshes[i], &iStartVertexIndex, &iStartFaceIndex, XMMatrixIdentity())))
+			return E_FAIL;
+	}
+
+	if (false == m_pScene->HasAnimations())
+	{
+		if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
+			return E_FAIL;
+
+		return S_OK;
+	}
+
+	//int numAnim = m_pScene->mNumAnimations;
+	//_matrix		ScaleMatrix, RotationMatrix, TranslationMatrix;
+	//_matrix		ModelPivotMatrix;
+	//ScaleMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//// RotationMatrix = XMMatrixRotationX(XMConvertToRadians(90.0f));
+	//ModelPivotMatrix = ScaleMatrix;
+	// Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ModelPivotMatrix);
+
+	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
+
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest) {
+		return pSour->Get_Depth() < pDest->Get_Depth();
+	});
+
+	if (FAILED(SetUp_SkinnedInfo()))
+		return E_FAIL;
+
+	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
+		return E_FAIL;
+
+	if (FAILED(SetUp_AnimationInfo()))
+		return E_FAIL;
+
+	// HRESULT result = CreateRagdollRbs();
+
+	//if (FAILED(CreateRagdollRbs()))
+	//	return E_FAIL;
+
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
+	//	CreateRagdollRbs();
+
+	// return result;
 	return S_OK;
 }
 
@@ -50,10 +210,10 @@ HRESULT CModel::Bind_Buffers()
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
-	
+
 	_uint		iOffSet = 0;
-	m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVB.GetAddressOf(), &m_iStride, &iOffSet);
-	m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), DXGI_FORMAT_R32_UINT, 0);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
+	m_pDeviceContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 	m_pDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return S_OK;
@@ -73,10 +233,37 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
-	m_pShader->Render(iPassIndex);
+	//if (0 < m_Animations.size())
+	//	iPassIndex = 1;
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		if (m_bSimulateRagdoll)
+			iPassIndex = 2;
+		else
+			iPassIndex = 1;
+	}
+	else
+		iPassIndex = 0;
+	// m_pShader->Render(iPassIndex);
+
+	m_pShader->SetInputLayout(iPassIndex);
+
+	_matrix			BoneMatrices[512];
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+		{
+			ZeroMemory(BoneMatrices, sizeof(_matrix) * 512);
+
+			pMeshContainer->Get_BoneMatrices(BoneMatrices);
+			// pMeshContainer->Get_BoneMatrices_Ragdoll(BoneMatrices);
+
+			m_pShader->SetUp_ValueOnShader("g_BoneMatrices", BoneMatrices, sizeof(_matrix) * 512);
+		}
+
+		m_pShader->Apply(iPassIndex);
+
 		m_pDeviceContext->DrawIndexed(pMeshContainer->Get_NumFaces() * 3,
 			pMeshContainer->Get_StartFaceIndex() * 3,
 			pMeshContainer->Get_StartVertexIndex());
@@ -85,13 +272,19 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex)
+
+HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex, _fmatrix PivotMatrix)
 {
 	_uint		iStartVertexIndex = *pStartVertexIndex;
 
 	for (_uint i = 0; i < pMesh->mNumVertices; ++i)
 	{
 		memcpy(&m_pVertices[*pStartVertexIndex].vPosition, &pMesh->mVertices[i], sizeof(_float3));
+		// ADDED
+		_vector		vPosition;
+		vPosition = XMLoadFloat3(&m_pVertices[*pStartVertexIndex].vPosition);
+		vPosition = XMVector3TransformCoord(vPosition, PivotMatrix);
+		XMStoreFloat3(&m_pVertices[*pStartVertexIndex].vPosition, vPosition);
 
 		memcpy(&m_pVertices[*pStartVertexIndex].vNormal, &pMesh->mNormals[i], sizeof(_float3));
 
@@ -100,7 +293,7 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 		memcpy(&m_pVertices[*pStartVertexIndex].vTangent, &pMesh->mTangents[i], sizeof(_float3));
 
 		// PhysX
-		memcpy(&m_pxVertices[*pStartVertexIndex], &pMesh->mVertices[i], sizeof(PxVec3));
+		 memcpy(&m_pxVertices[*pStartVertexIndex], &pMesh->mVertices[i], sizeof(PxVec3));
 
 		++(*pStartVertexIndex);
 	}
@@ -121,10 +314,10 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 
 
 	CMeshContainer*			pMeshContainer = CMeshContainer::Create(
-		pMesh->mName.data, 
-		pMesh->mNumFaces, 
-		iStartFaceIndex, 
-		iStartVertexIndex, 
+		pMesh->mName.data,
+		pMesh->mNumFaces,
+		iStartFaceIndex,
+		iStartVertexIndex,
 		pMesh->mMaterialIndex
 	);
 
@@ -186,7 +379,7 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 	for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
 	{
 		aiString		strTexturePath;
-
+		aiString		strMatName = pMaterial->GetName();
 		if (FAILED(pMaterial->GetTexture(aiTextureType(i), 0, &strTexturePath)))
 			continue;
 
@@ -207,9 +400,9 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 		string strFullPath = pMeshFilePath + szTextureFileName;
 		//MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szWideFullPath, MAX_PATH);
 
-		if (!strcmp(szExt, ".dds"))
+		if (!strcmp(szExt, ".dds") || !strcmp(szExt, ".DDS"))
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_DDS, strFullPath);
-		else if (!strcmp(szExt, ".tga"))
+		else if (!strcmp(szExt, ".tga") || !strcmp(szExt, ".TGA") || !strcmp(szExt, ".Tga"))
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, strFullPath);
 		else
 			pModelTexture->pModelTexture[i] = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, strFullPath);
@@ -221,121 +414,569 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::Sort_MeshesByMaterial()
+HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, _uint iDepth, _fmatrix PivotMatrix)
 {
-	{
-		_uint		iNumMaterials = m_ModelTextures.size();
+	_matrix		TransformationMatrix;
+	memcpy(&TransformationMatrix, &pNode->mTransformation, sizeof(_matrix));
 
-		m_SortByMaterialMesh.resize(iNumMaterials);
+	// ADDED
+	//_matrix		ScaleMatrix, RotationMatrix, TranslationMatrix;
+	//_matrix		ModelPivotMatrix;
+	//ScaleMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//// RotationMatrix = XMMatrixRotationX(XMConvertToRadians(90.0f));
+	//ModelPivotMatrix = ScaleMatrix;
 
-		for (auto& pMeshContainer : m_MeshContainers)
-		{
-			_uint	iMeshMaterialIndex = pMeshContainer->Get_MeshMaterialIndex();
-			if (iMeshMaterialIndex >= m_pScene->mNumMaterials)
-				return E_FAIL;
-			m_SortByMaterialMesh[iMeshMaterialIndex].push_back(pMeshContainer);
-			// Safe_AddRef(pMeshContainer);
-		}
-		return S_OK;
-	}
-}
-
-
-
-HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
-{
-	if (pMeshFileName.length() == 0 || pMeshFileName.length() == 0)
-		return S_OK;
-
-	RemoveBuffer();
-
-	m_pShader = make_unique<CShader>(pShaderFilePath);
-
-	m_pMeshFilePath = pMeshFilePath;
-	m_pMeshFileName = pMeshFileName;
-	m_pShaderFilePath = pShaderFilePath;
-
-	string strFullPath = pMeshFilePath + pMeshFileName;
-
-	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-	if (nullptr == m_pScene)
+	CHierarchyNode*		pHierarchyNode = CHierarchyNode::Create(pNode->mName.data, TransformationMatrix * PivotMatrix, pParent, iDepth);
+	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
 
-	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
-	{
-		m_iNumVertices += m_pScene->mMeshes[i]->mNumVertices;
-		m_iNumFaces += m_pScene->mMeshes[i]->mNumFaces;
-	}
+	pHierarchyNode->Reserve_Channels(m_pScene->mNumAnimations);
 
-	m_pVertices = new VTXMESH[m_iNumVertices];
-	ZeroMemory(m_pVertices, sizeof(VTXMESH) * m_iNumVertices);
-	m_pxVertices = new PxVec3[m_iNumVertices];
-	ZeroMemory(m_pxVertices, sizeof(PxVec3) * m_iNumVertices);
+	m_HierarchyNodes.push_back(pHierarchyNode);
 
-	m_pPolygonIndices = new POLYGONINDICES32[m_iNumFaces];
-	ZeroMemory(m_pPolygonIndices, sizeof(POLYGONINDICES32) * m_iNumFaces);
-	m_pxIndices = new PxU32[m_iNumFaces * 3];
-	ZeroMemory(m_pxIndices, sizeof(PxU32) * m_iNumFaces * 3);
-
-	_uint		iStartVertexIndex = 0;
-	_uint		iStartFaceIndex = 0;
-
-
-	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
-	{
-		if (FAILED(Create_MeshContainer(m_pScene->mMeshes[i], &iStartVertexIndex, &iStartFaceIndex)))
-			return E_FAIL;
-	}
-
-	m_iStride = sizeof(VTXMESH);
-
-	if (FAILED(Create_VertexIndexBuffer(pShaderFilePath)))
-		return E_FAIL;
-
-	m_ModelTextures.reserve(m_pScene->mNumMaterials);
-
-	for (_uint i = 0; i < m_pScene->mNumMaterials; ++i)
-	{
-		if (FAILED(Create_Materials(m_pScene->mMaterials[i], pMeshFilePath)))
-			return E_FAIL;
-	}
-
-	if (FAILED(Sort_MeshesByMaterial()))
-		return E_FAIL;
-
-	//CreatePxMesh();
+	for (_uint i = 0; i < pNode->mNumChildren; ++i)
+		Create_HierarchyNodes(pNode->mChildren[i], pHierarchyNode, iDepth + 1);
 
 	return S_OK;
 }
 
-void CModel::RemoveBuffer()
+HRESULT CModel::Sort_MeshesByMaterial()
 {
-	m_pShader.reset();
+	_uint		iNumMaterials = m_ModelTextures.size();
 
-	for (auto& container : m_MeshContainers)
-		SafeRelease(container);
-	m_MeshContainers.clear();
+	m_SortByMaterialMesh.resize(iNumMaterials);
 
-	for (auto& texture : m_ModelTextures)
+	for (auto& pMeshContainer : m_MeshContainers)
 	{
-		for (auto& tex : texture->pModelTexture)
-			SafeRelease(tex);
-		SafeDelete(texture);
+		_uint	iMeshMaterialIndex = pMeshContainer->Get_MeshMaterialIndex();
+		if (iMeshMaterialIndex >= m_pScene->mNumMaterials)
+			return E_FAIL;
+		m_SortByMaterialMesh[iMeshMaterialIndex].push_back(pMeshContainer);
+		// Safe_AddRef(pMeshContainer);
 	}
-	m_ModelTextures.clear();
+	return S_OK;
+}
 
-	for (auto& mesh : m_SortByMaterialMesh)
-		mesh.clear();
-	m_SortByMaterialMesh.clear();
+HRESULT CModel::SetUp_SkinnedInfo()
+{
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
+	{
+		aiMesh*		pMesh = m_pScene->mMeshes[i];
+		CMeshContainer*	pMeshContainer = m_MeshContainers[i];
 
-	SafeDeleteArray(m_pVertices);
-	SafeDeleteArray(m_pPolygonIndices);
-	SafeDeleteArray(m_pxVertices);
-	SafeDeleteArray(m_pxIndices);
-	m_pVB.Reset();
-	m_pIB.Reset();
-	m_Importer.FreeScene();
+		for (_uint j = 0; j < pMesh->mNumBones; ++j)
+		{
+			aiBone*		pBone = pMesh->mBones[j];
+			if (nullptr == pBone)
+				return E_FAIL;
+
+			BONEDESC*	pBoneDesc = new BONEDESC;
+			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
+			pBoneDesc->pName = pBone->mName.data;
+			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
+
+			_matrix		OffsetMatrix;
+			memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
+			XMStoreFloat4x4(&pBoneDesc->OffsetMatrix, XMMatrixTranspose(OffsetMatrix));
+
+			// memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
+
+			CHierarchyNode* h = pBoneDesc->pHierarchyNode;
+			// memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
+			XMStoreFloat4x4(&h->m_offset, XMMatrixTranspose(OffsetMatrix));
+
+			//SetRagdollBoneDesc(pBone->mName.data, pBoneDesc);
+
+			for (_uint k = 0; k < pBone->mNumWeights; ++k)
+			{
+				_uint	iVertexIndex = pBone->mWeights[k].mVertexId + pMeshContainer->Get_StartVertexIndex();
+
+				if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.x)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.x = j;
+					m_pVertices[iVertexIndex].vBlendWeight.x = pBone->mWeights[k].mWeight;
+				}
+				else if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.y)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.y = j;
+					m_pVertices[iVertexIndex].vBlendWeight.y = pBone->mWeights[k].mWeight;
+				}
+				else if (0.0f == m_pVertices[iVertexIndex].vBlendWeight.z)
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.z = j;
+					m_pVertices[iVertexIndex].vBlendWeight.z = pBone->mWeights[k].mWeight;
+				}
+				else
+				{
+					m_pVertices[iVertexIndex].vBlendIndex.w = j;
+					m_pVertices[iVertexIndex].vBlendWeight.w = pBone->mWeights[k].mWeight;
+				}
+			}
+			pMeshContainer->Add_Bones(pBoneDesc);
+		}
+	}
+
+	return S_OK;
+}
+
+CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
+	{
+		return !strcmp(pNode->Get_Name(), pBoneName);
+	});
+
+	if (iter == m_HierarchyNodes.end())
+		return nullptr;
+
+	return *iter;
+}
+
+HRESULT CModel::Play_Animation(_double TimeDelta)
+{
+	if (m_bSimulateRagdoll)
+		Update_CombinedTransformationMatrix_Ragdoll();
+	else
+		Update_CombinedTransformationMatrices(TimeDelta);
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_AnimationInfo()
+{
+	_uint		iNumAnimation = m_pScene->mNumAnimations;
+
+	for (_uint i = 0; i < iNumAnimation; ++i)
+	{
+		aiAnimation*	pAnim = m_pScene->mAnimations[i];
+		if (nullptr == pAnim)
+			return E_FAIL;
+
+		CAnimation*		pAnimation = CAnimation::Create(pAnim->mName.data, pAnim->mDuration, pAnim->mTicksPerSecond);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		for (_uint j = 0; j < pAnim->mNumChannels; ++j)
+		{
+			aiNodeAnim*		pNodeAnim = pAnim->mChannels[j];
+			if (nullptr == pNodeAnim)
+				return E_FAIL;
+
+			CChannel*		pChannel = CChannel::Create(pNodeAnim->mNodeName.data);
+			if (nullptr == pChannel)
+				return E_FAIL;
+
+			_uint		iMaxKeyFrame = max(pNodeAnim->mNumScalingKeys, pNodeAnim->mNumRotationKeys);
+			iMaxKeyFrame = max(iMaxKeyFrame, pNodeAnim->mNumPositionKeys);
+
+
+			for (_uint k = 0; k < iMaxKeyFrame; ++k)
+			{
+				KEYFRAMEDESC*		pKeyFrame = new KEYFRAMEDESC;
+				ZeroMemory(pKeyFrame, sizeof(KEYFRAMEDESC));
+
+				if (k < pNodeAnim->mNumScalingKeys)
+				{
+					memcpy(&pKeyFrame->vScale, &pNodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mScalingKeys[k].mTime;
+				}
+
+				if (k < pNodeAnim->mNumRotationKeys)
+				{
+					pKeyFrame->vRotation.x = pNodeAnim->mRotationKeys[k].mValue.x;
+					pKeyFrame->vRotation.y = pNodeAnim->mRotationKeys[k].mValue.y;
+					pKeyFrame->vRotation.z = pNodeAnim->mRotationKeys[k].mValue.z;
+					pKeyFrame->vRotation.w = pNodeAnim->mRotationKeys[k].mValue.w;
+					pKeyFrame->Time = pNodeAnim->mRotationKeys[k].mTime;
+				}
+
+				if (k < pNodeAnim->mNumPositionKeys)
+				{
+					memcpy(&pKeyFrame->vPosition, &pNodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mPositionKeys[k].mTime;
+				}
+
+				pChannel->Add_KeyFrameDesc(pKeyFrame);
+			}
+			Add_ChannelToHierarchyNode(i, pChannel);
+
+			pAnimation->Add_Channel(pChannel);
+		}
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
+{
+	if (iAnimationIndex >= m_Animations.size())
+		return E_FAIL;
+
+	m_iAnimationIndex = iAnimationIndex;
+
+	return S_OK;
+}
+
+HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
+{
+	if (m_Animations.empty() || m_iAnimationIndex >= m_Animations.size())
+		return E_FAIL;
+
+	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+
+	for (auto& pHierarchyNodes : m_HierarchyNodes)
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex);
+
+	// Set ragdoll rb position
+	for (auto& ragdollRb : m_RagdollRbs)
+		SetRagdollRbTransform(ragdollRb.second);
+
+	return S_OK;
+}
+
+HRESULT CModel::Update_CombinedTransformationMatrix_Ragdoll()
+{
+	for (auto& pHierarchyNodes : m_HierarchyNodes)
+		pHierarchyNodes->Update_CombinedTransformationMatrix_Ragdoll();
+
+	return S_OK;
+}
+
+void CModel::Add_ChannelToHierarchyNode(_uint iAnimationindex, CChannel * pChannel)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)->bool
+	{
+		return !strcmp(pNode->Get_Name(), pChannel->Get_Name());
+	});
+
+	if (iter != m_HierarchyNodes.end())
+		(*iter)->Add_Channel(iAnimationindex, pChannel);
+}
+
+
+
+
+
+
+void CModel::SetRagdollBoneDesc(BONEDESC* desc)
+{
+	//auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
+	//{
+	//	return !strcmp(pNode->Get_Name(), desc->pName);
+	//});
+
+	//if (iter == m_HierarchyNodes.end())
+	//	return;
+
+	string name = desc->pName;
+	if (name == "Pelvis" ||
+		name == "LArm" || name == "LForearm" || name == "LHand" ||
+		name == "LLeg" || name == "LShin" || name == "LFoot" ||
+		name == "RArm" || name == "RForearm" || name == "RHand" ||
+		name == "RLeg" || name == "RShin" || name == "RFoot" ||
+		name == "Neck" || name == "Head")
+		m_RagdollBones.emplace(name, desc);
+}
+
+HRESULT CModel::CreateRagdollRbs()
+{
+	BONEDESC* Pelvis = m_RagdollBones["Pelvis"];
+
+	BONEDESC* LArm = m_RagdollBones["LArm"];
+	BONEDESC* LForearm = m_RagdollBones["LForearm"];
+	BONEDESC* LHand = m_RagdollBones["LHand"];
+
+	BONEDESC* LLeg = m_RagdollBones["LLeg"];
+	BONEDESC* LShin = m_RagdollBones["LShin"];
+	BONEDESC* LFoot = m_RagdollBones["LFoot"];
+
+	BONEDESC* RLeg = m_RagdollBones["RLeg"];
+	BONEDESC* RShin = m_RagdollBones["RShin"];
+	BONEDESC* RFoot = m_RagdollBones["RFoot"];
+
+	BONEDESC* RArm = m_RagdollBones["RArm"];
+	BONEDESC* RForearm = m_RagdollBones["RForearm"];
+	BONEDESC* RHand = m_RagdollBones["RHand"];
+
+	BONEDESC* Neck = m_RagdollBones["Neck"];
+	BONEDESC* Head = m_RagdollBones["Head"];
+
+	CreateCapsuleRb(LLeg, LShin, "LThigh");
+	CreateCapsuleRb(LShin, LFoot, "LCalf");
+	CreateCapsuleRb(RLeg, RShin, "RThigh");
+	CreateCapsuleRb(RShin, RFoot, "RCalf");
+	CreateCapsuleRb(LArm, LForearm, "LArm");
+	CreateCapsuleRb(LForearm, LHand, "LForearm");
+	CreateCapsuleRb(RArm, RForearm, "RArm");
+	CreateCapsuleRb(RForearm, RHand, "RForearm");
+	CreateCapsuleRb(Pelvis, Neck, "Body");
+
+	CreateSphereRb(Head, "Head");
+
+	CreateD6Joint("LThigh", "LCalf", "LShin");
+	CreateD6Joint("RThigh", "RCalf", "RShin");
+	CreateD6Joint("Body", "LThigh", "Pelvis");
+	CreateD6Joint("Body", "RThigh", "Pelvis");
+	CreateD6Joint("Body", "LArm", "LArm");
+	CreateD6Joint("Body", "RArm", "RArm");
+	CreateD6Joint("LArm", "LForearm", "LForearm");
+	CreateD6Joint("RArm", "RForearm", "RForearm");
+
+	CreateD6Joint("Body", "Head", "Head");
+
+
+	//for (auto& rb : m_RagdollRbs)
+	//	rb.second->pRb->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, !m_bSimulateRagdoll);
+
+	return S_OK;
+}
+
+void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
+{
+	_float radius = 0.05f;
+	_vector scale, rotation, pos;
+	_vector cscale, crotation, cpos;
+
+	_matrix parentMat = parent->pHierarchyNode->Get_CombinedTransformationMatrix();
+	_matrix childMat = child->pHierarchyNode->Get_CombinedTransformationMatrix();
+
+	_matrix parentOffset = XMLoadFloat4x4(&parent->OffsetMatrix);
+	_matrix childOffset = XMLoadFloat4x4(&child->OffsetMatrix);
+
+	XMMatrixDecompose(&scale, &rotation, &pos, parentMat);
+	XMMatrixDecompose(&cscale, &crotation, &cpos, childMat);
+	//_matrix newParentMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&parentMat)));
+	//_matrix newChildMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&childMat)));
+	//_matrix newParentMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&parentMat)), m_pTransform->GetWorldMatrix());
+	//_matrix newChildMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&childMat)), m_pTransform->GetWorldMatrix());
+	//_matrix newParentMat = XMMatrixMultiply(XMLoadFloat4x4(&parentMat), m_pTransform->GetWorldMatrix());
+	//_matrix newChildMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), m_pTransform->GetWorldMatrix());
+
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, parentOffset), m_pTransform->GetWorldMatrix());
+	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, childOffset), m_pTransform->GetWorldMatrix());
+
+
+	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
+	XMMatrixDecompose(&cscale, &crotation, &cpos, newChildMat);
+
+	_float4x4 newChildFloat4x4;
+	_float4x4 newParentFloat4x4;
+	_vector pVec, cVec;
+	XMStoreFloat4x4(&newChildFloat4x4, newChildMat);
+	XMStoreFloat4x4(&newParentFloat4x4, newParentMat);
+	memcpy(&pVec, newParentFloat4x4.m[3], sizeof(_vector));
+	memcpy(&cVec, newChildFloat4x4.m[3], sizeof(_vector));
+	_vector length = XMVector3Length(XMVectorSubtract(pVec, cVec));
+	XMVECTOR midPos = XMVectorDivide(XMVectorAdd(pVec, cVec), FXMVECTOR{ 2.f, 2.f, 2.f, 2.f });
+	_float len = XMVectorGetX(length) * .9f;
+
+	_float len_minus_2r = len - (2.f * radius);
+	_float half_height = abs(len_minus_2r / 2.f);
+
+	PxShape* shape = CEngine::GetInstance()->GetPhysics()->createShape(PxCapsuleGeometry(radius, half_height), *CEngine::GetInstance()->GetMaterial());
+	// shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+
+	//PxFilterData filterData;
+	////filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
+	////filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID
+	//filterData.word0 = CPxManager::GROUP1;
+	//filterData.word1 = CPxManager::GROUP2;
+	//shape->setSimulationFilterData(filterData);
+	//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+
+
+	////shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+	PxTransform transform;
+	memcpy(&transform.p, &midPos, sizeof(_float3));
+	memcpy(&transform.q, &rotation, sizeof(_float4));
+	PxRigidDynamic* body = CEngine::GetInstance()->GetPhysics()->createRigidDynamic(transform);
+	body->setMass(10.f);
+	body->attachShape(*shape);
+	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+	// body->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
+
+	CEngine::GetInstance()->AddActor(body);
+
+	RAGDOLLBONEDESC* ragdollBoneDesc = new RAGDOLLBONEDESC();
+	ragdollBoneDesc->pRb = body;
+	ragdollBoneDesc->pParentBone = parent;
+	ragdollBoneDesc->pChildBone = child;
+
+	m_RagdollRbs.emplace(name, ragdollBoneDesc);
+	parent->pHierarchyNode->AddRagdollRb(body);
+
+	PxTransform test = body->getGlobalPose();
+	//test = test.getInverse();
+	// test = test.getNormalized();
+
+	PxMat44 m = PxMat44(test);
+	XMMATRIX d3dMat;
+	memcpy(&d3dMat, &m, sizeof(XMMATRIX));
+	// d3dMat = XMMatrixInverse(nullptr, d3dMat);
+	_float4x4 dd;
+	XMStoreFloat4x4(&dd, d3dMat);
+
+	_vector vecUp = { dd._11, dd._12, dd._13, dd._14 };
+	vecUp = XMVector3Normalize(vecUp);
+	int i = 0;
+}
+
+void CModel::CreateSphereRb(BONEDESC * parent, string name)
+{
+	_float radius = 0.06f;
+	_vector scale, rotation, pos;
+
+	_matrix parentMat = parent->pHierarchyNode->Get_CombinedTransformationMatrix();
+	_matrix parentOffset = XMLoadFloat4x4(&parent->OffsetMatrix);
+
+	XMMatrixDecompose(&scale, &rotation, &pos, parentMat);
+
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, parentOffset), m_pTransform->GetWorldMatrix());
+
+
+	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
+
+	_float4x4 newParentFloat4x4;
+	_vector pVec;
+	XMStoreFloat4x4(&newParentFloat4x4, newParentMat);
+	memcpy(&pVec, newParentFloat4x4.m[3], sizeof(_vector));
+
+	PxShape* shape = CEngine::GetInstance()->GetPhysics()->createShape(PxSphereGeometry(radius), *CEngine::GetInstance()->GetMaterial());
+
+	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+
+
+	////shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+	PxTransform transform;
+	memcpy(&transform.p, &pVec, sizeof(_float3));
+	memcpy(&transform.q, &rotation, sizeof(_float4));
+	PxRigidDynamic* body = CEngine::GetInstance()->GetPhysics()->createRigidDynamic(transform);
+	body->setMass(10.f);
+	body->attachShape(*shape);
+	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+	// body->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
+
+	CEngine::GetInstance()->AddActor(body);
+
+	RAGDOLLBONEDESC* ragdollBoneDesc = new RAGDOLLBONEDESC();
+	ragdollBoneDesc->pRb = body;
+	ragdollBoneDesc->pParentBone = parent;
+	ragdollBoneDesc->pChildBone = nullptr;
+
+	m_RagdollRbs.emplace(name, ragdollBoneDesc);
+	parent->pHierarchyNode->AddRagdollRb(body);
+}
+
+void CModel::CreateD6Joint(string parent, string child, string jointBone)
+{
+	BONEDESC* pJointBone = m_RagdollBones[jointBone];
+
+	PxRigidDynamic* parentRb = m_RagdollRbs[parent]->pRb;
+	PxRigidDynamic* childRb = m_RagdollRbs[child]->pRb;
+
+	_float4x4 joingOffset = pJointBone->OffsetMatrix;
+	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&joingOffset)), m_pTransform->GetWorldMatrix());
+	_vector scale, rotation, pos;
+	XMMatrixDecompose(&scale, &rotation, &pos, newParentMat);
+
+	PxTransform transform;
+	memcpy(&transform.p, &pos, sizeof(_float3));
+	memcpy(&transform.q, &rotation, sizeof(_float4));
+
+	PxD6Joint* joint = PxD6JointCreate(*CEngine::GetInstance()->GetPhysics(),
+		parentRb,
+		parentRb->getGlobalPose().transformInv(transform),
+		childRb,
+		childRb->getGlobalPose().transformInv(transform));
+
+	joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
+
+	ConfigD6Joint(3.14f / 2.f, 3.14f / 2.f, -3.14f / 8.f, 3.14f / 8.f, joint);
+}
+
+void CModel::ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint * joint)
+{
+	joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
+	joint->setMotion(physx::PxD6Axis::eSWING2, physx::PxD6Motion::eLIMITED);
+	joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
+
+	joint->setSwingLimit(physx::PxJointLimitCone(swing0, swing1));
+	joint->setTwistLimit(physx::PxJointAngularLimitPair(twistLo, twistHi));
+}
+
+void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
+{
+	PxTransform transform;
+	// XMMATRIX matParent = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pParentBone->OffsetMatrix), ragdollBoneDesc->pParentBone->pHierarchyNode->Get_CombinedTransformationMatrix());
+	// XMMATRIX matChild = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pChildBone->OffsetMatrix), ragdollBoneDesc->pChildBone->pHierarchyNode->Get_CombinedTransformationMatrix());
+	_vector scale, rotation, pos;
+	_float4x4 newParentFloat4x4;
+	_vector pVec, cVec;
+
+	XMMATRIX matParent = ragdollBoneDesc->pParentBone->pHierarchyNode->Get_CombinedTransformationMatrix();
+	matParent = XMMatrixMultiply(matParent, XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+	XMMatrixDecompose(&scale, &rotation, &pos, matParent);
+	XMStoreFloat4x4(&newParentFloat4x4, matParent);
+	memcpy(&pVec, newParentFloat4x4.m[3], sizeof(_vector));
+
+	if (ragdollBoneDesc->pChildBone)
+	{
+		XMMATRIX matChild = ragdollBoneDesc->pChildBone->pHierarchyNode->Get_CombinedTransformationMatrix();
+		matChild = XMMatrixMultiply(matChild, XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+
+
+		_float4x4 newChildFloat4x4;
+		XMStoreFloat4x4(&newChildFloat4x4, matChild);
+		memcpy(&cVec, newChildFloat4x4.m[3], sizeof(_vector));
+		XMVECTOR midPos = XMVectorDivide(XMVectorAdd(pVec, cVec), FXMVECTOR{ 2.f, 2.f, 2.f, 2.f });
+
+		memcpy(&transform.p, &midPos, sizeof(_float3));
+		memcpy(&transform.q, &rotation, sizeof(_float4));
+		ragdollBoneDesc->pRb->setGlobalPose(transform, false);
+		ragdollBoneDesc->pRb->setKinematicTarget(transform);
+		// ragdollBoneDesc->pRb->putToSleep();
+	}
+	else
+	{
+		memcpy(&transform.p, &pVec, sizeof(_float3));
+		memcpy(&transform.q, &rotation, sizeof(_float4));
+		ragdollBoneDesc->pRb->setGlobalPose(transform, false);
+		ragdollBoneDesc->pRb->setKinematicTarget(transform);
+		ragdollBoneDesc->pRb->putToSleep();
+	}
+}
+
+void CModel::SetRagdollSimulate(_bool result)
+{
+	m_bSimulateRagdoll = result;
+
+	for (auto& rb : m_RagdollRbs)
+	{
+		rb.second->pRb->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, !result);
+		rb.second->pRb->wakeUp();
+		rb.second->pRb->setLinearVelocity(PxVec3(PxZero));
+		rb.second->pRb->setAngularVelocity(PxVec3(PxZero));
+	}
+	//if (m_bSimulateRagdoll)
+	//{
+	//	PxShape* shape = nullptr;
+	//	rb.second->pRb->getShapes(&shape, 1);
+	//	// shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	//}
+
+	for (auto& rb : m_RagdollRbs)
+	{
+		rb.second->pRb->setLinearVelocity(PxVec3(PxZero));
+		rb.second->pRb->setAngularVelocity(PxVec3(PxZero));
+	}
+}
+
+PxRigidDynamic * CModel::GetRagdollRb(string name)
+{
+	return m_RagdollRbs[name]->pRb;
 }
 
 void CModel::CreatePxMesh()
@@ -360,9 +1001,13 @@ void CModel::CreatePxMesh()
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	m_pPxMesh = pEngine->GetPhysics()->createTriangleMesh(readBuffer);
 
+
 	PxTransform transform;
-	transform.q = PxIdentity;
-	transform.p = { 0, 0, 0 };
+	_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+	XMVECTOR quat = XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_pTransform->GetMatrix()));
+	memcpy(&transform.p, &position, sizeof(_float3));
+	memcpy(&transform.q, &quat, sizeof(_float4));
+
 	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);
@@ -402,4 +1047,58 @@ void CModel::Free()
 	RemoveBuffer();
 
 	__super::Free();
+}
+
+void CModel::RemoveBuffer()
+{
+	if (false == m_isCloned)
+	{
+		SafeDeleteArray(m_pVertices);
+		SafeDeleteArray(m_pPolygonIndices);
+		SafeDeleteArray(m_pxVertices);
+		SafeDeleteArray(m_pxIndices);
+
+		for (auto& texture : m_ModelTextures)
+		{
+			for (auto& tex : texture->pModelTexture)
+				SafeRelease(tex);
+			SafeDelete(texture);
+		}
+
+		SafeRelease(m_pVB);
+		SafeRelease(m_pIB);
+	}
+	m_pShader.reset();
+
+	m_RagdollBones.clear();
+
+	for (auto& rb : m_RagdollRbs)
+		SafeDelete(rb.second);
+	m_RagdollRbs.clear();
+
+	for (auto& anim : m_Animations)
+		SafeRelease(anim);
+	m_Animations.clear();
+
+	for (auto& container : m_MeshContainers)
+		SafeRelease(container);
+	m_MeshContainers.clear();
+
+
+	m_ModelTextures.clear();
+
+	// TODO: Release
+	for (auto& mesh : m_SortByMaterialMesh)
+		mesh.clear();
+	m_SortByMaterialMesh.clear();
+
+	for (auto& node : m_HierarchyNodes)
+		SafeRelease(node);
+	m_HierarchyNodes.clear();
+
+	//m_pVB.Reset();
+	//m_pIB.Reset();
+
+
+	m_Importer.FreeScene();
 }

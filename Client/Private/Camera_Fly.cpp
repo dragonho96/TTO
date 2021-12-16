@@ -26,6 +26,13 @@ HRESULT CCamera_Fly::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	if (list.size() <= 0)
+		return E_FAIL;
+
+	CGameObject* m_pGameObject = list.front();
+	m_pTargetTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
+
 	return S_OK;
 }
 
@@ -34,9 +41,10 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 	if (nullptr == m_pTransformCom)
 		return -1;
 
+
+	// Q || E 누르면 m_pTargetLook을 회전시긴다
 	if (GetActiveWindow() == g_hWnd)
 	{
-
 		if (m_pEngine->IsKeyPressed('W'))
 		{
 			m_pTransformCom->GoStraight(TimeDelta * 2.f);
@@ -74,15 +82,6 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 		}
 	}
 
-	string str = "";
-	_vector		vPosition = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-	_float4 pos;
-	XMStoreFloat4(&pos, vPosition);
-	str = "" + to_string(pos.x) + ", " + to_string(pos.y) + ", " + to_string(pos.z);
-	ADDLOG(str.c_str());
-
-
-	
 	return __super::Update(TimeDelta);
 }
 
@@ -96,8 +95,6 @@ _uint CCamera_Fly::LateUpdate(_double TimeDelta)
 
 HRESULT CCamera_Fly::SetUp_Components()
 {
-
-
 
 	return S_OK;
 }

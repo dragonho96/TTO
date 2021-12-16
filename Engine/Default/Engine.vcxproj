@@ -174,10 +174,12 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
   <ItemGroup>
     <ClInclude Include="..\..\Backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Backends\imgui_impl_win32.h" />
+    <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\BoxCollider.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\CapsuleCollider.h" />
+    <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\ComponentManager.h" />
@@ -196,6 +198,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\GameObjectManager.h" />
     <ClInclude Include="..\Public\GlobalBuffers.h" />
     <ClInclude Include="..\Public\GraphicDevice.h" />
+    <ClInclude Include="..\Public\HierarchyNode.h" />
     <ClInclude Include="..\Public\ImGuiManager.h" />
     <ClInclude Include="..\Public\ImGuiWindow.h" />
     <ClInclude Include="..\Public\IScriptObject.h" />
@@ -206,6 +209,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\MeshContainer.h" />
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\ModelManager.h" />
     <ClInclude Include="..\Public\Pipeline.h" />
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\RectTransform.h" />
@@ -236,10 +240,12 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\..\Backends\imgui_demo.cpp" />
     <ClCompile Include="..\..\Backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\Backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\Private\BoxCollider.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\CapsuleCollider.cpp" />
+    <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\ComponentManager.cpp" />
@@ -252,6 +258,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObjectManager.cpp" />
     <ClCompile Include="..\Private\GraphicDevice.cpp" />
+    <ClCompile Include="..\Private\HierarchyNode.cpp" />
     <ClCompile Include="..\Private\ImGuiManager.cpp" />
     <ClCompile Include="..\Private\ImGuiWindow.cpp" />
     <ClCompile Include="..\Private\IScriptObject.cpp" />
@@ -262,6 +269,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\MeshContainer.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\ModelManager.cpp" />
     <ClCompile Include="..\Private\Pipeline.cpp" />
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\RectTransform.cpp" />
