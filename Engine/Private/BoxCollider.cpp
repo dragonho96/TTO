@@ -124,8 +124,9 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		PxMaterial* pMaterial = m_pEngine->GetMaterial();
 		PxShape* meshShape = m_pEngine->GetPhysics()->createShape(PxBoxGeometry(geoSize), *pMaterial);
 		PxFilterData filterData;
-		filterData.word0 = CPxManager::GROUP2;
+		filterData.word0 = CPxManager::GROUP1;
 		meshShape->setQueryFilterData(filterData);
+
 		// Make Dynamic
 		if (desc.bEnabled)
 		{

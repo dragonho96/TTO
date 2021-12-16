@@ -57,3 +57,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 void CEquipButtonManager::LapteUpdate(_double deltaTime)
 {
 }
+
+void Client::CEquipButtonManager::Render()
+{
+}

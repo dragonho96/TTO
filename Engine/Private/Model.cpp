@@ -68,6 +68,9 @@ HRESULT CModel::Initialize(void * pArg)
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
+			CreatePxMesh();
+
 	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest)
@@ -91,8 +94,9 @@ HRESULT CModel::Initialize(void * pArg)
 
 	Update_CombinedTransformationMatrices(0.0);
 
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
-		CreateRagdollRbs();
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT &&
+		0 < m_Animations.size())
+			CreateRagdollRbs();
 
 	return S_OK;
 }
@@ -239,8 +243,10 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	{
 		if (m_bSimulateRagdoll)
 			iPassIndex = 2;
-		else
+		else if (0 < m_Animations.size())
 			iPassIndex = 1;
+		else
+			iPassIndex = 0;
 	}
 	else
 		iPassIndex = 0;
@@ -785,6 +791,12 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	//filterData.word1 = CPxManager::GROUP2;
 	//shape->setSimulationFilterData(filterData);
 	//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+
+	//PxFilterData filterData;
+	//filterData.word0 = CPxManager::GROUP1;
+	//filterData.word1 = CPxManager::GROUP2;
+	//shape->setQueryFilterData(filterData);
+
 	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
 
 
@@ -1011,6 +1023,11 @@ void CModel::CreatePxMesh()
 	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);
+	
+	PxFilterData filterData;
+	filterData.word0 = CPxManager::GROUP1;
+	// filterData.word1 = CPxManager::GROUP2;
+	shape->setQueryFilterData(filterData);
 
 	m_pRigidActor->attachShape(*shape);
 	pEngine->AddActor(m_pRigidActor);

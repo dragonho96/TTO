@@ -71,6 +71,7 @@ HRESULT CScene_Test::Initialize()
 
 	//if (FAILED(ReadyLayerGrid("LAYER_GRID")))
 	//	return E_FAIL;
+
 	m_pPathFinding = CPathFinding::GetInstance();
 	m_pPathFinding->Initialize();
 
@@ -129,9 +130,6 @@ HRESULT CScene_Test::ReadyPrototypeGameObject()
 	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 	//	return E_FAIL;
 
-	/* Prototype_BackGround */
-	if (FAILED(m_pEngine->AddPrototype("Prototype_Terrain", CTerrain::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
 	/* Gameobject Prototype */
 	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyGameObject", CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
@@ -196,7 +194,8 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
-	
+	m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
+
 	// m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 	return S_OK;
 }

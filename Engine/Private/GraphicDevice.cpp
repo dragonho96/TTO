@@ -154,7 +154,8 @@ void CGraphicDevice::Render()
 
 void CGraphicDevice::RenderClient()
 {
-	// m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	// TODO: Call OMSetRenderTargets for ImGui
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 }
 

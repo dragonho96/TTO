@@ -19,6 +19,10 @@ public:
 	HRESULT Initialize();
 	virtual void Update(_double deltaTime);
 	virtual void LapteUpdate(_double deltaTime);
+	virtual void Render();
+
+public:
+	_vector GetPickingDir();
 
 private:
 	CGameObject*	m_pGameObject;
@@ -31,6 +35,7 @@ private:
 
 	CTransform*		m_pCameraTransform;
 	CModel*			m_pModel1;
+
 };
 
 END

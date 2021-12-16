@@ -1,37 +1,34 @@
 #pragma once
 
-#include "Client_Defines.h"
-#include "GameObject.h"
+#include "Engine.h"
 #include "VIBuffer.h"
 
-
 BEGIN(Client)
-class CTerrain final : public CGameObject
+class CTerrain : public IScriptObject
 {
 private:
-	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CTerrain(const CTerrain& rhs);
+	explicit CTerrain();
+	explicit CTerrain(CGameObject* pObj);
 	virtual ~CTerrain() = default;
 public:
-	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	virtual CGameObject* Clone(void* pArg) override;
+	static CTerrain* Create(CGameObject* pObj);
 	virtual void Free() override;
 
 public:
-	virtual HRESULT InitializePrototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
-	virtual _uint Update(_double TimeDelta) override;
-	virtual _uint LateUpdate(_double TimeDelta) override;
-	virtual HRESULT Render() override;
+	HRESULT Initialize();
+	virtual void Update(_double deltaTime);
+	virtual void LapteUpdate(_double deltaTime);
+	virtual void Render();
 
 private:
-	HRESULT SetUpComponents();
-
-private:
-	CRenderer*		m_pRendererCom = nullptr;
+	CGameObject*	m_pGameObject;
 	CVIBuffer*		m_pVIBuffer = nullptr;
-	CTransform*		m_pTransform = nullptr;
+	CShader*		m_pShader;
 
+private:
+	CTexture*		m_pTerrainTexture = nullptr;
+	CTexture*		m_pFilterTexture = nullptr;
+	CTexture*		m_pBrushTexture = nullptr;
 };
 
 END

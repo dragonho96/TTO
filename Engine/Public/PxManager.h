@@ -73,6 +73,10 @@ public:
 	PxScene*				GetScene() { return m_pScene; }
 	PxCooking*				GetCooking() { return m_pCooking; }
 
+public:
+	_bool					Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer& hit);
+
+
 	void					OnContact(const PxContactPairHeader & pairHeader, const PxContactPair * pairs, PxU32 nbPairs);
 
 private:

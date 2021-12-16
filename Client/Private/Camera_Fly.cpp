@@ -83,6 +83,7 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 	}
 
 	return __super::Update(TimeDelta);
+	return _uint();
 }
 
 _uint CCamera_Fly::LateUpdate(_double TimeDelta)

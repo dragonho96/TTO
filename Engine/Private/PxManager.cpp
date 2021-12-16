@@ -59,22 +59,22 @@ void CPxManager::Free()
 	if (!m_pScene)
 		return;
 
-		m_pScene->flushQueryUpdates();
-		SafeDelete(m_pMyCallback);
-		PX_RELEASE(m_pMaterial);
-		PX_RELEASE(m_pCooking);
-		PX_RELEASE(m_pControllerManager);
-		// PX_RELEASE(m_pAggregate);
-		PX_RELEASE(m_pScene);
-		PX_RELEASE(m_pDispatcher);
-		PX_RELEASE(m_pPhysics);
-		if (m_pPvd)
-		{
-			PxPvdTransport* transport = m_pPvd->getTransport();
-			m_pPvd->release();	m_pPvd = NULL;
-			PX_RELEASE(transport);
-		}
-		PX_RELEASE(m_pFoundation);
+	m_pScene->flushQueryUpdates();
+	SafeDelete(m_pMyCallback);
+	PX_RELEASE(m_pMaterial);
+	PX_RELEASE(m_pCooking);
+	PX_RELEASE(m_pControllerManager);
+	// PX_RELEASE(m_pAggregate);
+	PX_RELEASE(m_pScene);
+	PX_RELEASE(m_pDispatcher);
+	PX_RELEASE(m_pPhysics);
+	if (m_pPvd)
+	{
+		PxPvdTransport* transport = m_pPvd->getTransport();
+		m_pPvd->release();	m_pPvd = NULL;
+		PX_RELEASE(transport);
+	}
+	PX_RELEASE(m_pFoundation);
 }
 
 HRESULT CPxManager::Initialize()
@@ -113,8 +113,6 @@ HRESULT CPxManager::Initialize()
 	//	throw("PxCreateCooking failed!");
 
 
-
-
 	PxSceneDesc sceneDesc(m_pPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 	m_pDispatcher = PxDefaultCpuDispatcherCreate(1);
@@ -131,7 +129,7 @@ HRESULT CPxManager::Initialize()
 	m_pScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
 	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
 	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
-	m_pScene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
+	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
 	//m_pScene->setVisualizationParameter(PxVisualizationParameter::eCULL_BOX, 2.0f);
 
 
@@ -151,6 +149,8 @@ HRESULT CPxManager::Initialize()
 	m_pMaterial = m_pPhysics->createMaterial(0.5f, 10.f, 0.6f);
 	PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, PxPlane(0, 1, 0, 0), *m_pMaterial);
 	groundPlane->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
+
+
 	m_pScene->addActor(*groundPlane);
 
 
@@ -187,5 +187,21 @@ void CPxManager::AddAggregateActor(PxRigidActor * pActor)
 	}
 
 	// m_pAggregate->addActor(*pActor);
+}
+
+_bool CPxManager::Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer & hit)
+{
+	PxVec3 pxOrigin;
+	PxVec3 pxUnitDir;
+	PxReal pxMaxDistance = maxDistance;
+
+	memcpy(&pxOrigin, &origin, sizeof(PxVec3));
+	memcpy(&pxUnitDir, &unitDir, sizeof(PxVec3));
+
+	PxQueryFilterData filterData;
+	filterData.data.word0 = CPxManager::GROUP1;
+	// filterData.data.word1 = CPxManager::GROUP2;
+	_bool result = m_pScene->raycast(pxOrigin, pxUnitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
+	return result;
 }
 

@@ -2,7 +2,6 @@
 #include "TimerManager.h"
 #include "GraphicDevice.h"
 #include "SceneSerializer.h"
-#include "PxManager.h"
 #include "InputManager.h"
 #include "ModelManager.h"
 IMPLEMENT_SINGLETON(CEngine)
@@ -557,6 +556,12 @@ void CEngine::AddActor(PxRigidActor * pActor)
 void CEngine::AddAggregateActor(PxRigidActor * pActor)
 {
 	m_pPxManager->AddAggregateActor(pActor);
+}
+
+_bool CEngine::Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer & hit)
+{
+
+	return m_pPxManager->Raycast(origin, unitDir, maxDistance, hit);
 }
 
 PxScene * CEngine::GetScene()

@@ -16,10 +16,12 @@ public:
 	void Initialize();
 	virtual void Update(_double deltaTime);
 	virtual void LapteUpdate(_double deltaTime);
+	virtual void Render();
 
 private:
 	class CGameObject* m_pPrimaryWeaponButton = nullptr;
 	class CGameObject* m_pHoverInfo = nullptr;
+
 };
 
 END

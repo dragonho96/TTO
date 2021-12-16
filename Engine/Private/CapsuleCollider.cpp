@@ -113,17 +113,18 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 			desc.material = pMaterial;
 			desc.position = PxExtendedVec3(transform.p.x, transform.p.y, transform.p.z);
 			desc.contactOffset = 0.001f;
+			
 			//desc.behaviorCallback = 
 			//desc.reportCallback = &m_callback;
 			//CE_ASSERT(desc.isValid(), "Capsule is not valid");
 			if (CEngine::GetInstance()->GetControllerManager())
 				m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
-			//PxShape* shape = nullptr;
-			//m_pController->getActor()->getShapes(&shape, 1);
-			//PxFilterData filterData;
-			//filterData.word0 = CPxManager::GROUP2;
-			//filterData.word1 = CPxManager::GROUP1;
-			//shape->setSimulationFilterData(filterData);
+			PxShape* shape = nullptr;
+			m_pController->getActor()->getShapes(&shape, 1);
+			PxFilterData filterData;
+			filterData.word0 = CPxManager::GROUP1;
+			// filterData.word1 = CPxManager::GROUP1;
+			shape->setQueryFilterData(filterData);
 			//filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
 			//filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID
 			//shape->setSimulationFilterData(filterData);

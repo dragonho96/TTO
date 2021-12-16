@@ -32,11 +32,23 @@ cbuffer EtcDesc
     vector g_vCamPosition;
 }
 
-Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseSourTexture;
+Texture2D g_DiffuseDestTexture;
+Texture2D g_BrushTexture;
 
+Texture2D g_DiffuseTexture;
 SamplerState g_DiffuseSampler
 {
     Filter = min_mag_mip_linear;
+
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
+Texture2D g_FilterTexture;
+SamplerState g_FilterSampler
+{
+    Filter = min_mag_mip_point;
 
     AddressU = wrap;
     AddressV = wrap;
@@ -69,7 +81,7 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vTexUV = In.vTexUV * 20.f;  // Tiling
+    Out.vTexUV = In.vTexUV * 5.f;  // Tiling
 
     vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
 	// Out.fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
@@ -105,10 +117,28 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
     vector vColor = (vector) 0;
 
-    vector vDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
-    vColor = (g_vLightDiffuse * vDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) + 
-         (g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
-    vColor.a = vDiffuse.a;
+    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
+    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
+	
+	
+    vector vFilter = g_FilterTexture.Sample(g_FilterSampler, In.vTexUV);
+
+    vector vMtrlDiffuse = vSourDiffuse * vFilter.r + vDestDiffuse * (1.f - vFilter.r);
+
+    if (g_vBrushPos.x - g_fRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fRange &&
+		g_vBrushPos.z - g_fRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fRange)
+    {
+        float2 vTexUV = float2((In.vWorldPos.x - (g_vBrushPos.x - g_fRange)) / (2.f * g_fRange),
+			((g_vBrushPos.z + g_fRange) - In.vWorldPos.z) / (2.f * g_fRange));
+
+        vector vBrush = g_BrushTexture.Sample(g_DiffuseSampler, vTexUV);
+
+        vMtrlDiffuse += vBrush;
+    }
+
+    vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
+		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
+    vColor.a = vMtrlDiffuse.a;
 
     return vColor;
 }
