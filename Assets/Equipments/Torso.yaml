@@ -1,0 +1,14 @@
+EquipmentType: Torso 
+Equipments:
+  - Name: CS95 JACKET
+    Background: THIS IS CS95 JACKET
+    Weight: 0.66
+    Inventory:
+      - [1, 1, 4]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: T-SHART
+    Background: it is T-SHART
+    Weight: 0.35
+    Mobility: 1.00
+    Dexterity: 1.00

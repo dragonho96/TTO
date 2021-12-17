@@ -1,0 +1,18 @@
+EquipmentType: Vest 
+Equipments:
+  - Name: 6SH92
+    Background: THIS IS 6SH92
+    Weight: 0.66
+    Inventory:
+      - [1, 1, 4]
+      - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: ALICE VEST
+    Background: it is ALICE VEST
+    Weight: 0.35
+    Inventory:
+      - [1, 1, 4]
+      - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00

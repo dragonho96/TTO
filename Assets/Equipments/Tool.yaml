@@ -1,0 +1,12 @@
+EquipmentType: Grenade 
+Equipments:
+  - Name: MEDKIT
+    Background: it is MEDKIT
+    Weight: 1.5
+    Cost: 3
+    SlotSize: [2, 2]
+  - Name: CLAYMORE
+    Background: it is CLAYMORE
+    Weight: 3.0
+    Cost: 3
+    SlotSize: [2, 2]

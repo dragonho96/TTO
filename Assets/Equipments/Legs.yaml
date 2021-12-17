@@ -1,0 +1,18 @@
+EquipmentType: Legs 
+Equipments:
+  - Name: BDU PANTS
+    Background: THIS IS BDU PANTS
+    Weight: 0.66
+    Inventory:
+      - [1, 1, 1]
+      - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: BDU PANTS TUCKED
+    Background: it is BDU PANTS TUCKED
+    Weight: 0.35
+    Inventory:
+      - [1, 1, 2]
+      - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00

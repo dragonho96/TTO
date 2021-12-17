@@ -1,0 +1,20 @@
+EquipmentType: SecondaryWeapon
+Equipments:
+  - Name: Desert Eagle
+    Background: This is Desert Eagle
+    Weight: 2.0
+    Cost: 3
+    Rpm: 90
+    Accuracy: 30
+  - Name: M9
+    Background: This is M9
+    Weight: 1.0
+    Cost: 2
+    Rpm: 68
+    Accuracy: 60
+  - Name: TRG
+    Background: This is TRG
+    Weight: 5.0
+    Cost: 6
+    Rpm: 18
+    Accuracy: 90

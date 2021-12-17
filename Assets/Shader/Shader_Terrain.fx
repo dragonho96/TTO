@@ -26,7 +26,7 @@ cbuffer MaterialDesc
 
 cbuffer EtcDesc
 {
-    vector g_vBrushPos = vector(10.f, 0.f, 10.f, 1.f);
+    vector g_vBrushPos;
     float g_fRange = 5.f;
 
     vector g_vCamPosition;
@@ -125,6 +125,10 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET
 
     vector vMtrlDiffuse = vSourDiffuse * vFilter.r + vDestDiffuse * (1.f - vFilter.r);
 
+    vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
+		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
+    vColor.a = vMtrlDiffuse.a;
+
     if (g_vBrushPos.x - g_fRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fRange &&
 		g_vBrushPos.z - g_fRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fRange)
     {
@@ -133,12 +137,10 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET
 
         vector vBrush = g_BrushTexture.Sample(g_DiffuseSampler, vTexUV);
 
-        vMtrlDiffuse += vBrush;
+        vColor += vBrush;
     }
 
-    vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
-		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
-    vColor.a = vMtrlDiffuse.a;
+
 
     return vColor;
 }

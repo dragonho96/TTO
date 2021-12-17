@@ -29,6 +29,7 @@
 
 #include "Player.h"
 #include "EquipButtonManager.h"
+#include "EquipmentPool.h"
 USING(Client)
 
 CScene_Test::CScene_Test(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -51,6 +52,7 @@ CScene_Test * CScene_Test::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 
 void CScene_Test::Free()
 {
+	RELEASE_INSTANCE(CEquipmentPool);
 	__super::Free();
 }
 
@@ -61,6 +63,9 @@ HRESULT CScene_Test::Initialize()
 
 	if (FAILED(ReadyPrototypeGameObject()))
 		return E_FAIL;
+
+	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
+	RELEASE_INSTANCE(CEquipmentPool);
 
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 

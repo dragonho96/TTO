@@ -56,22 +56,34 @@
       <Filter>FX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Grid.h">
-      <Filter>PathFinding\Grid</Filter>
+      <Filter>97.Manager\PathFindingManager\Grid</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Node.h">
-      <Filter>PathFinding\Node</Filter>
+      <Filter>97.Manager\PathFindingManager\Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PathFinding.h">
-      <Filter>PathFinding</Filter>
+      <Filter>97.Manager\PathFindingManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EquipButtonManager.h">
-      <Filter>EquipButtonManager</Filter>
+      <Filter>97.Manager\EquipButtonManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Fly.h">
       <Filter>02.GameObjects\Camera\Camera_Fly</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Follow.h">
       <Filter>02.GameObjects\Camera\Camera_Follow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Equipment.h">
+      <Filter>03.Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EquipmentPool.h">
+      <Filter>EquipmentPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EquipmentSerializer.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>98.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,22 +133,31 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Grid.cpp">
-      <Filter>PathFinding\Grid</Filter>
+      <Filter>97.Manager\PathFindingManager\Grid</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Node.cpp">
-      <Filter>PathFinding\Node</Filter>
+      <Filter>97.Manager\PathFindingManager\Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PathFinding.cpp">
-      <Filter>PathFinding</Filter>
+      <Filter>97.Manager\PathFindingManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EquipButtonManager.cpp">
-      <Filter>EquipButtonManager</Filter>
+      <Filter>97.Manager\EquipButtonManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Fly.cpp">
       <Filter>02.GameObjects\Camera\Camera_Fly</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Follow.cpp">
       <Filter>02.GameObjects\Camera\Camera_Follow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Equipment.cpp">
+      <Filter>03.Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EquipmentPool.cpp">
+      <Filter>EquipmentPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EquipmentSerializer.cpp">
+      <Filter>Serializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,23 +220,35 @@
     <Filter Include="FX">
       <UniqueIdentifier>{bfd9097f-0a6e-415e-9acc-d189c34c374d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PathFinding">
-      <UniqueIdentifier>{b8375056-5470-4f93-b684-311dc07c6ef4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PathFinding\Grid">
-      <UniqueIdentifier>{12593d30-3da1-4307-9d26-cf886fc50737}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PathFinding\Node">
-      <UniqueIdentifier>{b89def4f-662e-4fe3-a8de-8777d9237882}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="EquipButtonManager">
-      <UniqueIdentifier>{f60c43d0-b6bb-4939-875a-ffc94f97533b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Camera\Camera_Fly">
       <UniqueIdentifier>{ade715b0-6738-45c6-ad2b-7b99408ade48}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Camera\Camera_Follow">
       <UniqueIdentifier>{650f4204-cbd2-464c-9cb6-be0c6990c006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Components">
+      <UniqueIdentifier>{a5ceb8ed-a68c-41fd-b944-db3f95fb66db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager">
+      <UniqueIdentifier>{ecfb6b88-7f25-46c4-9bca-24346ce8f5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\EquipButtonManager">
+      <UniqueIdentifier>{f60c43d0-b6bb-4939-875a-ffc94f97533b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\PathFindingManager">
+      <UniqueIdentifier>{b8375056-5470-4f93-b684-311dc07c6ef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\PathFindingManager\Grid">
+      <UniqueIdentifier>{12593d30-3da1-4307-9d26-cf886fc50737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\PathFindingManager\Node">
+      <UniqueIdentifier>{b89def4f-662e-4fe3-a8de-8777d9237882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EquipmentPool">
+      <UniqueIdentifier>{7b1cfd85-10fe-4c3b-89a2-107aeb4d017d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{bbf6c325-fde0-4792-90a8-9241b30c718e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +266,9 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_RectImage.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

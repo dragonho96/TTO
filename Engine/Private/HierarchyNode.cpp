@@ -54,23 +54,23 @@ void CHierarchyNode::Update_CombinedTransformationMatrix_Ragdoll()
 	// 만약 노드 이름이 pelvis leg... 면 바로 matrix 대입, 아니면 parent따라서 곱함
 	if (m_pRagdollRb)
 	{
-
 		PxTransform transform = m_pRagdollRb->getGlobalPose();
-		PxCapsuleGeometry cap;
+
 		PxShape* shape;
 		m_pRagdollRb->getShapes(&shape, 1);
+
+		PxCapsuleGeometry cap;
 		shape->getCapsuleGeometry(cap);
 		float halfLength = ((cap.halfHeight * 2.f) + (cap.radius * 2.f)) * 1.1f / 2.f;
+
 		_vector quat;
 		memcpy(&quat, &transform.q, sizeof(_vector));
 
-		PxMat44 m = PxMat44(transform);
-		XMMATRIX d3dMat;
-		memcpy(&d3dMat, &m, sizeof(XMMATRIX));
-		_float4x4 dd;
-		XMStoreFloat4x4(&dd, d3dMat);
+		PxMat44 pxMat = PxMat44(transform);
+		_float4x4 mat;
+		memcpy(&mat, &pxMat, sizeof(_float4x4));
 		// Getting first row = Up Vector
-		_vector vecUp = { dd._11, dd._12, dd._13, dd._14 };
+		_vector vecUp = { mat._11, mat._12, mat._13, mat._14 };
 		vecUp = XMVector3Normalize(vecUp);
 
 		_vector addPos = vecUp * halfLength;

@@ -67,6 +67,48 @@ GameObjects:
         Gravity: false
         Kinematic: false
         CharacterController: false
+  - Name: Name
+    UUID: 14191663875556976298
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [115.147522, 95.1006775]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.899999976, 1]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 8541124978897117697
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [244.184418, 95.1008301]
+      Size: [50, 50]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [1, 1]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3578189107282520881
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [121.201111, 190.134232]
+      Size: [73.0999985, 50]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [1, 1]
+      LayerDepth: 0
   - Name: Terrain
     UUID: 10024634474122618756
     Active: true
@@ -80,3 +122,19 @@ GameObjects:
       Type: Terrain
       HeightMapPath: ../../Assets/Texture/Height.bmp
       TexturePath: ../../Assets/Texture/Height.bmp
+  - Name: WeaponButton
+    UUID: 15469185481822053587
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [177.838165, 135.369156]
+      Size: [200, 130]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\EquipmentButton.png
+      Color: [0, 0, 0, 0]
+    Children:
+      - 14191663875556976298
+      - 8541124978897117697
+      - 3578189107282520881

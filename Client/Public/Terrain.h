@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "VIBuffer.h"
+#include "Transform.h"
 
 BEGIN(Client)
 class CTerrain : public IScriptObject
@@ -24,6 +25,7 @@ private:
 	CGameObject*	m_pGameObject;
 	CVIBuffer*		m_pVIBuffer = nullptr;
 	CShader*		m_pShader;
+	CTransform*		m_pPlayerTransform = nullptr;
 
 private:
 	CTexture*		m_pTerrainTexture = nullptr;

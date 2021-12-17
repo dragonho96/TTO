@@ -35,17 +35,8 @@ CModel::CModel(const CModel & rhs)
 	for (auto& pPrototypeMeshContainer : rhs.m_MeshContainers)
 	{
 		CMeshContainer*	pMeshContainer = pPrototypeMeshContainer->Clone();
-
 		m_MeshContainers.push_back(pMeshContainer);
-
-		vector<BONEDESC*> bones = pMeshContainer->Get_BoneDesc();
-		for (auto& bone : bones)
-		{
-			SetRagdollBoneDesc(bone);
-		}
 	}
-
-
 }
 
 HRESULT CModel::InitializePrototype()
@@ -83,7 +74,10 @@ HRESULT CModel::Initialize(void * pArg)
 		vector<BONEDESC*>	Bones = pMeshContainer->Get_BoneDesc();
 
 		for (auto& pBoneDesc : Bones)
+		{
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
+			SetRagdollBoneDesc(pBoneDesc);
+		}
 	}
 
 	if (FAILED(Sort_MeshesByMaterial()))
@@ -819,21 +813,6 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 
 	m_RagdollRbs.emplace(name, ragdollBoneDesc);
 	parent->pHierarchyNode->AddRagdollRb(body);
-
-	PxTransform test = body->getGlobalPose();
-	//test = test.getInverse();
-	// test = test.getNormalized();
-
-	PxMat44 m = PxMat44(test);
-	XMMATRIX d3dMat;
-	memcpy(&d3dMat, &m, sizeof(XMMATRIX));
-	// d3dMat = XMMatrixInverse(nullptr, d3dMat);
-	_float4x4 dd;
-	XMStoreFloat4x4(&dd, d3dMat);
-
-	_vector vecUp = { dd._11, dd._12, dd._13, dd._14 };
-	vecUp = XMVector3Normalize(vecUp);
-	int i = 0;
 }
 
 void CModel::CreateSphereRb(BONEDESC * parent, string name)

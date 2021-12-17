@@ -1,0 +1,12 @@
+EquipmentType: Headgear
+Equipments:
+  - Name: BASEBALL CAP
+    Background: THIS IS BASEBALL CAP
+    Weight: 0.66
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: BALACLAVA A
+    Background: it is BALACLAVA A
+    Weight: 0.35
+    Mobility: 1.00
+    Dexterity: 1.00

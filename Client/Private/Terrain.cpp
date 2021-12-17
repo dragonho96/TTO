@@ -38,6 +38,13 @@ HRESULT CTerrain::Initialize()
 	m_pVIBuffer = dynamic_cast<CVIBuffer*>(m_pGameObject->GetComponent("Com_VIBuffer"));
 	m_pShader = m_pVIBuffer->GetShader();
 
+	objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	if (objList.size() <= 0)
+		return E_FAIL;
+
+	CGameObject* player = objList.front();
+	m_pPlayerTransform = dynamic_cast<CTransform*>(player->GetComponent("Com_Transform"));
+
 	
 	m_pTerrainTexture = CTexture::Create(
 		CEngine::GetInstance()->GetDevice(), 
@@ -71,6 +78,9 @@ void CTerrain::LapteUpdate(_double deltaTime)
 	_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
 	ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
 	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
+
+	_vector playerPos = m_pPlayerTransform->GetState(CTransform::STATE_POSITION);
+	m_pShader->SetUp_ValueOnShader("g_vBrushPos", &playerPos, sizeof(_vector));
 }
 
 void CTerrain::Render()

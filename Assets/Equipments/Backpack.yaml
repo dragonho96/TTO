@@ -1,0 +1,16 @@
+EquipmentType: Backpack 
+Equipments:
+  - Name: ROC
+    Background: it is ROC
+    Weight: 1.5
+    Inventory:
+      - [4, 4, 1]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: ALICE BACKPACK
+    Background: it is ALICE BACKPACK
+    Weight: 3.0
+    Inventory:
+      - [5, 4, 4]
+    Mobility: 1.00
+    Dexterity: 1.00
