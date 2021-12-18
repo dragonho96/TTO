@@ -1,10 +1,10 @@
 #include "..\Public\CapsuleCollider.h"
 #include "Transform.h"
 #include "PxManager.h"
+#include "Engine.h"
 
 CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
-	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
 	, m_fHeight(1.f)
 {
@@ -13,7 +13,6 @@ CCapsuleCollider::CCapsuleCollider(ID3D11Device * pDevice, ID3D11DeviceContext *
 
 CCapsuleCollider::CCapsuleCollider(const CCapsuleCollider & rhs)
 	: CCollider(rhs)
-	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
 	, m_fHeight(1.f)
 {
@@ -72,13 +71,9 @@ HRESULT CCapsuleCollider::Initialize(void * pArg)
 
 HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 {
-	CEngine*	pEngine = GET_INSTANCE(CEngine);
-
-	m_pDebugLine = pEngine->CloneComponent(0, "Prototype_VIBuffer_LineCapsule", m_pObjTransform);
+	m_pDebugLine = m_pEngine->CloneComponent(0, "Prototype_VIBuffer_LineCapsule", m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
-
-	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }

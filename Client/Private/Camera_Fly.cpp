@@ -26,12 +26,12 @@ HRESULT CCamera_Fly::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
-	if (list.size() <= 0)
-		return E_FAIL;
+	//list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	//if (list.size() <= 0)
+	//	return E_FAIL;
 
-	CGameObject* m_pGameObject = list.front();
-	m_pTargetTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
+	//CGameObject* m_pGameObject = list.front();
+	//m_pTargetTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
 
 	return S_OK;
 }

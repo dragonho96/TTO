@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Collider.h"
-#include "VIBuffer.h"
 #include "VIBuffer_LineBox.h"
-
 
 BEGIN(Engine)
 
@@ -30,7 +28,6 @@ public:
 	_float3 GetSize() { return m_Size; };
 
 private:
-	CEngine*		m_pEngine;
 	_float3			m_Size;
 };
 

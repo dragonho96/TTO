@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Engine.h"
 #include "Transform.h"
 #include "VIBuffer.h"
 
@@ -47,6 +46,8 @@ public:
 public:
 	void ReleaseController();
 protected:
+	class CEngine*		m_pEngine;
+
 	_float3			m_vRelativePos = { 0.f, 0.f, 0.f };
 	RIGIDBODYDESC	m_RigidBodyDesc;
 

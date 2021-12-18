@@ -1,3 +1,2 @@
-Scene: Name
-Entities:
-  - GameObject: idk
+Scene: Scene_Lobby
+GameObjects:

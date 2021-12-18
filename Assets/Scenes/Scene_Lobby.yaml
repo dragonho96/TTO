@@ -1,0 +1,60 @@
+Scene: Untitled
+GameObjects:
+  - Name: Primary
+    UUID: 1901211972883645456
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [221.529694, 148.255081]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 9433789498520215262
+      - 17823497980358353119
+      - 2685136350401009801
+  - Name: Name
+    UUID: 9433789498520215262
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [182.692841, 122.4832]
+      Size: [62.4000015, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.800000012, 0.699999988]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 17823497980358353119
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [279.785126, 120.872513]
+      Size: [50, 50]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.800000012, 0.800000012]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 2685136350401009801
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [189.165649, 185.302048]
+      Size: [76.8000031, 27.6000004]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.800000012, 0.800000012]
+      LayerDepth: 0

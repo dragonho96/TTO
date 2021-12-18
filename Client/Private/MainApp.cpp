@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "..\Public\MainApp.h"
-
 #include "Engine.h"
+
 #include "Scene_Logo.h"
 #include "Scene_Loading.h"
 #include "Scene_Test.h"
+#include "Scene_Lobby.h"
+
+#include "Camera_Fly.h"
+#include "Camera_Follow.h"
 
 #include "Log.h"
 
@@ -57,7 +61,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_TEST)))
+	if (FAILED(OpenScene(SCENE_LOBBY)))
 		return E_FAIL;
 
 	ImGuiInitialize();
@@ -93,7 +97,7 @@ HRESULT CMainApp::Render()
 	if (g_Done)
 		return _uint();
 
-	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pEngine->ClearBackBufferView(_float4(0.1f, 0.5f, 0.f, 1.f));
 	m_pEngine->ClearDepthStencilView(1.f, 0);
 	m_pEngine->RenderClient();
 	/* 필요한 객체들을 백버퍼에 그린다. */
@@ -234,6 +238,9 @@ HRESULT CMainApp::OpenScene(SCENE eScene)
 	case SCENE_LOGO:
 		pScene = CScene_Logo::Create(m_pDevice, m_pDeviceContext, SCENE_LOGO);
 		break;
+	case SCENE_LOBBY:
+		pScene = CScene_Lobby::Create(m_pDevice, m_pDeviceContext, SCENE_LOBBY);
+		break;
 	case SCENE_TEST:
 		pScene = CScene_Test::Create(m_pDevice, m_pDeviceContext, SCENE_TEST);
 		break;
@@ -262,7 +269,61 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	SafeAddRef(m_pRenderer);
 
+	/* Transform */
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Transform", CTransform::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_RectTransform", CRectTransform::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
+	/* Buffer */
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_LineBox", CVIBuffer_LineBox::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_LineSphere", CVIBuffer_LineSphere::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_LineCapsule", CVIBuffer_LineCapsule::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Terrain", CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectUI", CVIBuffer_RectUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Rect", CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* Collider*/
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_SphereCollider", CSphereCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_CapsuleCollider", CCapsuleCollider::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* Text */
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
+
+	/* Gameobject Prototype */
+	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyGameObject", CEmptyGameObject::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("Prototype_EmptyUI", CEmptyUI::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+
+
+	/* PathFinding*/
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Grid", CGrid::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	/* Camera */
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Fly", CCamera_Fly::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Follow", CCamera_Follow::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 
 	return S_OK;
 }

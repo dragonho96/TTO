@@ -1,10 +1,9 @@
 #include "..\Public\BoxCollider.h"
 #include "Transform.h"
-#include "PxManager.h"
+#include "Engine.h"
 
 CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
-	, m_pEngine(CEngine::GetInstance())
 	, m_Size(1.f, 1.f, 1.f)
 {
 
@@ -12,7 +11,6 @@ CBoxCollider::CBoxCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice
 
 CBoxCollider::CBoxCollider(const CBoxCollider & rhs)
 	: CCollider(rhs)
-	, m_pEngine(CEngine::GetInstance())
 	, m_Size(1.f, 1.f, 1.f)
 {
 
@@ -70,13 +68,9 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 
 HRESULT CBoxCollider::SetUpDebugLine(/* SIZE DESC */)
 {
-	CEngine*	pEngine = GET_INSTANCE(CEngine);
-
-	m_pDebugLine = pEngine->CloneComponent(0, "Prototype_VIBuffer_LineBox", m_pObjTransform);
+	m_pDebugLine = m_pEngine->CloneComponent(0, "Prototype_VIBuffer_LineBox", m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
-
-	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }

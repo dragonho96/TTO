@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Base.h"
-
+#include "EmptyGameObject.h"
+#include "EmptyUI.h"
 /* 객체들을 개발자가 원하는 기준으로 나누어서 보관한다.  */
 
 BEGIN(Engine)
-class CGameObject;
 class CLayer;
 class CGameObjectManager final : public CBase
 {

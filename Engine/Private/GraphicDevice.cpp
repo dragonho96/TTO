@@ -231,7 +231,7 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	m_pDeviceContext->ClearState();
 	m_pBackBufferRTV.Reset();
 	m_pBackBufferRTV2.Reset();
-	//m_pShaderResourceView.Reset();
+	m_pShaderResourceView.Reset();
 	m_pDepthStencilRTV.Reset();
 	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
 	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();

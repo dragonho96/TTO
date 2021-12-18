@@ -1,10 +1,9 @@
 #include "..\Public\SphereCollider.h"
 #include "Transform.h"
-
+#include "Engine.h"
 
 CSphereCollider::CSphereCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CCollider(pDevice, pDeviceContext)
-	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
 {
 
@@ -12,7 +11,6 @@ CSphereCollider::CSphereCollider(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 CSphereCollider::CSphereCollider(const CSphereCollider & rhs)
 	: CCollider(rhs)
-	, m_pEngine(CEngine::GetInstance())
 	, m_fRadius(0.5f)
 {
 
@@ -70,13 +68,9 @@ HRESULT CSphereCollider::Initialize(void * pArg)
 
 HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 {
-	CEngine*	pEngine = GET_INSTANCE(CEngine);
-
-	m_pDebugLine = pEngine->CloneComponent(0, "Prototype_VIBuffer_LineSphere", m_pObjTransform);
+	m_pDebugLine = m_pEngine->CloneComponent(0, "Prototype_VIBuffer_LineSphere", m_pObjTransform);
 	if (nullptr == m_pDebugLine)
 		return E_FAIL;
-
-	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }

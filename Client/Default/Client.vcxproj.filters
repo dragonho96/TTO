@@ -85,6 +85,9 @@
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>98.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Scene_Lobby.h">
+      <Filter>01.Scenes\Lobby</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -158,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EquipmentSerializer.cpp">
       <Filter>Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_Lobby.cpp">
+      <Filter>01.Scenes\Lobby</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +255,9 @@
     </Filter>
     <Filter Include="Serializer">
       <UniqueIdentifier>{bbf6c325-fde0-4792-90a8-9241b30c718e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Lobby">
+      <UniqueIdentifier>{ac300dfc-b5b1-4ac5-9c27-cf41aa281234}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

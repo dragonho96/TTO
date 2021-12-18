@@ -1,25 +1,25 @@
 #include "stdafx.h"
 #include "..\Public\Scene_Tool.h"
-
-#pragma region COMPONENTS
-#include "Transform.h"
-#include "RectTransform.h"
-#include "SphereCollider.h"
-#include "BoxCollider.h"
-#include "CapsuleCollider.h"
-#include "VIBuffer_LineSphere.h"
-#include "VIBuffer_LineBox.h"
-#include "VIBuffer_LineCapsule.h"
-#include "VIBuffer_RectUI.h"
-#include "VIBuffer_Terrain.h"
-#include "Text.h"
-#include "Model.h"
-#pragma endregion 
-
-#pragma region OBJECTS
-#include "EmptyGameObject.h"
-#include "EmptyUI.h"
-#pragma endregion
+#include "Engine.h"
+//#pragma region COMPONENTS
+//#include "Transform.h"
+//#include "RectTransform.h"
+//#include "SphereCollider.h"
+//#include "BoxCollider.h"
+//#include "CapsuleCollider.h"
+//#include "VIBuffer_LineSphere.h"
+//#include "VIBuffer_LineBox.h"
+//#include "VIBuffer_LineCapsule.h"
+//#include "VIBuffer_RectUI.h"
+//#include "VIBuffer_Terrain.h"
+//#include "Text.h"
+//#include "Model.h"
+//#pragma endregion 
+//
+//#pragma region OBJECTS
+//#include "EmptyGameObject.h"
+//#include "EmptyUI.h"
+//#pragma endregion
 
 #include "Camera_Tool.h"
 
