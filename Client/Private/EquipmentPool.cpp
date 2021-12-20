@@ -27,7 +27,10 @@ void CEquipmentPool::SetUpEquipmentPool()
 	CEquipmentSerializer serializer;
 
 	serializer.Deserialize("../../Assets/Equipments/PrimaryWeapon.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::PRIMARY]);
+	serializer.Deserialize("../../Assets/Equipments/PrimaryMagazine.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::PRIMARYMAG]);
 	serializer.Deserialize("../../Assets/Equipments/SecondaryWeapon.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::SECONDARY]);
+	serializer.Deserialize("../../Assets/Equipments/SecondaryMagazine.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::SECONDARYMAG]);
+
 	serializer.Deserialize("../../Assets/Equipments/Grenade.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::GRENADE]);
 	serializer.Deserialize("../../Assets/Equipments/Tool.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::TOOL]);
 	serializer.Deserialize("../../Assets/Equipments/Headgear.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::HEADGEAR]);
@@ -35,6 +38,7 @@ void CEquipmentPool::SetUpEquipmentPool()
 	serializer.Deserialize("../../Assets/Equipments/Legs.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::LEGS]);
 	serializer.Deserialize("../../Assets/Equipments/Vest.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::VEST]);
 	serializer.Deserialize("../../Assets/Equipments/Backpack.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::BACKPACK]);
+
 
 	GEARDESC* gear = (GEARDESC*)m_EquipmentPool[(_uint)EQUIPMENT::LEGS].front();
 	int i = 0;
@@ -44,4 +48,9 @@ void CEquipmentPool::SetUpEquipmentPool()
 	// Save in list
 
 
+}
+
+BASEEQUIPDESC * CEquipmentPool::GetEquipment(EQUIPMENT eType, _uint iIndex)
+{
+	return m_EquipmentPool[(_uint)eType][iIndex];
 }

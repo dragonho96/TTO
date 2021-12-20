@@ -3,6 +3,8 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Model.h"
+#include "Equipment.h"
+
 BEGIN(Client)
 
 class CPlayer : public IScriptObject
@@ -30,6 +32,8 @@ private:
 	CCollider*		m_pCollider;
 	CModel*			m_pModel;
 	PxController*	m_pController;
+
+	CEquipment*		m_pEquipment;
 	// Inherited via IScriptObject
 
 

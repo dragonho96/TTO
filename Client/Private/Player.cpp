@@ -40,6 +40,9 @@ HRESULT CPlayer::Initialize()
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
 	m_pController = m_pCollider->GetController();
+	
+	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
+	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
@@ -50,15 +53,16 @@ HRESULT CPlayer::Initialize()
 		return E_FAIL;
 
 	// TODO: Organize cameras
-	camList.pop_front();
-	CGameObject* m_pCam = camList.front();
-	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
+	// camList.pop_front();
+	//CGameObject* m_pCam = camList.front();
+	//m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
 
 	return S_OK;
 }
 
 void CPlayer::Update(_double deltaTime)
 {
+	return;
 	if (m_pController)
 	{
 		// Look Vector
@@ -180,15 +184,18 @@ void CPlayer::Update(_double deltaTime)
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
+	return ;
 	// Ragdoll Anim
 
 	static int anim = 0;
-	if (CEngine::GetInstance()->IsKeyDown('0'))
-		anim = 0;
 	if (CEngine::GetInstance()->IsKeyDown('1'))
+		anim = 0;
+	if (CEngine::GetInstance()->IsKeyDown('2'))
 		anim = 1;
+	if (CEngine::GetInstance()->IsKeyDown('3'))
+		anim = 2;
 
-	m_pModel->SetUp_AnimationIndex(0);
+	m_pModel->SetUp_AnimationIndex(anim);
 	m_pModel->Play_Animation(deltaTime);
 
 	//m_pModel1->SetUp_AnimationIndex(1);

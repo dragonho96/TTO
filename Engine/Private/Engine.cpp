@@ -354,6 +354,16 @@ CGameObject * CEngine::FindGameObjectWithUUID(uint64_t uuid)
 	return m_pGameObjectManager->FindGameObjectWithUUID(uuid);
 }
 
+void CEngine::AddPrefab(string name, YAML::Node node)
+{
+	m_pGameObjectManager->AddPrefab(name, node);
+}
+
+CGameObject* CEngine::SpawnPrefab(string name)
+{
+	return m_pGameObjectManager->SpawnPrefab(name);
+}
+
 void CEngine::AddScriptObject(IScriptObject * pObj)
 {
 	m_pScriptObjectManager->AddObject(pObj);

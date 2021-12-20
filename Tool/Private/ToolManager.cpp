@@ -15,6 +15,8 @@
 #include "Renderer.h"
 #pragma endregion 
 
+#include "SceneSerializer.h"
+
 USING(Tool)
 
 static string strScene = "../../Assets/Scenes/Scene_Lobby.yaml";
@@ -55,6 +57,7 @@ HRESULT CToolManager::Initialize()
 	InitializeImGui();
 
 	m_pEngine->DeserializeScene(strScene);
+
 
 	return S_OK;
 }

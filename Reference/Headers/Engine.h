@@ -84,6 +84,9 @@ public:
 	void AddGameObjectWithUUID(uint64_t uuid, CGameObject* pObj);
 	CGameObject* FindGameObjectWithName(string name);
 	CGameObject* FindGameObjectWithUUID(uint64_t uuid);
+
+	void AddPrefab(string name, YAML::Node node);
+	CGameObject* SpawnPrefab(string name);
 #pragma endregion
 
 #pragma region SCRIPTOBJECT

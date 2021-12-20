@@ -34,11 +34,16 @@ public:
 	CLayer*			FindLayer(_uint iSceneIndex, string pLayerTag);
 	CGameObject*	FindGameObjectWithUUID(uint64_t uuid);
 	CGameObject*	FindGameObjectWithName(string name);
+
+public:
+	void			AddPrefab(string name, YAML::Node node);
+	CGameObject*	SpawnPrefab(string name);
 private:
 	_uint		m_iNumScenes = 0;
 
 private:
 	unordered_map<string, CGameObject*>			m_pPrototypes;
+	unordered_map<string, YAML::Node>			m_pPrefabs;
 
 	typedef unordered_map<string, CLayer*>		GAMEOBJECTS;
 	GAMEOBJECTS*										m_pGameObjects = nullptr;

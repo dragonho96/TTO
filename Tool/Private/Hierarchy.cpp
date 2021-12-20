@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Log.h"
 #include "Layer.h"
+#include "SceneSerializer.h"
 
 static int selected = -1;
 static bool openPopup = false;
@@ -85,6 +86,13 @@ void CHierarchy::Update()
 
 		if (ImGui::BeginPopup("my_select_popup"))
 		{
+			if (ImGui::MenuItem("Make Prefab"))
+			{
+				CSceneSerializer serializer;
+				serializer.SerializePrefab(g_pObjFocused);
+			}
+			ImGui::Separator();
+
 			if (ImGui::MenuItem("Delete"))
 			{
 				/* Delete Object*/

@@ -16,6 +16,10 @@ public:
 	void SerializeObject(YAML::Emitter& out, CGameObject* obj);
 	void SerializeUI(YAML::Emitter& out, CGameObject* obj);
 
+	void SerializePrefab(CGameObject* obj);
+	void DeserializePrefab();
+	CGameObject* SpawnPrefab(YAML::Node data);
+
 	CGameObject* DeserializeUI(YAML::Node& obj);
 	CGameObject* DeserializeObject(YAML::Node& obj);
 private:

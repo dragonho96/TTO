@@ -4,7 +4,12 @@
 #include "Engine.h"
 #include "Camera_Fly.h"
 #include "EquipButtonManager.h"
+
+#pragma region SCRIPTOBJECT
 #include "EquipmentPool.h"
+#include "Player.h"
+#pragma endregion
+
 USING(Client)
 
 CScene_Lobby::CScene_Lobby(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
@@ -44,6 +49,9 @@ HRESULT CScene_Lobby::Initialize()
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
+	if (FAILED(ReadyScript()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -74,6 +82,14 @@ HRESULT CScene_Lobby::ReadyLayerCamera(string pLayerTag)
 
 	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CScene_Lobby::ReadyScript()
+{
+	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
+	m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 
 	return S_OK;
 }

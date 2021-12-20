@@ -19,6 +19,7 @@ public:
 
 private:
 	HRESULT ReadyLayerCamera(string pLayerTag);
+	HRESULT ReadyScript();
 };
 
 END

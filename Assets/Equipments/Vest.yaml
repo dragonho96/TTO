@@ -4,6 +4,7 @@ Equipments:
     Background: THIS IS 6SH92
     Weight: 0.66
     Inventory:
+      - [2, 3, 2]
       - [1, 1, 4]
       - [1, 2, 2]
     Mobility: 1.00

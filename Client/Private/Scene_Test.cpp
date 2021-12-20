@@ -66,7 +66,7 @@ HRESULT CScene_Test::Initialize()
 
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);
-
+	
 	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
 
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))

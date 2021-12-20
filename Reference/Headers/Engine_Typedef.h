@@ -22,6 +22,10 @@ namespace Engine
 
 	typedef wchar_t					_tchar;
 
+	typedef XMUINT2					_uint2;
+	typedef XMUINT3					_uint3;
+	typedef XMUINT4					_uint4;
+
 	typedef XMFLOAT2				_float2;
 	typedef XMFLOAT3				_float3;
 	typedef XMFLOAT4				_float4;

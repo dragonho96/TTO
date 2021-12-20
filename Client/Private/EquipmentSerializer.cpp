@@ -12,7 +12,7 @@ CEquipmentSerializer::CEquipmentSerializer()
 	m_pDeviceContext = m_pEngine->GetDeviceContext();
 }
 
-bool CEquipmentSerializer::Deserialize(const string & filePath, list<BASEEQUIPDESC*>* listDesc)
+bool CEquipmentSerializer::Deserialize(const string & filePath, vector<BASEEQUIPDESC*>* vecDesc)
 {
 	std::ifstream stream(filePath);
 	std::stringstream strStream;
@@ -27,6 +27,8 @@ bool CEquipmentSerializer::Deserialize(const string & filePath, list<BASEEQUIPDE
 	EQUIPMENTTYPE eType;
 	if (equipmentType == "PrimaryWeapon" || equipmentType == "SecondaryWeapon")
 		eType = EQUIPMENTTYPE::WEAPON;
+	else if (equipmentType == "PrimaryMagazine" || equipmentType == "SecondaryMagazine")
+		eType = EQUIPMENTTYPE::MAGAZINE;
 	else if (equipmentType == "Grenade" || equipmentType == "Tool")
 		eType = EQUIPMENTTYPE::BASE;
 	else
@@ -34,6 +36,8 @@ bool CEquipmentSerializer::Deserialize(const string & filePath, list<BASEEQUIPDE
 
 
 	auto equipments = data["Equipments"];
+	vecDesc->reserve((size_t)equipments.size());
+
 	if (equipments)
 	{
 		for (auto equipment : equipments)
@@ -41,13 +45,16 @@ bool CEquipmentSerializer::Deserialize(const string & filePath, list<BASEEQUIPDE
 			switch (eType)
 			{
 			case Client::CEquipmentSerializer::EQUIPMENTTYPE::BASE:
-				listDesc->emplace_back(DeserializeBase(equipment));
+				vecDesc->emplace_back(DeserializeBase(equipment));
+				break;
+			case Client::CEquipmentSerializer::EQUIPMENTTYPE::MAGAZINE:
+				vecDesc->emplace_back(DeserializeMagazine(equipment));
 				break;
 			case Client::CEquipmentSerializer::EQUIPMENTTYPE::WEAPON:
-				listDesc->emplace_back(DeserializeWeapon(equipment));
+				vecDesc->emplace_back(DeserializeWeapon(equipment));
 				break;
 			case Client::CEquipmentSerializer::EQUIPMENTTYPE::GEAR:
-				listDesc->emplace_back(DeserializeGear(equipment));
+				vecDesc->emplace_back(DeserializeGear(equipment));
 				break;
 			default:
 				break;
@@ -72,8 +79,8 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeBase(YAML::Node & node, BASEEQUI
 	if (node["SlotSize"])
 	{
 		auto sequence = node["SlotSize"];
-		pDesc->slotX = sequence[0].as<_uint>();
-		pDesc->slotY = sequence[1].as<_uint>();
+		pDesc->slotSize.x = sequence[0].as<_uint>();
+		pDesc->slotSize.y = sequence[1].as<_uint>();
 	}
 
 	return pDesc;
@@ -84,7 +91,20 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeWeapon(YAML::Node & node)
 	WEAPONDESC* pDesc = new WEAPONDESC();
 	DeserializeBase(node, pDesc);
 	pDesc->rpm = node["Rpm"].as<_float>();
-	pDesc->rpm = node["Rpm"].as<_float>();
+	pDesc->accuracy = node["Accuracy"].as<_float>();
+	return pDesc;
+}
+
+BASEEQUIPDESC * CEquipmentSerializer::DeserializeMagazine(YAML::Node & node)
+{
+	MAGAZINEDESC* pDesc = new MAGAZINEDESC();
+	DeserializeBase(node, pDesc);
+	pDesc->magRound = node["Round"].as<_uint>();
+	if (node["Type"].as<string>() == "Primary")
+		pDesc->magType = EQUIPMENT::PRIMARYMAG;
+	else
+		pDesc->magType = EQUIPMENT::SECONDARYMAG;
+
 	return pDesc;
 }
 
@@ -105,7 +125,7 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeGear(YAML::Node & node)
 			_uint slotCount = sequence[2].as<_uint>();
 			for (_uint j = 0; j < slotCount; ++j)
 			{
-				_float2 invenSize;
+				_uint2 invenSize;
 				invenSize.x = sequence[0].as<_uint>();
 				invenSize.y = sequence[1].as<_uint>();
 				pDesc->inventories.emplace_back(invenSize);

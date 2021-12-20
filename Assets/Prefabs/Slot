@@ -1,0 +1,14 @@
+Scene: Untitled
+GameObjects:
+  - Name: Slot
+    UUID: 11739273852387762053
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [560.981934, 122.482742]
+      Size: [40, 40]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\InventorySlot.png
+      Color: [0, 0, 0, 1]

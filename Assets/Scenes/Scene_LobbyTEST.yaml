@@ -72,20 +72,6 @@ GameObjects:
       Color: [1, 1, 1, 1]
       Scale: [0.5, 0.5]
       LayerDepth: 0
-  - Name: Name
-    UUID: 2090552913147059798
-    Active: true
-    Layer: Name
-    Type: UI
-    SortingOrder: 1
-    Com_Transform:
-      Position: [399.264893, 126.450455]
-      Size: [50, 50]
-    Com_Text:
-      Text: Name
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
   - Name: Torso
     UUID: 12973492261452882665
     Active: true
@@ -101,6 +87,20 @@ GameObjects:
     Children:
       - 2090552913147059798
       - 3141107937387621359
+  - Name: Name
+    UUID: 2090552913147059798
+    Active: true
+    Layer: Name
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [399.264893, 126.450455]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
   - Name: Player
     UUID: 11970625152892416961
     Active: true

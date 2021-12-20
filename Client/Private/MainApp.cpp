@@ -9,6 +9,7 @@
 
 #include "Camera_Fly.h"
 #include "Camera_Follow.h"
+#include "Equipment.h"
 
 #include "Log.h"
 
@@ -77,18 +78,15 @@ _uint CMainApp::Update(_double dDeltaTime)
 	if (g_Done)
 		return _uint();
 
-
 	m_pEngine->Update(dDeltaTime);
 	m_pEngine->UpdateScene(dDeltaTime);
 
 	// TODO: Fix Update Order
 	m_pEngine->UpdatePx(dDeltaTime);
 
-
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
 	return 0;
 }
 
@@ -301,6 +299,9 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 	//	return E_FAIL;
 
@@ -324,6 +325,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Follow", CCamera_Follow::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+
+	
 
 	return S_OK;
 }
