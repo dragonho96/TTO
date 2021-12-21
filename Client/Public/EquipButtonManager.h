@@ -32,13 +32,20 @@ private:
 	// Buttons
 	class CGameObject* m_pPrimaryWeaponButton = nullptr;
 	class CGameObject* m_pTorsoButton = nullptr;
+	class CGameObject* m_pLegsButton = nullptr;
+	class CGameObject* m_pVestButton = nullptr;
+	class CGameObject* m_pBackpackButton = nullptr;
+
+
 	class CGameObject* m_pHoverInfo = nullptr;
 
 	vector<vector<vector<vector<class CGameObject*>>>> m_InventorySlots;
+	list<pair<_uint4, CGameObject*>> m_ImagesInSlot;
 
 	// PlayerEquipment
-	CEquipment* m_pPlayerEquipment = nullptr;
-
+	CEquipment*		m_pPlayerEquipment = nullptr;
+	CGameObject*	m_pMoveImage = nullptr;
+	BASEEQUIPDESC*	m_pCopiedRemovedItem = nullptr;
 private:
 	_bool	m_bHoveringSlot = false;
 	_uint4	m_hoveredSlotIndex;

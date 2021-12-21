@@ -1,6 +1,7 @@
 EquipmentType: SecondaryMagazine
 Equipments:
   - Name: G18 9X19MM 15RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\G18_Mag.tga
     Background: This is G18 MAG
     Weight: 0.19
     Cost: 0
@@ -8,6 +9,7 @@ Equipments:
     Type: Secondary
     Round: 12
   - Name: M9 9X19MM 15RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\G18_Mag.tga
     Background: This is M9 MAG
     Weight: 0.34
     Cost: 0
@@ -15,6 +17,7 @@ Equipments:
     Type: Secondary
     Round: 15
   - Name: M1911 9X19MM 15RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\G18_Mag.tga
     Background: This is M1911
     Weight: 5.0
     Cost: 0

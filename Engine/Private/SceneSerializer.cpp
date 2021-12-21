@@ -357,12 +357,12 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 	{
 		CRectTransform::RECTTRANSFORMDESC desc;
 
-		auto sequence = transformCom["Position"];
-		desc.posX = sequence[0].as<float>();
-		desc.posY = sequence[1].as<float>();
-		sequence = transformCom["Size"];
-		desc.sizeX = sequence[0].as<float>();
-		desc.sizeY = sequence[1].as<float>();
+		auto pos = transformCom["Position"];
+		desc.posX = pos[0].as<float>();
+		desc.posY = pos[1].as<float>();
+		auto size = transformCom["Size"];
+		desc.sizeX = size[0].as<float>();
+		desc.sizeY = size[1].as<float>();
 
 		dynamic_cast<CEmptyUI*>(deserializedObject)->SetRectTransform(desc);
 	}
@@ -575,9 +575,26 @@ void CSceneSerializer::SerializePrefab(CGameObject * obj)
 		out << YAML::Key << "Children";
 		out << YAML::BeginSeq;
 
+
+
 		list<CGameObject*> children = obj->GetChildren();
 		for (auto& child : children)
-			out << child->GetUUID();
+		{
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "Name" << YAML::Value << child->GetName();
+			out << YAML::Key << "UUID" << YAML::Value << child->GetUUID();
+			out << YAML::Key << "Active" << YAML::Value << child->IsActive();
+			out << YAML::Key << "Layer" << YAML::Value << child->GetLayer();
+
+			if (dynamic_cast<CEmptyGameObject*>(child))
+				SerializeObject(out, child);
+			else
+				SerializeUI(out, child);
+
+			out << YAML::EndMap;
+		}
+
 
 		out << YAML::EndSeq;
 	}
@@ -670,8 +687,32 @@ CGameObject * CSceneSerializer::SpawnPrefab(YAML::Node data)
 				deserializedObject = DeserializeUI(obj);
 			else
 				deserializedObject = DeserializeObject(obj);
+
+			auto children = obj["Children"];
+			if (children)
+			{
+				CGameObject* pChildObj = nullptr;
+
+				for (auto& child : children)
+				{
+					if (child["Type"].as<string>() == "UI")
+					{
+						pChildObj = DeserializeUI(child);
+						dynamic_cast<CEmptyUI*>(pChildObj)->SetParent(deserializedObject);
+					}
+					else
+					{
+						dynamic_cast<CEmptyGameObject*>(pChildObj)->SetParent(deserializedObject);
+						pChildObj = DeserializeObject(child);
+					}
+
+					pChildObj->SetParent(deserializedObject);
+					deserializedObject->AddChild(pChildObj);
+				}
+			}
 		}
 	}
+
 	//if (gameObjects)
 	//{
 	//	for (auto obj : gameObjects)

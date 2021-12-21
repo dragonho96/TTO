@@ -175,9 +175,22 @@ string CVIBuffer_RectUI::GetTextureFilePath()
 
 void CVIBuffer_RectUI::UpdateTexture(string texturePath)
 {
-	//SafeRelease(m_pTexture);
-	//wstring wstr = wstring(texturePath.begin(), texturePath.end());
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TEXTURETYPE::TYPE_WIC, texturePath);
+	if (m_pTexture)
+		SafeRelease(m_pTexture);
+
+	CTexture::TEXTURETYPE type = CTexture::TYPE_END;
+
+	FILESYSTEM::path path = texturePath;
+	string ext = path.extension().string();
+
+	if (ext == ".dds" || ext == ".DDS")
+		type = CTexture::TYPE_DDS;
+	else if (ext == ".tga" || ext == ".TGA" || ext == ".Tga")
+		type = CTexture::TYPE_TGA;
+	else
+		type = CTexture::TYPE_WIC;
+
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, type, texturePath);
 }
 
 

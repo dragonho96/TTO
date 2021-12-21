@@ -31,12 +31,16 @@ public:
 	list<BASEEQUIPDESC*>	ClearMyInventory(GEAR type);
 
 	_bool			AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
-	_bool			RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize);
-	BASEEQUIPDESC*	AddMagazine(EQUIPMENT type);
+	_bool			AddItemAtPos(BASEEQUIPDESC* desc, _uint4 slotPosToValidate, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
+	_bool			RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem = nullptr);
+	BASEEQUIPDESC*	AddMagazine(BASEEQUIPDESC* desc, EQUIPMENT type);
 	//_bool	AddItem(/* slot 위치 */);
 	//_bool	RemoveItem(/* slot 위치 */);
 
+	/* Iterate all possible inventories*/
 	_bool FindSlot(BASEEQUIPDESC* desc, _uint4& slotStartPos);
+	/* Check if given inventory has validate slot */
+	_bool ValidateSlot(BASEEQUIPDESC* desc, _uint4& slotStartPos, _uint4 slotToValidate);
 	void PlaceItemInSlot(BASEEQUIPDESC* desc, _uint4 slotStarPos);
 private:
 	WEAPONS	m_pWeapons;

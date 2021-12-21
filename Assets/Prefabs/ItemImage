@@ -1,0 +1,14 @@
+Scene: Untitled
+GameObjects:
+  - Name: ItemImage
+    UUID: 7610955279947421359
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [832.60022, 434.965637]
+      Size: [50, 50]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
+      Color: [0, 0, 0, 1]

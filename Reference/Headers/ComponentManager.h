@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Renderer.h"
-#include "Renderer.h"
 #include "Transform.h"
 #include "RectTransform.h"
 

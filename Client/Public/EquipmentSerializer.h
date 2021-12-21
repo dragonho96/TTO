@@ -4,7 +4,6 @@ BEGIN(Client)
 class CEquipmentSerializer
 {
 public:
-	enum class EQUIPMENTTYPE { BASE, WEAPON, MAGAZINE, GEAR };
 public:
 	CEquipmentSerializer();
 

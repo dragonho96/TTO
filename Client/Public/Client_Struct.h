@@ -1,6 +1,7 @@
 #pragma once
 namespace Client
 {
+	enum class	EQUIPMENTGROUP { BASE, WEAPON, MAGAZINE, GEAR };
 	enum class  EQUIPMENT : int { PRIMARY, PRIMARYMAG, SECONDARY, SECONDARYMAG, GRENADE, TOOL, HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
 	enum class  GEAR : int { HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
 
@@ -9,16 +10,19 @@ namespace Client
 	{
 		tagBaseEquipDesc() {}
 		tagBaseEquipDesc(const tagBaseEquipDesc& rhs)
-			: name(rhs.name), background(rhs.background)
+			: type(rhs.type)
+			, name(rhs.name), background(rhs.background)
 			, weight(rhs.weight), cost(rhs.cost)
-			, slotSize(rhs.slotSize) {}
+			, slotSize(rhs.slotSize), texturePath(rhs.texturePath) {}
 
-		string		name;
-		string		background;
-		_float		weight;
-		_uint		cost;
-		_uint2		slotSize;
-		Ref<CModel> model;
+		EQUIPMENT		type;
+		string			name;
+		string			texturePath;
+		string			background;
+		_float			weight;
+		_uint			cost;
+		_uint2			slotSize;
+		Ref<CModel>		model;
 	}BASEEQUIPDESC;
 
 	typedef struct tagWeaponDesc : BASEEQUIPDESC
@@ -37,9 +41,8 @@ namespace Client
 		tagMagazineDesc() {}
 		tagMagazineDesc(const tagMagazineDesc& rhs)
 			: tagBaseEquipDesc(rhs)
-			, magType(rhs.magType), magRound(rhs.magRound) {}
+			, magRound(rhs.magRound) {}
 
-		EQUIPMENT		magType;
 		_uint			magRound;
 	}MAGAZINEDESC;
 

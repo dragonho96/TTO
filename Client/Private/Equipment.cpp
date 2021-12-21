@@ -40,7 +40,10 @@ HRESULT CEquipment::Initialize(void * pArg)
 {
 	m_MyInventories.resize((size_t)GEAR::NONE);
 
+	SetMyInventory(GEAR::TORSO);
+	SetMyInventory(GEAR::LEGS);
 	SetMyInventory(GEAR::VEST);
+	SetMyInventory(GEAR::BACKPACK);
 	// ClearMyInventory(GEAR::VEST);
 
 	return S_OK;
@@ -107,18 +110,28 @@ _bool CEquipment::AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& o
 	if (!FindSlot(desc, slotPos))
 		return false;
 
+
 	BASEEQUIPDESC* itemToPlace = nullptr;
 	switch (type)
 	{
-	case Client::EQUIPMENT::PRIMARYMAG:
-	case Client::EQUIPMENT::SECONDARYMAG:
-		itemToPlace = AddMagazine(type);
-		break;
 	case Client::EQUIPMENT::GRENADE:
-		break;
 	case Client::EQUIPMENT::TOOL:
+		itemToPlace = new BASEEQUIPDESC(*m_pWeapons.tool);
 		break;
-	case Client::EQUIPMENT::NONE:
+	case Client::EQUIPMENT::PRIMARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::PRIMARYMAG);
+		break;
+	case Client::EQUIPMENT::SECONDARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::SECONDARYMAG);
+		break;
+	case Client::EQUIPMENT::PRIMARY:
+	case Client::EQUIPMENT::SECONDARY:
+		break;
+	case Client::EQUIPMENT::HEADGEAR:
+	case Client::EQUIPMENT::TORSO:
+	case Client::EQUIPMENT::LEGS:
+	case Client::EQUIPMENT::VEST:
+	case Client::EQUIPMENT::BACKPACK:
 		break;
 	default:
 		break;
@@ -133,7 +146,50 @@ _bool CEquipment::AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& o
 	return true;
 }
 
-_bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize)
+_bool CEquipment::AddItemAtPos(BASEEQUIPDESC * desc, _uint4 slotPosToValidate, BASEEQUIPDESC *& outputItem, _uint4 & outputSlotPos)
+{
+	//_uint4 slotPos;
+	//if (!FindSlot(desc, slotPos))
+	//	return false;
+
+	if (!ValidateSlot(desc, outputSlotPos, slotPosToValidate))
+		return false;
+
+	BASEEQUIPDESC* itemToPlace = nullptr;
+	switch (desc->type)
+	{
+	case Client::EQUIPMENT::GRENADE:
+	case Client::EQUIPMENT::TOOL:
+		itemToPlace = new BASEEQUIPDESC(*desc);
+		break;
+	case Client::EQUIPMENT::PRIMARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::PRIMARYMAG);
+		break;
+	case Client::EQUIPMENT::SECONDARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::SECONDARYMAG);
+		break;
+	case Client::EQUIPMENT::PRIMARY:
+	case Client::EQUIPMENT::SECONDARY:
+		break;
+	case Client::EQUIPMENT::HEADGEAR:
+	case Client::EQUIPMENT::TORSO:
+	case Client::EQUIPMENT::LEGS:
+	case Client::EQUIPMENT::VEST:
+	case Client::EQUIPMENT::BACKPACK:
+		break;
+	default:
+		break;
+	}
+
+	if (!itemToPlace)
+		return false;
+
+	PlaceItemInSlot(itemToPlace, outputSlotPos);
+	outputItem = itemToPlace;
+	return true;
+}
+
+_bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem)
 {
 	BASEEQUIPDESC* item = nullptr;
 	item = m_MyInventories[itemSlotPos.x][itemSlotPos.y][itemSlotPos.z][itemSlotPos.w];
@@ -159,22 +215,51 @@ _bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize)
 		}
 	}
 
+	if (outCopiedRemovedItem)
+	{
+		switch (item->type)
+		{
+		case Client::EQUIPMENT::GRENADE:
+		case Client::EQUIPMENT::TOOL:
+			*outCopiedRemovedItem = new BASEEQUIPDESC(*item);
+			break;
+		case Client::EQUIPMENT::PRIMARYMAG:
+		case Client::EQUIPMENT::SECONDARYMAG:
+			*outCopiedRemovedItem = new MAGAZINEDESC(*(MAGAZINEDESC*)item);
+			break;
+		case Client::EQUIPMENT::PRIMARY:
+		case Client::EQUIPMENT::SECONDARY:
+			*outCopiedRemovedItem = new WEAPONDESC(*(WEAPONDESC*)item);
+			break;
+		case Client::EQUIPMENT::HEADGEAR:
+		case Client::EQUIPMENT::TORSO:
+		case Client::EQUIPMENT::LEGS:
+		case Client::EQUIPMENT::VEST:
+		case Client::EQUIPMENT::BACKPACK:
+			*outCopiedRemovedItem = new GEARDESC(*(GEARDESC*)item);
+			break;
+		default:
+			break;
+		}
+	}
+
+
+	
 	SafeDelete(item);
 	return true;
 }
 
-BASEEQUIPDESC * CEquipment::AddMagazine(EQUIPMENT type)
+BASEEQUIPDESC * CEquipment::AddMagazine(BASEEQUIPDESC* desc, EQUIPMENT type)
 {
 	// Find if space available for magazine
 
 	MAGAZINEDESC* magDesc = nullptr;
+	magDesc = new MAGAZINEDESC(*(MAGAZINEDESC*)desc);
 
-	if (type == EQUIPMENT::PRIMARYMAG)
-		magDesc = new MAGAZINEDESC(*m_pWeapons.primaryMag);
-	else
-		magDesc = new MAGAZINEDESC(*m_pWeapons.secondaryMag);
-
-
+	//if (type == EQUIPMENT::PRIMARYMAG)
+	//	magDesc = new MAGAZINEDESC(*m_pWeapons.primaryMag);
+	//else
+	//	magDesc = new MAGAZINEDESC(*m_pWeapons.secondaryMag);
 	return magDesc;
 }
 
@@ -232,6 +317,45 @@ _bool CEquipment::FindSlot(BASEEQUIPDESC * desc, _uint4& slotStartPos)
 			++inventory;
 		}
 	}
+	return false;
+}
+
+_bool CEquipment::ValidateSlot(BASEEQUIPDESC * desc, _uint4 & slotStartPos, _uint4 slotToValidate)
+{
+	_uint2 itemSize = desc->slotSize;
+
+	_uint inventorySizeY = m_MyInventories[slotToValidate.x][slotToValidate.y].size();
+	_uint inventorySizeX = m_MyInventories[slotToValidate.x][slotToValidate.y][slotToValidate.z].size();
+
+	if (itemSize.x <= inventorySizeX && itemSize.y <= inventorySizeY)
+	{
+		for (_uint row = slotToValidate.z; row < inventorySizeY - itemSize.y + 1; ++row)
+		{
+			for (_uint col = slotToValidate.w; col < inventorySizeX - itemSize.x + 1; ++col)
+			{
+				if (m_MyInventories[slotToValidate.x][slotToValidate.y][row][col] == nullptr)
+				{
+					// iterate empty slots
+					_uint stack = 0;
+					for (int nextRow = row; nextRow < itemSize.y + row; ++nextRow)
+					{
+						for (int nextCol = col; nextCol < itemSize.x + col; ++nextCol)
+						{
+							if (m_MyInventories[slotToValidate.x][slotToValidate.y][nextRow][nextCol] == nullptr)
+								++stack;
+						}
+					}
+					if (stack == (itemSize.y * itemSize.x))
+					{
+						// space found;
+						slotStartPos = { slotToValidate.x, slotToValidate.y, row, col };
+						return true;
+					}
+				}
+			}
+		}
+	}
+
 	return false;
 }
 

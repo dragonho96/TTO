@@ -92,7 +92,7 @@ bool CRectTransform::IsMouseInRect()
 void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 {
 	m_TransformDesc = _desc;
-	
+
 	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
 	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
 
@@ -135,5 +135,19 @@ void CRectTransform::SetTransformMat(_float4x4 _mat)
 void CRectTransform::SetPosition(_float x, _float y)
 {
 	RECTTRANSFORMDESC newDesc = { x, y, m_TransformDesc.sizeX, m_TransformDesc.sizeY };
+	SetTransformMat(newDesc);
+}
+
+void CRectTransform::SetClientPosition(_float x, _float y)
+{
+	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
+	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
+	float defaultWindowSizeX = 1280.f;
+	float defaultWindowSizeY = 720.f;
+
+	_float newX = x * (defaultWindowSizeX / curWindowSizeX);
+	_float newY = y * (defaultWindowSizeY / curWindowSizeY);
+
+	RECTTRANSFORMDESC newDesc = { newX, newY, m_TransformDesc.sizeX, m_TransformDesc.sizeY };
 	SetTransformMat(newDesc);
 }

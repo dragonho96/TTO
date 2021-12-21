@@ -1,13 +1,14 @@
 EquipmentType: PrimaryMagazine
 Equipments:
   - Name: AKM 7.62X39MM 30RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
     Background: This is AKM MAG
     Weight: 0.97
     Cost: 0
     SlotSize: [1, 2]
-    Type: Primary
     Round: 30
   - Name: M4 5.56X45MM 30RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
     Background: This is M4 MAG
     Weight: 0.34
     Cost: 0
@@ -15,9 +16,9 @@ Equipments:
     Type: Primary
     Round: 30
   - Name: TRG 7.62X51MM 8RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
     Background: This is TRG MAG
     Weight: 1.23
     Cost: 0
     SlotSize: [1, 1]
-    Type: Primary
     Round: 8

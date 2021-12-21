@@ -24,15 +24,29 @@ bool CEquipmentSerializer::Deserialize(const string & filePath, vector<BASEEQUIP
 
 	string equipmentType = data["EquipmentType"].as<string>();
 
-	EQUIPMENTTYPE eType;
-	if (equipmentType == "PrimaryWeapon" || equipmentType == "SecondaryWeapon")
-		eType = EQUIPMENTTYPE::WEAPON;
-	else if (equipmentType == "PrimaryMagazine" || equipmentType == "SecondaryMagazine")
-		eType = EQUIPMENTTYPE::MAGAZINE;
-	else if (equipmentType == "Grenade" || equipmentType == "Tool")
-		eType = EQUIPMENTTYPE::BASE;
-	else
-		eType = EQUIPMENTTYPE::GEAR;
+	EQUIPMENT eType;
+	if (equipmentType == "PrimaryWeapon")
+		eType = EQUIPMENT::PRIMARY;
+	else if (equipmentType == "SecondaryWeapon")
+		eType = EQUIPMENT::SECONDARY;
+	else if (equipmentType == "PrimaryMagazine")
+		eType = EQUIPMENT::PRIMARYMAG;
+	else if (equipmentType == "SecondaryMagazine")
+		eType = EQUIPMENT::SECONDARYMAG;
+	else if (equipmentType == "Grenade")
+		eType = EQUIPMENT::GRENADE;
+	else if (equipmentType == "Tool")
+		eType = EQUIPMENT::TOOL;
+	else if (equipmentType == "Headgear")
+		eType = EQUIPMENT::HEADGEAR;
+	else if (equipmentType == "Torso")
+		eType = EQUIPMENT::TORSO;
+	else if (equipmentType == "Legs")
+		eType = EQUIPMENT::LEGS;
+	else if (equipmentType == "Vest")
+		eType = EQUIPMENT::VEST;
+	else if (equipmentType == "Backpack")
+		eType = EQUIPMENT::BACKPACK;
 
 
 	auto equipments = data["Equipments"];
@@ -42,23 +56,33 @@ bool CEquipmentSerializer::Deserialize(const string & filePath, vector<BASEEQUIP
 	{
 		for (auto equipment : equipments)
 		{
+			BASEEQUIPDESC* desc = nullptr;
 			switch (eType)
 			{
-			case Client::CEquipmentSerializer::EQUIPMENTTYPE::BASE:
-				vecDesc->emplace_back(DeserializeBase(equipment));
+			case Client::EQUIPMENT::GRENADE:
+			case Client::EQUIPMENT::TOOL:
+				desc = DeserializeBase(equipment);
 				break;
-			case Client::CEquipmentSerializer::EQUIPMENTTYPE::MAGAZINE:
-				vecDesc->emplace_back(DeserializeMagazine(equipment));
+			case Client::EQUIPMENT::PRIMARYMAG:
+			case Client::EQUIPMENT::SECONDARYMAG:
+				desc = DeserializeMagazine(equipment);
 				break;
-			case Client::CEquipmentSerializer::EQUIPMENTTYPE::WEAPON:
-				vecDesc->emplace_back(DeserializeWeapon(equipment));
+			case Client::EQUIPMENT::PRIMARY:
+			case Client::EQUIPMENT::SECONDARY:
+				desc = DeserializeWeapon(equipment);
 				break;
-			case Client::CEquipmentSerializer::EQUIPMENTTYPE::GEAR:
-				vecDesc->emplace_back(DeserializeGear(equipment));
+			case Client::EQUIPMENT::HEADGEAR:
+			case Client::EQUIPMENT::TORSO:
+			case Client::EQUIPMENT::LEGS:
+			case Client::EQUIPMENT::VEST:
+			case Client::EQUIPMENT::BACKPACK:
+				desc = DeserializeGear(equipment);
 				break;
 			default:
 				break;
 			}
+			desc->type = eType;
+			vecDesc->emplace_back(desc);
 		}
 	}
 
@@ -72,6 +96,9 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeBase(YAML::Node & node, BASEEQUI
 	pDesc->name = node["Name"].as<string>();
 	pDesc->background = node["Background"].as<string>();
 	pDesc->weight = node["Weight"].as<_float>();
+
+	if (node["Texture"])
+		pDesc->texturePath = node["Texture"].as<string>();
 
 	if (node["Cost"])
 		pDesc->cost = node["Cost"].as<_uint>();
@@ -100,10 +127,6 @@ BASEEQUIPDESC * CEquipmentSerializer::DeserializeMagazine(YAML::Node & node)
 	MAGAZINEDESC* pDesc = new MAGAZINEDESC();
 	DeserializeBase(node, pDesc);
 	pDesc->magRound = node["Round"].as<_uint>();
-	if (node["Type"].as<string>() == "Primary")
-		pDesc->magType = EQUIPMENT::PRIMARYMAG;
-	else
-		pDesc->magType = EQUIPMENT::SECONDARYMAG;
 
 	return pDesc;
 }

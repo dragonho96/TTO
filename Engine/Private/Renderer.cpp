@@ -186,7 +186,7 @@ CRenderer * CRenderer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDev
 
 CComponent * CRenderer::Clone(void * pArg)
 {
-	// AddRef();
+	AddRef();
 
 	return this;
 }
