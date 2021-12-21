@@ -88,7 +88,7 @@ HRESULT CText::Render()
 		m_pDeviceContext->RSSetScissorRects(1, &rt);
 	});
 
-	_float padding = desc.sizeX / 20.f;
+	_float padding = desc.sizeX / 5.f;
 	_float textWidth = (desc.sizeX - padding) * xFactor;
 
 	string newStr = "";
@@ -106,7 +106,7 @@ HRESULT CText::Render()
 			strCheck = "";
 
 		_float4 curStrSize;
-		XMStoreFloat4(&curStrSize, m_pSpriteFont->MeasureString(strCheck.c_str()));
+		XMStoreFloat4(&curStrSize, m_pSpriteFont->MeasureString((strCheck + "S").c_str()));
 		_float curStrWidth = curStrSize.x * m_vScale.x * xFactor;
 
 		if (curStrWidth >= textWidth)

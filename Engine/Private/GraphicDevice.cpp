@@ -51,7 +51,9 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
-	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
+	// m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
+	// m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/UAV-OSD-Sans-Mono.spritefont");
+	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/UAV-OSD-Mono12.spritefont");
 
 
 	Initialize(iWidth, iHeight);

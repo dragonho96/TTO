@@ -62,7 +62,7 @@ float4 PS_MAIN(PS_IN input) : SV_TARGET
 {
     float4 color = Map.Sample(Sampler, input.vTexUV);
     clip(color.a < 0.1f ? -1 : 1);
-    color += vColor;
+    // color += vColor;
     return color;
 }
 

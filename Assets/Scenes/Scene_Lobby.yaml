@@ -151,8 +151,8 @@ GameObjects:
     Type: UI
     SortingOrder: 1
     Com_Transform:
-      Position: [400, 130]
-      Size: [50, 50]
+      Position: [430.821533, 118.82486]
+      Size: [130, 26]
     Com_Text:
       Text: Name
       Color: [1, 1, 1, 1]
@@ -208,8 +208,8 @@ GameObjects:
     Type: UI
     SortingOrder: 1
     Com_Transform:
-      Position: [394.616272, 520.334778]
-      Size: [50, 50]
+      Position: [430.876892, 505.966705]
+      Size: [130, 26]
     Com_Text:
       Text: Name
       Color: [1, 1, 1, 1]
