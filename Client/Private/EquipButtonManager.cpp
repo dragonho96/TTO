@@ -30,39 +30,34 @@ void CEquipButtonManager::Initialize()
 	CGameObject* m_pGameObject = objList.front();
 	m_pPlayerEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
-	m_pPrimaryWeaponButton = CEngine::GetInstance()->FindGameObjectWithName("PrimaryButton");
-	m_pSecondaryWeaponButton = CEngine::GetInstance()->FindGameObjectWithName("SecondaryButton");
-	//m_pGrenadeButton = CEngine::GetInstance()->FindGameObjectWithName("GrenadeButton");
-	//m_pToolButton = CEngine::GetInstance()->FindGameObjectWithName("ToolButton");
-	// m_pHeadgearButton = CEngine::GetInstance()->FindGameObjectWithName("HeadgearButton");
-	m_pTorsoButton = CEngine::GetInstance()->FindGameObjectWithName("TorsoButton");
-	//m_pLegsButton = CEngine::GetInstance()->FindGameObjectWithName("LegsButton");
-	//m_pVestButton = CEngine::GetInstance()->FindGameObjectWithName("VestButton");
-	//m_pBackpackButton = CEngine::GetInstance()->FindGameObjectWithName("BackpackButton");
+	m_vecButtons.resize((size_t)EQUIPMENT::NONE);
 
-	SetButtonText(m_pPrimaryWeaponButton, m_pPlayerEquipment->m_pWeapons.primary);
-	SetButtonText(m_pSecondaryWeaponButton, m_pPlayerEquipment->m_pWeapons.secondary);
-	// SetButtonText(m_pGrenadeButton, m_pPlayerEquipment->m_pWeapons.grenade);
-	// SetButtonText(m_pToolButton, m_pPlayerEquipment->m_pWeapons.tool);
+	m_vecButtons[(size_t)EQUIPMENT::PRIMARY] = CEngine::GetInstance()->FindGameObjectWithName("PrimaryButton");
+	m_vecButtons[(size_t)EQUIPMENT::SECONDARY] = CEngine::GetInstance()->FindGameObjectWithName("SecondaryButton");
+	m_vecButtons[(size_t)EQUIPMENT::GRENADE] = CEngine::GetInstance()->FindGameObjectWithName("GrenadeButton");
+	m_vecButtons[(size_t)EQUIPMENT::TOOL] = CEngine::GetInstance()->FindGameObjectWithName("ToolButton");
+	m_vecButtons[(size_t)EQUIPMENT::HEADGEAR] = CEngine::GetInstance()->FindGameObjectWithName("HeadgearButton");
+	m_vecButtons[(size_t)EQUIPMENT::TORSO] = CEngine::GetInstance()->FindGameObjectWithName("TorsoButton");
+	m_vecButtons[(size_t)EQUIPMENT::LEGS] = CEngine::GetInstance()->FindGameObjectWithName("LegsButton");
+	m_vecButtons[(size_t)EQUIPMENT::VEST] = CEngine::GetInstance()->FindGameObjectWithName("VestButton");
+	m_vecButtons[(size_t)EQUIPMENT::BACKPACK] = CEngine::GetInstance()->FindGameObjectWithName("BackpackButton");
 
-
-	//m_pTorsoButton = CEngine::GetInstance()->FindGameObjectWithName("Torso");
-	//m_pLegsButton = CEngine::GetInstance()->FindGameObjectWithName("Legs");
-	//m_pVestButton = CEngine::GetInstance()->FindGameObjectWithName("Vest");
-	//m_pBackpackButton = CEngine::GetInstance()->FindGameObjectWithName("Backpack");
-
-
-	//SetButtonText(m_pTorsoButton, m_pPlayerEquipment->m_Gears[(_uint)GEAR::TORSO]);
-	//SetButtonText(m_pLegsButton, m_pPlayerEquipment->m_Gears[(_uint)GEAR::LEGS]);
-	//SetButtonText(m_pLegsButton, m_pPlayerEquipment->m_Gears[(_uint)GEAR::VEST]);
-	//SetButtonText(m_pLegsButton, m_pPlayerEquipment->m_Gears[(_uint)GEAR::BACKPACK]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::PRIMARY], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::PRIMARY]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::SECONDARY], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::SECONDARY]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::GRENADE], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::GRENADE]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::TOOL], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::TOOL]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::HEADGEAR], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::HEADGEAR]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::TORSO], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::TORSO]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::LEGS], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::LEGS]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::VEST], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::VEST]);
+	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::BACKPACK], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::BACKPACK]);
 
 	///* Slot GameObject를 담을 공간 */
 	m_InventorySlots.resize((size_t)GEAR::NONE);
-	SetInventorySlot(m_pTorsoButton, GEAR::TORSO);
-	// SetInventorySlot(m_pLegsButton, GEAR::LEGS);
-	// SetInventorySlot(m_pVestButton, GEAR::VEST);
-	// SetInventorySlot(m_pBackpackButton, GEAR::BACKPACK);
+	SetInventorySlot(GEAR::TORSO);
+	SetInventorySlot(GEAR::LEGS);
+	SetInventorySlot(GEAR::VEST);
+	SetInventorySlot(GEAR::BACKPACK);
 
 
 	m_pHoverInfo = CEngine::GetInstance()->FindGameObjectWithName("HoverInfo");
@@ -85,42 +80,64 @@ void CEquipButtonManager::Initialize()
 void CEquipButtonManager::Update(_double deltaTime)
 {
 	/* ItemSelectWindow */
-	if (dynamic_cast<CEmptyUI*>(m_pPrimaryWeaponButton)->IsHovered())
+	for (int i = 0; i < m_vecButtons.size(); ++i)
 	{
-		if (CEngine::GetInstance()->IsMouseDown(0))
+		if (m_vecButtons[i])
 		{
-			// Add Magazine
-			//AddItem(m_pPlayerEquipment->m_pWeapons.primaryMag, EQUIPMENT::SECONDARYMAG);
-			OpenItemSelectWindow(EQUIPMENT::PRIMARY);
+			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
+				CEngine::GetInstance()->IsMouseDown(0))
+				OpenItemSelectWindow(EQUIPMENT(i));
+			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
+				CEngine::GetInstance()->IsMouseDown(1))
+				AddItem(m_pPlayerEquipment->m_Equipments[i], EQUIPMENT(i));
 		}
 	}
-	if (dynamic_cast<CEmptyUI*>(m_pSecondaryWeaponButton)->IsHovered())
-	{
-		if (CEngine::GetInstance()->IsMouseDown(0))
-		{
-			// Add Magazine
-			//AddItem(m_pPlayerEquipment->m_pWeapons.primaryMag, EQUIPMENT::SECONDARYMAG);
-			OpenItemSelectWindow(EQUIPMENT::SECONDARY);
-		}
-	}
+
+	//if (dynamic_cast<CEmptyUI*>(m_pPrimaryWeaponButton)->IsHovered())
+	//{
+	//	if (CEngine::GetInstance()->IsMouseDown(0))
+	//	{
+	//		// Add Magazine
+	//		//AddItem(m_pPlayerEquipment->m_pWeapons.primaryMag, EQUIPMENT::SECONDARYMAG);
+	//		OpenItemSelectWindow(EQUIPMENT::PRIMARY);
+	//	}
+	//	else if (CEngine::GetInstance()->IsMouseDown(1))
+	//	{
+	//		AddItem(m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::PRIMARYMAG], EQUIPMENT::PRIMARYMAG);
+	//	}
+	//}
+	//if (dynamic_cast<CEmptyUI*>(m_pSecondaryWeaponButton)->IsHovered())
+	//{
+	//	if (CEngine::GetInstance()->IsMouseDown(0))
+	//	{
+	//		// Add Magazine
+	//		//AddItem(m_pPlayerEquipment->m_pWeapons.primaryMag, EQUIPMENT::SECONDARYMAG);
+	//		OpenItemSelectWindow(EQUIPMENT::SECONDARY);
+	//	}
+	//	else if (CEngine::GetInstance()->IsMouseDown(1))
+	//	{
+	//		AddItem(m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::SECONDARYMAG], EQUIPMENT::SECONDARYMAG);
+	//	}
+	//}
 	if (m_bOpenItemSelectWindow)
 	{
 		for (int i = 0; i < m_vecItemSelectButton.size(); ++i)
 		{
-			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered() && 
-				CEngine::GetInstance()->IsMouseDown(0))
+			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered())
 			{
-				// 내가 들고있는 것과 다르다면?
-				if (m_pPlayerEquipment->GetCurrentEquipment(m_eCurItemSelectType) != 
-					m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i))
+				SetItemSelectDesc(m_eCurItemSelectType, i);
+				if (CEngine::GetInstance()->IsMouseDown(0))
 				{
-					// player equipment를 바꾼다
-					// slot 을 clear하고 바뀐것으로 다시 생성한다
-
-					int i = 0;
+					// 내가 들고있는 것과 다르다면?
+					if (m_pPlayerEquipment->GetCurrentEquipment(m_eCurItemSelectType) !=
+						m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i))
+					{
+						// player equipment를 바꾼다
+						// slot 을 clear하고 바뀐것으로 다시 생성한다
+						ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
+						int i = 0;
+					}
 				}
-
-
 			}
 		}
 	}
@@ -140,7 +157,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 			list<_uint4>	itemToRemove;
 			// BASEEQUIPDESC*	copiedRemovedItem;
 			if (m_pPlayerEquipment->RemoveItem(m_hoveredSlotIndex, itemToRemove, &m_pCopiedRemovedItem, 0))
-				RemoveItemImage(itemToRemove);
+				RemoveItemImage(itemToRemove, true);
 
 			// m_pCopiedRemovedItem = copiedRemovedItem;
 		}
@@ -150,7 +167,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 		if (CEngine::GetInstance()->IsMouseUp(0))
 		{
 			m_pMoveImage->SetDead();
-
+			m_pMoveImage = nullptr;
 			// 아이템이 place가능한 slot에 있다면 place
 			if (m_bHoveringSlot)
 			{
@@ -170,7 +187,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 		}
 	}
 
-	// FindHoveredSlot();
+	FindHoveredSlot();
 	return;
 }
 
@@ -218,9 +235,12 @@ void CEquipButtonManager::SetButtonText(CGameObject * button, BASEEQUIPDESC* des
 }
 
 /* Slot을 화면에 생성해준다 */
-void CEquipButtonManager::SetInventorySlot(CGameObject * button, GEAR type)
+void CEquipButtonManager::SetInventorySlot(GEAR type)
 {
 	ClearInventorySlot(type);
+
+	EQUIPMENT idx = (EQUIPMENT((size_t)EQUIPMENT::HEADGEAR + (size_t)type));
+	CGameObject* button = GetButton(idx);
 
 	CRectTransform* buttonTransform = dynamic_cast<CRectTransform*>(button->GetComponent("Com_Transform"));
 
@@ -229,7 +249,8 @@ void CEquipButtonManager::SetInventorySlot(CGameObject * button, GEAR type)
 	_float2 startPos = { buttonDesc.posX + (buttonDesc.sizeX / 2.f), buttonDesc.posY - (buttonDesc.sizeY / 2.f) };
 	startPos.x += (buttonDesc.sizeX / 25.f); // Adding Space between slots
 
-	list<_uint2> slots = m_pPlayerEquipment->m_Gears[(size_t)type]->inventories;
+	_uint iGearIdx = (size_t)EQUIPMENT::HEADGEAR + (size_t)type;
+	list<_uint2> slots = ((GEARDESC*)m_pPlayerEquipment->m_Equipments[iGearIdx])->inventories;
 	slots.sort([](_uint2 first, _uint2 second) {
 		return second.y < first.y;
 	});
@@ -271,30 +292,52 @@ void CEquipButtonManager::SetInventorySlot(CGameObject * button, GEAR type)
 
 void CEquipButtonManager::ClearInventorySlot(GEAR type)
 {
+	list<_uint4> itemToRemove;
+
 	// Call Shink_to_fit if changed to vector
-	for (auto& innerVec : m_InventorySlots[(_uint)type])
+	for (_uint i = 0; i < m_InventorySlots[(_uint)type].size(); ++i)
 	{
-		for (auto& row : innerVec)
+		for (_uint j = 0; j < m_InventorySlots[(_uint)type][i].size(); ++j)
 		{
-			for (auto& col : row)
+			for (_uint k = 0; k < m_InventorySlots[(_uint)type][i][j].size(); ++k)
 			{
-				col->SetDead();
+				m_InventorySlots[(_uint)type][i][j][k]->SetDead();
+				itemToRemove.emplace_back((_uint)type, i, j, k);
 			}
-			row.clear();
+			m_InventorySlots[(_uint)type][i][j].clear();
 		}
-		innerVec.clear();
-		innerVec.shrink_to_fit();
+		m_InventorySlots[(_uint)type][i].clear();
+		m_InventorySlots[(_uint)type][i].shrink_to_fit();
 	}
 	m_InventorySlots[(_uint)type].clear();
 	m_InventorySlots[(_uint)type].shrink_to_fit();
+
+
+	for (auto& item : itemToRemove)
+	{
+		for (auto iter = m_ImagesInSlot.begin(); iter != m_ImagesInSlot.end();)
+		{
+			if (iter->first.x == item.x && iter->first.y == item.y && iter->first.z == item.z && iter->first.w == item.w)
+			{
+				iter->second->SetDead();
+				iter = m_ImagesInSlot.erase(iter);
+			}
+			else
+				++iter;
+		}
+	}
 }
 
-void CEquipButtonManager::AddItem(BASEEQUIPDESC * desc, EQUIPMENT type)
+_bool CEquipButtonManager::AddItem(BASEEQUIPDESC * desc, EQUIPMENT type)
 {
 	BASEEQUIPDESC*	itemToPlace = nullptr;
 	_uint4			itemSlotPos;
 	if (m_pPlayerEquipment->AddItem(desc, type, itemToPlace, itemSlotPos))
+	{
 		AddItemImage(itemToPlace, itemSlotPos);
+		return true;
+	}
+	return false;
 }
 
 void CEquipButtonManager::AddItemImage(BASEEQUIPDESC * desc, _uint4 itemSlotPos)
@@ -354,7 +397,7 @@ void CEquipButtonManager::AddItemImage(BASEEQUIPDESC * desc, _uint4 itemSlotPos)
 	m_ImagesInSlot.emplace_back(itemSlotPos, pImage);
 }
 
-void CEquipButtonManager::RemoveItemImage(list<_uint4> itemToRemove)
+void CEquipButtonManager::RemoveItemImage(list<_uint4> itemToRemove, _bool bStoreImage)
 {
 	_bool bDelete = false;
 	for (auto& item : itemToRemove)
@@ -365,22 +408,6 @@ void CEquipButtonManager::RemoveItemImage(list<_uint4> itemToRemove)
 		list<CGameObject*> children = obj->GetChildren();
 		for (auto& child : children)
 			dynamic_cast<CText*>(child->GetComponent("Com_Text"))->SetString("");
-
-
-		//if (!bDelete)
-		//{
-		//	for (auto iter = m_ImagesInSlot.begin(); iter != m_ImagesInSlot.end();)
-		//	{
-		//		if (iter->first.x == item.x && iter->first.y == item.y && iter->first.z == item.z && iter->first.w == item.w)
-		//		{
-		//			iter->second->SetDead();
-		//			iter = m_ImagesInSlot.erase(iter);
-		//			bDelete = true;
-		//		}
-		//		else
-		//			++iter;
-		//	}
-		//}
 	}
 
 	for (auto& item : itemToRemove)
@@ -390,7 +417,7 @@ void CEquipButtonManager::RemoveItemImage(list<_uint4> itemToRemove)
 			if (iter->first.x == item.x && iter->first.y == item.y && iter->first.z == item.z && iter->first.w == item.w)
 			{
 				// Hold the image when dragging
-				if (CEngine::GetInstance()->IsMouseDown(0))
+				if (bStoreImage)
 					m_pMoveImage = iter->second;
 				else
 					iter->second->SetDead();
@@ -414,6 +441,40 @@ void CEquipButtonManager::OpenItemSelectWindow(EQUIPMENT type)
 	{
 		BASEEQUIPDESC* equipment = (WEAPONDESC*)pEquipmentPool->GetEquipment(type, i);
 		SetButtonText(m_vecItemSelectButton[i], equipment);
+
+		if (m_pPlayerEquipment->m_Equipments[(size_t)type]->name == equipment->name)
+			SetItemSelectDesc(type, i);
+	}
+}
+
+void CEquipButtonManager::SetItemSelectDesc(EQUIPMENT type, _uint idx)
+{
+	list<CGameObject*> children = m_pItemSelectWindow->GetChildren();
+	auto iter = find_if(children.begin(), children.end(), [&](CGameObject* child) {
+		return child->GetName() == "Background";
+	});
+
+	if (iter != children.end())
+		dynamic_cast<CText*>((*iter)->GetComponent("Com_Text"))->SetString(m_pEquipmentPool->GetEquipment(type, idx)->background);
+}
+
+void CEquipButtonManager::ChangeEquipment(EQUIPMENT type, BASEEQUIPDESC * equipment)
+{
+	list<pair<BASEEQUIPDESC*, EQUIPMENT>> itemToPutIn = m_pPlayerEquipment->SetCurrentEquipment(m_eCurItemSelectType, equipment);
+
+	if ((size_t)type >= (size_t)EQUIPMENT::HEADGEAR)
+	{
+		GEAR idx = GEAR((size_t)type - (size_t)EQUIPMENT::HEADGEAR);
+		SetInventorySlot(idx);
+	}
+
+	SetButtonText(GetButton(type), equipment);
+
+	// 빈 공간에 넣는다
+	for (auto iter = itemToPutIn.begin(); iter != itemToPutIn.end();++iter)
+	{
+		AddItem(iter->first, iter->second);
+		SafeDelete(iter->first);
 	}
 }
 
@@ -439,4 +500,9 @@ void CEquipButtonManager::FindHoveredSlot()
 		}
 	}
 	m_bHoveringSlot = false;
+}
+
+CGameObject * CEquipButtonManager::GetButton(EQUIPMENT type)
+{
+	return m_vecButtons[(size_t)type];
 }

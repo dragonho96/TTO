@@ -11,7 +11,7 @@ Equipments:
     Background: it is Frag
     Weight: 0.9
     Cost: 4
-    SlotSize: [1, 2]
+    SlotSize: [1, 1]
   - Name: Stun
     Texture: ..\..\Assets\Textures\Grenades\Stun.tga
     Background: it is Stun

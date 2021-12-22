@@ -1,6 +1,7 @@
 EquipmentType: Legs 
 Equipments:
   - Name: BDU PANTS
+    Texture: ..\..\Assets\Textures\Legs\BDU_Pants.tga
     Background: THIS IS BDU PANTS
     Weight: 0.66
     Inventory:
@@ -9,7 +10,17 @@ Equipments:
     Mobility: 1.00
     Dexterity: 1.00
   - Name: BDU PANTS TUCKED
+    Texture: ..\..\Assets\Textures\Legs\BDU_Pants_Tucked.tga
     Background: it is BDU PANTS TUCKED
+    Weight: 0.35
+    Inventory:
+      - [1, 1, 2]
+      - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: WZ2010
+    Texture: ..\..\Assets\Textures\Legs\WZ2010.tga
+    Background: it is BDU PANTS WZ2010
     Weight: 0.35
     Inventory:
       - [1, 1, 2]

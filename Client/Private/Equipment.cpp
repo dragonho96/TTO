@@ -11,8 +11,9 @@ CEquipment::CEquipment(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContex
 
 CEquipment::CEquipment(const CEquipment & rhs)
 	: CComponent(rhs)
-	, m_pWeapons(rhs.m_pWeapons)
-	, m_Gears(rhs.m_Gears)
+	//, m_pWeapons(rhs.m_pWeapons)
+	//, m_Gears(rhs.m_Gears)
+	, m_Equipments(rhs.m_Equipments)
 {
 }
 
@@ -20,19 +21,20 @@ HRESULT CEquipment::InitializePrototype()
 {
 	CEquipmentPool* pEquipmentPool = CEquipmentPool::GetInstance();
 
-	m_pWeapons.primary = (WEAPONDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::PRIMARY);
-	m_pWeapons.secondary = (WEAPONDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::SECONDARY);
-	m_pWeapons.primaryMag = (MAGAZINEDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::PRIMARYMAG);
-	m_pWeapons.secondaryMag = (MAGAZINEDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::SECONDARYMAG);
-	m_pWeapons.grenade = pEquipmentPool->GetEquipment(EQUIPMENT::GRENADE);
-	m_pWeapons.tool = pEquipmentPool->GetEquipment(EQUIPMENT::TOOL);
+	m_Equipments.resize((size_t)EQUIPMENT::NONE);
 
-	m_Gears.resize((size_t)GEAR::NONE);
-	m_Gears[(size_t)GEAR::HEADGEAR] = (GEARDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::HEADGEAR);
-	m_Gears[(size_t)GEAR::TORSO] = (GEARDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::TORSO);
-	m_Gears[(size_t)GEAR::LEGS] = (GEARDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::LEGS);
-	m_Gears[(size_t)GEAR::VEST] = (GEARDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::VEST);
-	m_Gears[(size_t)GEAR::BACKPACK] = (GEARDESC*)pEquipmentPool->GetEquipment(EQUIPMENT::BACKPACK);
+	m_Equipments[(size_t)EQUIPMENT::PRIMARY] = pEquipmentPool->GetEquipment(EQUIPMENT::PRIMARY);
+	m_Equipments[(size_t)EQUIPMENT::PRIMARYMAG] = pEquipmentPool->GetEquipment(EQUIPMENT::PRIMARYMAG);
+	m_Equipments[(size_t)EQUIPMENT::SECONDARY] = pEquipmentPool->GetEquipment(EQUIPMENT::SECONDARY);
+	m_Equipments[(size_t)EQUIPMENT::SECONDARYMAG] = pEquipmentPool->GetEquipment(EQUIPMENT::SECONDARYMAG);
+	m_Equipments[(size_t)EQUIPMENT::GRENADE] = pEquipmentPool->GetEquipment(EQUIPMENT::GRENADE);
+	m_Equipments[(size_t)EQUIPMENT::TOOL] = pEquipmentPool->GetEquipment(EQUIPMENT::TOOL);
+	m_Equipments[(size_t)EQUIPMENT::HEADGEAR] = pEquipmentPool->GetEquipment(EQUIPMENT::HEADGEAR);
+	m_Equipments[(size_t)EQUIPMENT::TORSO] = pEquipmentPool->GetEquipment(EQUIPMENT::TORSO);
+	m_Equipments[(size_t)EQUIPMENT::LEGS] = pEquipmentPool->GetEquipment(EQUIPMENT::LEGS);
+	m_Equipments[(size_t)EQUIPMENT::VEST] = pEquipmentPool->GetEquipment(EQUIPMENT::VEST);
+	m_Equipments[(size_t)EQUIPMENT::BACKPACK] = pEquipmentPool->GetEquipment(EQUIPMENT::BACKPACK);
+
 	return S_OK;
 }
 
@@ -44,15 +46,14 @@ HRESULT CEquipment::Initialize(void * pArg)
 	SetMyInventory(GEAR::LEGS);
 	SetMyInventory(GEAR::VEST);
 	SetMyInventory(GEAR::BACKPACK);
-	// ClearMyInventory(GEAR::VEST);
 
 	return S_OK;
 }
 
 void CEquipment::SetMyInventory(GEAR type)
 {
-
-	list<_uint2> slots = m_Gears[(size_t)type]->inventories;
+	_uint iGearIdx = (size_t)EQUIPMENT::HEADGEAR + (size_t)type;
+	list<_uint2> slots = ((GEARDESC*)m_Equipments[iGearIdx])->inventories;
 	slots.sort([](_uint2 first, _uint2 second) {
 		return second.y < first.y;
 	});
@@ -80,10 +81,10 @@ void CEquipment::SetMyInventory(GEAR type)
 }
 
 /* Return items in the inventory*/
-list<BASEEQUIPDESC*> CEquipment::ClearMyInventory(GEAR type)
+list<pair<BASEEQUIPDESC*, EQUIPMENT>> CEquipment::ClearMyInventory(GEAR type)
 {
 	// Inventory clear시 원래 들어있던 아이템을 저장해놓고 새롭게 생성된 inventory에 넣는다
-	list<BASEEQUIPDESC*> listItems;
+	list<pair<BASEEQUIPDESC*, EQUIPMENT>> output;
 
 	for (auto& innerVec : m_MyInventories[(_uint)type])
 	{
@@ -92,7 +93,7 @@ list<BASEEQUIPDESC*> CEquipment::ClearMyInventory(GEAR type)
 			for (auto& col : row)
 			{
 				if (col)
-					listItems.emplace_back(col);
+					output.emplace_back(col, col->type);
 			}
 		}
 		innerVec.clear();
@@ -101,41 +102,29 @@ list<BASEEQUIPDESC*> CEquipment::ClearMyInventory(GEAR type)
 	m_MyInventories[(_uint)type].clear();
 	m_MyInventories[(_uint)type].shrink_to_fit();
 
-	return listItems;
+	return output;
 }
 
 _bool CEquipment::AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos)
 {
 	_uint4 slotPos;
-	if (!FindSlot(desc, slotPos))
+	BASEEQUIPDESC* newDesc = desc;
+	EQUIPMENT newType = type;
+	if (type == EQUIPMENT::PRIMARY)
+	{
+		newDesc = m_Equipments[(size_t)EQUIPMENT::PRIMARYMAG];
+		newType = EQUIPMENT::PRIMARYMAG;
+	}
+	else if (type == EQUIPMENT::SECONDARY)
+	{
+		newDesc = m_Equipments[(size_t)EQUIPMENT::SECONDARYMAG];
+		newType = EQUIPMENT::SECONDARYMAG;
+	}
+
+	if (!FindSlot(newDesc, slotPos))
 		return false;
 
-
-	BASEEQUIPDESC* itemToPlace = nullptr;
-	switch (type)
-	{
-	case Client::EQUIPMENT::GRENADE:
-	case Client::EQUIPMENT::TOOL:
-		itemToPlace = new BASEEQUIPDESC(*m_pWeapons.tool);
-		break;
-	case Client::EQUIPMENT::PRIMARYMAG:
-		itemToPlace = AddMagazine(desc, EQUIPMENT::PRIMARYMAG);
-		break;
-	case Client::EQUIPMENT::SECONDARYMAG:
-		itemToPlace = AddMagazine(desc, EQUIPMENT::SECONDARYMAG);
-		break;
-	case Client::EQUIPMENT::PRIMARY:
-	case Client::EQUIPMENT::SECONDARY:
-		break;
-	case Client::EQUIPMENT::HEADGEAR:
-	case Client::EQUIPMENT::TORSO:
-	case Client::EQUIPMENT::LEGS:
-	case Client::EQUIPMENT::VEST:
-	case Client::EQUIPMENT::BACKPACK:
-		break;
-	default:
-		break;
-	}
+	BASEEQUIPDESC* itemToPlace = MakeItem(newDesc, newType);
 
 	if (!itemToPlace)
 		return false;
@@ -155,31 +144,7 @@ _bool CEquipment::AddItemAtPos(BASEEQUIPDESC * desc, _uint4 slotPosToValidate, B
 	if (!ValidateSlot(desc, outputSlotPos, slotPosToValidate))
 		return false;
 
-	BASEEQUIPDESC* itemToPlace = nullptr;
-	switch (desc->type)
-	{
-	case Client::EQUIPMENT::GRENADE:
-	case Client::EQUIPMENT::TOOL:
-		itemToPlace = new BASEEQUIPDESC(*desc);
-		break;
-	case Client::EQUIPMENT::PRIMARYMAG:
-		itemToPlace = AddMagazine(desc, EQUIPMENT::PRIMARYMAG);
-		break;
-	case Client::EQUIPMENT::SECONDARYMAG:
-		itemToPlace = AddMagazine(desc, EQUIPMENT::SECONDARYMAG);
-		break;
-	case Client::EQUIPMENT::PRIMARY:
-	case Client::EQUIPMENT::SECONDARY:
-		break;
-	case Client::EQUIPMENT::HEADGEAR:
-	case Client::EQUIPMENT::TORSO:
-	case Client::EQUIPMENT::LEGS:
-	case Client::EQUIPMENT::VEST:
-	case Client::EQUIPMENT::BACKPACK:
-		break;
-	default:
-		break;
-	}
+	BASEEQUIPDESC* itemToPlace = MakeItem(desc, desc->type);
 
 	if (!itemToPlace)
 		return false;
@@ -220,6 +185,8 @@ _bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, B
 		switch (item->type)
 		{
 		case Client::EQUIPMENT::GRENADE:
+			*outCopiedRemovedItem = new BASEEQUIPDESC(*item);
+			break;
 		case Client::EQUIPMENT::TOOL:
 			*outCopiedRemovedItem = new BASEEQUIPDESC(*item);
 			break;
@@ -249,6 +216,40 @@ _bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, B
 	return true;
 }
 
+BASEEQUIPDESC * CEquipment::MakeItem(BASEEQUIPDESC * desc, EQUIPMENT type)
+{
+	BASEEQUIPDESC* itemToPlace = nullptr;
+	switch (type)
+	{
+	case Client::EQUIPMENT::GRENADE:
+		itemToPlace = new BASEEQUIPDESC(*m_Equipments[(size_t)EQUIPMENT::GRENADE]);
+		break;
+	case Client::EQUIPMENT::TOOL:
+		itemToPlace = new BASEEQUIPDESC(*m_Equipments[(size_t)EQUIPMENT::TOOL]);
+		break;
+	case Client::EQUIPMENT::PRIMARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::PRIMARYMAG);
+		break;
+	case Client::EQUIPMENT::SECONDARYMAG:
+		itemToPlace = AddMagazine(desc, EQUIPMENT::SECONDARYMAG);
+		break;
+	case Client::EQUIPMENT::PRIMARY:
+		break;
+	case Client::EQUIPMENT::SECONDARY:
+		break;
+		break;
+	case Client::EQUIPMENT::HEADGEAR:
+	case Client::EQUIPMENT::TORSO:
+	case Client::EQUIPMENT::LEGS:
+	case Client::EQUIPMENT::VEST:
+	case Client::EQUIPMENT::BACKPACK:
+		break;
+	default:
+		break;
+	}
+	return itemToPlace;
+}
+
 BASEEQUIPDESC * CEquipment::AddMagazine(BASEEQUIPDESC* desc, EQUIPMENT type)
 {
 	// Find if space available for magazine
@@ -269,7 +270,8 @@ _bool CEquipment::FindSlot(BASEEQUIPDESC * desc, _uint4& slotStartPos)
 
 	for (_uint i = 0; i < m_MyInventories.size(); ++i)
 	{
-		list<_uint2> inventories = m_Gears[i]->inventories;
+		_uint iGearIdx = i + (_uint)EQUIPMENT::HEADGEAR;
+		list<_uint2> inventories = ((GEARDESC*)m_Equipments[iGearIdx])->inventories;
 		if (inventories.size() <= 0)
 			continue;
 
@@ -373,38 +375,20 @@ void CEquipment::PlaceItemInSlot(BASEEQUIPDESC * desc, _uint4 slotStarPos)
 
 const BASEEQUIPDESC * CEquipment::GetCurrentEquipment(EQUIPMENT type)
 {
-	BASEEQUIPDESC* output = nullptr;
-	switch (type)
+	return m_Equipments[(size_t)type];
+}
+
+// Return list<_uint4> to clear image and text
+list<pair<BASEEQUIPDESC*, EQUIPMENT>> CEquipment::SetCurrentEquipment(EQUIPMENT type, BASEEQUIPDESC* equipment)
+{
+	list<pair<BASEEQUIPDESC*, EQUIPMENT>> output;
+	m_Equipments[(size_t)type] = equipment;
+	if ((size_t)type >= (size_t)EQUIPMENT::HEADGEAR)
 	{
-	case Client::EQUIPMENT::PRIMARY:
-		output = m_pWeapons.primary;
-		break;
-	case Client::EQUIPMENT::SECONDARY:
-		output = m_pWeapons.secondary;
-		break;
-	case Client::EQUIPMENT::GRENADE:
-		output = m_pWeapons.grenade;
-		break;
-	case Client::EQUIPMENT::TOOL:
-		output = m_pWeapons.tool;
-		break;
-	case Client::EQUIPMENT::HEADGEAR:
-		output = m_Gears[(size_t)GEAR::HEADGEAR];
-		break;
-	case Client::EQUIPMENT::TORSO:
-		output = m_Gears[(size_t)GEAR::TORSO];
-		break;
-	case Client::EQUIPMENT::LEGS:
-		output = m_Gears[(size_t)GEAR::LEGS];
-		break;
-	case Client::EQUIPMENT::VEST:
-		output = m_Gears[(size_t)GEAR::VEST];
-		break;
-	case Client::EQUIPMENT::BACKPACK:
-		output = m_Gears[(size_t)GEAR::BACKPACK];
-		break;
-	default:
-		break;
+		// 원래 있던 obj들 저장해놓는다
+		GEAR idx = GEAR((size_t)type - (size_t)EQUIPMENT::HEADGEAR);
+		output = ClearMyInventory(idx);
+		SetMyInventory(idx);
 	}
 
 	return output;

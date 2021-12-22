@@ -1,13 +1,23 @@
 EquipmentType: Torso 
 Equipments:
-  - Name: CS95 JACKET
-    Background: THIS IS CS95 JACKET
+  - Name: BDU Jacket
+    Texture: ..\..\Assets\Textures\Torsos\BDU_Jacket.tga
+    Background: THIS IS BDU Jacket
     Weight: 0.66
     Inventory:
       - [1, 1, 4]
     Mobility: 1.00
     Dexterity: 1.00
-  - Name: T-SHART
+  - Name: CS95 Jacket
+    Texture: ..\..\Assets\Textures\Torsos\CS95_Jacket.tga
+    Background: it is CS95 Jacket
+    Weight: 0.35
+    Inventory:
+      - [1, 1, 2]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: T-Shirt
+    Texture: ..\..\Assets\Textures\Torsos\TShirt.tga
     Background: it is T-SHART
     Weight: 0.35
     Mobility: 1.00

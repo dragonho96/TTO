@@ -1,5 +1,47 @@
 Scene: Untitled
 GameObjects:
+  - Name: Weight
+    UUID: 1159453446327318583
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 327.781097]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3488741111903446007
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 244.765549]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 12782937878656165500
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 410.796692]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
   - Name: ItemSelectButton1
     UUID: 12395590112999480506
     Active: true
@@ -123,48 +165,6 @@ GameObjects:
       - 4573071905662044804
       - 5667078025410041942
       - 8992064765472229245
-  - Name: Weight
-    UUID: 1159453446327318583
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 327.781097]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 3488741111903446007
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 244.765549]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 12782937878656165500
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 410.796692]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -259,7 +259,9 @@ GameObjects:
       - 16901477521903793229
       - 12395590112999480506
       - 9932391712204584039
-  - Name: Background
+      - 448453972483024801
+      - 6878301570081682436
+  - Name: WindowBackground
     UUID: 10468354878641465680
     Active: true
     Layer: Default
@@ -995,8 +997,36 @@ GameObjects:
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
       Color: [0, 0, 0, 1]
+  - Name: TextBackground
+    UUID: 448453972483024801
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [1113.61902, 204.85585]
+      Size: [190.600006, 50]
+    Com_Text:
+      Text: Background
+      Color: [0.826086938, 0.583778501, 0.0299306791, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Background
+    UUID: 6878301570081682436
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [1098.38098, 247.960068]
+      Size: [160, 100]
+    Com_Text:
+      Text: ""
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
   - Name: Player
-    UUID: 2470812592528865616
+    UUID: 11731040437082550637
     Active: true
     Layer: Player
     Type: Object

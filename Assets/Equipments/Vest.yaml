@@ -1,19 +1,29 @@
 EquipmentType: Vest 
 Equipments:
   - Name: 6SH92
+    Texture: ..\..\Assets\Textures\Vests\6SH92.tga
     Background: THIS IS 6SH92
     Weight: 0.66
     Inventory:
       - [2, 3, 2]
-      - [1, 1, 4]
       - [1, 2, 2]
     Mobility: 1.00
     Dexterity: 1.00
   - Name: ALICE VEST
+    Texture: ..\..\Assets\Textures\Vests\AliceVest.tga
     Background: it is ALICE VEST
     Weight: 0.35
     Inventory:
       - [1, 1, 4]
       - [1, 2, 2]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: STRAP
+    Texture: ..\..\Assets\Textures\Vests\Strap.tga
+    Background: it is STRAP
+    Weight: 0.35
+    Inventory:
+      - [1, 1, 1]
+      - [1, 2, 1]
     Mobility: 1.00
     Dexterity: 1.00

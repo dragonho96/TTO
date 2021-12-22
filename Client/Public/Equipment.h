@@ -28,14 +28,14 @@ public:
 
 public:
 	void					SetMyInventory(GEAR type);
-	list<BASEEQUIPDESC*>	ClearMyInventory(GEAR type);
+	list<pair<BASEEQUIPDESC*, EQUIPMENT>>	ClearMyInventory(GEAR type);
 
 	_bool			AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
 	_bool			AddItemAtPos(BASEEQUIPDESC* desc, _uint4 slotPosToValidate, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
 	_bool			RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem = nullptr, _uint mouseInput = 1);
+	BASEEQUIPDESC*  MakeItem(BASEEQUIPDESC* desc, EQUIPMENT type);
 	BASEEQUIPDESC*	AddMagazine(BASEEQUIPDESC* desc, EQUIPMENT type);
-	//_bool	AddItem(/* slot 위치 */);
-	//_bool	RemoveItem(/* slot 위치 */);
+
 
 	/* Iterate all possible inventories*/
 	_bool FindSlot(BASEEQUIPDESC* desc, _uint4& slotStartPos);
@@ -44,10 +44,10 @@ public:
 	void PlaceItemInSlot(BASEEQUIPDESC* desc, _uint4 slotStarPos);
 
 	const BASEEQUIPDESC* GetCurrentEquipment(EQUIPMENT type);
-	void SetCurrentEquipment(EQUIPMENT type);
+	list<pair<BASEEQUIPDESC*, EQUIPMENT>> SetCurrentEquipment(EQUIPMENT type, BASEEQUIPDESC* equipment);
 private:
-	WEAPONS	m_pWeapons;
-	vector<GEARDESC*> m_Gears;
+	//WEAPONS	m_pWeapons;
+	//vector<GEARDESC*> m_Gears;
 
 	vector<BASEEQUIPDESC*> m_Equipments;
 	// 전체 인벤토리 관리

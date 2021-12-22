@@ -1,4 +1,4 @@
-EquipmentType: Grenade 
+EquipmentType: Tool 
 Equipments:
   - Name: MEDKIT
     Texture: ..\..\Assets\Textures\Tools\Medkit.tga

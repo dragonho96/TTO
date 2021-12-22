@@ -30,9 +30,9 @@ void CEquipmentPool::SetUpEquipmentPool()
 	serializer.Deserialize("../../Assets/Equipments/PrimaryMagazine.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::PRIMARYMAG]);
 	serializer.Deserialize("../../Assets/Equipments/SecondaryWeapon.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::SECONDARY]);
 	serializer.Deserialize("../../Assets/Equipments/SecondaryMagazine.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::SECONDARYMAG]);
-
 	serializer.Deserialize("../../Assets/Equipments/Grenade.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::GRENADE]);
 	serializer.Deserialize("../../Assets/Equipments/Tool.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::TOOL]);
+	
 	serializer.Deserialize("../../Assets/Equipments/Headgear.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::HEADGEAR]);
 	serializer.Deserialize("../../Assets/Equipments/Torso.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::TORSO]);
 	serializer.Deserialize("../../Assets/Equipments/Legs.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::LEGS]);
