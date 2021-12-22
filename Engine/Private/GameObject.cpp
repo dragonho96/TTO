@@ -19,13 +19,24 @@ CGameObject::CGameObject(const CGameObject & rhs)
 void CGameObject::SetDead()
 {
 	m_bDead = true;
-	for (auto& child : m_listChildren)
-		child->SetDead();
-
-	m_listChildren.clear();
-
+	list<CGameObject*> childrenToDelete = m_listChildren;
+	
 	if (m_pParent)
 		m_pParent->RemoveChild(this);
+
+
+	if (0 < m_listChildren.size())
+	{
+		for (auto& iter = m_listChildren.begin(); iter != m_listChildren.end();)
+		{
+			(*iter)->SetDead();
+			// Child에서 deparent하기때문에 iter를 다시 begin으로 잡아준다
+			iter = m_listChildren.begin();
+		}
+	}
+	m_listChildren.clear();
+
+
 }
 
 

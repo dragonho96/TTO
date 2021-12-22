@@ -37,6 +37,7 @@ private:
 	class CGameObject* m_pSecondaryWeaponButton = nullptr;
 	class CGameObject* m_pGrenadeButton = nullptr;
 	class CGameObject* m_pToolButton = nullptr;
+	class CGameObject* m_pHeadgearButton = nullptr;
 	class CGameObject* m_pTorsoButton = nullptr;
 	class CGameObject* m_pLegsButton = nullptr;
 	class CGameObject* m_pVestButton = nullptr;

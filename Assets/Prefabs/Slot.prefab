@@ -10,7 +10,7 @@ GameObjects:
       Position: [633.97937, 518.724243]
       Size: [40, 40]
     Com_VIBuffer:
-      TexturePath: ..\..\Assets\Texture\InventorySlot.png
+      TexturePath: ..\..\Assets\Textures\Buttons\InventorySlot.png
       Color: [0, 0, 0, 1]
     Children:
       - Name: Name

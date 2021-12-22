@@ -10,7 +10,7 @@ GameObjects:
       Position: [601.101501, 139.400681]
       Size: [150, 80]
     Com_VIBuffer:
-      TexturePath: ""
+      TexturePath: ..\..\Assets\Textures\Buttons\ItemSelectButton.png
       Color: [0, 0, 0, 1]
     Children:
       - Name: Name

@@ -32,13 +32,18 @@ void CEquipButtonManager::Initialize()
 
 	m_pPrimaryWeaponButton = CEngine::GetInstance()->FindGameObjectWithName("PrimaryButton");
 	m_pSecondaryWeaponButton = CEngine::GetInstance()->FindGameObjectWithName("SecondaryButton");
-	m_pGrenadeButton = CEngine::GetInstance()->FindGameObjectWithName("GrenadeButton");
-	m_pToolButton = CEngine::GetInstance()->FindGameObjectWithName("ToolButton");
+	//m_pGrenadeButton = CEngine::GetInstance()->FindGameObjectWithName("GrenadeButton");
+	//m_pToolButton = CEngine::GetInstance()->FindGameObjectWithName("ToolButton");
+	// m_pHeadgearButton = CEngine::GetInstance()->FindGameObjectWithName("HeadgearButton");
+	m_pTorsoButton = CEngine::GetInstance()->FindGameObjectWithName("TorsoButton");
+	//m_pLegsButton = CEngine::GetInstance()->FindGameObjectWithName("LegsButton");
+	//m_pVestButton = CEngine::GetInstance()->FindGameObjectWithName("VestButton");
+	//m_pBackpackButton = CEngine::GetInstance()->FindGameObjectWithName("BackpackButton");
 
 	SetButtonText(m_pPrimaryWeaponButton, m_pPlayerEquipment->m_pWeapons.primary);
 	SetButtonText(m_pSecondaryWeaponButton, m_pPlayerEquipment->m_pWeapons.secondary);
-	SetButtonText(m_pGrenadeButton, m_pPlayerEquipment->m_pWeapons.grenade);
-	SetButtonText(m_pToolButton, m_pPlayerEquipment->m_pWeapons.tool);
+	// SetButtonText(m_pGrenadeButton, m_pPlayerEquipment->m_pWeapons.grenade);
+	// SetButtonText(m_pToolButton, m_pPlayerEquipment->m_pWeapons.tool);
 
 
 	//m_pTorsoButton = CEngine::GetInstance()->FindGameObjectWithName("Torso");
@@ -53,11 +58,11 @@ void CEquipButtonManager::Initialize()
 	//SetButtonText(m_pLegsButton, m_pPlayerEquipment->m_Gears[(_uint)GEAR::BACKPACK]);
 
 	///* Slot GameObject를 담을 공간 */
-	//m_InventorySlots.resize((size_t)GEAR::NONE);
-	//SetInventorySlot(m_pTorsoButton, GEAR::TORSO);
-	//SetInventorySlot(m_pLegsButton, GEAR::LEGS);
-	//SetInventorySlot(m_pVestButton, GEAR::VEST);
-	//SetInventorySlot(m_pBackpackButton, GEAR::BACKPACK);
+	m_InventorySlots.resize((size_t)GEAR::NONE);
+	SetInventorySlot(m_pTorsoButton, GEAR::TORSO);
+	// SetInventorySlot(m_pLegsButton, GEAR::LEGS);
+	// SetInventorySlot(m_pVestButton, GEAR::VEST);
+	// SetInventorySlot(m_pBackpackButton, GEAR::BACKPACK);
 
 
 	m_pHoverInfo = CEngine::GetInstance()->FindGameObjectWithName("HoverInfo");
@@ -111,6 +116,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 				{
 					// player equipment를 바꾼다
 					// slot 을 clear하고 바뀐것으로 다시 생성한다
+
 					int i = 0;
 				}
 

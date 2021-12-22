@@ -44,10 +44,12 @@ public:
 	void PlaceItemInSlot(BASEEQUIPDESC* desc, _uint4 slotStarPos);
 
 	const BASEEQUIPDESC* GetCurrentEquipment(EQUIPMENT type);
+	void SetCurrentEquipment(EQUIPMENT type);
 private:
 	WEAPONS	m_pWeapons;
 	vector<GEARDESC*> m_Gears;
 
+	vector<BASEEQUIPDESC*> m_Equipments;
 	// 전체 인벤토리 관리
 	// Type->Inventories->InventoryRow->InventoryColumn
 	vector<vector<vector<vector<BASEEQUIPDESC*>>>> m_MyInventories;
