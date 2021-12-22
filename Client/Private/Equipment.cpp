@@ -189,7 +189,7 @@ _bool CEquipment::AddItemAtPos(BASEEQUIPDESC * desc, _uint4 slotPosToValidate, B
 	return true;
 }
 
-_bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem)
+_bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem, _uint mouseInput)
 {
 	BASEEQUIPDESC* item = nullptr;
 	item = m_MyInventories[itemSlotPos.x][itemSlotPos.y][itemSlotPos.z][itemSlotPos.w];
@@ -215,7 +215,7 @@ _bool CEquipment::RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, B
 		}
 	}
 
-	if (outCopiedRemovedItem)
+	if (0 == mouseInput)
 	{
 		switch (item->type)
 		{
@@ -369,6 +369,45 @@ void CEquipment::PlaceItemInSlot(BASEEQUIPDESC * desc, _uint4 slotStarPos)
 			m_MyInventories[slotStarPos.x][slotStarPos.y][slotStarPos.z + row][slotStarPos.w + col] = desc;
 		}
 	}
+}
+
+const BASEEQUIPDESC * CEquipment::GetCurrentEquipment(EQUIPMENT type)
+{
+	BASEEQUIPDESC* output = nullptr;
+	switch (type)
+	{
+	case Client::EQUIPMENT::PRIMARY:
+		output = m_pWeapons.primary;
+		break;
+	case Client::EQUIPMENT::SECONDARY:
+		output = m_pWeapons.secondary;
+		break;
+	case Client::EQUIPMENT::GRENADE:
+		output = m_pWeapons.grenade;
+		break;
+	case Client::EQUIPMENT::TOOL:
+		output = m_pWeapons.tool;
+		break;
+	case Client::EQUIPMENT::HEADGEAR:
+		output = m_Gears[(size_t)GEAR::HEADGEAR];
+		break;
+	case Client::EQUIPMENT::TORSO:
+		output = m_Gears[(size_t)GEAR::TORSO];
+		break;
+	case Client::EQUIPMENT::LEGS:
+		output = m_Gears[(size_t)GEAR::LEGS];
+		break;
+	case Client::EQUIPMENT::VEST:
+		output = m_Gears[(size_t)GEAR::VEST];
+		break;
+	case Client::EQUIPMENT::BACKPACK:
+		output = m_Gears[(size_t)GEAR::BACKPACK];
+		break;
+	default:
+		break;
+	}
+
+	return output;
 }
 
 

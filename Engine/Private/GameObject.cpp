@@ -16,6 +16,20 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 }
 
+void CGameObject::SetDead()
+{
+	m_bDead = true;
+	for (auto& child : m_listChildren)
+		child->SetDead();
+
+	m_listChildren.clear();
+
+	if (m_pParent)
+		m_pParent->RemoveChild(this);
+}
+
+
+
 HRESULT CGameObject::InitializePrototype()
 {
 	return S_OK;
@@ -44,9 +58,12 @@ HRESULT CGameObject::Render()
 
 void CGameObject::SetInfo(string name, string layer, uint64_t uuid, _bool active)
 {
+	// if UUID is not 0, it means it has uuid to inherit
+	if (uuid)
+		m_UUID = uuid;
+
 	m_Name = name;
 	m_Layer = layer;
-	m_UUID = uuid;
 	m_bIsActive = active;
 	m_pEngine->AddGameObjectWithName(name, this);
 	m_pEngine->AddGameObjectWithUUID(uuid, this);
@@ -186,6 +203,7 @@ void CGameObject::Free()
 
 	m_Components.clear();
 
-	m_listChildren.clear();
+
+
 	m_pParent = nullptr;
 }

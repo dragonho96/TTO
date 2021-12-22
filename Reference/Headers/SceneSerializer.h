@@ -20,8 +20,8 @@ public:
 	void DeserializePrefab();
 	CGameObject* SpawnPrefab(YAML::Node data);
 
-	CGameObject* DeserializeUI(YAML::Node& obj);
-	CGameObject* DeserializeObject(YAML::Node& obj);
+	CGameObject* DeserializeUI(YAML::Node& obj, _bool bSpawn = false);
+	CGameObject* DeserializeObject(YAML::Node& obj, _bool bSpawn = false);
 private:
 	CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;

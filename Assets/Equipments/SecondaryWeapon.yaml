@@ -1,18 +1,21 @@
 EquipmentType: SecondaryWeapon
 Equipments:
   - Name: G18
+    Texture: ..\..\Assets\Textures\Weapons\G18.tga
     Background: This is G18
     Weight: 2.0
     Cost: 3
     Rpm: 90
     Accuracy: 30
   - Name: M9
+    Texture: ..\..\Assets\Textures\Weapons\M9.tga
     Background: This is M9
     Weight: 1.0
     Cost: 2
     Rpm: 68
     Accuracy: 60
   - Name: M1911
+    Texture: ..\..\Assets\Textures\Weapons\M1911.tga
     Background: This is M1911
     Weight: 2.5
     Cost: 3

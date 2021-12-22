@@ -7,18 +7,17 @@ Equipments:
     Cost: 0
     SlotSize: [1, 2]
     Round: 30
-  - Name: M4 5.56X45MM 30RND MAG
-    Texture: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
-    Background: This is M4 MAG
+  - Name: MP5 9X19MM 30RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\MP5_Mag.tga
+    Background: This is MP5 MAG
     Weight: 0.34
     Cost: 0
     SlotSize: [1, 2]
-    Type: Primary
     Round: 30
-  - Name: TRG 7.62X51MM 8RND MAG
-    Texture: ..\..\Assets\Textures\Magazines\AKM_Mag.tga
-    Background: This is TRG MAG
+  - Name: M24 7.62X51MM 5RND MAG
+    Texture: ..\..\Assets\Textures\Magazines\M24_Mag.tga
+    Background: This is M24 MAG
     Weight: 1.23
     Cost: 0
     SlotSize: [1, 1]
-    Round: 8
+    Round: 5

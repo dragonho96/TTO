@@ -9,7 +9,7 @@ Equipments:
     Type: Secondary
     Round: 12
   - Name: M9 9X19MM 15RND MAG
-    Texture: ..\..\Assets\Textures\Magazines\G18_Mag.tga
+    Texture: ..\..\Assets\Textures\Magazines\M9_Mag.tga
     Background: This is M9 MAG
     Weight: 0.34
     Cost: 0
@@ -17,8 +17,8 @@ Equipments:
     Type: Secondary
     Round: 15
   - Name: M1911 9X19MM 15RND MAG
-    Texture: ..\..\Assets\Textures\Magazines\G18_Mag.tga
-    Background: This is M1911
+    Texture: ..\..\Assets\Textures\Magazines\M1911_Mag.tga
+    Background: This is M1911_Mag
     Weight: 5.0
     Cost: 0
     SlotSize: [1, 1]

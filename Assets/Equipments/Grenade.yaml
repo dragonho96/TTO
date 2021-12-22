@@ -1,16 +1,19 @@
 EquipmentType: Grenade 
 Equipments:
   - Name: Smoke Shell
+    Texture: ..\..\Assets\Textures\Grenades\Smoke.tga
     Background: blah blah blah it is smoke shell
     Weight: 0.5
     Cost: 1
     SlotSize: [1, 2]
   - Name: Frag
+    Texture: ..\..\Assets\Textures\Grenades\Frag.tga
     Background: it is Frag
     Weight: 0.9
     Cost: 4
     SlotSize: [1, 2]
   - Name: Stun
+    Texture: ..\..\Assets\Textures\Grenades\Stun.tga
     Background: it is Stun
     Weight: 1.2
     Cost: 3

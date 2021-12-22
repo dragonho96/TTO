@@ -338,10 +338,14 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 }
 
 
-CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
+CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj, _bool bSpawn)
 {
+	uint64_t uuid = 0;
+	if (!bSpawn)
+		uuid = obj["UUID"].as<uint64_t>();
+
 	auto name = obj["Name"].as<string>();
-	auto uuid = obj["UUID"].as<uint64_t>();
+	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
 
@@ -418,10 +422,14 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 
 }
 
-CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
+CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 {
+	_uint uuid = 0;
+	if (!bSpawn)
+		_uint uuid = obj["UUID"].as<uint64_t>();
+
 	auto name = obj["Name"].as<string>();
-	auto uuid = obj["UUID"].as<uint64_t>();
+	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
 
@@ -604,7 +612,7 @@ void CSceneSerializer::SerializePrefab(CGameObject * obj)
 	out << YAML::EndSeq;
 	out << YAML::EndMap;
 
-	std::ofstream fout(prefabPath + obj->GetName());
+	std::ofstream fout(prefabPath + obj->GetName() + ".prefab");
 	fout << out.c_str();
 }
 
@@ -615,9 +623,12 @@ void CSceneSerializer::DeserializePrefab()
 	for (auto& iter : FILESYSTEM::directory_iterator(prefabPath))
 	{
 		FILESYSTEM::path filePath = iter.path();
-		string strFilePath = iter.path().string();
-		string fileName = iter.path().filename().string();
+		if (filePath.extension().string() != ".prefab")
+			continue;
 
+		string strFilePath = iter.path().string();
+		string fileName = iter.path().stem().string();
+		
 		std::ifstream stream(strFilePath);
 		std::stringstream strStream;
 		strStream << stream.rdbuf();
@@ -626,46 +637,6 @@ void CSceneSerializer::DeserializePrefab()
 
 		m_pEngine->AddPrefab(fileName, data);
 	}
-
-	//if (!data["Scene"])
-	//	return false;
-
-	//string SceneName = data["Scene"].as<string>();
-
-	//auto gameObjects = data["GameObjects"];
-	//if (gameObjects)
-	//{
-	//	for (auto obj : gameObjects)
-	//	{
-	//		CGameObject* deserializedObject = nullptr;
-
-	//		if (obj["Type"].as<string>() == "UI")
-	//			deserializedObject = DeserializeUI(obj);
-	//		else
-	//			deserializedObject = DeserializeObject(obj);
-
-
-	//	}
-	//}
-	//if (gameObjects)
-	//{
-	//	for (auto obj : gameObjects)
-	//	{
-	//		auto children = obj["Children"];
-	//		if (children)
-	//		{
-	//			CGameObject* parent = m_pEngine->FindGameObjectWithUUID(obj["UUID"].as<uint64_t>());
-	//			int seqSize = children.size();
-	//			for (int i = 0; i < children.size(); ++i)
-	//			{
-	//				uint64_t uuid = children[i].as<uint64_t>();
-	//				CGameObject* child = nullptr;
-	//				if (child = m_pEngine->FindGameObjectWithUUID(uuid))
-	//					parent->AddChild(child);
-	//			}
-	//		}
-	//	}
-	//}
 	return;
 }
 
@@ -684,9 +655,9 @@ CGameObject * CSceneSerializer::SpawnPrefab(YAML::Node data)
 		{
 
 			if (obj["Type"].as<string>() == "UI")
-				deserializedObject = DeserializeUI(obj);
+				deserializedObject = DeserializeUI(obj, true);
 			else
-				deserializedObject = DeserializeObject(obj);
+				deserializedObject = DeserializeObject(obj, true);
 
 			auto children = obj["Children"];
 			if (children)
@@ -697,13 +668,13 @@ CGameObject * CSceneSerializer::SpawnPrefab(YAML::Node data)
 				{
 					if (child["Type"].as<string>() == "UI")
 					{
-						pChildObj = DeserializeUI(child);
+						pChildObj = DeserializeUI(child, true);
 						dynamic_cast<CEmptyUI*>(pChildObj)->SetParent(deserializedObject);
 					}
 					else
 					{
 						dynamic_cast<CEmptyGameObject*>(pChildObj)->SetParent(deserializedObject);
-						pChildObj = DeserializeObject(child);
+						pChildObj = DeserializeObject(child, true);
 					}
 
 					pChildObj->SetParent(deserializedObject);

@@ -32,7 +32,7 @@ public:
 
 	_bool			AddItem(BASEEQUIPDESC* desc, EQUIPMENT type, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
 	_bool			AddItemAtPos(BASEEQUIPDESC* desc, _uint4 slotPosToValidate, BASEEQUIPDESC*& outputItem, _uint4& outputSlotPos);
-	_bool			RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem = nullptr);
+	_bool			RemoveItem(_uint4 itemSlotPos, list<_uint4>& outputItemSize, BASEEQUIPDESC** outCopiedRemovedItem = nullptr, _uint mouseInput = 1);
 	BASEEQUIPDESC*	AddMagazine(BASEEQUIPDESC* desc, EQUIPMENT type);
 	//_bool	AddItem(/* slot 위치 */);
 	//_bool	RemoveItem(/* slot 위치 */);
@@ -42,6 +42,8 @@ public:
 	/* Check if given inventory has validate slot */
 	_bool ValidateSlot(BASEEQUIPDESC* desc, _uint4& slotStartPos, _uint4 slotToValidate);
 	void PlaceItemInSlot(BASEEQUIPDESC* desc, _uint4 slotStarPos);
+
+	const BASEEQUIPDESC* GetCurrentEquipment(EQUIPMENT type);
 private:
 	WEAPONS	m_pWeapons;
 	vector<GEARDESC*> m_Gears;
