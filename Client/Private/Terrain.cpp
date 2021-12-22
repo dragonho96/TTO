@@ -1,37 +1,21 @@
 #include "stdafx.h"
 #include "..\Public\Terrain.h"
 
-CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	: CGameObject(pDevice, pDeviceContext)
+USING(Client)
+
+CTerrain::CTerrain(CGameObject* pObj)
 {
 }
 
-CTerrain::CTerrain(const CTerrain & rhs)
-	: CGameObject(rhs)
+CTerrain* CTerrain::Create(CGameObject* pObj)
 {
-}
+	CTerrain*		pInstance = new CTerrain(pObj);
 
-CTerrain * CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-{
-	CTerrain*		pInstance = new CTerrain(pDevice, pDeviceContext);
-
-	if (FAILED(pInstance->InitializePrototype()))
+	if (FAILED(pInstance->Initialize()))
 	{
 		MSG_BOX("Failed to Create CTerrain");
 		SafeRelease(pInstance);
-	}
-
-	return pInstance;
-}
-
-CGameObject * CTerrain::Clone(void * pArg)
-{
-	CTerrain*		pInstance = new CTerrain(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Creating CTerrain");
-		SafeRelease(pInstance);
+		return nullptr;
 	}
 
 	return pInstance;
@@ -39,67 +23,67 @@ CGameObject * CTerrain::Clone(void * pArg)
 
 void CTerrain::Free()
 {
-	CGameObject::Free();
+	SafeRelease(m_pTerrainTexture);
+	SafeRelease(m_pFilterTexture);
+	SafeRelease(m_pBrushTexture);
 }
 
-HRESULT CTerrain::InitializePrototype()
+HRESULT CTerrain::Initialize()
 {
-	if (FAILED(__super::InitializePrototype()))
+	list<class CGameObject*> objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Terrain");
+	if (objList.size() <= 0)
 		return E_FAIL;
 
+	m_pGameObject = objList.front();
+	m_pVIBuffer = dynamic_cast<CVIBuffer*>(m_pGameObject->GetComponent("Com_VIBuffer"));
+	m_pShader = m_pVIBuffer->GetShader();
+
+	objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
+	if (objList.size() <= 0)
+		return E_FAIL;
+
+	CGameObject* player = objList.front();
+	m_pPlayerTransform = dynamic_cast<CTransform*>(player->GetComponent("Com_Transform"));
+
+	
+	m_pTerrainTexture = CTexture::Create(
+		CEngine::GetInstance()->GetDevice(), 
+		CEngine::GetInstance()->GetDeviceContext(),
+		CTexture::TYPE_TGA, "../../Assets/Texture/Grass_%d.tga", 2);
+
+	m_pFilterTexture = CTexture::Create(
+		CEngine::GetInstance()->GetDevice(),
+		CEngine::GetInstance()->GetDeviceContext(),
+		CTexture::TYPE_WIC, "../../Assets/Texture/Filter.bmp");
+
+	m_pBrushTexture = CTexture::Create(
+		CEngine::GetInstance()->GetDevice(),
+		CEngine::GetInstance()->GetDeviceContext(),
+		CTexture::TYPE_TGA, "../../Assets/Texture/Brush.tga");
 
 	return S_OK;
 }
 
-HRESULT CTerrain::Initialize(void * pArg)
+void CTerrain::Update(_double deltaTime)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
-	if (FAILED(SetUpComponents()))
-		return E_FAIL;
-
-	return S_OK;
 }
 
-_uint CTerrain::Update(_double TimeDelta)
+void CTerrain::LapteUpdate(_double deltaTime)
 {
-	if (NO_EVENT != __super::Update(TimeDelta))
-		return CHANGE;
+	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTexture", m_pTerrainTexture, 0);
+	m_pShader->SetUp_TextureOnShader("g_DiffuseDestTexture", m_pTerrainTexture, 1);
+	m_pShader->SetUp_TextureOnShader("g_FilterTexture", m_pFilterTexture);
+	m_pShader->SetUp_TextureOnShader("g_BrushTexture", m_pBrushTexture);
 
-	return NO_EVENT;
+	_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
+	ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
+	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
+
+	_vector playerPos = m_pPlayerTransform->GetState(CTransform::STATE_POSITION);
+	m_pShader->SetUp_ValueOnShader("g_vBrushPos", &playerPos, sizeof(_vector));
 }
 
-_uint CTerrain::LateUpdate(_double TimeDelta)
+void CTerrain::Render()
 {
-	if (nullptr == m_pRendererCom)
-		return -1;
 
-	if (NO_EVENT != __super::LateUpdate(TimeDelta))
-		return -1;
-
-	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_PRIORITY, this);
-
-	return NO_EVENT;
-}
-
-HRESULT CTerrain::Render()
-{
-	m_pVIBuffer->Render();
-	return S_OK;
-}
-
-HRESULT CTerrain::SetUpComponents()
-{
-	/* For.Renderer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransform)))
-		return E_FAIL;
-
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_Terrain", "Com_VIBuffer", (CComponent**)&m_pVIBuffer, (void*)m_pTransform)))
-		return E_FAIL;
-
-	return S_OK;
 }

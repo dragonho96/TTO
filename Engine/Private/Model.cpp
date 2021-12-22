@@ -35,17 +35,8 @@ CModel::CModel(const CModel & rhs)
 	for (auto& pPrototypeMeshContainer : rhs.m_MeshContainers)
 	{
 		CMeshContainer*	pMeshContainer = pPrototypeMeshContainer->Clone();
-
 		m_MeshContainers.push_back(pMeshContainer);
-
-		vector<BONEDESC*> bones = pMeshContainer->Get_BoneDesc();
-		for (auto& bone : bones)
-		{
-			SetRagdollBoneDesc(bone);
-		}
 	}
-
-
 }
 
 HRESULT CModel::InitializePrototype()
@@ -68,6 +59,9 @@ HRESULT CModel::Initialize(void * pArg)
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
+			CreatePxMesh();
+
 	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest)
@@ -80,7 +74,10 @@ HRESULT CModel::Initialize(void * pArg)
 		vector<BONEDESC*>	Bones = pMeshContainer->Get_BoneDesc();
 
 		for (auto& pBoneDesc : Bones)
+		{
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
+			SetRagdollBoneDesc(pBoneDesc);
+		}
 	}
 
 	if (FAILED(Sort_MeshesByMaterial()))
@@ -91,8 +88,9 @@ HRESULT CModel::Initialize(void * pArg)
 
 	Update_CombinedTransformationMatrices(0.0);
 
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
-		CreateRagdollRbs();
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT &&
+		0 < m_Animations.size())
+			CreateRagdollRbs();
 
 	return S_OK;
 }
@@ -239,8 +237,10 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	{
 		if (m_bSimulateRagdoll)
 			iPassIndex = 2;
-		else
+		else if (0 < m_Animations.size())
 			iPassIndex = 1;
+		else
+			iPassIndex = 0;
 	}
 	else
 		iPassIndex = 0;
@@ -785,6 +785,12 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	//filterData.word1 = CPxManager::GROUP2;
 	//shape->setSimulationFilterData(filterData);
 	//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+
+	//PxFilterData filterData;
+	//filterData.word0 = CPxManager::GROUP1;
+	//filterData.word1 = CPxManager::GROUP2;
+	//shape->setQueryFilterData(filterData);
+
 	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
 
 
@@ -807,21 +813,6 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 
 	m_RagdollRbs.emplace(name, ragdollBoneDesc);
 	parent->pHierarchyNode->AddRagdollRb(body);
-
-	PxTransform test = body->getGlobalPose();
-	//test = test.getInverse();
-	// test = test.getNormalized();
-
-	PxMat44 m = PxMat44(test);
-	XMMATRIX d3dMat;
-	memcpy(&d3dMat, &m, sizeof(XMMATRIX));
-	// d3dMat = XMMatrixInverse(nullptr, d3dMat);
-	_float4x4 dd;
-	XMStoreFloat4x4(&dd, d3dMat);
-
-	_vector vecUp = { dd._11, dd._12, dd._13, dd._14 };
-	vecUp = XMVector3Normalize(vecUp);
-	int i = 0;
 }
 
 void CModel::CreateSphereRb(BONEDESC * parent, string name)
@@ -1011,6 +1002,11 @@ void CModel::CreatePxMesh()
 	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);
+	
+	PxFilterData filterData;
+	filterData.word0 = CPxManager::GROUP1;
+	// filterData.word1 = CPxManager::GROUP2;
+	shape->setQueryFilterData(filterData);
 
 	m_pRigidActor->attachShape(*shape);
 	pEngine->AddActor(m_pRigidActor);

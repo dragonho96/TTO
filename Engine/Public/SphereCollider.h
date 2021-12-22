@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Collider.h"
-#include "VIBuffer.h"
 #include "VIBuffer_LineSphere.h"
-
 
 BEGIN(Engine)
 
@@ -29,7 +27,6 @@ public:
 	float GetSize() { return m_fRadius; }
 
 private:
-	CEngine*		m_pEngine;
 	float			m_fRadius;
 };
 

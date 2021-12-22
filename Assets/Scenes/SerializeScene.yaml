@@ -1,38 +1,14 @@
 Scene: Untitled
 GameObjects:
-  - Name: Player
-    UUID: 15485910027331943928
+  - Name: Primary
+    UUID: 3632012601712475571
     Active: true
-    Layer: Player
-    Type: Object
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
     Com_Transform:
-      Translation: [3.79740667, 1.39676535, 2.41537118]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 0.9, 0]
-      Type: Capsule
-      Radius: 0.200000003
-      Height: 0.899999976
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: cccc.fbx
-      HasCollider: false
-  - Name: Terrain
-    UUID: 10024634474122618756
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
+      Position: [187.547363, 122.483185]
+      Size: [150, 100]
     Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ../../Assets/Texture/Height.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
+      TexturePath: ..\..\Assets\Texture\EquipmentButton.png
+      Color: [0, 0, 0, 1]

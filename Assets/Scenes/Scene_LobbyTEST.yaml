@@ -1,0 +1,126 @@
+Scene: Untitled
+GameObjects:
+  - Name: Type
+    UUID: 3141107937387621359
+    Active: true
+    Layer: Type
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [410.685394, 168.063446]
+      Size: [80, 20]
+    Com_Text:
+      Text: Type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Primary
+    UUID: 1901211972883645456
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [221.529709, 148.255081]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 9433789498520215262
+      - 17823497980358353119
+      - 2685136350401009801
+  - Name: Name
+    UUID: 9433789498520215262
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [182.692856, 122.4832]
+      Size: [62.4000015, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 17823497980358353119
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [279.785156, 120.872513]
+      Size: [50, 50]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Type
+    UUID: 2685136350401009801
+    Active: true
+    Layer: UI
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [189.165695, 185.302048]
+      Size: [76.8000031, 27.6000004]
+    Com_Text:
+      Text: Type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Torso
+    UUID: 12973492261452882665
+    Active: true
+    Layer: Torso
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [443.042084, 139.031174]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Texture\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 2090552913147059798
+      - 3141107937387621359
+  - Name: Name
+    UUID: 2090552913147059798
+    Active: true
+    Layer: Name
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [399.264893, 126.450455]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Player
+    UUID: 11970625152892416961
+    Active: true
+    Layer: Player
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Center: [0, 0.600000024, 0]
+      Type: Capsule
+      Radius: 0.200000003
+      Height: 0.800000012
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Advent\
+      MeshFileName: cccc.fbx
+      HasCollider: false

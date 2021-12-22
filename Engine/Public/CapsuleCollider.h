@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Collider.h"
-#include "VIBuffer.h"
 #include "VIBuffer_LineCapsule.h"
-
 
 BEGIN(Engine)
 
@@ -30,7 +28,6 @@ public:
 	pair<float, float> GetSize() { return make_pair(m_fRadius, m_fHeight); }
 
 private:
-	CEngine*		m_pEngine;
 	float			m_fRadius;
 	float			m_fHeight;
 };

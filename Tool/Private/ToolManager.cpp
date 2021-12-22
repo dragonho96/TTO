@@ -15,7 +15,12 @@
 #include "Renderer.h"
 #pragma endregion 
 
+#include "SceneSerializer.h"
+
 USING(Tool)
+
+static string strScene = "../../Assets/Scenes/Scene_Lobby.yaml";
+
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())
 {
@@ -51,7 +56,8 @@ HRESULT CToolManager::Initialize()
 
 	InitializeImGui();
 
-	m_pEngine->DeserializeScene("../../Assets/Scenes/SerializeScene.yaml");
+	m_pEngine->DeserializeScene(strScene);
+
 
 	return S_OK;
 }
@@ -128,7 +134,7 @@ void CToolManager::Render()
 
 void CToolManager::Release()
 {
-	m_pEngine->SerializeScene("../../Assets/Scenes/SerializeScene.yaml");
+	m_pEngine->SerializeScene(strScene);
 
 	dynamic_cast<CLog*>(m_pEngine->GetWindow("Log"))->ClearLog();
 

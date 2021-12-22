@@ -68,11 +68,21 @@ HRESULT CRectTransform::Initialize(void * pArg)
 
 bool CRectTransform::IsMouseInRect()
 {
+	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
+	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
+	float defaultWindowSizeX = 1280.f;
+	float defaultWindowSizeY = 720.f;
+
+	_float fSizeX = m_TransformDesc.sizeX * (curWindowSizeX / defaultWindowSizeX);
+	_float fSizeY = m_TransformDesc.sizeY * (curWindowSizeY / defaultWindowSizeY);
+	_float fPosX = m_TransformDesc.posX * (curWindowSizeX / defaultWindowSizeX);
+	_float fPosY = m_TransformDesc.posY * (curWindowSizeY / defaultWindowSizeY);
+
 	_float3 mousePos = m_pEngine->GetMousePosition();
-	if (mousePos.x <= m_TransformDesc.posX + (m_TransformDesc.sizeX / 2) &&
-		mousePos.x >= m_TransformDesc.posX - (m_TransformDesc.sizeX / 2) &&
-		mousePos.y <= m_TransformDesc.posY + (m_TransformDesc.sizeY / 2) &&
-		mousePos.y >= m_TransformDesc.posY - (m_TransformDesc.sizeY / 2))
+	if (mousePos.x <= fPosX + (fSizeX / 2) &&
+		mousePos.x >= fPosX - (fSizeX / 2) &&
+		mousePos.y <= fPosY + (fSizeY / 2) &&
+		mousePos.y >= fPosY - (fSizeY / 2))
 	{
 		return true;
 	}
@@ -82,7 +92,7 @@ bool CRectTransform::IsMouseInRect()
 void CRectTransform::SetTransformMat(RECTTRANSFORMDESC _desc)
 {
 	m_TransformDesc = _desc;
-	
+
 	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
 	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
 
@@ -125,5 +135,19 @@ void CRectTransform::SetTransformMat(_float4x4 _mat)
 void CRectTransform::SetPosition(_float x, _float y)
 {
 	RECTTRANSFORMDESC newDesc = { x, y, m_TransformDesc.sizeX, m_TransformDesc.sizeY };
+	SetTransformMat(newDesc);
+}
+
+void CRectTransform::SetClientPosition(_float x, _float y)
+{
+	int curWindowSizeX = (int)m_pEngine->GetCurrentWindowSize().x;
+	int curWindowSizeY = (int)m_pEngine->GetCurrentWindowSize().y;
+	float defaultWindowSizeX = 1280.f;
+	float defaultWindowSizeY = 720.f;
+
+	_float newX = x * (defaultWindowSizeX / curWindowSizeX);
+	_float newY = y * (defaultWindowSizeY / curWindowSizeY);
+
+	RECTTRANSFORMDESC newDesc = { newX, newY, m_TransformDesc.sizeX, m_TransformDesc.sizeY };
 	SetTransformMat(newDesc);
 }

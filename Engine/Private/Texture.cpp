@@ -29,15 +29,14 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, string pTextureFilePath
 	m_FilePath = pTextureFilePath;
 
 	m_iNumTextures = iNumTextures;
-
-	_tchar			szTextureFileName[MAX_PATH] = L"";
+	_tchar			szFullPath[MAX_PATH] = TEXT("");
 
 	for (_int i = 0; i < iNumTextures; ++i)
 	{
 		ComRef<ID3D11ShaderResourceView>			pShaderResourceView = nullptr;
-
 		wstring ws(pTextureFilePath.begin(), pTextureFilePath.end());
 		const _tchar* path = ws.c_str();
+		wsprintf(szFullPath, path, i);
 
 		DirectX::ScratchImage				Image;
 
@@ -46,13 +45,13 @@ HRESULT CTexture::InitializePrototype(TEXTURETYPE eType, string pTextureFilePath
 		switch (eType)
 		{
 		case TYPE_DDS:
-			hr = DirectX::LoadFromDDSFile(path, DirectX::DDS_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromDDSFile(szFullPath, DirectX::DDS_FLAGS_NONE, nullptr, Image);
 			break;
 		case TYPE_TGA:
-			hr = DirectX::LoadFromTGAFile(path, nullptr, Image);
+			hr = DirectX::LoadFromTGAFile(szFullPath, nullptr, Image);
 			break;
 		case TYPE_WIC:
-			hr = DirectX::LoadFromWICFile(path, DirectX::WIC_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromWICFile(szFullPath, DirectX::WIC_FLAGS_NONE, nullptr, Image);
 			break;
 		}
 

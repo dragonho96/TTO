@@ -17,6 +17,8 @@
 #include "CapsuleCollider.h"
 #pragma endregion
 
+static string prefabPath = "../../Assets/Prefabs/";
+
 CSceneSerializer::CSceneSerializer()
 	: m_pEngine(CEngine::GetInstance())
 {
@@ -102,11 +104,7 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 				deserializedObject = DeserializeUI(obj);
 			else
 				deserializedObject = DeserializeObject(obj);
-
-
 		}
-
-		
 	}
 	if (gameObjects)
 	{
@@ -127,6 +125,9 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 			}
 		}
 	}
+
+	/* Prepare prefabs*/
+	DeserializePrefab();
 	return true;
 }
 
@@ -336,10 +337,15 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 
 }
 
-CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
+
+CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj, _bool bSpawn)
 {
+	uint64_t uuid = 0;
+	if (!bSpawn)
+		uuid = obj["UUID"].as<uint64_t>();
+
 	auto name = obj["Name"].as<string>();
-	auto uuid = obj["UUID"].as<uint64_t>();
+	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
 
@@ -355,12 +361,12 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 	{
 		CRectTransform::RECTTRANSFORMDESC desc;
 
-		auto sequence = transformCom["Position"];
-		desc.posX = sequence[0].as<float>();
-		desc.posY = sequence[1].as<float>();
-		sequence = transformCom["Size"];
-		desc.sizeX = sequence[0].as<float>();
-		desc.sizeY = sequence[1].as<float>();
+		auto pos = transformCom["Position"];
+		desc.posX = pos[0].as<float>();
+		desc.posY = pos[1].as<float>();
+		auto size = transformCom["Size"];
+		desc.sizeX = size[0].as<float>();
+		desc.sizeY = size[1].as<float>();
 
 		dynamic_cast<CEmptyUI*>(deserializedObject)->SetRectTransform(desc);
 	}
@@ -416,10 +422,14 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj)
 
 }
 
-CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
+CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 {
+	_uint uuid = 0;
+	if (!bSpawn)
+		_uint uuid = obj["UUID"].as<uint64_t>();
+
 	auto name = obj["Name"].as<string>();
-	auto uuid = obj["UUID"].as<uint64_t>();
+	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
 
@@ -484,7 +494,6 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			// dynamic_cast<CBoxCollider*>(pCollider)->SetSize(size);
 			dynamic_cast<CBoxCollider*>(pCollider)->SetUpRigidActor(&size, desc);
 		}
 		else if (type == "Sphere")
@@ -495,7 +504,6 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			_float radius = colliderCom["Radius"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			//dynamic_cast<CSphereCollider*>(pCollider)->SetSize(radius);
 			dynamic_cast<CSphereCollider*>(pCollider)->SetUpRigidActor(&radius, desc);
 		}
 		else if (type == "Capsule")
@@ -508,7 +516,6 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 			capsuleSize.second = colliderCom["Height"].as<float>();
 			CComponent* pCollider = deserializedObject->GetComponent("Com_Collider");
 			dynamic_cast<CCollider*>(pCollider)->SetRelativePos(center);
-			//dynamic_cast<CCapsuleCollider*>(pCollider)->SetSize(capsuleSize);
 			dynamic_cast<CCapsuleCollider*>(pCollider)->SetUpRigidActor(&capsuleSize, desc);
 		}
 	}
@@ -538,7 +545,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		string meshFileName = modelCom["MeshFileName"].as<string>();
 		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
-		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, "", false, deserializedObject->GetComponent("Com_Transform"));
+		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, "", hasCollider, deserializedObject->GetComponent("Com_Transform"));
 		deserializedObject->AddModelComponent(0, pModel);
 		//if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
 		//	MSG_BOX("Failed to AddComponent Prototype_Model");
@@ -548,5 +555,153 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj)
 		//pMesh->CreateBuffer(meshFilePath, meshFileName);
 	}
 
+	return deserializedObject;
+}
+
+void CSceneSerializer::SerializePrefab(CGameObject * obj)
+{
+	YAML::Emitter out;
+
+	out << YAML::BeginMap;
+	out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+	out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
+
+	out << YAML::BeginMap;
+
+	out << YAML::Key << "Name" << YAML::Value << obj->GetName();
+	out << YAML::Key << "UUID" << YAML::Value << obj->GetUUID();
+	out << YAML::Key << "Active" << YAML::Value << obj->IsActive();
+	out << YAML::Key << "Layer" << YAML::Value << obj->GetLayer();
+
+	if (dynamic_cast<CEmptyGameObject*>(obj))
+		SerializeObject(out, obj);
+	else
+		SerializeUI(out, obj);
+
+	if (0 < obj->GetChildren().size())
+	{
+		out << YAML::Key << "Children";
+		out << YAML::BeginSeq;
+
+
+
+		list<CGameObject*> children = obj->GetChildren();
+		for (auto& child : children)
+		{
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "Name" << YAML::Value << child->GetName();
+			out << YAML::Key << "UUID" << YAML::Value << child->GetUUID();
+			out << YAML::Key << "Active" << YAML::Value << child->IsActive();
+			out << YAML::Key << "Layer" << YAML::Value << child->GetLayer();
+
+			if (dynamic_cast<CEmptyGameObject*>(child))
+				SerializeObject(out, child);
+			else
+				SerializeUI(out, child);
+
+			out << YAML::EndMap;
+		}
+
+
+		out << YAML::EndSeq;
+	}
+
+	out << YAML::EndMap;
+
+	out << YAML::EndSeq;
+	out << YAML::EndMap;
+
+	std::ofstream fout(prefabPath + obj->GetName() + ".prefab");
+	fout << out.c_str();
+}
+
+void CSceneSerializer::DeserializePrefab()
+{
+	// get all file name in directory
+	
+	for (auto& iter : FILESYSTEM::directory_iterator(prefabPath))
+	{
+		FILESYSTEM::path filePath = iter.path();
+		if (filePath.extension().string() != ".prefab")
+			continue;
+
+		string strFilePath = iter.path().string();
+		string fileName = iter.path().stem().string();
+		
+		std::ifstream stream(strFilePath);
+		std::stringstream strStream;
+		strStream << stream.rdbuf();
+
+		YAML::Node data = YAML::Load(strStream.str());
+
+		m_pEngine->AddPrefab(fileName, data);
+	}
+	return;
+}
+
+CGameObject * CSceneSerializer::SpawnPrefab(YAML::Node data)
+{
+	if (!data["Scene"])
+		return false;
+	CGameObject* deserializedObject = nullptr;
+
+	string SceneName = data["Scene"].as<string>();
+
+	auto gameObjects = data["GameObjects"];
+	if (gameObjects)
+	{
+		for (auto obj : gameObjects)
+		{
+
+			if (obj["Type"].as<string>() == "UI")
+				deserializedObject = DeserializeUI(obj, true);
+			else
+				deserializedObject = DeserializeObject(obj, true);
+
+			auto children = obj["Children"];
+			if (children)
+			{
+				CGameObject* pChildObj = nullptr;
+
+				for (auto& child : children)
+				{
+					if (child["Type"].as<string>() == "UI")
+					{
+						pChildObj = DeserializeUI(child, true);
+						dynamic_cast<CEmptyUI*>(pChildObj)->SetParent(deserializedObject);
+					}
+					else
+					{
+						dynamic_cast<CEmptyGameObject*>(pChildObj)->SetParent(deserializedObject);
+						pChildObj = DeserializeObject(child, true);
+					}
+
+					pChildObj->SetParent(deserializedObject);
+					deserializedObject->AddChild(pChildObj);
+				}
+			}
+		}
+	}
+
+	//if (gameObjects)
+	//{
+	//	for (auto obj : gameObjects)
+	//	{
+	//		auto children = obj["Children"];
+	//		if (children)
+	//		{
+	//			CGameObject* parent = m_pEngine->FindGameObjectWithUUID(obj["UUID"].as<uint64_t>());
+	//			int seqSize = children.size();
+	//			for (int i = 0; i < children.size(); ++i)
+	//			{
+	//				uint64_t uuid = children[i].as<uint64_t>();
+	//				CGameObject* child = nullptr;
+	//				if (child = m_pEngine->FindGameObjectWithUUID(uuid))
+	//					parent->AddChild(child);
+	//			}
+	//		}
+	//	}
+	//}
 	return deserializedObject;
 }

@@ -1,0 +1,26 @@
+EquipmentType: Backpack 
+Equipments:
+  - Name: ROC
+    Texture: ..\..\Assets\Textures\Backpacks\ROC.tga
+    Background: it is ROC
+    Weight: 1.25
+    Inventory:
+      - [4, 4, 1]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: ALICE BACKPACK
+    Texture: ..\..\Assets\Textures\Backpacks\AliceBackpack.tga
+    Background: it is ALICE BACKPACK
+    Weight: 2.72
+    Inventory:
+      - [5, 4, 1]
+    Mobility: 1.00
+    Dexterity: 1.00
+  - Name: PATROL PACK
+    Texture: ..\..\Assets\Textures\Backpacks\PatrolPack.tga
+    Background: it is PATROL PACK
+    Weight: 1.75
+    Inventory:
+      - [3, 4, 1]
+    Mobility: 1.00
+    Dexterity: 1.00

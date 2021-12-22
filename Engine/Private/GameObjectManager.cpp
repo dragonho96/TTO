@@ -1,6 +1,7 @@
 #include "..\public\GameObjectManager.h"
 #include "Layer.h"
 #include "GameObject.h"
+#include "SceneSerializer.h"
 
 IMPLEMENT_SINGLETON(CGameObjectManager)
 
@@ -140,6 +141,20 @@ CGameObject * CGameObjectManager::FindGameObjectWithName(string name)
 	auto find = m_pNameObjects.find(name);
 	if (find != m_pNameObjects.end())
 		return find->second;
+
+	return nullptr;
+}
+
+void CGameObjectManager::AddPrefab(string name, YAML::Node node)
+{
+	m_pPrefabs.emplace(name, node);
+}
+
+CGameObject * CGameObjectManager::SpawnPrefab(string name)
+{
+	CSceneSerializer serializer;
+	if (m_pPrefabs[name])
+		return serializer.SpawnPrefab(m_pPrefabs[name]);
 
 	return nullptr;
 }

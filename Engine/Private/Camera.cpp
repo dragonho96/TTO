@@ -18,8 +18,6 @@ HRESULT CCamera::InitializePrototype()
 {
 	__super::InitializePrototype();
 
-
-
 	return S_OK;
 }
 

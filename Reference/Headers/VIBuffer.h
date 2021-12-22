@@ -18,6 +18,9 @@ public:
 	virtual HRESULT RenderDebug(_float4x4 pxMat);
 	virtual HRESULT RenderDebug(_float3 relativePos);
 
+public:
+	CShader*	GetShader() { return m_pShader.get(); }
+
 protected: /* For.Vertex Buffer */
 	//ID3D11Buffer*				m_pVB = nullptr;
 	ComRef<ID3D11Buffer>		m_pVB = nullptr;
@@ -43,10 +46,10 @@ protected:
 	ID3DX11Effect*				m_pEffect = nullptr;
 
 protected:
-	Scope<class CShader>	m_pShader;
+	Ref<CShader>				m_pShader;
 
 protected:
-	void*				m_pVertices = nullptr;
+	void*						m_pVertices = nullptr;
 	class CTransform*			m_pObjTransform = nullptr;
 protected:
 	HRESULT Create_Buffers();

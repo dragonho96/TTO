@@ -1,14 +1,17 @@
 #include "..\Public\Collider.h"
+#include "Engine.h"
 
 USING(Engine)
 
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
+	, m_pEngine(CEngine::GetInstance())
 {
 }
 
 CCollider::CCollider(const CCollider & rhs)
 	: CComponent(rhs)
+	, m_pEngine(CEngine::GetInstance())
 	, m_RigidBodyDesc(rhs.m_RigidBodyDesc)
 {
 }

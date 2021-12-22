@@ -51,7 +51,9 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
-	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
+	// m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/comic_sans_ms_16.spritefont");
+	// m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/UAV-OSD-Sans-Mono.spritefont");
+	m_pSpriteFont = make_unique<DirectX::SpriteFont>(m_pDevice.Get(), L"../../Assets/Fonts/UAV-OSD-Mono12.spritefont");
 
 
 	Initialize(iWidth, iHeight);
@@ -154,7 +156,8 @@ void CGraphicDevice::Render()
 
 void CGraphicDevice::RenderClient()
 {
-	// m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
+	// TODO: Call OMSetRenderTargets for ImGui
+	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 }
 
@@ -230,7 +233,7 @@ HRESULT CGraphicDevice::ChangeResolution(_uint iWidth, _uint iHeight)
 	m_pDeviceContext->ClearState();
 	m_pBackBufferRTV.Reset();
 	m_pBackBufferRTV2.Reset();
-	//m_pShaderResourceView.Reset();
+	m_pShaderResourceView.Reset();
 	m_pDepthStencilRTV.Reset();
 	//if (g_pConstantBuffer) g_pConstantBuffer.Reset();
 	//if (g_pVertexBuffer) g_pVertexBuffer.Reset();

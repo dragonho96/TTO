@@ -19,6 +19,9 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void SetDead();
+	_bool isDead() { return m_bDead; }
+public:
 	/* Getter Setter Name for Tool Inspector */
 	string GetName() { return m_Name; }
 	void SetName(string name) { m_Name = name; }
@@ -72,8 +75,7 @@ public:
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;
-	void SetDead() { m_bDead = true; }
-	_bool isDead() { return m_bDead; }
+
 };
 
 END

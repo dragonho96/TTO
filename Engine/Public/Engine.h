@@ -8,6 +8,7 @@
 #include "Sound.h"
 #include "ScriptObjectManager.h"
 #include "LightManager.h"
+#include "PxManager.h"
 
 BEGIN(Engine)
 
@@ -83,6 +84,9 @@ public:
 	void AddGameObjectWithUUID(uint64_t uuid, CGameObject* pObj);
 	CGameObject* FindGameObjectWithName(string name);
 	CGameObject* FindGameObjectWithUUID(uint64_t uuid);
+
+	void AddPrefab(string name, YAML::Node node);
+	CGameObject* SpawnPrefab(string name);
 #pragma endregion
 
 #pragma region SCRIPTOBJECT
@@ -142,13 +146,17 @@ public:
 #pragma region PHYSX
 	void					PxInitialize();
 	void					UpdatePx(_double dDeltaTime);
+
 	PxPhysics*				GetPhysics();
 	PxMaterial*				GetMaterial();
 	PxControllerManager*	GetControllerManager();
-	void					AddActor(PxRigidActor* pActor);
-	void					AddAggregateActor(PxRigidActor* pActor);
 	PxScene*				GetScene();
 	PxCooking*				GetCooking();
+	void					AddActor(PxRigidActor* pActor);
+	void					AddAggregateActor(PxRigidActor* pActor);
+
+	_bool					Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer& hit);
+
 #pragma endregion
 
 private:

@@ -1,0 +1,1050 @@
+Scene: Untitled
+GameObjects:
+  - Name: Weight
+    UUID: 1159453446327318583
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 327.781097]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3488741111903446007
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 244.765549]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 12782937878656165500
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 410.796692]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: ItemSelectButton1
+    UUID: 12395590112999480506
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [930, 294.256317]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11958503899241948692
+      - 1159453446327318583
+      - 1002104511800707750
+      - 8478798759154447911
+  - Name: ItemSelectButton0
+    UUID: 16901477521903793229
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [930, 211.240799]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 4837474837565533316
+      - 3488741111903446007
+      - 4295213939393850796
+      - 6450886089572573575
+  - Name: ItemSelectButton2
+    UUID: 9932391712204584039
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [930, 377.271912]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 3865072540178768369
+      - 12782937878656165500
+      - 17984762815910856734
+      - 16864335864421968479
+  - Name: PrimaryButton
+    UUID: 12093147603812936211
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 100]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 17541984327254566941
+      - 16179789431088241540
+      - 6516057895914212887
+      - 1300512098907578702
+      - 17292240881584331459
+  - Name: SecondaryButton
+    UUID: 3382959932288473809
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 270]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 16149360133127932685
+      - 1870186138951882300
+      - 2410069680909768497
+      - 6219745485958422700
+      - 6309290761446302672
+  - Name: GrenadeButton
+    UUID: 16919542768826791758
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 450]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 4533891749248565758
+      - 3053456580877667598
+      - 8200255700669287446
+      - 3238548532915793255
+      - 10602343933462053726
+  - Name: ToolButton
+    UUID: 7710187302178408541
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 560]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 1016241581322964420
+      - 16258672536726813124
+      - 4573071905662044804
+      - 5667078025410041942
+      - 8992064765472229245
+  - Name: Name
+    UUID: 11958503899241948692
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [885.25354, 286.273254]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 1002104511800707750
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [982.327576, 265.520111]
+      Size: [40, 20]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.300000012, 0.300000012]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 8478798759154447911
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [932.041809, 299.045654]
+      Size: [130, 50]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\MP5.tga
+      Color: [1, 1, 1, 1]
+  - Name: Name
+    UUID: 4837474837565533316
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [885.25354, 203.257736]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 4295213939393850796
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [982.327576, 182.504593]
+      Size: [40, 20]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.300000012, 0.300000012]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 6450886089572573575
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [932.041809, 216.030136]
+      Size: [130, 50]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\MP5.tga
+      Color: [1, 1, 1, 1]
+  - Name: ItemSelectWindow
+    UUID: 8043113038690804051
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [856.096069, 172.925949]
+      Size: [1, 1]
+    Children:
+      - 10468354878641465680
+      - 16901477521903793229
+      - 12395590112999480506
+      - 9932391712204584039
+      - 448453972483024801
+      - 6878301570081682436
+  - Name: WindowBackground
+    UUID: 10468354878641465680
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [1005.4295, 321.396118]
+      Size: [300, 300]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+  - Name: Name
+    UUID: 17541984327254566941
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [128.666718, 79.246048]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 16179789431088241540
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [204.857178, 64.878006]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 6516057895914212887
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [125.619141, 139.911285]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 1300512098907578702
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [127.142914, 144.700653]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 17292240881584331459
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [148.476227, 99.9999695]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: Name
+    UUID: 16149360133127932685
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [128.666718, 249.246048]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 1870186138951882300
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [204.857178, 234.878006]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 2410069680909768497
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [125.619141, 309.911285]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 6219745485958422700
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [127.142914, 314.700653]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 6309290761446302672
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [148.476227, 269.999969]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: Name
+    UUID: 4533891749248565758
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [128.666718, 429.246033]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 3053456580877667598
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [204.857178, 414.877991]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 8200255700669287446
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [125.619141, 489.911285]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 3238548532915793255
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [127.142914, 494.700653]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 10602343933462053726
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [148.476227, 449.999969]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: Name
+    UUID: 1016241581322964420
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [128.666718, 539.246033]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 16258672536726813124
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [204.857178, 524.877991]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 4573071905662044804
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [125.619141, 599.911255]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 5667078025410041942
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [127.142944, 604.700684]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 8992064765472229245
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [148.476227, 560]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: Name
+    UUID: 3865072540178768369
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [885.25354, 369.288849]
+      Size: [50, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 17984762815910856734
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [982.327576, 348.535706]
+      Size: [40, 20]
+    Com_Text:
+      Text: Cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.300000012, 0.300000012]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 16864335864421968479
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [932.041809, 382.061249]
+      Size: [130, 50]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\MP5.tga
+      Color: [1, 1, 1, 1]
+  - Name: HeadgearButton
+    UUID: 14453886951402215434
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [362.381683, 99.4892273]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 12281869673548191710
+      - 10256489559965065552
+      - 9824066396620066818
+      - 4864231268442313388
+      - 12280464569555256866
+  - Name: Name
+    UUID: 12281869673548191710
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [341.048401, 78.7352753]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 10256489559965065552
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [417.238861, 64.3672333]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 9824066396620066818
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [338.000824, 139.400513]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 4864231268442313388
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [339.524597, 144.18988]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 12280464569555256866
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [360.85791, 99.4891968]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: TorsoButton
+    UUID: 867133266680222004
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [362.381561, 208.047943]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 18383958584386492703
+      - 17802834579776427699
+      - 17043728531729954372
+      - 2927922534131386818
+      - 714970714401830291
+  - Name: Name
+    UUID: 18383958584386492703
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [341.048279, 187.293991]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 17802834579776427699
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [417.238739, 172.925949]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 17043728531729954372
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [338.000702, 247.959229]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 2927922534131386818
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [339.524475, 252.748596]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 714970714401830291
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [360.857788, 208.047913]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: LegsButton
+    UUID: 6018288715899734704
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [362.381836, 319.799744]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11774193104627637409
+      - 14352363958527056575
+      - 5384137259605339095
+      - 16919273915160538760
+      - 8503803453254296030
+  - Name: Name
+    UUID: 11774193104627637409
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [341.048553, 299.045776]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 14352363958527056575
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [417.239014, 284.677734]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 5384137259605339095
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [338.000977, 359.711029]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 16919273915160538760
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [339.52475, 364.500397]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 8503803453254296030
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [360.858063, 319.799713]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: VestButton
+    UUID: 4831229900035772633
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [362.381683, 437.936951]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11514449600283008528
+      - 6145444366993586287
+      - 8775193429220685961
+      - 17905412065509954818
+      - 7373256874497846904
+  - Name: Name
+    UUID: 11514449600283008528
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [341.048401, 417.182983]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 6145444366993586287
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [417.238861, 402.814941]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 8775193429220685961
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [338.000824, 477.848236]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 17905412065509954818
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [339.524597, 482.637604]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 7373256874497846904
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [360.85791, 437.93692]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: BackpackButton
+    UUID: 1282425459013040759
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [360.857819, 554.478149]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 14350697810466315860
+      - 4747138975059302466
+      - 8168630893760139800
+      - 18168949951079455987
+      - 4138014352478888062
+  - Name: Name
+    UUID: 14350697810466315860
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [339.524536, 533.724182]
+      Size: [100, 50]
+    Com_Text:
+      Text: Name
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Cost
+    UUID: 4747138975059302466
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [415.714996, 519.35614]
+      Size: [40, 20]
+    Com_Text:
+      Text: cost
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: TypeBackground
+    UUID: 8168630893760139800
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [336.476959, 594.389404]
+      Size: [100, 20]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.804347813, 0.524574637, 0, 1]
+  - Name: Type
+    UUID: 18168949951079455987
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [338.000732, 599.178833]
+      Size: [100, 20]
+    Com_Text:
+      Text: type
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Image
+    UUID: 4138014352478888062
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [359.334045, 554.478149]
+      Size: [130, 70]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
+      Color: [0, 0, 0, 1]
+  - Name: TextBackground
+    UUID: 448453972483024801
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [1113.61902, 204.85585]
+      Size: [190.600006, 50]
+    Com_Text:
+      Text: Background
+      Color: [0.826086938, 0.583778501, 0.0299306791, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Background
+    UUID: 6878301570081682436
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [1098.38098, 247.960068]
+      Size: [160, 100]
+    Com_Text:
+      Text: ""
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: Player
+    UUID: 11731040437082550637
+    Active: true
+    Layer: Player
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Center: [0, 0.600000024, 0]
+      Type: Capsule
+      Radius: 0.200000003
+      Height: 0.800000012
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Advent\
+      MeshFileName: cccc.fbx
+      HasCollider: false

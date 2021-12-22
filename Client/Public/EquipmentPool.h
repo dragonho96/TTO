@@ -1,0 +1,25 @@
+#pragma once
+#include "Engine.h"
+#include "Client_Defines.h"
+
+BEGIN(Client)
+class CEquipmentPool : public CBase
+{
+	DECLARE_SINGLETON(CEquipmentPool)
+private:
+	CEquipmentPool();
+	virtual ~CEquipmentPool() = default;
+public:
+	virtual void Free();
+
+public:
+	void SetUpEquipmentPool();
+
+public:
+	BASEEQUIPDESC* GetEquipment(EQUIPMENT eType, _uint iIndex = 0);
+
+private:
+	vector<vector<BASEEQUIPDESC*>> m_EquipmentPool;
+};
+
+END

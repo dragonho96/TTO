@@ -16,6 +16,31 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 }
 
+void CGameObject::SetDead()
+{
+	m_bDead = true;
+	list<CGameObject*> childrenToDelete = m_listChildren;
+	
+	if (m_pParent)
+		m_pParent->RemoveChild(this);
+
+
+	if (0 < m_listChildren.size())
+	{
+		for (auto& iter = m_listChildren.begin(); iter != m_listChildren.end();)
+		{
+			(*iter)->SetDead();
+			// Child에서 deparent하기때문에 iter를 다시 begin으로 잡아준다
+			iter = m_listChildren.begin();
+		}
+	}
+	m_listChildren.clear();
+
+
+}
+
+
+
 HRESULT CGameObject::InitializePrototype()
 {
 	return S_OK;
@@ -44,9 +69,12 @@ HRESULT CGameObject::Render()
 
 void CGameObject::SetInfo(string name, string layer, uint64_t uuid, _bool active)
 {
+	// if UUID is not 0, it means it has uuid to inherit
+	if (uuid)
+		m_UUID = uuid;
+
 	m_Name = name;
 	m_Layer = layer;
-	m_UUID = uuid;
 	m_bIsActive = active;
 	m_pEngine->AddGameObjectWithName(name, this);
 	m_pEngine->AddGameObjectWithUUID(uuid, this);
@@ -186,6 +214,7 @@ void CGameObject::Free()
 
 	m_Components.clear();
 
-	m_listChildren.clear();
+
+
 	m_pParent = nullptr;
 }

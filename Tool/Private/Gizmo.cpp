@@ -145,6 +145,20 @@ void CGizmo::LateUpdate()
 			ManipulateUI();
 	}
 
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			const char* s = (const char*)(payload->Data);
+			string fullPath = s;
+			FILESYSTEM::path filePath = FILESYSTEM::directory_entry(fullPath).path();
+			if (filePath.extension().string() == ".prefab")
+				CEngine::GetInstance()->SpawnPrefab(filePath.stem().string());
+
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	ImGui::End();
 	ImGui::PopStyleColor(1);
 

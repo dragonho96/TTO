@@ -38,6 +38,7 @@ public:
 	void					SetTransformMat(RECTTRANSFORMDESC _desc);
 	void					SetTransformMat(_float4x4 _mat);
 	void					SetPosition(_float x, _float y);
+	void					SetClientPosition(_float x, _float y);
 
 private:
 	class CEngine*				m_pEngine = nullptr;

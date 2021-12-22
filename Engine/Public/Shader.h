@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class CShader
+class ENGINE_DLL CShader
 {
 public:
 	explicit CShader(string file);

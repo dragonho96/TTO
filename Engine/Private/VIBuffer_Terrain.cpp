@@ -65,19 +65,19 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Terrain.fx");
-	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
-
+	// m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
 	return S_OK;
 }
 
 HRESULT CVIBuffer_Terrain::Render()
 {
-	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
-	_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
+	//m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
 
-	ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
-	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
+	//_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
+	//ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
+	//m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
 	__super::Render();
+
 	return S_OK;
 }
 
@@ -126,14 +126,13 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			//float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
-			float height = 0.f;
+			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			// float height = 0.f;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), 1.f - i / (m_iNumVerticesZ - 1.f));
 		}
 	}
-
 
 	/* For.D3D11_SUBRESOURCE_DATA */
 	m_VBSubResourceData.pSysMem = *pVertices;
@@ -313,6 +312,13 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = PxRigidActorExt::createExclusiveShape(*m_pTerrainActor, hfGeom, *mat);
 	shape->setLocalPose(localPose);
+
+	PxFilterData filterData;
+	filterData.word0 = CPxManager::GROUP1;
+	// filterData.word1 = CPxManager::GROUP2;
+	shape->setQueryFilterData(filterData);
+
+
 	CEngine::GetInstance()->AddActor(m_pTerrainActor);
 	delete[] hfSamples;
 }
