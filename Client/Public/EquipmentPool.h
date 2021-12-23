@@ -17,7 +17,7 @@ public:
 
 public:
 	BASEEQUIPDESC* GetEquipment(EQUIPMENT eType, _uint iIndex = 0);
-
+	BASEEQUIPDESC* FindMagazine(BASEEQUIPDESC* weaponDesc, EQUIPMENT type);
 private:
 	vector<vector<BASEEQUIPDESC*>> m_EquipmentPool;
 };

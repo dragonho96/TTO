@@ -62,8 +62,12 @@ void CEquipButtonManager::Initialize()
 
 	m_pHoverInfo = CEngine::GetInstance()->FindGameObjectWithName("HoverInfo");
 	m_pItemSelectWindow = CEngine::GetInstance()->FindGameObjectWithName("ItemSelectWindow");
+	m_pSlotIndicator = CEngine::GetInstance()->SpawnPrefab("SlotIndicator");
+	m_pSlotIndicator->SetActive(false);
+
 	m_vecItemSelectButton.reserve(3);
 
+	// Get ItemSelectButton
 	list<CGameObject*> children = m_pItemSelectWindow->GetChildren();
 	for (int i = 0; i < 3; ++i)
 	{
@@ -74,6 +78,18 @@ void CEquipButtonManager::Initialize()
 
 		if (iter != children.end())
 			m_vecItemSelectButton.emplace_back(*iter);
+	}
+
+	// Get Parameters
+	for (int i = 0; i < 5; ++i)
+	{
+		string childName = "Parameter" + to_string(i);
+		auto iter = find_if(children.begin(), children.end(), [&](CGameObject* child) {
+			return child->GetName() == childName;
+		});
+
+		if (iter != children.end())
+			m_vecParameter.emplace_back(*iter);
 	}
 }
 
@@ -125,7 +141,11 @@ void CEquipButtonManager::Update(_double deltaTime)
 		{
 			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered())
 			{
-				SetItemSelectDesc(m_eCurItemSelectType, i);
+				if (i == 1)
+				{
+					int isdf = 0;
+				}
+				SetItemSelectDesc("HoverBar", m_eCurItemSelectType, i);
 				if (CEngine::GetInstance()->IsMouseDown(0))
 				{
 					// 내가 들고있는 것과 다르다면?
@@ -164,6 +184,15 @@ void CEquipButtonManager::Update(_double deltaTime)
 	}
 	if (m_pMoveImage)
 	{
+		if (m_bHoveringSlot)
+		{
+			_uint4			itemToPlace;
+			if (m_pPlayerEquipment->ValidateSlot(m_pCopiedRemovedItem, itemToPlace, m_hoveredSlotIndex))
+				SetSlotIndicator(m_pCopiedRemovedItem, itemToPlace);
+			else
+				m_pSlotIndicator->SetActive(false);
+		}
+
 		if (CEngine::GetInstance()->IsMouseUp(0))
 		{
 			m_pMoveImage->SetDead();
@@ -178,6 +207,8 @@ void CEquipButtonManager::Update(_double deltaTime)
 					AddItemImage(itemToPlace, itemSlotPos);
 			}
 			SafeDelete(m_pCopiedRemovedItem);
+
+			m_pSlotIndicator->SetActive(false);
 		}
 		else if (CEngine::GetInstance()->IsMousePressed(0))
 		{
@@ -443,19 +474,114 @@ void CEquipButtonManager::OpenItemSelectWindow(EQUIPMENT type)
 		SetButtonText(m_vecItemSelectButton[i], equipment);
 
 		if (m_pPlayerEquipment->m_Equipments[(size_t)type]->name == equipment->name)
-			SetItemSelectDesc(type, i);
+			SetItemSelectDesc("EquipBar",type, i);
 	}
 }
 
-void CEquipButtonManager::SetItemSelectDesc(EQUIPMENT type, _uint idx)
+void CEquipButtonManager::SetItemSelectDesc(string barName, EQUIPMENT type, _uint idx)
 {
-	list<CGameObject*> children = m_pItemSelectWindow->GetChildren();
-	auto iter = find_if(children.begin(), children.end(), [&](CGameObject* child) {
-		return child->GetName() == "Background";
-	});
+	// type과 idx로 hover아이템이 뭔지 알수있음
+	// player type의 아이템과 비교
+	BASEEQUIPDESC* curEquipment = m_pPlayerEquipment->m_Equipments[(size_t)type];
+	BASEEQUIPDESC* hoverEquipment = m_pEquipmentPool->GetEquipment(type, idx);
 
-	if (iter != children.end())
-		dynamic_cast<CText*>((*iter)->GetComponent("Com_Text"))->SetString(m_pEquipmentPool->GetEquipment(type, idx)->background);
+	CGameObject* textBackground = m_pItemSelectWindow->FindChildWithName("Background");
+	if (textBackground)
+	{
+		dynamic_cast<CText*>(textBackground->GetComponent("Com_Text"))->SetString(hoverEquipment->background);
+		// SetParameters(barName,type, idx);
+	}
+
+	if (type == EQUIPMENT::PRIMARY || type == EQUIPMENT::SECONDARY)
+	{
+		m_pItemSelectWindow->FindChildWithName("TextParameter")->SetActive(true);
+
+		_float curWidthRatio = ((WEAPONDESC*)curEquipment)->rpm / 100.f;
+		_float hoverWidthRatio = ((WEAPONDESC*)hoverEquipment)->rpm / 100.f;
+		SetParameters("FIRERATE", curWidthRatio, hoverWidthRatio, 0);
+
+		curWidthRatio = ((WEAPONDESC*)curEquipment)->muzzleVelocity / 100.f;
+		hoverWidthRatio = ((WEAPONDESC*)hoverEquipment)->muzzleVelocity / 100.f;
+		SetParameters("MUZZLE VELOCITY", curWidthRatio, hoverWidthRatio, 1);
+
+		curWidthRatio = ((WEAPONDESC*)curEquipment)->recoil / 100.f;
+		hoverWidthRatio = ((WEAPONDESC*)hoverEquipment)->recoil / 100.f;
+		SetParameters("RECOIL", curWidthRatio, hoverWidthRatio, 2);
+
+		curWidthRatio = ((WEAPONDESC*)curEquipment)->accuracy / 100.f;
+		hoverWidthRatio = ((WEAPONDESC*)hoverEquipment)->accuracy / 100.f;
+		SetParameters("ACCURACY", curWidthRatio, hoverWidthRatio, 3);
+
+		curWidthRatio = ((WEAPONDESC*)curEquipment)->handling / 100.f;
+		hoverWidthRatio = ((WEAPONDESC*)hoverEquipment)->handling / 100.f;
+		SetParameters("HANDLING", curWidthRatio, hoverWidthRatio, 4);
+
+		for (int i = 0; i < m_vecParameter.size(); ++i)
+			m_vecParameter[i]->SetActive(true);
+	}
+	else if ((size_t)type >= (size_t)EQUIPMENT::HEADGEAR)
+	{
+		m_pItemSelectWindow->FindChildWithName("TextParameter")->SetActive(true);
+
+		_float curWidthRatio = ((GEARDESC*)curEquipment)->mobility / 100.f;
+		_float hoverWidthRatio = ((GEARDESC*)hoverEquipment)->mobility / 100.f;
+		SetParameters("MOBILITY", curWidthRatio, hoverWidthRatio, 0);
+
+		curWidthRatio = ((GEARDESC*)curEquipment)->dexterity / 100.f;
+		hoverWidthRatio = ((GEARDESC*)hoverEquipment)->dexterity / 100.f;
+		SetParameters("DEXTERITY", curWidthRatio, hoverWidthRatio, 1);
+
+		for (int i = 0; i < 2; ++i)
+			m_vecParameter[i]->SetActive(true);
+		for (int i = 2; i < 5; ++i)
+			m_vecParameter[i]->SetActive(false);
+	}
+	else
+	{
+		m_pItemSelectWindow->FindChildWithName("TextParameter")->SetActive(false);
+
+		for (int i = 0; i < m_vecParameter.size(); ++i)
+			m_vecParameter[i]->SetActive(false);
+	}
+
+
+}
+
+void CEquipButtonManager::SetParameters(string barName, _float curWidthRatio, _float hoverWidthRatio, _uint idx)
+{
+	CGameObject* name = m_vecParameter[idx]->FindChildWithName("Name");
+	CComponent* textName = name->GetComponent("Com_Text");
+	dynamic_cast<CText*>(textName)->SetString(barName);
+
+	CGameObject* defaultBar = m_vecParameter[idx]->FindChildWithName("DefaultBar");
+	CComponent* defaultTransform = defaultBar->GetComponent("Com_Transform");
+	CRectTransform::RECTTRANSFORMDESC defaultDesc = dynamic_cast<CRectTransform*>(defaultTransform)->GetTransformDesc();
+
+	if (curWidthRatio <= hoverWidthRatio)
+	{
+		SetParameterBar("HoverBar", hoverWidthRatio, idx, defaultDesc, _float4(0.f, 1.f, 0.f, 1.f));
+		SetParameterBar("EquipBar", curWidthRatio, idx, defaultDesc);
+	}
+	else
+	{
+		SetParameterBar("HoverBar", curWidthRatio, idx, defaultDesc, _float4(1.f, 0.f, 0.f, 1.f));
+		SetParameterBar("EquipBar", hoverWidthRatio, idx, defaultDesc);
+	}
+}
+
+void CEquipButtonManager::SetParameterBar(string barName, _float widthRatio, _uint idx, CRectTransform::RECTTRANSFORMDESC defaultDesc, _float4 color)
+{
+	CGameObject* hoverBar = m_vecParameter[idx]->FindChildWithName(barName);
+	CComponent* hoverTransform = hoverBar->GetComponent("Com_Transform");
+	CComponent* hoverVIBuffer = hoverBar->GetComponent("Com_VIBuffer");
+	CRectTransform::RECTTRANSFORMDESC newHoverDesc = defaultDesc;
+	newHoverDesc.sizeX = defaultDesc.sizeX * widthRatio;
+	newHoverDesc.posX = newHoverDesc.posX - ((defaultDesc.sizeX - newHoverDesc.sizeX) / 2.f);
+	dynamic_cast<CRectTransform*>(hoverTransform)->SetTransformMat(newHoverDesc);
+	if ("HoverBar" == barName)
+		dynamic_cast<CVIBuffer_RectUI*>(hoverVIBuffer)->SetColor(color);
+
+	hoverBar->LinkTranformWithParent();
 }
 
 void CEquipButtonManager::ChangeEquipment(EQUIPMENT type, BASEEQUIPDESC * equipment)
@@ -471,7 +597,7 @@ void CEquipButtonManager::ChangeEquipment(EQUIPMENT type, BASEEQUIPDESC * equipm
 	SetButtonText(GetButton(type), equipment);
 
 	// 빈 공간에 넣는다
-	for (auto iter = itemToPutIn.begin(); iter != itemToPutIn.end();++iter)
+	for (auto iter = itemToPutIn.begin(); iter != itemToPutIn.end(); ++iter)
 	{
 		AddItem(iter->first, iter->second);
 		SafeDelete(iter->first);
@@ -500,6 +626,23 @@ void CEquipButtonManager::FindHoveredSlot()
 		}
 	}
 	m_bHoveringSlot = false;
+}
+
+void CEquipButtonManager::SetSlotIndicator(BASEEQUIPDESC * desc, _uint4 itemToPlace)
+{
+	if (desc == nullptr)
+		return;
+
+	CGameObject* slot = m_InventorySlots[itemToPlace.x][itemToPlace.y][itemToPlace.z][itemToPlace.w];
+	CRectTransform::RECTTRANSFORMDESC rectDesc = dynamic_cast<CRectTransform*>(slot->GetComponent("Com_Transform"))->GetTransformDesc();
+	
+	_float2 indicatorSize = { rectDesc.sizeX * desc->slotSize.x, rectDesc.sizeY * desc->slotSize.y };
+	_float2 indicatorPos = {rectDesc.posX - (rectDesc.sizeX / 2) + ((rectDesc.sizeX * desc->slotSize.x) / 2),
+		rectDesc.posY - (rectDesc.sizeY / 2) + ((rectDesc.sizeY * desc->slotSize.y) / 2) };
+
+	CRectTransform::RECTTRANSFORMDESC slotTransform = { indicatorPos.x, indicatorPos.y, indicatorSize.x, indicatorSize.y };
+	dynamic_cast<CRectTransform*>(m_pSlotIndicator->GetComponent("Com_Transform"))->SetTransformMat(slotTransform);
+	m_pSlotIndicator->SetActive(true);
 }
 
 CGameObject * CEquipButtonManager::GetButton(EQUIPMENT type)

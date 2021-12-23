@@ -381,8 +381,18 @@ const BASEEQUIPDESC * CEquipment::GetCurrentEquipment(EQUIPMENT type)
 // Return list<_uint4> to clear image and text
 list<pair<BASEEQUIPDESC*, EQUIPMENT>> CEquipment::SetCurrentEquipment(EQUIPMENT type, BASEEQUIPDESC* equipment)
 {
+	
 	list<pair<BASEEQUIPDESC*, EQUIPMENT>> output;
 	m_Equipments[(size_t)type] = equipment;
+	// If setting primary or secondary weapons, set corresponding mag.
+	if (type == EQUIPMENT::PRIMARY || type == EQUIPMENT::SECONDARY)
+	{
+		BASEEQUIPDESC* magazine = nullptr;
+		magazine = CEquipmentPool::GetInstance()->FindMagazine(m_Equipments[(size_t)type], EQUIPMENT((size_t)type + 1));
+		if (magazine)
+			m_Equipments[(size_t)type + 1] = magazine;
+	}
+
 	if ((size_t)type >= (size_t)EQUIPMENT::HEADGEAR)
 	{
 		// 원래 있던 obj들 저장해놓는다

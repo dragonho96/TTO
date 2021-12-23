@@ -54,3 +54,19 @@ BASEEQUIPDESC * CEquipmentPool::GetEquipment(EQUIPMENT eType, _uint iIndex)
 {
 	return m_EquipmentPool[(_uint)eType][iIndex];
 }
+
+BASEEQUIPDESC * CEquipmentPool::FindMagazine(BASEEQUIPDESC * weaponDesc, EQUIPMENT type)
+{
+	string name = weaponDesc->name;
+	auto iter = find_if(m_EquipmentPool[(size_t)type].begin(), m_EquipmentPool[(size_t)type].end(), [&](BASEEQUIPDESC* magazine) {
+		if (magazine->name.find(name) != string::npos)
+			return true;
+		
+		return false;
+	});
+	
+	if (iter != m_EquipmentPool[(size_t)type].end())
+		return *iter;
+
+	return nullptr;
+}

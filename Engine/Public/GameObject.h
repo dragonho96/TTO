@@ -41,6 +41,7 @@ public:
 	void ClearChildren();
 	CGameObject* GetParent() { return m_pParent; }
 	list<CGameObject*> GetChildren() { return m_listChildren; }
+	CGameObject* FindChildWithName(string name);
 
 public:
 	_bool&	IsActive() { return m_bIsActive; }

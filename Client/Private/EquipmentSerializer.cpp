@@ -118,7 +118,10 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeWeapon(YAML::Node & node)
 	WEAPONDESC* pDesc = new WEAPONDESC();
 	DeserializeBase(node, pDesc);
 	pDesc->rpm = node["Rpm"].as<_float>();
+	pDesc->muzzleVelocity = node["MuzzleVelocity"].as<_float>();
+	pDesc->recoil = node["Recoil"].as<_float>();
 	pDesc->accuracy = node["Accuracy"].as<_float>();
+	pDesc->handling= node["Handling"].as<_float>();
 	return pDesc;
 }
 

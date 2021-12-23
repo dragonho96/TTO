@@ -72,6 +72,4 @@ _uint CCamera::LateUpdate(_double TimeDelta)
 void CCamera::Free()
 {
 	__super::Free();
-
-	SafeRelease(m_pTransformCom);
 }
