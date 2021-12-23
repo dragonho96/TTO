@@ -33,7 +33,10 @@ namespace Client
 			,rpm(rhs.rpm), accuracy(rhs.accuracy) {}
 
 		_float			rpm;
+		_float			muzzleVelocity;
+		_float			recoil;
 		_float			accuracy;
+		_float			handling;
 	}WEAPONDESC;
 
 	typedef struct tagMagazineDesc : BASEEQUIPDESC

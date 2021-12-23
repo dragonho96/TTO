@@ -133,6 +133,17 @@ void CGameObject::ClearChildren()
 	m_listChildren.clear();
 }
 
+CGameObject * CGameObject::FindChildWithName(string name)
+{
+	auto iter = find_if(m_listChildren.begin(), m_listChildren.end(), [&](CGameObject* child) {
+		return child->GetName() == name;
+	});
+	if (iter != m_listChildren.end())
+		return (*iter);
+
+	return nullptr;
+}
+
 HRESULT CGameObject::SetUpComponents(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, CComponent ** pOut, void * pArg)
 {
 	CEngine*	pEngine = GET_INSTANCE(CEngine);

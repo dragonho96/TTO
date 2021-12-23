@@ -1,5 +1,132 @@
 Scene: Untitled
 GameObjects:
+  - Name: ItemSelectButton1
+    UUID: 12395590112999480506
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [930, 294.256317]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11958503899241948692
+      - 1159453446327318583
+      - 1002104511800707750
+      - 8478798759154447911
+  - Name: ItemSelectButton0
+    UUID: 16901477521903793229
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [930, 211.240799]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 4837474837565533316
+      - 3488741111903446007
+      - 4295213939393850796
+      - 6450886089572573575
+  - Name: ItemSelectButton2
+    UUID: 9932391712204584039
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [930, 377.271912]
+      Size: [150, 80]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0, 0, 0, 1]
+    Children:
+      - 3865072540178768369
+      - 12782937878656165500
+      - 17984762815910856734
+      - 16864335864421968479
+  - Name: PrimaryButton
+    UUID: 12093147603812936211
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 100]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 17541984327254566941
+      - 16179789431088241540
+      - 6516057895914212887
+      - 1300512098907578702
+      - 17292240881584331459
+      - 5174021482754831641
+  - Name: SecondaryButton
+    UUID: 3382959932288473809
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 270]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 16149360133127932685
+      - 1870186138951882300
+      - 2410069680909768497
+      - 6219745485958422700
+      - 6309290761446302672
+      - 4920852573113509751
+  - Name: GrenadeButton
+    UUID: 16919542768826791758
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 450]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 4533891749248565758
+      - 3053456580877667598
+      - 8200255700669287446
+      - 3238548532915793255
+      - 10602343933462053726
+      - 13645909525926770231
+  - Name: ToolButton
+    UUID: 7710187302178408541
+    Active: true
+    Layer: Button
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [150, 560]
+      Size: [150, 100]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 1016241581322964420
+      - 16258672536726813124
+      - 4573071905662044804
+      - 5667078025410041942
+      - 8992064765472229245
+      - 2998650503654168551
   - Name: Weight
     UUID: 1159453446327318583
     Active: true
@@ -42,129 +169,6 @@ GameObjects:
       Color: [1, 1, 1, 1]
       Scale: [0.5, 0.5]
       LayerDepth: 0
-  - Name: ItemSelectButton1
-    UUID: 12395590112999480506
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 2
-    Com_Transform:
-      Position: [930, 294.256317]
-      Size: [150, 80]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 1]
-    Children:
-      - 11958503899241948692
-      - 1159453446327318583
-      - 1002104511800707750
-      - 8478798759154447911
-  - Name: ItemSelectButton0
-    UUID: 16901477521903793229
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 2
-    Com_Transform:
-      Position: [930, 211.240799]
-      Size: [150, 80]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 1]
-    Children:
-      - 4837474837565533316
-      - 3488741111903446007
-      - 4295213939393850796
-      - 6450886089572573575
-  - Name: ItemSelectButton2
-    UUID: 9932391712204584039
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 2
-    Com_Transform:
-      Position: [930, 377.271912]
-      Size: [150, 80]
-    Com_VIBuffer:
-      TexturePath: ""
-      Color: [0, 0, 0, 1]
-    Children:
-      - 3865072540178768369
-      - 12782937878656165500
-      - 17984762815910856734
-      - 16864335864421968479
-  - Name: PrimaryButton
-    UUID: 12093147603812936211
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 0
-    Com_Transform:
-      Position: [150, 100]
-      Size: [150, 100]
-    Com_VIBuffer:
-      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
-      Color: [0, 0, 0, 1]
-    Children:
-      - 17541984327254566941
-      - 16179789431088241540
-      - 6516057895914212887
-      - 1300512098907578702
-      - 17292240881584331459
-  - Name: SecondaryButton
-    UUID: 3382959932288473809
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 0
-    Com_Transform:
-      Position: [150, 270]
-      Size: [150, 100]
-    Com_VIBuffer:
-      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
-      Color: [0, 0, 0, 1]
-    Children:
-      - 16149360133127932685
-      - 1870186138951882300
-      - 2410069680909768497
-      - 6219745485958422700
-      - 6309290761446302672
-  - Name: GrenadeButton
-    UUID: 16919542768826791758
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 0
-    Com_Transform:
-      Position: [150, 450]
-      Size: [150, 100]
-    Com_VIBuffer:
-      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
-      Color: [0, 0, 0, 1]
-    Children:
-      - 4533891749248565758
-      - 3053456580877667598
-      - 8200255700669287446
-      - 3238548532915793255
-      - 10602343933462053726
-  - Name: ToolButton
-    UUID: 7710187302178408541
-    Active: true
-    Layer: Button
-    Type: UI
-    SortingOrder: 0
-    Com_Transform:
-      Position: [150, 560]
-      Size: [150, 100]
-    Com_VIBuffer:
-      TexturePath: ..\..\Assets\Textures\Buttons\EquipmentButton.png
-      Color: [0, 0, 0, 1]
-    Children:
-      - 1016241581322964420
-      - 16258672536726813124
-      - 4573071905662044804
-      - 5667078025410041942
-      - 8992064765472229245
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -261,12 +265,19 @@ GameObjects:
       - 9932391712204584039
       - 448453972483024801
       - 6878301570081682436
+      - 930701986414077178
+      - 12398372519550648696
+      - 1195203919133217051
+      - 1301558705023769434
+      - 11025858645720441541
+      - 15476752112787550247
+      - 11994688633682649837
   - Name: WindowBackground
     UUID: 10468354878641465680
     Active: true
     Layer: Default
     Type: UI
-    SortingOrder: 0
+    SortingOrder: 2
     Com_Transform:
       Position: [1005.4295, 321.396118]
       Size: [300, 300]
@@ -280,7 +291,7 @@ GameObjects:
     Type: UI
     SortingOrder: 1
     Com_Transform:
-      Position: [128.666718, 79.246048]
+      Position: [128.666718, 79.2460327]
       Size: [100, 50]
     Com_Text:
       Text: Name
@@ -1002,31 +1013,481 @@ GameObjects:
     Active: true
     Layer: Default
     Type: UI
-    SortingOrder: 0
+    SortingOrder: 3
     Com_Transform:
       Position: [1113.61902, 204.85585]
       Size: [190.600006, 50]
     Com_Text:
       Text: Background
       Color: [0.826086938, 0.583778501, 0.0299306791, 1]
-      Scale: [0.5, 0.5]
+      Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
   - Name: Background
     UUID: 6878301570081682436
     Active: true
     Layer: Default
     Type: UI
-    SortingOrder: 0
+    SortingOrder: 3
     Com_Transform:
-      Position: [1098.38098, 247.960068]
-      Size: [160, 100]
+      Position: [1098.38098, 233.59201]
+      Size: [160, 80]
     Com_Text:
       Text: ""
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
+  - Name: TextParameter
+    UUID: 930701986414077178
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1080.09521, 286.274902]
+      Size: [124.043999, 20]
+    Com_Text:
+      Text: Parameters
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: Parameter0
+    UUID: 12398372519550648696
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1010, 285]
+      Size: [50, 50]
+    Children:
+      - 5323737552804444481
+      - 11427584745076939957
+      - 5015466234424065262
+      - 13996056466077293174
+  - Name: Name
+    UUID: 5323737552804444481
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1061.71362, 293.093842]
+      Size: [100, 10]
+    Com_Text:
+      Text: Firerate
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: DefaultBar
+    UUID: 11427584745076939957
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1076.95166, 301.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.405797124, 0.405797124, 0.405797124, 1]
+  - Name: EquipBar
+    UUID: 5015466234424065262
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 5
+    Com_Transform:
+      Position: [1076.95166, 301.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+  - Name: HoverBar
+    UUID: 13996056466077293174
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [1076.95166, 301.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.760869563, 0, 0, 1]
+  - Name: Parameter1
+    UUID: 1195203919133217051
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1010, 305]
+      Size: [50, 50]
+    Children:
+      - 15073878529017879776
+      - 11970235997973011607
+      - 1569717396776708360
+      - 751904011611631295
+  - Name: Name
+    UUID: 15073878529017879776
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1061.71362, 313.093842]
+      Size: [100, 10]
+    Com_Text:
+      Text: Firerate
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: DefaultBar
+    UUID: 11970235997973011607
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1076.95166, 321.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.405797124, 0.405797124, 0.405797124, 1]
+  - Name: EquipBar
+    UUID: 1569717396776708360
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 5
+    Com_Transform:
+      Position: [1076.95166, 321.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+  - Name: HoverBar
+    UUID: 751904011611631295
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [1076.95166, 321.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.760869563, 0, 0, 1]
+  - Name: Parameter2
+    UUID: 1301558705023769434
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1010, 325]
+      Size: [101, 50]
+    Children:
+      - 1011178832971582500
+      - 13579147159151322716
+      - 2052609146320465739
+      - 12214518814370915216
+  - Name: Name
+    UUID: 1011178832971582500
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1061.71362, 333.093842]
+      Size: [100, 10]
+    Com_Text:
+      Text: Firerate
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: DefaultBar
+    UUID: 13579147159151322716
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1076.95166, 341.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.405797124, 0.405797124, 0.405797124, 1]
+  - Name: EquipBar
+    UUID: 2052609146320465739
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 5
+    Com_Transform:
+      Position: [1076.95166, 341.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+  - Name: HoverBar
+    UUID: 12214518814370915216
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [1076.95166, 341.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.760869563, 0, 0, 1]
+  - Name: Parameter3
+    UUID: 11025858645720441541
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1010, 345]
+      Size: [50, 50]
+    Children:
+      - 12058169879771793822
+      - 17545961181996612389
+      - 17350234552321791072
+      - 7501160770665378553
+  - Name: Name
+    UUID: 12058169879771793822
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1061.71362, 353.093842]
+      Size: [100, 10]
+    Com_Text:
+      Text: Firerate
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: DefaultBar
+    UUID: 17545961181996612389
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1076.95166, 361.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.405797124, 0.405797124, 0.405797124, 1]
+  - Name: EquipBar
+    UUID: 17350234552321791072
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 5
+    Com_Transform:
+      Position: [1076.95166, 361.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+  - Name: HoverBar
+    UUID: 7501160770665378553
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [1076.95166, 361.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.760869563, 0, 0, 1]
+  - Name: Parameter4
+    UUID: 15476752112787550247
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1010, 365]
+      Size: [50, 50]
+    Children:
+      - 16222437326743655559
+      - 8161763651190473282
+      - 4614992935714143805
+      - 3869255005811789680
+  - Name: Name
+    UUID: 16222437326743655559
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1061.71362, 373.093842]
+      Size: [100, 10]
+    Com_Text:
+      Text: Firerate
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: DefaultBar
+    UUID: 8161763651190473282
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1076.95166, 381.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.405797124, 0.405797124, 0.405797124, 1]
+  - Name: EquipBar
+    UUID: 4614992935714143805
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 5
+    Com_Transform:
+      Position: [1076.95166, 381.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.827450991, 0.58431375, 0.0313725509, 1]
+  - Name: HoverBar
+    UUID: 3869255005811789680
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 4
+    Com_Transform:
+      Position: [1076.95166, 381.918732]
+      Size: [130, 3]
+    Com_VIBuffer:
+      TexturePath: ""
+      Color: [0.760869563, 0, 0, 1]
+  - Name: AddButton
+    UUID: 5174021482754831641
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [211.523773, 134.611969]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11363651845782317704
+  - Name: Arrow
+    UUID: 11363651845782317704
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [211.523773, 134.611969]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 4920852573113509751
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047607, 307.028839]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 14171142405395375336
+  - Name: Arrow
+    UUID: 14171142405395375336
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047607, 307.028839]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 13645909525926770231
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047607, 484.235046]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 14423533990760776279
+  - Name: Arrow
+    UUID: 14423533990760776279
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047607, 484.235046]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 2998650503654168551
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047577, 595.986694]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 1733345722624922639
+  - Name: Arrow
+    UUID: 1733345722624922639
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047577, 595.986694]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: CloseButton
+    UUID: 11994688633682649837
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1145.61914, 182.505524]
+      Size: [12, 12]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
+      Color: [0, 0, 0, 1]
   - Name: Player
-    UUID: 11731040437082550637
+    UUID: 9967862499981184877
     Active: true
     Layer: Player
     Type: Object

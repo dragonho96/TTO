@@ -56,7 +56,7 @@ _uint CCamera::Update(_double TimeDelta)
 	__super::Update(TimeDelta);
 
 	m_pPipeline->Set_Transform(CPipeline::D3DTS_VIEW, m_pTransformCom->GetWorldMatrixInverse());
-	m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XM_PIDIV2, _float(1280) / 720.0f, 0.2f, 300.f));
+	m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH(/*XM_PIDIV2*//*0.25f * 3.14f*/XMConvertToRadians(60.0f), _float(1280) / 720.0f, 0.2f, 300.f));
 
 	return _uint();
 }
@@ -72,6 +72,4 @@ _uint CCamera::LateUpdate(_double TimeDelta)
 void CCamera::Free()
 {
 	__super::Free();
-
-	SafeRelease(m_pTransformCom);
 }

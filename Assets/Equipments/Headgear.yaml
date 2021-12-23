@@ -4,17 +4,17 @@ Equipments:
     Texture: ..\..\Assets\Textures\Headgears\Cap.tga
     Background: THIS IS BASEBALL CAP
     Weight: 0.66
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 95
+    Dexterity: 95
   - Name: Mk6Helmet
     Texture: ..\..\Assets\Textures\Headgears\Mk6Helmet.tga
     Background: it is Mk6Helmet
     Weight: 0.35
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 91
+    Dexterity: 99
   - Name: Balaclava
     Texture: ..\..\Assets\Textures\Headgears\Balaclava.tga
     Background: it is Balaclava
     Weight: 0.35
-    Mobility: 1.00
-    Dexterity: 1.0
+    Mobility: 94
+    Dexterity: 97

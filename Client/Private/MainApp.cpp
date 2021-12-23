@@ -62,7 +62,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_LOBBY)))
+	if (FAILED(OpenScene(SCENE_TEST)))
 		return E_FAIL;
 
 	ImGuiInitialize();

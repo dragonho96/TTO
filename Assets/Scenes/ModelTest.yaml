@@ -1,0 +1,28 @@
+Scene: Untitled
+GameObjects:
+  - Name: Player
+    UUID: 2421048852860740736
+    Active: true
+    Layer: Player
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [-179.999496, 4.68753529, 179.999893]
+      Scale: [0.999991059, 0.999995291, 0.999991059]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Player\
+      MeshFileName: player24.fbx
+      HasCollider: false
+  - Name: Empty Object
+    UUID: 7484408884702769398
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ../../Assets/Texture/Height.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp

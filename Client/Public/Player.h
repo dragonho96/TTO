@@ -27,18 +27,18 @@ public:
 	_vector GetPickingDir();
 
 private:
-	CGameObject*	m_pGameObject;
-	CTransform*		m_pTransform;
-	CCollider*		m_pCollider;
-	CModel*			m_pModel;
-	PxController*	m_pController;
+	CGameObject*	m_pGameObject = nullptr;
+	CTransform*		m_pTransform = nullptr;
+	CCollider*		m_pCollider = nullptr;
+	CModel*			m_pModel = nullptr;
+	PxController*	m_pController = nullptr;
 
-	CEquipment*		m_pEquipment;
+	CEquipment*		m_pEquipment = nullptr;
 	// Inherited via IScriptObject
 
 
-	CTransform*		m_pCameraTransform;
-	CModel*			m_pModel1;
+	CTransform*		m_pCameraTransform = nullptr;
+	CModel*			m_pModel1 = nullptr;
 
 };
 

@@ -37,10 +37,11 @@ HRESULT CPlayer::Initialize()
 
 	m_pGameObject = objList.front();
 	m_pTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
-	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
-	m_pController = m_pCollider->GetController();
-	
+	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
+	if (m_pCollider)
+		m_pController = m_pCollider->GetController();
+
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
@@ -62,7 +63,9 @@ HRESULT CPlayer::Initialize()
 
 void CPlayer::Update(_double deltaTime)
 {
-	return;
+	if (!m_pGameObject)
+		return;
+
 	if (m_pController)
 	{
 		// Look Vector
@@ -170,8 +173,11 @@ void CPlayer::Update(_double deltaTime)
 
 	if (CEngine::GetInstance()->IsKeyDown('9'))
 	{
-		m_pCollider->ReleaseController();
-		m_pController = nullptr;
+		if (m_pController)
+		{
+			m_pCollider->ReleaseController();
+			m_pController = nullptr;
+		}
 		m_pModel->SetRagdollSimulate(true);
 	}
 	if (CEngine::GetInstance()->IsKeyDown('8'))
@@ -184,7 +190,6 @@ void CPlayer::Update(_double deltaTime)
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
-	return ;
 	// Ragdoll Anim
 
 	static int anim = 0;

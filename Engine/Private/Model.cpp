@@ -54,13 +54,13 @@ HRESULT CModel::Initialize(void * pArg)
 
 	m_bSimulateRagdoll = false;
 
-	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Mesh.fx"); 
+	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Mesh.fx");
 
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
-			CreatePxMesh();
+		CreatePxMesh();
 
 	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
 
@@ -131,7 +131,7 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	ZeroMemory(m_pPolygonIndices, sizeof(POLYGONINDICES32) * m_iNumFaces);
 	m_pxIndices = new PxU32[m_iNumFaces * 3];
 	ZeroMemory(m_pxIndices, sizeof(PxU32) * m_iNumFaces * 3);
-	
+
 	m_iStride = sizeof(VTXMESH);
 
 	_uint		iStartVertexIndex = 0;
@@ -293,7 +293,7 @@ HRESULT CModel::Create_MeshContainer(aiMesh * pMesh, _uint* pStartVertexIndex, _
 		memcpy(&m_pVertices[*pStartVertexIndex].vTangent, &pMesh->mTangents[i], sizeof(_float3));
 
 		// PhysX
-		 memcpy(&m_pxVertices[*pStartVertexIndex], &pMesh->mVertices[i], sizeof(PxVec3));
+		memcpy(&m_pxVertices[*pStartVertexIndex], &pMesh->mVertices[i], sizeof(PxVec3));
 
 		++(*pStartVertexIndex);
 	}
@@ -671,60 +671,66 @@ void CModel::SetRagdollBoneDesc(BONEDESC* desc)
 	//	return;
 
 	string name = desc->pName;
-	if (name == "Pelvis" ||
-		name == "LArm" || name == "LForearm" || name == "LHand" ||
-		name == "LLeg" || name == "LShin" || name == "LFoot" ||
-		name == "RArm" || name == "RForearm" || name == "RHand" ||
-		name == "RLeg" || name == "RShin" || name == "RFoot" ||
-		name == "Neck" || name == "Head")
+	//if (name == "pelvis" ||
+	//	name == "upperarm_l" || name == "lowerarm_l" || name == "hand_l" ||
+	//	name == "thigh_l" || name == "calf_l" || name == "foot_l" ||
+	//	name == "upperarm_r" || name == "lowerarm_r" || name == "hand_r" ||
+	//	name == "thigh_r" || name == "calf_r" || name == "foot_r" ||
+	//	name == "neck_01" || name == "head")
+	if (name == "pelvis" ||
+		name == "upperarm_l" || name == "lowerarm_l" || name == "hand_l" ||
+		name == "upperarm_r" || name == "lowerarm_r" || name == "hand_r" ||
+		name == "thigh_l" || name == "calf_l" || name == "foot_l" ||
+		name == "thigh_r" || name == "calf_r" || name == "foot_r" ||
+		name == "neck_01" || name == "head")
 		m_RagdollBones.emplace(name, desc);
 }
 
 HRESULT CModel::CreateRagdollRbs()
 {
-	BONEDESC* Pelvis = m_RagdollBones["Pelvis"];
+	BONEDESC* pelvis = m_RagdollBones["pelvis"];
 
-	BONEDESC* LArm = m_RagdollBones["LArm"];
-	BONEDESC* LForearm = m_RagdollBones["LForearm"];
-	BONEDESC* LHand = m_RagdollBones["LHand"];
+	BONEDESC* upperarm_l = m_RagdollBones["upperarm_l"];
+	BONEDESC* lowerarm_l = m_RagdollBones["lowerarm_l"];
+	BONEDESC* hand_l = m_RagdollBones["hand_l"];
 
-	BONEDESC* LLeg = m_RagdollBones["LLeg"];
-	BONEDESC* LShin = m_RagdollBones["LShin"];
-	BONEDESC* LFoot = m_RagdollBones["LFoot"];
+	BONEDESC* thigh_l = m_RagdollBones["thigh_l"];
+	BONEDESC* calf_l = m_RagdollBones["calf_l"];
+	BONEDESC* foot_l = m_RagdollBones["foot_l"];
 
-	BONEDESC* RLeg = m_RagdollBones["RLeg"];
-	BONEDESC* RShin = m_RagdollBones["RShin"];
-	BONEDESC* RFoot = m_RagdollBones["RFoot"];
+	BONEDESC* thigh_r = m_RagdollBones["thigh_r"];
+	BONEDESC* calf_r = m_RagdollBones["calf_r"];
+	BONEDESC* foot_r = m_RagdollBones["foot_r"];
 
-	BONEDESC* RArm = m_RagdollBones["RArm"];
-	BONEDESC* RForearm = m_RagdollBones["RForearm"];
-	BONEDESC* RHand = m_RagdollBones["RHand"];
+	BONEDESC* upperarm_r = m_RagdollBones["upperarm_r"];
+	BONEDESC* lowerarm_r = m_RagdollBones["lowerarm_r"];
+	BONEDESC* hand_r = m_RagdollBones["hand_r"];
 
-	BONEDESC* Neck = m_RagdollBones["Neck"];
-	BONEDESC* Head = m_RagdollBones["Head"];
+	BONEDESC* neck_01 = m_RagdollBones["neck_01"];
+	BONEDESC* head = m_RagdollBones["head"];
 
-	CreateCapsuleRb(LLeg, LShin, "LThigh");
-	CreateCapsuleRb(LShin, LFoot, "LCalf");
-	CreateCapsuleRb(RLeg, RShin, "RThigh");
-	CreateCapsuleRb(RShin, RFoot, "RCalf");
-	CreateCapsuleRb(LArm, LForearm, "LArm");
-	CreateCapsuleRb(LForearm, LHand, "LForearm");
-	CreateCapsuleRb(RArm, RForearm, "RArm");
-	CreateCapsuleRb(RForearm, RHand, "RForearm");
-	CreateCapsuleRb(Pelvis, Neck, "Body");
+	CreateCapsuleRb(thigh_l, calf_l, "thigh_l");
+	CreateCapsuleRb(calf_l, foot_l, "calf_l");
+	CreateCapsuleRb(thigh_r, calf_r, "thigh_r");
+	CreateCapsuleRb(calf_r, foot_r, "calf_r");
+	CreateCapsuleRb(upperarm_l, lowerarm_l, "upperarm_l");
+	CreateCapsuleRb(lowerarm_l, hand_l, "lowerarm_l");
+	CreateCapsuleRb(upperarm_r, lowerarm_r, "upperarm_r");
+	CreateCapsuleRb(lowerarm_r, hand_r, "lowerarm_r");
+	CreateCapsuleRb(pelvis, neck_01, "body");
 
-	CreateSphereRb(Head, "Head");
+	CreateSphereRb(head, "head");
 
-	CreateD6Joint("LThigh", "LCalf", "LShin");
-	CreateD6Joint("RThigh", "RCalf", "RShin");
-	CreateD6Joint("Body", "LThigh", "Pelvis");
-	CreateD6Joint("Body", "RThigh", "Pelvis");
-	CreateD6Joint("Body", "LArm", "LArm");
-	CreateD6Joint("Body", "RArm", "RArm");
-	CreateD6Joint("LArm", "LForearm", "LForearm");
-	CreateD6Joint("RArm", "RForearm", "RForearm");
+	CreateD6Joint("thigh_l", "calf_l", "calf_l");
+	CreateD6Joint("thigh_r", "calf_r", "calf_r");
+	CreateD6Joint("body", "thigh_l", "pelvis");
+	CreateD6Joint("body", "thigh_r", "pelvis");
+	CreateD6Joint("body", "upperarm_l", "upperarm_l");
+	CreateD6Joint("body", "upperarm_r", "upperarm_r");
+	CreateD6Joint("upperarm_l", "lowerarm_l", "lowerarm_l");
+	CreateD6Joint("upperarm_r", "lowerarm_r", "lowerarm_r");
 
-	CreateD6Joint("Body", "Head", "Head");
+	CreateD6Joint("body", "head", "head");
 
 
 	//for (auto& rb : m_RagdollRbs)
@@ -747,12 +753,6 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 
 	XMMatrixDecompose(&scale, &rotation, &pos, parentMat);
 	XMMatrixDecompose(&cscale, &crotation, &cpos, childMat);
-	//_matrix newParentMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&parentMat)));
-	//_matrix newChildMat = XMMatrixMultiply(m_pTransform->GetWorldMatrix(), XMMatrixTranspose(XMLoadFloat4x4(&childMat)));
-	//_matrix newParentMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&parentMat)), m_pTransform->GetWorldMatrix());
-	//_matrix newChildMat = XMMatrixMultiply(XMMatrixTranspose(XMLoadFloat4x4(&childMat)), m_pTransform->GetWorldMatrix());
-	//_matrix newParentMat = XMMatrixMultiply(XMLoadFloat4x4(&parentMat), m_pTransform->GetWorldMatrix());
-	//_matrix newChildMat = XMMatrixMultiply(XMLoadFloat4x4(&childMat), m_pTransform->GetWorldMatrix());
 
 	_matrix newParentMat = XMMatrixMultiply(XMMatrixInverse(nullptr, parentOffset), m_pTransform->GetWorldMatrix());
 	_matrix newChildMat = XMMatrixMultiply(XMMatrixInverse(nullptr, childOffset), m_pTransform->GetWorldMatrix());
@@ -793,8 +793,10 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 
 	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
 
-
+	//_vector newRotation = XMVector3InverseRotate(_vector{ 0, 0, 1}, rotation);
 	////shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+
+
 	PxTransform transform;
 	memcpy(&transform.p, &midPos, sizeof(_float3));
 	memcpy(&transform.q, &rotation, sizeof(_float4));
@@ -1002,7 +1004,7 @@ void CModel::CreatePxMesh()
 	PxRigidStatic* m_pRigidActor = pEngine->GetPhysics()->createRigidStatic(transform);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = pEngine->GetPhysics()->createShape(PxTriangleMeshGeometry(m_pPxMesh), *mat);
-	
+
 	PxFilterData filterData;
 	filterData.word0 = CPxManager::GROUP1;
 	// filterData.word1 = CPxManager::GROUP2;

@@ -1,0 +1,14 @@
+Scene: Untitled
+GameObjects:
+  - Name: SlotIndicator
+    UUID: 13914950162855741538
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 0
+    Com_Transform:
+      Position: [894.191223, 565.653381]
+      Size: [40, 40]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\InventorySlotIndicator.png
+      Color: [0, 0, 0, 1]

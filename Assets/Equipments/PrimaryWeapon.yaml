@@ -6,18 +6,27 @@ Equipments:
     Weight: 2.0
     Cost: 3
     Rpm: 90
+    MuzzleVelocity: 30
+    Recoil: 20
     Accuracy: 30
+    Handling: 40
   - Name: MP5
     Texture: ..\..\Assets\Textures\Weapons\MP5.tga
     Background: This is MP5
     Weight: 1.0
     Cost: 2
     Rpm: 68
-    Accuracy: 60
+    MuzzleVelocity: 40
+    Recoil: 15
+    Accuracy: 70
+    Handling: 90
   - Name: M24
     Texture: ..\..\Assets\Textures\Weapons\M24.tga
     Background: This is M24
     Weight: 5.0
     Cost: 6
     Rpm: 18
-    Accuracy: 90
+    MuzzleVelocity: 85
+    Recoil: 90
+    Accuracy: 65
+    Handling: 80

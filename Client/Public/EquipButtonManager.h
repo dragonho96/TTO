@@ -29,29 +29,36 @@ public:
 	void RemoveItemImage(list<_uint4>	itemToRemove, _bool bStoreImage = false);
 
 	void OpenItemSelectWindow(EQUIPMENT type);
-	void SetItemSelectDesc(EQUIPMENT type, _uint idx);
+	void SetItemSelectDesc(string barName, EQUIPMENT type, _uint idx);
+	void SetParameters(string barName, _float curWidthRatio, _float hoverWidthRatio, _uint idx);
+	void SetParameterBar(string barName, _float widthRatio, _uint idx, CRectTransform::RECTTRANSFORMDESC defaultDesc, _float4 color = {0, 0, 0, 0});
 	void ChangeEquipment(EQUIPMENT type, BASEEQUIPDESC* equipment);
 
 	void FindHoveredSlot();
-
+	void SetSlotIndicator(BASEEQUIPDESC* desc, _uint4 itemToPlace);
 	CGameObject* GetButton(EQUIPMENT type);
 private:
-	vector<CGameObject*> m_vecButtons;
+	class CEquipmentPool* m_pEquipmentPool = nullptr;
 
-	class CGameObject* m_pHoverInfo = nullptr;
-	class CGameObject* m_pItemSelectWindow = nullptr;
+	vector<CGameObject*> m_vecButtons; // Equipment Button
+	vector<CGameObject*> m_vecAddItemButtons; // Equipment Button
 	vector<CGameObject*> m_vecItemSelectButton;
+	vector<CGameObject*> m_vecParameter;
 	EQUIPMENT	m_eCurItemSelectType;
 	_bool		m_bOpenItemSelectWindow = false;
 
 	vector<vector<vector<vector<class CGameObject*>>>> m_InventorySlots;
 	list<pair<_uint4, CGameObject*>> m_ImagesInSlot;
 
-	class CEquipmentPool* m_pEquipmentPool = nullptr;
 	// PlayerEquipment
 	CEquipment*		m_pPlayerEquipment = nullptr;
-	CGameObject*	m_pMoveImage = nullptr;
 	BASEEQUIPDESC*	m_pCopiedRemovedItem = nullptr;
+private:
+	class CGameObject*	m_pHoverInfo = nullptr;
+	class CGameObject*	m_pMoveImage = nullptr;
+	class CGameObject*	m_pItemSelectWindow = nullptr;
+	class CGameObject*	m_pItemWindowCloseButton = nullptr;
+	class CGameObject*	m_pSlotIndicator = nullptr;
 private:
 	_bool	m_bHoveringSlot = false;
 	_uint4	m_hoveredSlotIndex;
