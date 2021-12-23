@@ -7,8 +7,8 @@ Equipments:
     Inventory:
       - [2, 3, 2]
       - [1, 2, 2]
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 88
+    Dexterity: 44
   - Name: ALICE VEST
     Texture: ..\..\Assets\Textures\Vests\AliceVest.tga
     Background: it is ALICE VEST
@@ -16,8 +16,8 @@ Equipments:
     Inventory:
       - [1, 1, 4]
       - [1, 2, 2]
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 96
+    Dexterity: 56
   - Name: STRAP
     Texture: ..\..\Assets\Textures\Vests\Strap.tga
     Background: it is STRAP
@@ -25,5 +25,5 @@ Equipments:
     Inventory:
       - [1, 1, 1]
       - [1, 2, 1]
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 75
+    Dexterity: 98

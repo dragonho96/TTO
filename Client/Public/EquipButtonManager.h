@@ -41,6 +41,7 @@ private:
 	class CEquipmentPool* m_pEquipmentPool = nullptr;
 
 	vector<CGameObject*> m_vecButtons; // Equipment Button
+	vector<CGameObject*> m_vecAddItemButtons; // Equipment Button
 	vector<CGameObject*> m_vecItemSelectButton;
 	vector<CGameObject*> m_vecParameter;
 	EQUIPMENT	m_eCurItemSelectType;
@@ -56,6 +57,7 @@ private:
 	class CGameObject*	m_pHoverInfo = nullptr;
 	class CGameObject*	m_pMoveImage = nullptr;
 	class CGameObject*	m_pItemSelectWindow = nullptr;
+	class CGameObject*	m_pItemWindowCloseButton = nullptr;
 	class CGameObject*	m_pSlotIndicator = nullptr;
 private:
 	_bool	m_bHoveringSlot = false;

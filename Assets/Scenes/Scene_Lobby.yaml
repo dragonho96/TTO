@@ -111,6 +111,7 @@ GameObjects:
       - 6516057895914212887
       - 1300512098907578702
       - 17292240881584331459
+      - 5174021482754831641
   - Name: SecondaryButton
     UUID: 3382959932288473809
     Active: true
@@ -129,6 +130,7 @@ GameObjects:
       - 2410069680909768497
       - 6219745485958422700
       - 6309290761446302672
+      - 4920852573113509751
   - Name: GrenadeButton
     UUID: 16919542768826791758
     Active: true
@@ -147,6 +149,7 @@ GameObjects:
       - 8200255700669287446
       - 3238548532915793255
       - 10602343933462053726
+      - 13645909525926770231
   - Name: ToolButton
     UUID: 7710187302178408541
     Active: true
@@ -165,6 +168,7 @@ GameObjects:
       - 4573071905662044804
       - 5667078025410041942
       - 8992064765472229245
+      - 2998650503654168551
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -267,6 +271,7 @@ GameObjects:
       - 1301558705023769434
       - 11025858645720441541
       - 15476752112787550247
+      - 11994688633682649837
   - Name: WindowBackground
     UUID: 10468354878641465680
     Active: true
@@ -1365,8 +1370,124 @@ GameObjects:
     Com_VIBuffer:
       TexturePath: ""
       Color: [0.760869563, 0, 0, 1]
+  - Name: AddButton
+    UUID: 5174021482754831641
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [211.523773, 134.611969]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 11363651845782317704
+  - Name: Arrow
+    UUID: 11363651845782317704
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [211.523773, 134.611969]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 4920852573113509751
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047607, 307.028839]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 14171142405395375336
+  - Name: Arrow
+    UUID: 14171142405395375336
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047607, 307.028839]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 13645909525926770231
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047607, 484.235046]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 14423533990760776279
+  - Name: Arrow
+    UUID: 14423533990760776279
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047607, 484.235046]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: AddButton
+    UUID: 2998650503654168551
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 1
+    Com_Transform:
+      Position: [213.047577, 595.986694]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemBackground.png
+      Color: [0, 0, 0, 1]
+    Children:
+      - 1733345722624922639
+  - Name: Arrow
+    UUID: 1733345722624922639
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 2
+    Com_Transform:
+      Position: [213.047577, 595.986694]
+      Size: [20, 20]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
+      Color: [0, 0, 0, 1]
+  - Name: CloseButton
+    UUID: 11994688633682649837
+    Active: true
+    Layer: Default
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [1145.61914, 182.505524]
+      Size: [12, 12]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
+      Color: [0, 0, 0, 1]
   - Name: Player
-    UUID: 15691542687553083746
+    UUID: 6108437931987364340
     Active: true
     Layer: Player
     Type: Object

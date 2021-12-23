@@ -31,7 +31,6 @@ void CEquipButtonManager::Initialize()
 	m_pPlayerEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
 	m_vecButtons.resize((size_t)EQUIPMENT::NONE);
-
 	m_vecButtons[(size_t)EQUIPMENT::PRIMARY] = CEngine::GetInstance()->FindGameObjectWithName("PrimaryButton");
 	m_vecButtons[(size_t)EQUIPMENT::SECONDARY] = CEngine::GetInstance()->FindGameObjectWithName("SecondaryButton");
 	m_vecButtons[(size_t)EQUIPMENT::GRENADE] = CEngine::GetInstance()->FindGameObjectWithName("GrenadeButton");
@@ -41,6 +40,12 @@ void CEquipButtonManager::Initialize()
 	m_vecButtons[(size_t)EQUIPMENT::LEGS] = CEngine::GetInstance()->FindGameObjectWithName("LegsButton");
 	m_vecButtons[(size_t)EQUIPMENT::VEST] = CEngine::GetInstance()->FindGameObjectWithName("VestButton");
 	m_vecButtons[(size_t)EQUIPMENT::BACKPACK] = CEngine::GetInstance()->FindGameObjectWithName("BackpackButton");
+
+	m_vecAddItemButtons.resize((size_t)EQUIPMENT::TOOL + 1);
+	m_vecAddItemButtons[(size_t)EQUIPMENT::PRIMARY] = m_vecButtons[(size_t)EQUIPMENT::PRIMARY]->FindChildWithName("AddButton");
+	m_vecAddItemButtons[(size_t)EQUIPMENT::SECONDARY] = m_vecButtons[(size_t)EQUIPMENT::SECONDARY]->FindChildWithName("AddButton");
+	m_vecAddItemButtons[(size_t)EQUIPMENT::GRENADE] = m_vecButtons[(size_t)EQUIPMENT::GRENADE]->FindChildWithName("AddButton");
+	m_vecAddItemButtons[(size_t)EQUIPMENT::TOOL] = m_vecButtons[(size_t)EQUIPMENT::TOOL]->FindChildWithName("AddButton");
 
 	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::PRIMARY], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::PRIMARY]);
 	SetButtonText(m_vecButtons[(size_t)EQUIPMENT::SECONDARY], m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::SECONDARY]);
@@ -63,11 +68,13 @@ void CEquipButtonManager::Initialize()
 	m_pHoverInfo = CEngine::GetInstance()->FindGameObjectWithName("HoverInfo");
 	m_pItemSelectWindow = CEngine::GetInstance()->FindGameObjectWithName("ItemSelectWindow");
 	m_pSlotIndicator = CEngine::GetInstance()->SpawnPrefab("SlotIndicator");
-	m_pSlotIndicator->SetActive(false);
 
-	m_vecItemSelectButton.reserve(3);
+	m_pItemSelectWindow->SetActive(false);
+	m_pSlotIndicator->SetActive(false);
+	m_pItemWindowCloseButton = m_pItemSelectWindow->FindChildWithName("CloseButton");
 
 	// Get ItemSelectButton
+	m_vecItemSelectButton.reserve(3);
 	list<CGameObject*> children = m_pItemSelectWindow->GetChildren();
 	for (int i = 0; i < 3; ++i)
 	{
@@ -81,6 +88,7 @@ void CEquipButtonManager::Initialize()
 	}
 
 	// Get Parameters
+	m_vecParameter.reserve(5);
 	for (int i = 0; i < 5; ++i)
 	{
 		string childName = "Parameter" + to_string(i);
@@ -95,6 +103,55 @@ void CEquipButtonManager::Initialize()
 
 void CEquipButtonManager::Update(_double deltaTime)
 {
+	if (m_bOpenItemSelectWindow)
+	{
+		for (int i = 0; i < m_vecItemSelectButton.size(); ++i)
+		{
+			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered())
+			{
+				if (i == 1)
+				{
+					int isdf = 0;
+				}
+				SetItemSelectDesc("HoverBar", m_eCurItemSelectType, i);
+				if (CEngine::GetInstance()->IsMouseDown(0))
+				{
+					// 내가 들고있는 것과 다르다면?
+					if (m_pPlayerEquipment->GetCurrentEquipment(m_eCurItemSelectType) !=
+						m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i))
+					{
+						// player equipment를 바꾼다
+						// slot 을 clear하고 바뀐것으로 다시 생성한다
+						ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
+						m_bOpenItemSelectWindow = false;
+						m_pItemSelectWindow->SetActive(false);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	/* Add Item*/
+	if (dynamic_cast<CEmptyUI*>(m_pItemWindowCloseButton)->IsHovered() &&
+		CEngine::GetInstance()->IsMouseDown(0))
+	{
+		m_bOpenItemSelectWindow = false;
+		m_pItemSelectWindow->SetActive(false);
+	}
+
+	for (int i = 0; i < m_vecAddItemButtons.size(); ++i)
+	{
+		if (m_vecAddItemButtons[i])
+		{
+			if (dynamic_cast<CEmptyUI*>(m_vecAddItemButtons[i])->IsHovered() &&
+				CEngine::GetInstance()->IsMouseDown(0))
+			{
+				AddItem(m_pPlayerEquipment->m_Equipments[i], EQUIPMENT(i));
+				return;
+			}
+		}
+	}
 	/* ItemSelectWindow */
 	for (int i = 0; i < m_vecButtons.size(); ++i)
 	{
@@ -103,11 +160,9 @@ void CEquipButtonManager::Update(_double deltaTime)
 			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
 				CEngine::GetInstance()->IsMouseDown(0))
 				OpenItemSelectWindow(EQUIPMENT(i));
-			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
-				CEngine::GetInstance()->IsMouseDown(1))
-				AddItem(m_pPlayerEquipment->m_Equipments[i], EQUIPMENT(i));
 		}
 	}
+
 
 	//if (dynamic_cast<CEmptyUI*>(m_pPrimaryWeaponButton)->IsHovered())
 	//{
@@ -135,32 +190,7 @@ void CEquipButtonManager::Update(_double deltaTime)
 	//		AddItem(m_pPlayerEquipment->m_Equipments[(size_t)EQUIPMENT::SECONDARYMAG], EQUIPMENT::SECONDARYMAG);
 	//	}
 	//}
-	if (m_bOpenItemSelectWindow)
-	{
-		for (int i = 0; i < m_vecItemSelectButton.size(); ++i)
-		{
-			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered())
-			{
-				if (i == 1)
-				{
-					int isdf = 0;
-				}
-				SetItemSelectDesc("HoverBar", m_eCurItemSelectType, i);
-				if (CEngine::GetInstance()->IsMouseDown(0))
-				{
-					// 내가 들고있는 것과 다르다면?
-					if (m_pPlayerEquipment->GetCurrentEquipment(m_eCurItemSelectType) !=
-						m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i))
-					{
-						// player equipment를 바꾼다
-						// slot 을 clear하고 바뀐것으로 다시 생성한다
-						ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
-						int i = 0;
-					}
-				}
-			}
-		}
-	}
+
 
 
 
@@ -476,6 +506,16 @@ void CEquipButtonManager::OpenItemSelectWindow(EQUIPMENT type)
 		if (m_pPlayerEquipment->m_Equipments[(size_t)type]->name == equipment->name)
 			SetItemSelectDesc("EquipBar",type, i);
 	}
+	// 위치 변경
+	CRectTransform* buttonTransform = dynamic_cast<CRectTransform*>(m_vecButtons[(size_t)type]->GetComponent("Com_Transform"));
+	CRectTransform::RECTTRANSFORMDESC buttonDesc = buttonTransform->GetTransformDesc();
+	// get rightmost pos
+	_float2 startPos = { buttonDesc.posX + (buttonDesc.sizeX / 2.f), buttonDesc.posY - (buttonDesc.sizeY / 2.f) };
+	startPos.x += (buttonDesc.sizeX / 25.f); // Adding Space between slots
+
+	CRectTransform* windowTransform = dynamic_cast<CRectTransform*>(m_pItemSelectWindow->GetComponent("Com_Transform"));
+	windowTransform->SetPosition(startPos.x, startPos.y);
+	m_pItemSelectWindow->SetActive(true);
 }
 
 void CEquipButtonManager::SetItemSelectDesc(string barName, EQUIPMENT type, _uint idx)

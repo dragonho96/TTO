@@ -6,19 +6,19 @@ Equipments:
     Weight: 0.66
     Inventory:
       - [1, 1, 4]
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 88
+    Dexterity: 75
   - Name: CS95 Jacket
     Texture: ..\..\Assets\Textures\Torsos\CS95_Jacket.tga
     Background: it is CS95 Jacket
     Weight: 0.35
     Inventory:
       - [1, 1, 2]
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 75
+    Dexterity: 83
   - Name: T-Shirt
     Texture: ..\..\Assets\Textures\Torsos\TShirt.tga
     Background: it is T-SHART
     Weight: 0.35
-    Mobility: 1.00
-    Dexterity: 1.00
+    Mobility: 100
+    Dexterity: 40
