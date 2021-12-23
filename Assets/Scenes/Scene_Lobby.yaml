@@ -1,47 +1,5 @@
 Scene: Untitled
 GameObjects:
-  - Name: Weight
-    UUID: 1159453446327318583
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 327.781097]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 3488741111903446007
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 244.765549]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 12782937878656165500
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 410.796692]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
   - Name: ItemSelectButton1
     UUID: 12395590112999480506
     Active: true
@@ -169,6 +127,48 @@ GameObjects:
       - 5667078025410041942
       - 8992064765472229245
       - 2998650503654168551
+  - Name: Weight
+    UUID: 1159453446327318583
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 327.781097]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3488741111903446007
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 244.765549]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 12782937878656165500
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 410.796692]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -1487,7 +1487,7 @@ GameObjects:
       TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
       Color: [0, 0, 0, 1]
   - Name: Player
-    UUID: 6108437931987364340
+    UUID: 9967862499981184877
     Active: true
     Layer: Player
     Type: Object

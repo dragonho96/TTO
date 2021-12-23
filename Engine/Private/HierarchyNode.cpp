@@ -43,8 +43,6 @@ void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex)
 
 void CHierarchyNode::Update_CombinedTransformationMatrix_Ragdoll()
 {
-	if (!strcmp(m_szNodeName, "Pelvis"))
-		int i = 0;
 	_matrix		TransformationMatrix;
 	TransformationMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
 
@@ -75,21 +73,17 @@ void CHierarchyNode::Update_CombinedTransformationMatrix_Ragdoll()
 
 		_vector addPos = vecUp * halfLength;
 
-		_vector vecScale = { 0.01f, 0.01f, 0.01f, 1 };
+		// _vector vecScale = { 0.01f, 0.01f, 0.01f, 1 };
+		_vector vecScale = { 1.f, 1.f, 1.f, 1 };
 		_vector vecPos = { transform.p.x, transform.p.y, transform.p.z, 1 };
-		if (!strcmp(m_szNodeName, "Pelvis"))
-			vecPos = vecPos - addPos;
-		//else
-		//	vecPos = vecPos + addPos;
+
+		vecPos = vecPos - addPos;
 
 		_matrix matWorld2 = XMMatrixAffineTransformation(vecScale, XMVectorSet(0.f, 0.f, 0.f, 0.f), quat, vecPos);
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, matWorld2);
 	}
 	else if (m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
-		//XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_offset) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
-	//else
-	//	XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix);
 }
 
 void CHierarchyNode::Reserve_Channels(_uint iNumAnimation)

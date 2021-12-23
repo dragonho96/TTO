@@ -24,7 +24,7 @@ private:
 	HRESULT ReadyScript();
 
 private:
-	CPathFinding* m_pPathFinding;
+	CPathFinding* m_pPathFinding = nullptr;
 };
 
 END
