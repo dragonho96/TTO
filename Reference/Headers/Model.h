@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "HierarchyNode.h"
 #include "Shader.h"
 
 BEGIN(Engine)
@@ -23,6 +24,8 @@ public:
 	virtual HRESULT Initialize(void* pArg); 
 	HRESULT Render(_uint iMaterialIndex, _uint iPassIndex);
 
+public:
+	_fmatrix Get_BoneMatrix(const char* pBoneName);
 public:
 	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
 	HRESULT Play_Animation(_double TimeDelta);
@@ -58,8 +61,17 @@ public:
 	void ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint* joint);
 	void SetRagdollRbTransform(RAGDOLLBONEDESC* ragdollBoneDesc);
 	void SetRagdollSimulate(_bool result);
-
+	_bool IsSimulatingRagdoll() { return m_bSimulateRagdoll; }
 	PxRigidDynamic* GetRagdollRb(string name);
+
+public:
+	//_matrix GetGunPosition() {
+	//	return XMMatrixMultiply(XMLoadFloat4x4(&handGunBone->OffsetMatrix), handGunBone->pHierarchyNode->Get_CombinedTransformationMatrix()); }
+
+	_matrix GetGunPosition() {
+		return handGunBone->pHierarchyNode->Get_CombinedTransformationMatrix();
+	}
+
 private:
 	void CreatePxMesh();
 
@@ -124,6 +136,10 @@ private:
 private:
 	unordered_map<string, BONEDESC*>	m_RagdollBones;
 	unordered_map<string, RAGDOLLBONEDESC*> m_RagdollRbs;
+
+private:
+	CHierarchyNode* handGunNode = nullptr;
+	BONEDESC* handGunBone = nullptr;
 
 
 public:

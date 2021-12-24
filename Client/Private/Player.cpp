@@ -45,6 +45,8 @@ HRESULT CPlayer::Initialize()
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
+	weapon = CEngine::GetInstance()->SpawnPrefab("AK74");
+
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
 	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
@@ -65,6 +67,24 @@ void CPlayer::Update(_double deltaTime)
 {
 	if (!m_pGameObject)
 		return;
+
+	static bool startRagdoll = false;
+	if (weapon)
+	{
+
+
+		_matrix gunPos;
+		if (m_pModel->IsSimulatingRagdoll())
+			gunPos = m_pModel->GetGunPosition();
+		else
+			gunPos = m_pModel->GetGunPosition() * m_pTransform->GetWorldMatrix();
+		// gunPos = XMMatrixInverse(nullptr, gunPos);
+		_float4x4 gunPos44;
+		XMStoreFloat4x4(&gunPos44, gunPos);
+
+		dynamic_cast<CTransform*>(weapon->GetComponent("Com_Transform"))->SetMatrix(gunPos44);
+	}
+
 
 	if (m_pController)
 	{

@@ -22,6 +22,14 @@ public:
 		return m_TransformationMatrix;
 	}
 
+	_matrix Get_OffsetMatrix() {
+		return XMLoadFloat4x4(&m_OffSetMatrix);
+	}
+
+	void Set_OffSetMatrix(_fmatrix OffSetMatrix) {
+		XMStoreFloat4x4(&m_OffSetMatrix, OffSetMatrix);
+	}
+
 	const _matrix Get_CombinedTransformationMatrix() const {
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
 	}
@@ -38,13 +46,12 @@ public:
 
 private:
 	char				m_szNodeName[MAX_PATH] = "";
+	_float4x4			m_OffSetMatrix;
 	_float4x4			m_TransformationMatrix;
 	_float4x4			m_CombinedTransformationMatrix;
 	CHierarchyNode*		m_pParent = nullptr;
 	_uint				m_iDepth = 0;
 	PxRigidDynamic*		m_pRagdollRb = nullptr;
-public:
-	_float4x4			m_offset;
 
 private:
 	vector<class CChannel*>			m_Channels;

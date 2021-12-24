@@ -34,6 +34,8 @@ private:
 	PxController*	m_pController = nullptr;
 
 	CEquipment*		m_pEquipment = nullptr;
+
+	CGameObject*	weapon = nullptr;
 	// Inherited via IScriptObject
 
 

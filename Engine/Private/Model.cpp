@@ -77,6 +77,8 @@ HRESULT CModel::Initialize(void * pArg)
 		{
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
 			SetRagdollBoneDesc(pBoneDesc);
+			if (pBoneDesc->pHierarchyNode == Find_HierarchyNode("item_r"))
+				handGunBone = pBoneDesc;
 		}
 	}
 
@@ -92,7 +94,19 @@ HRESULT CModel::Initialize(void * pArg)
 		0 < m_Animations.size())
 			CreateRagdollRbs();
 
+	// handGunNode = Find_HierarchyNode("ik_hand_gun");
+	// handGunNode = Find_HierarchyNode("hand_r");
+
 	return S_OK;
+}
+
+_fmatrix CModel::Get_BoneMatrix(const char * pBoneName)
+{
+	CHierarchyNode*		pNode = Find_HierarchyNode(pBoneName);
+	if (nullptr == pNode)
+		return XMMatrixIdentity();
+
+	return pNode->Get_OffsetMatrix() * pNode->Get_CombinedTransformationMatrix();
 }
 
 HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
@@ -479,12 +493,12 @@ HRESULT CModel::SetUp_SkinnedInfo()
 			_matrix		OffsetMatrix;
 			memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
 			XMStoreFloat4x4(&pBoneDesc->OffsetMatrix, XMMatrixTranspose(OffsetMatrix));
-
+			pBoneDesc->pHierarchyNode->Set_OffSetMatrix(XMMatrixTranspose(OffsetMatrix));
 			// memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
 
-			CHierarchyNode* h = pBoneDesc->pHierarchyNode;
-			// memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
-			XMStoreFloat4x4(&h->m_offset, XMMatrixTranspose(OffsetMatrix));
+			//CHierarchyNode* h = pBoneDesc->pHierarchyNode;
+			//// memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
+			//XMStoreFloat4x4(&h->m_offset, XMMatrixTranspose(OffsetMatrix));
 
 			//SetRagdollBoneDesc(pBone->mName.data, pBoneDesc);
 
