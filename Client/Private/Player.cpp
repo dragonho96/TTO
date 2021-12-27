@@ -4,6 +4,7 @@
 #include "BoxCollider.h"
 #include "HierarchyNode.h"
 #include "Engine.h"
+#include "EquipmentPool.h"
 
 USING(Client)
 
@@ -42,10 +43,16 @@ HRESULT CPlayer::Initialize()
 	if (m_pCollider)
 		m_pController = m_pCollider->GetController();
 
+	// EquipmentPool ¿¡ meshcontainer µî·Ï
+	//AssignMeshContainter();
+	//FindBones();
+
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
 
-	weapon = CEngine::GetInstance()->SpawnPrefab("AK74");
+
+
+	m_pWeaponInHand = m_pPrimaryWeapon;
 
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
@@ -69,21 +76,8 @@ void CPlayer::Update(_double deltaTime)
 		return;
 
 	static bool startRagdoll = false;
-	if (weapon)
-	{
 
-
-		_matrix gunPos;
-		if (m_pModel->IsSimulatingRagdoll())
-			gunPos = m_pModel->GetGunPosition();
-		else
-			gunPos = m_pModel->GetGunPosition() * m_pTransform->GetWorldMatrix();
-		// gunPos = XMMatrixInverse(nullptr, gunPos);
-		_float4x4 gunPos44;
-		XMStoreFloat4x4(&gunPos44, gunPos);
-
-		dynamic_cast<CTransform*>(weapon->GetComponent("Com_Transform"))->SetMatrix(gunPos44);
-	}
+	// UpdateWeaponTransform();
 
 
 	if (m_pController)
@@ -227,6 +221,48 @@ void CPlayer::LapteUpdate(_double deltaTime)
 	//m_pModel1->Play_Animation(deltaTime);
 }
 
+void CPlayer::UpdateWeaponTransform()
+{
+	m_pPrimaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::PRIMARY)->model;
+	m_pSecondaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::SECONDARY)->model;
+	m_pGrenade = m_pEquipment->GetCurrentEquipment(EQUIPMENT::GRENADE)->model;
+	m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
+
+	SetObjectTransform(m_pPrimaryWeapon, m_pHandBone);
+	SetObjectTransform(m_pSecondaryWeapon, m_pRThighBone);
+	SetObjectTransform(m_pGrenade, m_pGrenadeBone);
+	SetObjectTransform(m_pTool, m_pToolBone);
+}
+
+void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
+{
+	if (pObj)
+	{
+		_float4x4 pos;
+		_matrix matPos;
+
+		if (m_pModel->IsSimulatingRagdoll())
+			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix();
+		else
+			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+		XMStoreFloat4x4(&pos, matPos);
+
+		dynamic_cast<CTransform*>(pObj->GetComponent("Com_Transform"))->SetMatrix(pos);
+	}
+}
+
+void CPlayer::ChangeWeapon(EQUIPMENT eType, _uint iIndex)
+{
+
+}
+
+void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
+{
+	CEquipmentPool* equipmentPool = CEquipmentPool::GetInstance();
+
+	equipmentPool->GetEquipment(eType, iIndex)->mesh->SetActive(true);
+}
+
 _vector CPlayer::GetPickingDir()
 {
 	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
@@ -254,6 +290,74 @@ _vector CPlayer::GetPickingDir()
 	vRayDir = XMVector4Normalize(vRayDir);
 
 	return vRayDir;
+}
+
+void CPlayer::AssignMeshContainter()
+{
+	CEquipmentPool* equipmentPool = CEquipmentPool::GetInstance();
+
+	// HEADGEAR
+	CMeshContainer* pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_H_BaseballCap_01");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::HEADGEAR, 0, pMeshContainer);
+	pMeshContainer->SetActive(true);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_H_Mk6Helmet_03");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::HEADGEAR, 1, pMeshContainer);
+	pMeshContainer->SetActive(false);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_H_Balaclava_01");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::HEADGEAR, 2, pMeshContainer);
+	pMeshContainer->SetActive(false);
+
+	// TORSO
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_UB_BDUJacketLong_NPC");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::TORSO, 0, pMeshContainer);
+	pMeshContainer->SetActive(true);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_UB_Flora");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::TORSO, 1, pMeshContainer);
+	pMeshContainer->SetActive(false);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_UB_TShirt_NPC");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::TORSO, 2, pMeshContainer);
+	pMeshContainer->SetActive(false);
+
+	// LEGS
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_LB_BDUPants_01");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::LEGS, 0, pMeshContainer);
+	pMeshContainer->SetActive(true);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_LB_BDUPants_02");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::LEGS, 1, pMeshContainer);
+	pMeshContainer->SetActive(false);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_LB_WZ93_Trousers_01");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::LEGS, 2, pMeshContainer);
+	pMeshContainer->SetActive(false);
+
+	// VEST
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_V_6sh92");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::VEST, 0, pMeshContainer);
+	pMeshContainer->SetActive(true);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_V_AliceVest");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::VEST, 1, pMeshContainer);
+	pMeshContainer->SetActive(false);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_V_Strap");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::VEST, 2, pMeshContainer);
+	pMeshContainer->SetActive(false);
+
+	// BACKPACK
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_B_Bergen");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::BACKPACK, 0, pMeshContainer);
+	pMeshContainer->SetActive(true);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_B_AliceBackpack");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::BACKPACK, 1, pMeshContainer);
+	pMeshContainer->SetActive(false);
+	pMeshContainer = m_pModel->GetMeshContainerByName("SK_CH_B_PatrolPack");
+	equipmentPool->AssignMeshContainer(EQUIPMENT::BACKPACK, 2, pMeshContainer);
+	pMeshContainer->SetActive(false);
+}
+
+void CPlayer::FindBones()
+{
+	m_pHandBone = m_pModel->Find_Bone("item_r");
+	m_pRThighBone = m_pModel->Find_Bone("thigh_twist_01_r");
+	m_pGrenadeBone = m_pModel->Find_Bone("slot_grenade");
+	m_pToolBone = m_pModel->Find_Bone("slot_gadget");
 }
 
 void CPlayer::Render()

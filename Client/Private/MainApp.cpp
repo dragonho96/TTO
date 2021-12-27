@@ -62,6 +62,11 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
+	m_pEngine->DeserializePrefab();
+
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
 	if (FAILED(OpenScene(SCENE_TEST)))
 		return E_FAIL;
 
@@ -299,8 +304,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Text", CText::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+
 
 	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Model", CModel::Create(m_pDevice, m_pDeviceContext))))
 	//	return E_FAIL;

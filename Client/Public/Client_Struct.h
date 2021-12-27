@@ -5,7 +5,6 @@ namespace Client
 	enum class  EQUIPMENT : int { PRIMARY, PRIMARYMAG, SECONDARY, SECONDARYMAG, GRENADE, TOOL, HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
 	enum class  GEAR : int { HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
 
-
 	typedef struct tagBaseEquipDesc
 	{
 		tagBaseEquipDesc() {}
@@ -13,16 +12,18 @@ namespace Client
 			: type(rhs.type)
 			, name(rhs.name), background(rhs.background)
 			, weight(rhs.weight), cost(rhs.cost)
-			, slotSize(rhs.slotSize), texturePath(rhs.texturePath) {}
+			, slotSize(rhs.slotSize), texturePath(rhs.texturePath)
+			, model(nullptr), mesh(nullptr) {}
 
-		EQUIPMENT		type;
-		string			name;
-		string			texturePath;
-		string			background;
-		_float			weight;
-		_uint			cost;
-		_uint2			slotSize;
-		Ref<CModel>		model;
+		EQUIPMENT					type;
+		string						name;
+		string						texturePath;
+		string						background;
+		_float						weight;
+		_uint						cost;
+		_uint2						slotSize;
+		CGameObject*				model;		// for weapons and tools
+		class CMeshContainer*		mesh;		// for gears
 	}BASEEQUIPDESC;
 
 	typedef struct tagWeaponDesc : BASEEQUIPDESC

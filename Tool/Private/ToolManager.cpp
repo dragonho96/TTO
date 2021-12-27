@@ -19,7 +19,7 @@
 
 USING(Tool)
 
-static string strScene = "../../Assets/Scenes/ModelTest.yaml";
+static string strScene = "../../Assets/Scenes/Scene_Lobby.yaml";
 
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())
@@ -50,6 +50,8 @@ HRESULT CToolManager::Initialize()
 
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
+
+	m_pEngine->DeserializePrefab();
 
 	if (FAILED(OpenScene(SCENE_TOOL)))
 		return E_FAIL;

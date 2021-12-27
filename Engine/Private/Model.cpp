@@ -125,10 +125,48 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 
 	string strFullPath = pMeshFilePath + pMeshFileName;
 
-	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-	if (nullptr == m_pScene)
-		return E_FAIL;
+	//m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//if (nullptr == m_pScene)
+	//	return E_FAIL;
 
+	FILESYSTEM::path pFullPath = FILESYSTEM::directory_entry(strFullPath).path();
+	string fileName = pFullPath.stem().string();
+	string fileExtension = pFullPath.extension().string();
+	//
+	std::string path = "C:\\Users\\drago\\Documents\\GitHub\\TTO\\Assets\\Meshes\\Binary\\";
+	string strFinalFullPath = path + fileName + ".glb";
+	//ifstream fin(strFinalFullPath, (ios::in | ios::ate | ios::binary));
+	//fin.seekg(0, ios::end);   // 끝위치 이동
+	//long fileSize = fin.tellg();  // 파일사이즈 구하긔
+	//fin.seekg(0, ios::beg);   // 다시 시작으로 갖다놓긔
+
+	//unsigned char* buffer = new unsigned char[fileSize];
+
+	//fin.read((char*)buffer, fileSize);
+	//fin.close();
+
+	//m_pScene = m_Importer.ReadFileFromMemory(buffer, fileSize/*, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace*/);
+	//delete[] buffer;
+
+
+	//if (nullptr == m_pScene)
+	//{
+	//}
+
+
+	m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	if (nullptr == m_pScene)
+	{
+		m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+
+		Assimp::Exporter Exporter;
+		auto descr = Exporter.GetExportFormatDescription(10);
+		string id = descr->id;
+		if (aiReturn::aiReturn_FAILURE == Exporter.Export(m_pScene, descr->id, strFinalFullPath))
+			return E_FAIL;
+
+		m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	}
 
 	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
@@ -266,6 +304,9 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
+		if (!pMeshContainer->IsActive())
+			continue;
+
 		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 		{
 			ZeroMemory(BoneMatrices, sizeof(_matrix) * 512);
@@ -547,6 +588,22 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
 	return *iter;
 }
 
+BONEDESC * CModel::Find_Bone(string pBoneName)
+{
+	for (auto& pMeshContainer : m_MeshContainers)
+	{
+		vector<BONEDESC*>	Bones = pMeshContainer->Get_BoneDesc();
+
+		for (auto& pBoneDesc : Bones)
+		{
+			if (pBoneDesc->pHierarchyNode->Get_Name() == pBoneName)
+				return pBoneDesc;
+		}
+	}
+
+	return nullptr;
+}
+
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
 	if (m_bSimulateRagdoll)
@@ -673,6 +730,18 @@ void CModel::Add_ChannelToHierarchyNode(_uint iAnimationindex, CChannel * pChann
 
 
 
+
+CMeshContainer * CModel::GetMeshContainerByName(string name)
+{
+	auto	iter = find_if(m_MeshContainers.begin(), m_MeshContainers.end(), [&](CMeshContainer* pContainer)->bool
+	{
+		return pContainer->GetName() == name;
+	});
+	if (iter != m_MeshContainers.end())
+		return *iter;
+
+	return nullptr;
+}
 
 void CModel::SetRagdollBoneDesc(BONEDESC* desc)
 {

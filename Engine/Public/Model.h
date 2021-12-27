@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "HierarchyNode.h"
+#include "MeshContainer.h"
 #include "Shader.h"
 
 BEGIN(Engine)
@@ -45,12 +46,14 @@ private:
 	void Add_ChannelToHierarchyNode(_uint iAnimationindex, class CChannel* pChannel);
 public:
 	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
+	BONEDESC* Find_Bone(string pBoneName);
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
 	void RemoveBuffer();
 public:
 	_bool& HasMeshCollider() { return m_bMeshCollider; }
 	void SetMeshCollider(_bool value) { m_bMeshCollider = value; }
+	CMeshContainer* GetMeshContainerByName(string name);
 
 public:
 	void SetRagdollBoneDesc(BONEDESC* desc);

@@ -39,12 +39,18 @@ public:
 		return m_Bones;
 	}
 
+	string GetName() { return m_szName; }
+	
+	_bool IsActive() { return m_bActive; }
+	void SetActive(_bool result) { m_bActive = result; }
+
 private:
 	char		m_szName[MAX_PATH] = "";
 	_uint		m_iNumFaces = 0;
 	_uint		m_iStartFaceIndex = 0;
 	_uint		m_iStartVertexIndex = 0;
 	_uint		m_iMaterialIndex = 0;
+	_bool		m_bActive = true;
 
 	vector<BONEDESC*>		m_Bones;
 

@@ -381,7 +381,18 @@ const BASEEQUIPDESC * CEquipment::GetCurrentEquipment(EQUIPMENT type)
 // Return list<_uint4> to clear image and text
 list<pair<BASEEQUIPDESC*, EQUIPMENT>> CEquipment::SetCurrentEquipment(EQUIPMENT type, BASEEQUIPDESC* equipment)
 {
-	
+	// Toggle Mesh Render
+	if (nullptr != m_Equipments[(size_t)type]->mesh)
+	{
+		m_Equipments[(size_t)type]->mesh->SetActive(false);
+		equipment->mesh->SetActive(true);
+	}
+	else
+	{
+		m_Equipments[(size_t)type]->model->SetActive(false);
+		equipment->model->SetActive(true);
+	}
+
 	list<pair<BASEEQUIPDESC*, EQUIPMENT>> output;
 	m_Equipments[(size_t)type] = equipment;
 	// If setting primary or secondary weapons, set corresponding mag.

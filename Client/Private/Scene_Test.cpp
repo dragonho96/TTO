@@ -43,12 +43,11 @@ HRESULT CScene_Test::Initialize()
 {
 	__super::Initialize();
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
+	m_pEngine->DeserializeScene("../../Assets/Scenes/ModelTest.yaml");
 
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);
 	
-	m_pEngine->DeserializeScene("../../Assets/Scenes/ModelTest.yaml");
-
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 

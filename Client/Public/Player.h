@@ -24,8 +24,15 @@ public:
 	virtual void Render();
 
 public:
-	_vector GetPickingDir();
+	void UpdateWeaponTransform();
+	void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
 
+	void ChangeWeapon(EQUIPMENT eType, _uint iIndex);
+	void ChangeGear(EQUIPMENT eType, _uint iIndex);
+
+	_vector GetPickingDir();
+	void AssignMeshContainter();
+	void FindBones();
 private:
 	CGameObject*	m_pGameObject = nullptr;
 	CTransform*		m_pTransform = nullptr;
@@ -35,13 +42,19 @@ private:
 
 	CEquipment*		m_pEquipment = nullptr;
 
-	CGameObject*	weapon = nullptr;
-	// Inherited via IScriptObject
+	CGameObject*	m_pWeaponInHand = nullptr;
+	CGameObject*	m_pPrimaryWeapon = nullptr;
+	CGameObject*	m_pSecondaryWeapon = nullptr;
+	CGameObject*	m_pGrenade = nullptr;
+	CGameObject*	m_pTool = nullptr;
 
+	BONEDESC*		m_pHandBone = nullptr;
+	BONEDESC*		m_pRThighBone = nullptr;
+	BONEDESC*		m_pGrenadeBone = nullptr;
+	BONEDESC*		m_pToolBone = nullptr;
 
 	CTransform*		m_pCameraTransform = nullptr;
 	CModel*			m_pModel1 = nullptr;
-
 };
 
 END
