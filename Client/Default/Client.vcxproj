@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\EquipmentPool.h" />
     <ClInclude Include="..\Public\EquipmentSerializer.h" />
     <ClInclude Include="..\Public\Grid.h" />
+    <ClInclude Include="..\Public\IdleState.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Log.h" />
     <ClInclude Include="..\Public\MainApp.h" />
@@ -195,7 +196,9 @@
     <ClInclude Include="..\Public\Scene_Lobby.h" />
     <ClInclude Include="..\Public\Scene_Logo.h" />
     <ClInclude Include="..\Public\Scene_Test.h" />
+    <ClInclude Include="..\Public\StateMachine.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\WalkState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -222,6 +225,7 @@
     <ClCompile Include="..\Private\EquipmentPool.cpp" />
     <ClCompile Include="..\Private\EquipmentSerializer.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
+    <ClCompile Include="..\Private\IdleState.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Log.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
@@ -233,7 +237,9 @@
     <ClCompile Include="..\Private\Scene_Lobby.cpp" />
     <ClCompile Include="..\Private\Scene_Logo.cpp" />
     <ClCompile Include="..\Private\Scene_Test.cpp" />
+    <ClCompile Include="..\Private\StateMachine.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\WalkState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

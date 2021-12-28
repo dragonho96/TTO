@@ -30,6 +30,8 @@ public:
 public:
 	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
 	HRESULT Play_Animation(_double TimeDelta);
+	HRESULT Blend_Animation(_double TimeDelta);
+
 public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
@@ -107,7 +109,8 @@ private:
 
 	vector<class CAnimation*>				m_Animations;
 	_uint									m_iAnimationIndex = 0;
-
+	_uint									m_iPrevAnimationIndex = 0;
+	_float									m_fBlendTime = 0.2f;
 private:
 	//ComRef<ID3D11Buffer>			m_pVB = nullptr;
 	//ComRef<ID3D11Buffer>			m_pIB = nullptr;

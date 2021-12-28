@@ -125,16 +125,18 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 
 	string strFullPath = pMeshFilePath + pMeshFileName;
 
-	//m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-	//if (nullptr == m_pScene)
-	//	return E_FAIL;
+	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	if (nullptr == m_pScene)
+		return E_FAIL;
 
-	FILESYSTEM::path pFullPath = FILESYSTEM::directory_entry(strFullPath).path();
-	string fileName = pFullPath.stem().string();
-	string fileExtension = pFullPath.extension().string();
-	//
-	std::string path = "C:\\Users\\drago\\Documents\\GitHub\\TTO\\Assets\\Meshes\\Binary\\";
-	string strFinalFullPath = path + fileName + ".glb";
+	//FILESYSTEM::path pFullPath = FILESYSTEM::directory_entry(strFullPath).path();
+	//string fileName = pFullPath.stem().string();
+	//string fileExtension = pFullPath.extension().string();
+	////
+	//std::string path = "C:\\Users\\drago\\Documents\\GitHub\\TTO\\Assets\\Meshes\\Binary\\";
+	//string strFinalFullPath = path + fileName + ".glb";
+
+
 	//ifstream fin(strFinalFullPath, (ios::in | ios::ate | ios::binary));
 	//fin.seekg(0, ios::end);   // 끝위치 이동
 	//long fileSize = fin.tellg();  // 파일사이즈 구하긔
@@ -154,19 +156,19 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	//}
 
 
-	m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-	if (nullptr == m_pScene)
-	{
-		m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//if (nullptr == m_pScene)
+	//{
+	//	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 
-		Assimp::Exporter Exporter;
-		auto descr = Exporter.GetExportFormatDescription(10);
-		string id = descr->id;
-		if (aiReturn::aiReturn_FAILURE == Exporter.Export(m_pScene, descr->id, strFinalFullPath))
-			return E_FAIL;
+	//	Assimp::Exporter Exporter;
+	//	auto descr = Exporter.GetExportFormatDescription(10);
+	//	string id = descr->id;
+	//	if (aiReturn::aiReturn_FAILURE == Exporter.Export(m_pScene, descr->id, strFinalFullPath))
+	//		return E_FAIL;
 
-		m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-	}
+	//	m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//}
 
 	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
@@ -614,6 +616,28 @@ HRESULT CModel::Play_Animation(_double TimeDelta)
 	return S_OK;
 }
 
+HRESULT CModel::Blend_Animation(_double TimeDelta)
+{
+	m_fBlendTime += TimeDelta;
+	if (m_fBlendTime >= 0.5f)
+		m_iPrevAnimationIndex = m_iAnimationIndex;
+
+	if (m_iAnimationIndex == m_iPrevAnimationIndex)
+	{
+		m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+		return S_OK;
+	}
+
+	m_Animations[m_iPrevAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+
+
+	_float ratio = (m_fBlendTime / 0.5f);
+	m_Animations[m_iAnimationIndex]->Blend_Animation(m_Animations[m_iPrevAnimationIndex], ratio);
+
+	return S_OK;
+}
+
 HRESULT CModel::SetUp_AnimationInfo()
 {
 	_uint		iNumAnimation = m_pScene->mNumAnimations;
@@ -685,8 +709,14 @@ HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
 	if (iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
+	if (m_iAnimationIndex == iAnimationIndex)
+		return S_OK;
+
+	m_iPrevAnimationIndex = m_iAnimationIndex;
 	m_iAnimationIndex = iAnimationIndex;
 
+	// m_Animations[m_iAnimationIndex]->ResetCurrentKeyFrame();
+	m_fBlendTime = 0.f;
 	return S_OK;
 }
 
@@ -695,7 +725,8 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 	if (m_Animations.empty() || m_iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
-	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+	Blend_Animation(TimeDelta);
+	// m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 
 	for (auto& pHierarchyNodes : m_HierarchyNodes)
 		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex);

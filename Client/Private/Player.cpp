@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "..\Public\Player.h"
-#include "PxManager.h"
-#include "BoxCollider.h"
-#include "HierarchyNode.h"
 #include "Engine.h"
+#include "HierarchyNode.h"
 #include "EquipmentPool.h"
+#include "StateMachine.h"
+#include "IdleState.h"
 
 USING(Client)
 
@@ -54,6 +54,10 @@ HRESULT CPlayer::Initialize()
 
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
+
+	m_pState = CStateMachine::idle;
+	m_pState->Enter(&m_pState, m_pModel);
+
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
 	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
@@ -74,6 +78,9 @@ void CPlayer::Update(_double deltaTime)
 {
 	if (!m_pGameObject)
 		return;
+
+	m_pState->HandleInput(&m_pState, m_pModel);
+	m_pState->Update(&m_pState, m_pModel);
 
 	static bool startRagdoll = false;
 
@@ -198,27 +205,23 @@ void CPlayer::Update(_double deltaTime)
 	{
 		m_pModel->SetRagdollSimulate(false);
 	}
-	//if (CEngine::GetInstance()->IsKeyDown('0'))
-	//	m_pModel1->SetRagdollSimulate(true);
+
 }
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
 	// Ragdoll Anim
 
-	static int anim = 0;
-	if (CEngine::GetInstance()->IsKeyDown('1'))
-		anim = 0;
-	if (CEngine::GetInstance()->IsKeyDown('2'))
-		anim = 1;
-	if (CEngine::GetInstance()->IsKeyDown('3'))
-		anim = 2;
+	//static int anim = 0;
+	//if (CEngine::GetInstance()->IsKeyDown('1'))
+	//	anim = 0;
+	//if (CEngine::GetInstance()->IsKeyDown('2'))
+	//	anim = 1;
+	//if (CEngine::GetInstance()->IsKeyDown('3'))
+	//	anim = 2;
 
-	m_pModel->SetUp_AnimationIndex(anim);
+	//m_pModel->SetUp_AnimationIndex(anim);
 	m_pModel->Play_Animation(deltaTime);
-
-	//m_pModel1->SetUp_AnimationIndex(1);
-	//m_pModel1->Play_Animation(deltaTime);
 }
 
 void CPlayer::UpdateWeaponTransform()

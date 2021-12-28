@@ -13,7 +13,8 @@ public:
 	HRESULT NativeConstruct(const char* pAnimationName, _double Duration, _double TickPerSecond);
 	HRESULT Add_Channel(class CChannel* pChannel);
 	HRESULT Update_TransformationMatrices(_double TimeDelta);
-
+	HRESULT Blend_Animation(CAnimation* prevAnim, _float ratio);
+	HRESULT ResetCurrentKeyFrame();
 private:
 	char				m_AnimationName[MAX_PATH];
 	_double				m_Duration = 0.0; 

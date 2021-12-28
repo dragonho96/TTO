@@ -34,6 +34,8 @@ public:
 	void AssignMeshContainter();
 	void FindBones();
 private:
+	CTransform*		m_pCameraTransform = nullptr;
+
 	CGameObject*	m_pGameObject = nullptr;
 	CTransform*		m_pTransform = nullptr;
 	CCollider*		m_pCollider = nullptr;
@@ -41,20 +43,17 @@ private:
 	PxController*	m_pController = nullptr;
 
 	CEquipment*		m_pEquipment = nullptr;
-
 	CGameObject*	m_pWeaponInHand = nullptr;
 	CGameObject*	m_pPrimaryWeapon = nullptr;
 	CGameObject*	m_pSecondaryWeapon = nullptr;
 	CGameObject*	m_pGrenade = nullptr;
 	CGameObject*	m_pTool = nullptr;
-
 	BONEDESC*		m_pHandBone = nullptr;
 	BONEDESC*		m_pRThighBone = nullptr;
 	BONEDESC*		m_pGrenadeBone = nullptr;
 	BONEDESC*		m_pToolBone = nullptr;
 
-	CTransform*		m_pCameraTransform = nullptr;
-	CModel*			m_pModel1 = nullptr;
+	class CStateMachine*	m_pState = nullptr;
 };
 
 END
