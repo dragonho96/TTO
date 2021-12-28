@@ -97,6 +97,10 @@
     <ClInclude Include="..\Public\WalkState.h">
       <Filter>StateMachine\Walk</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RunState.h">
+      <Filter>StateMachine\Run</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CrouchState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -183,6 +187,10 @@
     <ClCompile Include="..\Private\WalkState.cpp">
       <Filter>StateMachine\Walk</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RunState.cpp">
+      <Filter>StateMachine\Run</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CrouchState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -285,6 +293,12 @@
     </Filter>
     <Filter Include="StateMachine\Walk">
       <UniqueIdentifier>{68132537-d97f-479e-8afe-97d6754b71d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Run">
+      <UniqueIdentifier>{4db48bf9-f540-4fbd-a4a7-4d3499b44b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Crouch">
+      <UniqueIdentifier>{72b53f30-571a-461f-94e1-42c163442542}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,7 @@ public:
 	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
 	HRESULT Play_Animation(_double TimeDelta);
 	HRESULT Blend_Animation(_double TimeDelta);
+	void Push_Back_Animation(class CAnimation** anim);
 
 public:
 	HRESULT Bind_Buffers();
@@ -110,7 +111,9 @@ private:
 	vector<class CAnimation*>				m_Animations;
 	_uint									m_iAnimationIndex = 0;
 	_uint									m_iPrevAnimationIndex = 0;
-	_float									m_fBlendTime = 0.2f;
+	_float									m_fBlendTime = 0.0f;
+	vector<class CChannel*>					m_vecPrevChannels;
+	_bool									m_bBlending = false;
 private:
 	//ComRef<ID3D11Buffer>			m_pVB = nullptr;
 	//ComRef<ID3D11Buffer>			m_pIB = nullptr;

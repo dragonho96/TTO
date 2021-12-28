@@ -618,24 +618,48 @@ HRESULT CModel::Play_Animation(_double TimeDelta)
 
 HRESULT CModel::Blend_Animation(_double TimeDelta)
 {
-	m_fBlendTime += TimeDelta;
-	if (m_fBlendTime >= 0.5f)
-		m_iPrevAnimationIndex = m_iAnimationIndex;
 
-	if (m_iAnimationIndex == m_iPrevAnimationIndex)
-	{
-		m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
-		return S_OK;
-	}
-
-	m_Animations[m_iPrevAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 
-
-	_float ratio = (m_fBlendTime / 0.5f);
-	m_Animations[m_iAnimationIndex]->Blend_Animation(m_Animations[m_iPrevAnimationIndex], ratio);
+	if (m_iAnimationIndex != m_iPrevAnimationIndex)
+	{
+		_float ratio = (m_fBlendTime / 0.2f);
+		m_Animations[m_iAnimationIndex]->Blend_Animation(m_Animations[m_iPrevAnimationIndex], ratio);
+		m_fBlendTime += TimeDelta;
+		if (m_fBlendTime >= 0.2f)
+			m_iPrevAnimationIndex = m_iAnimationIndex;
+	}
 
 	return S_OK;
+}
+
+void CModel::Push_Back_Animation(CAnimation** anim)
+{
+	string name = (*anim)->GetName();
+	if (name.find("Rifle_Idle") != std::string::npos)
+		m_Animations[0] = *anim;
+	else if (name.find("Rifle_Walk_F") != std::string::npos)
+	{
+		if (name.find("Rifle_Walk_FL") != std::string::npos)
+			m_Animations[8] = *anim;
+		else if (name.find("Rifle_Walk_FR") != std::string::npos)
+			m_Animations[2] = *anim;
+		else
+			m_Animations[1] = *anim;
+	}
+	else if (name.find("Rifle_Walk_B") != std::string::npos)
+	{
+		if (name.find("Rifle_Walk_BL") != std::string::npos)
+			m_Animations[6] = *anim;
+		else if (name.find("Rifle_Walk_BR") != std::string::npos)
+			m_Animations[4] = *anim;
+		else
+			m_Animations[5] = *anim;
+	}
+	else if (name.find("Rifle_Walk_R") != std::string::npos)
+		m_Animations[3] = *anim;
+	else if (name.find("Rifle_Walk_L") != std::string::npos)
+		m_Animations[7] = *anim;
 }
 
 HRESULT CModel::SetUp_AnimationInfo()
@@ -698,9 +722,9 @@ HRESULT CModel::SetUp_AnimationInfo()
 
 			pAnimation->Add_Channel(pChannel);
 		}
+
 		m_Animations.push_back(pAnimation);
 	}
-
 	return S_OK;
 }
 

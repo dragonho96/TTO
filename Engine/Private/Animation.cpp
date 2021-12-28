@@ -127,9 +127,14 @@ HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 		//_float		fRatio = (_float)(m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /
 		//	(_float)(KeyFrames[iCurrentKeyFrame + 1]->Time - KeyFrames[iCurrentKeyFrame]->Time);
 
-		vSourScale = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vScale);
-		vSourRotation = XMLoadFloat4(&prevKeyFrames[iPrevCurrentKeyFrame]->vRotation);
-		vSourPosition = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vPosition);
+		//vSourScale = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vScale);
+		//vSourRotation = XMLoadFloat4(&prevKeyFrames[iPrevCurrentKeyFrame]->vRotation);
+		//vSourPosition = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vPosition);
+		//vSourPosition = XMVectorSetW(vSourPosition, 1.f);
+
+		_matrix prevMat = (*prevIter)->Get_TransformationMatrix();
+
+		XMMatrixDecompose(&vSourScale, &vSourRotation, &vSourPosition, prevMat);
 		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
 
 		vDestScale = XMLoadFloat3(&curKeyFrames[iCurCurrentKeyFrame]->vScale);

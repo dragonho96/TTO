@@ -7,7 +7,7 @@ GameObjects:
     Type: Object
     Com_Transform:
       Translation: [0, 0, 0]
-      Rotation: [-179.999496, 4.68753529, 179.999893]
+      Rotation: [0, 0, 0]
       Scale: [0.999991059, 0.999995291, 0.999991059]
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Player\

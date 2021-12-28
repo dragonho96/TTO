@@ -4,7 +4,7 @@
 #include "HierarchyNode.h"
 #include "EquipmentPool.h"
 #include "StateMachine.h"
-#include "IdleState.h"
+#include "WalkState.h"
 
 USING(Client)
 
@@ -55,7 +55,7 @@ HRESULT CPlayer::Initialize()
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
 
-	m_pState = CStateMachine::idle;
+	m_pState = CStateMachine::walk;
 	m_pState->Enter(&m_pState, m_pModel);
 
 	// list.pop_front();

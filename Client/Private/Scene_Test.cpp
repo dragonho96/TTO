@@ -86,7 +86,7 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
 
-	CameraDesc.vEye = _float3(0.f, 1.f, -5.f);
+	CameraDesc.vEye = _float3(0.f, 3.f, -5.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 

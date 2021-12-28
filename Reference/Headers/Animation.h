@@ -15,6 +15,10 @@ public:
 	HRESULT Update_TransformationMatrices(_double TimeDelta);
 	HRESULT Blend_Animation(CAnimation* prevAnim, _float ratio);
 	HRESULT ResetCurrentKeyFrame();
+	vector<class CChannel*> GetChannels() { return m_Channels; }
+
+	char* GetName() { return m_AnimationName; }
+
 private:
 	char				m_AnimationName[MAX_PATH];
 	_double				m_Duration = 0.0; 

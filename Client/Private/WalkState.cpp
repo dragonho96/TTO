@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\WalkState.h"
 #include "IdleState.h"
+#include "RunState.h"
+#include "CrouchState.h"
 
 USING(Client)
 
@@ -44,12 +46,28 @@ void CWalkState::SwitchAnim(CStateMachine** pState, CModel* pModel)
 			pModel->SetUp_AnimationIndex((_uint)ANIM::WALK_R);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
 			pModel->SetUp_AnimationIndex((_uint)ANIM::WALK_L);
+		else
+			pModel->SetUp_AnimationIndex((_uint)ANIM::IDLE);
 	}
 
-	if (!(CEngine::GetInstance()->IsKeyPressed('W') || CEngine::GetInstance()->IsKeyPressed('A') ||
-		CEngine::GetInstance()->IsKeyPressed('S') || CEngine::GetInstance()->IsKeyPressed('D')))
+	//if (!(CEngine::GetInstance()->IsKeyPressed('W') || CEngine::GetInstance()->IsKeyPressed('A') ||
+	//	CEngine::GetInstance()->IsKeyPressed('S') || CEngine::GetInstance()->IsKeyPressed('D')))
+	//{
+	//	*pState = CStateMachine::idle;
+	//	(*pState)->Enter(pState, pModel);
+	//}
+	//else
+	//{
+	if (CEngine::GetInstance()->IsKeyPressed(VK_LSHIFT))
 	{
-		*pState = CStateMachine::idle;
+		*pState = CStateMachine::run;
+		(*pState)->Enter(pState, pModel);
+	}
+	//}
+
+	if (CEngine::GetInstance()->IsKeyDown('C'))
+	{
+		*pState = CStateMachine::crouch;
 		(*pState)->Enter(pState, pModel);
 	}
 }
