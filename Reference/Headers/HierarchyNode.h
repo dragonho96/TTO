@@ -43,7 +43,7 @@ public:
 public:
 	HRESULT Initialize(const char* pNodeName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth, ANIM_TYPE eType);
 	HRESULT Add_Channel(_uint iAnimationIndex, class CChannel* pChannel);
-	void Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType);
+	void Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType, _float2 fUpperRotationAngle);
 	void Update_CombinedTransformationMatrix_Ragdoll();
 	void Reserve_Channels(_uint iNumAnimation);
 

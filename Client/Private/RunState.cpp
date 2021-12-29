@@ -21,8 +21,6 @@ void CRunState::Enter(CStateMachine ** pState, CModel * pModel)
 
 void CRunState::CheckAnim(CStateMachine ** pState, CModel * pModel)
 {
-	ADDLOG("RUNNING");
-
 	if (CEngine::GetInstance()->IsKeyPressed('W'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
@@ -58,7 +56,6 @@ void CRunState::CheckAnim(CStateMachine ** pState, CModel * pModel)
 	{
 		*pState = CStateMachine::walk;
 		(*pState)->Enter(pState, pModel);
-		ADDLOG("TO WALK@@@@@@@@@@@@@@");
 	}
 
 	if (CEngine::GetInstance()->IsKeyDown('C'))

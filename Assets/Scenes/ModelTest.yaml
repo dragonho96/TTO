@@ -1,19 +1,19 @@
 Scene: Untitled
 GameObjects:
   - Name: Player
-    UUID: 2594096167871891159
+    UUID: 17478439364731003745
     Active: true
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [0, 2, 0]
-      Rotation: [-179.999496, 2.82734895, -179.999237]
+      Translation: [12.3405237, 2.00000119, 5.05167866]
+      Rotation: [0, -0, 0]
       Scale: [0.999975502, 0.999995291, 0.999975502]
     Com_Collider:
       Center: [0, 1, 0]
       Type: Capsule
       Radius: 0.300000012
-      Height: 1.39999998
+      Height: 1
       RigidBody:
         Enabled: true
         Gravity: true
@@ -23,3 +23,68 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: Player_Walk.fbx
       HasCollider: false
+  - Name: Terrain
+    UUID: 10204488806845413654
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
+  - Name: Wall
+    UUID: 15309023933427495413
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [19.2117252, 0.180094242, 7.06867409]
+      Rotation: [0, -87.4419174, 0]
+      Scale: [0.999999881, 1, 0.999999881]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
+      MeshFileName: WallCastle.fbx
+      HasCollider: true
+  - Name: Building
+    UUID: 2303221871526297266
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [5.11316156, 0.362733543, 8.78027058]
+      Rotation: [179.999893, 44.2965202, 179.999878]
+      Scale: [0.999963641, 1, 0.999963641]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
+      MeshFileName: ContainerHouse.fbx
+      HasCollider: true
+  - Name: Wall
+    UUID: 13144839976370281199
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [19.2952023, 0.157170042, 9.08861351]
+      Rotation: [0, -87.4419174, 0]
+      Scale: [0.999999881, 1, 0.999999881]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
+      MeshFileName: WallCastle.fbx
+      HasCollider: true
+  - Name: Wall
+    UUID: 13289920467189594025
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [17.9048424, 0.158284172, 10.0431852]
+      Rotation: [178.961609, -15.5516605, -178.738739]
+      Scale: [0.999897242, 1.00000036, 0.999997616]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
+      MeshFileName: WallCastle.fbx
+      HasCollider: true

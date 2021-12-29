@@ -22,8 +22,6 @@ void CWalkState::Enter(CStateMachine** pState, CModel* pModel)
 
 void CWalkState::SwitchAnim(CStateMachine** pState, CModel* pModel)
 {
-	ADDLOG("WALKING");
-
 	if (CEngine::GetInstance()->IsKeyPressed('W'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
@@ -52,22 +50,12 @@ void CWalkState::SwitchAnim(CStateMachine** pState, CModel* pModel)
 			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::IDLE, ANIM_TYPE::LOWER);
 	}
 
-	//if (!(CEngine::GetInstance()->IsKeyPressed('W') || CEngine::GetInstance()->IsKeyPressed('A') ||
-	//	CEngine::GetInstance()->IsKeyPressed('S') || CEngine::GetInstance()->IsKeyPressed('D')))
-	//{
-	//	*pState = CStateMachine::idle;
-	//	(*pState)->Enter(pState, pModel);
-	//}
-	//else
-	//{
+
 	if (CEngine::GetInstance()->IsKeyDown(VK_LSHIFT))
 	{
 		*pState = CStateMachine::run;
 		(*pState)->Enter(pState, pModel);
-
-		ADDLOG("TO RUN@@@@@@@@@@@@");
 	}
-	//}
 
 	if (CEngine::GetInstance()->IsKeyDown('C'))
 	{

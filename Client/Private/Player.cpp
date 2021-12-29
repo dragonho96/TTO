@@ -45,8 +45,8 @@ HRESULT CPlayer::Initialize()
 		m_pController = m_pCollider->GetController();
 
 	// EquipmentPool ¿¡ meshcontainer µî·Ï
-	//AssignMeshContainter();
-	//FindBones();
+	// AssignMeshContainter();
+	// FindBones();
 
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
@@ -66,18 +66,10 @@ HRESULT CPlayer::Initialize()
 	m_pUpperState = CStateMachine::rifle;
 	m_pUpperState->Enter(&m_pUpperState, m_pModel);
 
-	// list.pop_front();
-	// CGameObject* gameObject1 = list.front();
-	// m_pModel1 = dynamic_cast<CModel*>(gameObject1->GetComponent("Com_Model"));
 
 	list<CGameObject*> camList = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
 	if (camList.size() <= 0)
 		return E_FAIL;
-
-	// TODO: Organize cameras
-	// camList.pop_front();
-
-
 	CGameObject* m_pCam = camList.front();
 	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
 
@@ -104,15 +96,15 @@ void CPlayer::Update(_double deltaTime)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
-		// _vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
-		_vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
+		_vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
+		// _vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
 		look = XMVector4Normalize(XMVectorSetY(look, 0.f));
 		PxVec3 pxLook;
 		memcpy(&pxLook, &look, sizeof(PxVec3));
 
 
-		// _vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
-		_vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
+		_vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
+		// _vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
 		PxVec3 pxRight;
 		memcpy(&pxRight, &right, sizeof(PxVec3));
 
@@ -142,27 +134,55 @@ void CPlayer::Update(_double deltaTime)
 			_vector vRayDir = GetPickingDir();
 			_vector vCamPos = m_pCameraTransform->GetState(CTransform::STATE_POSITION);
 
-			const PxU32 bufferSize = 256;
-			PxRaycastHit hitBuffer[bufferSize];
-			PxRaycastBuffer hit(hitBuffer, bufferSize);
+			//const PxU32 bufferSize = 256;
+			//PxRaycastHit hitBuffer[bufferSize];
+			//PxRaycastBuffer hit(hitBuffer, bufferSize);
+			PxRaycastBuffer hit;
 			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 20.f, hit))
 			{
-				_uint numHits = hit.getNbAnyHits();
-				ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
-				_uint closestUnitIndex = numHits - 1;
+				//string camPosition = "" + to_string(XMVectorGetX(vCamPos)) + ", " + to_string(XMVectorGetY(vCamPos)) + ", " + to_string(XMVectorGetZ(vCamPos));
+				//string rayDir = "" + to_string(XMVectorGetX(vRayDir)) + ", " + to_string(XMVectorGetY(vRayDir)) + ", " + to_string(XMVectorGetZ(vRayDir));
 
-				PxU32 distance = hit.getTouch(closestUnitIndex).distance;
+				//ADDLOG(("camPosition: " + camPosition).c_str());
+				//ADDLOG(("rayDir: " + rayDir).c_str());
+
+				PxU32 distance = hit.block.distance;
 				ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
-				PxU32 faceIndex = hit.getTouch(closestUnitIndex).faceIndex;
+				PxU32 faceIndex = hit.block.faceIndex;
 				ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
 				// PxU32 faceIndex = hit.getTouch(0).faceIndex;
-				PxVec3 hitPos = hit.getTouch(closestUnitIndex).position;
-				PxVec3 hitNormal = hit.getTouch(closestUnitIndex).normal;
+				PxVec3 hitPos = hit.block.position;
+				PxVec3 hitNormal = hit.block.normal;
 
 				string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
 				ADDLOG(("Hit Pos: " + logPos).c_str());
 				string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
 				ADDLOG(("Hit Normal: " + logStr).c_str());
+
+				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
+
+				_float yAxisAngle = GetYAxisAngle(myLookPos);
+
+				
+				m_pModel->SetUpperRotationAngle(_float2{ 0.f, yAxisAngle });
+
+				//_uint numHits = hit.getNbAnyHits();
+				//ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
+				//_uint closestUnitIndex = numHits - 1;
+				//_uint firstUnitIndex = 0;
+
+				//PxU32 distance = hit.getTouch(closestUnitIndex).distance;
+				//ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
+				//PxU32 faceIndex = hit.getTouch(closestUnitIndex).faceIndex;
+				//ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
+				//// PxU32 faceIndex = hit.getTouch(0).faceIndex;
+				//PxVec3 hitPos = hit.getTouch(closestUnitIndex).position;
+				//PxVec3 hitNormal = hit.getTouch(closestUnitIndex).normal;
+
+				//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+				//ADDLOG(("Hit Pos: " + logPos).c_str());
+				//string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
+				//ADDLOG(("Hit Normal: " + logStr).c_str());
 			}
 		}
 
@@ -283,6 +303,36 @@ void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
 	equipmentPool->GetEquipment(eType, iIndex)->mesh->SetActive(true);
 }
 
+_float CPlayer::GetYAxisAngle(_vector hitPos)
+{
+	_vector vecRootPos = m_pTransform->GetState(CTransform::STATE_POSITION);
+	vecRootPos = XMVectorSetW(vecRootPos, 0);
+	_vector XZDir = XMVectorSubtract(hitPos, vecRootPos);
+	// XZDir = XMVectorSetW(XZDir, 0);
+	// _vector XZDir = myLookPos - vecRootPos;
+	// XZDir = XMVector4Normalize(XZDir);
+
+	_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
+	// rootLook = XMVectorSetW(rootLook, 0);
+	// rootLook = XMVector4Normalize(rootLook);
+
+	_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
+	_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
+
+
+	_vector rootRight = m_pTransform->GetState(CTransform::STATE_RIGHT);
+	// rootRight = XMVectorSetW(rootRight, 0);
+	//rootRight = XMVector4Normalize(rootRight);
+	_vector angleBetweenRightVector = XMVector3AngleBetweenVectors(rootRight, XZDir);
+	_float rightVecAngle = XMVectorGetX(angleBetweenRightVector);
+	if (XMConvertToRadians(90) < rightVecAngle)
+		yAxisAngle *= -1;
+
+	ADDLOG(("yAxisAngle@@@: " + to_string(XMConvertToDegrees(yAxisAngle))).c_str());
+
+	return yAxisAngle;
+}
+
 _vector CPlayer::GetPickingDir()
 {
 	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
@@ -378,6 +428,7 @@ void CPlayer::FindBones()
 	m_pRThighBone = m_pModel->Find_Bone("thigh_twist_01_r");
 	m_pGrenadeBone = m_pModel->Find_Bone("slot_grenade");
 	m_pToolBone = m_pModel->Find_Bone("slot_gadget");
+	m_pSpineBone = m_pModel->Find_Bone("spine_02");
 }
 
 void CPlayer::Render()

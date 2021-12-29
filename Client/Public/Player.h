@@ -30,6 +30,7 @@ public:
 	void ChangeWeapon(EQUIPMENT eType, _uint iIndex);
 	void ChangeGear(EQUIPMENT eType, _uint iIndex);
 
+	_float	GetYAxisAngle(_vector hitPos);
 	_vector GetPickingDir();
 	void AssignMeshContainter();
 	void FindBones();
@@ -52,6 +53,7 @@ private:
 	BONEDESC*		m_pRThighBone = nullptr;
 	BONEDESC*		m_pGrenadeBone = nullptr;
 	BONEDESC*		m_pToolBone = nullptr;
+	BONEDESC*		m_pSpineBone = nullptr;
 
 	class CStateMachine*	m_pLowerState = nullptr;
 	class CStateMachine*	m_pUpperState = nullptr;

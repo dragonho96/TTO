@@ -22,7 +22,7 @@ private:
 	virtual ~CModel() = default;
 public:
 	virtual HRESULT InitializePrototype();
-	virtual HRESULT Initialize(void* pArg); 
+	virtual HRESULT Initialize(void* pArg);
 	HRESULT Render(_uint iMaterialIndex, _uint iPassIndex);
 
 public:
@@ -33,6 +33,8 @@ public:
 	HRESULT Blend_Animation(_double TimeDelta);
 	_bool	IsUpperFinished() { return m_bFinished_Upper; }
 	void	SetAnimationLoop(_uint idx, _bool result);
+	void	SetUpperRotationAngle(_float2 angle) { m_upperRotationAngle = angle; }
+
 public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
@@ -106,6 +108,7 @@ private:
 	_uint									m_iAnimationIndex_Upper = 32;
 	_uint									m_iPrevAnimationIndex_Upper = 32;
 	_bool									m_bFinished_Upper = false;
+	_float2									m_upperRotationAngle = { 0.f, 0.f };
 
 
 	_float									m_fBlendDuration = 0.2f;

@@ -27,7 +27,7 @@ HRESULT CHierarchyNode::Add_Channel(_uint iAnimationIndex, CChannel * pChannel)
 	return S_OK;
 }
 
-void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType)
+void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType, _float2 fUpperRotationAngle)
 {
 	_matrix		TransformationMatrix;
 	_uint		animIndex;
@@ -41,6 +41,17 @@ void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex, 
 		TransformationMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
 	else
 		TransformationMatrix = m_Channels[animIndex]->Get_TransformationMatrix();
+
+	if (!(strcmp(m_szNodeName, "spine_02")))
+	{
+		// DO NOT USE 2
+		// idx 0 = ÁÂ¿ì
+		// idx 1 = À§¾Æ·¡
+		
+		TransformationMatrix *= XMMatrixRotationAxis(TransformationMatrix.r[0], fUpperRotationAngle.y);
+		TransformationMatrix *= XMMatrixRotationAxis(TransformationMatrix.r[1], fUpperRotationAngle.x);
+		// TransformationMatrix *= XMMatrixRotationY(XMConvertToRadians(60.f));
+	}
 
 	if (nullptr != m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));

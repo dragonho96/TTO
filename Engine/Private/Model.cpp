@@ -771,7 +771,7 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 		else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
 			type = ANIM_TYPE::LOWER;
 
-		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type);
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
 	}
 
 	// Set ragdoll rb position
