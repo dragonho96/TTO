@@ -100,7 +100,13 @@
     <ClInclude Include="..\Public\RunState.h">
       <Filter>StateMachine\Run</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CrouchState.h" />
+    <ClInclude Include="..\Public\CrouchState.h">
+      <Filter>StateMachine\Crouch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RifleState.h">
+      <Filter>StateMachine\RifleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GrenadeState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -190,7 +196,13 @@
     <ClCompile Include="..\Private\RunState.cpp">
       <Filter>StateMachine\Run</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CrouchState.cpp" />
+    <ClCompile Include="..\Private\CrouchState.cpp">
+      <Filter>StateMachine\Crouch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RifleState.cpp">
+      <Filter>StateMachine\RifleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GrenadeState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -299,6 +311,12 @@
     </Filter>
     <Filter Include="StateMachine\Crouch">
       <UniqueIdentifier>{72b53f30-571a-461f-94e1-42c163442542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\RifleState">
+      <UniqueIdentifier>{ad376561-3705-44a7-93fd-ec9748630b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\GrenadeState">
+      <UniqueIdentifier>{335440f6-a9a8-4650-9ace-4789732c8bef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

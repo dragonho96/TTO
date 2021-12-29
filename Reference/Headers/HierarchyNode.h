@@ -18,6 +18,10 @@ public:
 		return m_szNodeName;
 	}
 
+	const ANIM_TYPE Get_Type() const {
+		return m_eType;
+	}
+
 	const _float4x4 Get_TransformationMatrix() const {
 		return m_TransformationMatrix;
 	}
@@ -34,10 +38,12 @@ public:
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
 	}
 
+
+
 public:
-	HRESULT Initialize(const char* pNodeName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth);
+	HRESULT Initialize(const char* pNodeName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth, ANIM_TYPE eType);
 	HRESULT Add_Channel(_uint iAnimationIndex, class CChannel* pChannel);
-	void Update_CombinedTransformationMatrix(_uint iAnimationIndex);
+	void Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType);
 	void Update_CombinedTransformationMatrix_Ragdoll();
 	void Reserve_Channels(_uint iNumAnimation);
 
@@ -52,12 +58,13 @@ private:
 	CHierarchyNode*		m_pParent = nullptr;
 	_uint				m_iDepth = 0;
 	PxRigidDynamic*		m_pRagdollRb = nullptr;
+	ANIM_TYPE			m_eType = ANIM_TYPE::NONE;
 
 private:
 	vector<class CChannel*>			m_Channels;
 
 public:
-	static CHierarchyNode* Create(const char* pNodeName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth);
+	static CHierarchyNode* Create(const char* pNodeName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth, ANIM_TYPE eType);
 	virtual void Free() override;
 
 };

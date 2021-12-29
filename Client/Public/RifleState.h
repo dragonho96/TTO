@@ -1,18 +1,19 @@
 #pragma once
 #include "StateMachine.h"
-
 BEGIN(Client)
-class CCrouchState : public CStateMachine
+class CRifleState : public CStateMachine 
 {
 public:
-	CCrouchState() {};
-	virtual ~CCrouchState() = default;
-public:
+	CRifleState() {};
+	virtual ~CRifleState() = default;
+
 	virtual void HandleInput(CStateMachine** pState, CModel* pModel);
 	virtual void Update(CStateMachine** pState, CModel* pModel);
 	virtual void Enter(CStateMachine** pState, CModel* pModel);
-public:
-	void CheckAnim(CStateMachine** pState, CModel* pModel);
+
+private:
+	_bool		m_bUnEquipping = false;
+	_bool		m_bEquipping = false;
 };
 
 END

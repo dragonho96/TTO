@@ -23,14 +23,15 @@ HRESULT CAnimation::Add_Channel(CChannel * pChannel)
 
 	return S_OK;
 }
-HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
+_bool CAnimation::Update_TransformationMatrices(_double TimeDelta)
 {
 	m_CurrrentTime += fmod(m_TickPerSecond * TimeDelta, m_Duration);
 
 	if (m_CurrrentTime > m_Duration)
 	{
-		m_CurrrentTime = fmod(m_TickPerSecond * TimeDelta, m_Duration);
-		// m_CurrrentTime = 0.0;
+		if (m_isLoop)
+			m_CurrrentTime = fmod(m_TickPerSecond * TimeDelta, m_Duration);
+
 		m_isFinished = true;
 	}
 	else
@@ -105,7 +106,7 @@ HRESULT CAnimation::Update_TransformationMatrices(_double TimeDelta)
 		pAnimChannel->Set_TransformationMatrix(TransformationMatrix);
 	}
 
-	return S_OK;
+	return m_isFinished;
 }
 HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 {
@@ -219,10 +220,10 @@ HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 
 	return S_OK;
 }
-HRESULT CAnimation::ResetCurrentKeyFrame()
+HRESULT CAnimation::ResetCurrentTime()
 {
-	for (auto& pAnimChannel : m_Channels)
-		pAnimChannel->Set_CurrentKeyFrame(0);
+	if (!m_isLoop)
+		m_CurrrentTime = 0.0;
 	
 	return S_OK;
 }

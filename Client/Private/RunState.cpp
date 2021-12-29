@@ -21,30 +21,32 @@ void CRunState::Enter(CStateMachine ** pState, CModel * pModel)
 
 void CRunState::CheckAnim(CStateMachine ** pState, CModel * pModel)
 {
+	ADDLOG("RUNNING");
+
 	if (CEngine::GetInstance()->IsKeyPressed('W'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_FR);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_FR, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_FL);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_FL, ANIM_TYPE::LOWER);
 		else
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_F);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_F, ANIM_TYPE::LOWER);
 	}
 	else if (CEngine::GetInstance()->IsKeyPressed('S'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_BR);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_BR, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_BL);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_BL, ANIM_TYPE::LOWER);
 		else
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_B);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_B, ANIM_TYPE::LOWER);
 	}
 	else
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_R);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_R, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::RUN_L);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_L, ANIM_TYPE::LOWER);
 		else
 		{
 			*pState = CStateMachine::walk;
@@ -52,10 +54,11 @@ void CRunState::CheckAnim(CStateMachine ** pState, CModel * pModel)
 		}
 	}
 
-	if (!CEngine::GetInstance()->IsKeyPressed(VK_LSHIFT))
+	if (CEngine::GetInstance()->IsKeyUp(VK_LSHIFT))
 	{
 		*pState = CStateMachine::walk;
 		(*pState)->Enter(pState, pModel);
+		ADDLOG("TO WALK@@@@@@@@@@@@@@");
 	}
 
 	if (CEngine::GetInstance()->IsKeyDown('C'))

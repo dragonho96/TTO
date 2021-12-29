@@ -90,11 +90,11 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
-	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
-		return E_FAIL;
-
-	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Follow", pLayerTag, &CameraDesc))
+	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
 	//	return E_FAIL;
+
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Follow", pLayerTag, &CameraDesc))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
 

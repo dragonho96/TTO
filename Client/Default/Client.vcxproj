@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\Equipment.h" />
     <ClInclude Include="..\Public\EquipmentPool.h" />
     <ClInclude Include="..\Public\EquipmentSerializer.h" />
+    <ClInclude Include="..\Public\GrenadeState.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\IdleState.h" />
     <ClInclude Include="..\Public\Loader.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="..\Public\Node.h" />
     <ClInclude Include="..\Public\PathFinding.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\RifleState.h" />
     <ClInclude Include="..\Public\RunState.h" />
     <ClInclude Include="..\Public\Scene_GamePlay.h" />
     <ClInclude Include="..\Public\Scene_Loading.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="..\Private\Equipment.cpp" />
     <ClCompile Include="..\Private\EquipmentPool.cpp" />
     <ClCompile Include="..\Private\EquipmentSerializer.cpp" />
+    <ClCompile Include="..\Private\GrenadeState.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\IdleState.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
@@ -235,6 +238,7 @@
     <ClCompile Include="..\Private\Node.cpp" />
     <ClCompile Include="..\Private\PathFinding.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\RifleState.cpp" />
     <ClCompile Include="..\Private\RunState.cpp" />
     <ClCompile Include="..\Private\Scene_GamePlay.cpp" />
     <ClCompile Include="..\Private\Scene_Loading.cpp" />

@@ -28,11 +28,11 @@ public:
 public:
 	_fmatrix Get_BoneMatrix(const char* pBoneName);
 public:
-	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
+	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType);
 	HRESULT Play_Animation(_double TimeDelta);
 	HRESULT Blend_Animation(_double TimeDelta);
-	void Push_Back_Animation(class CAnimation** anim);
-
+	_bool	IsUpperFinished() { return m_bFinished_Upper; }
+	void	SetAnimationLoop(_uint idx, _bool result);
 public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
@@ -40,7 +40,7 @@ private:
 	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex, _fmatrix PivotMatrix);
 	HRESULT Create_VertexIndexBuffer(string pShaderFilePath);
 	HRESULT Create_Materials(aiMaterial*	pMaterial, string pMeshFilePath);
-	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0, _fmatrix PivotMatrix = XMMatrixIdentity());
+	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0, ANIM_TYPE eType = ANIM_TYPE::NONE, _fmatrix PivotMatrix = XMMatrixIdentity());
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo();
 	HRESULT SetUp_AnimationInfo();
@@ -69,14 +69,6 @@ public:
 	void SetRagdollSimulate(_bool result);
 	_bool IsSimulatingRagdoll() { return m_bSimulateRagdoll; }
 	PxRigidDynamic* GetRagdollRb(string name);
-
-public:
-	//_matrix GetGunPosition() {
-	//	return XMMatrixMultiply(XMLoadFloat4x4(&handGunBone->OffsetMatrix), handGunBone->pHierarchyNode->Get_CombinedTransformationMatrix()); }
-
-	_matrix GetGunPosition() {
-		return handGunBone->pHierarchyNode->Get_CombinedTransformationMatrix();
-	}
 
 private:
 	void CreatePxMesh();
@@ -111,26 +103,31 @@ private:
 	vector<class CAnimation*>				m_Animations;
 	_uint									m_iAnimationIndex = 0;
 	_uint									m_iPrevAnimationIndex = 0;
+	_uint									m_iAnimationIndex_Upper = 32;
+	_uint									m_iPrevAnimationIndex_Upper = 32;
+	_bool									m_bFinished_Upper = false;
+
+
+	_float									m_fBlendDuration = 0.2f;
 	_float									m_fBlendTime = 0.0f;
+	_float									m_fBlendTime_Upper = 0.0f;
 	vector<class CChannel*>					m_vecPrevChannels;
-	_bool									m_bBlending = false;
 private:
 	//ComRef<ID3D11Buffer>			m_pVB = nullptr;
 	//ComRef<ID3D11Buffer>			m_pIB = nullptr;
 
-	ID3D11Buffer*			m_pVB = nullptr;
-	ID3D11Buffer*			m_pIB = nullptr;
+	ID3D11Buffer*					m_pVB = nullptr;
+	ID3D11Buffer*					m_pIB = nullptr;
 
-	_uint					m_iStride = 0;
+	_uint							m_iStride = 0;
 
 protected:
-	vector<EFFECTDESC>			m_EffectDescs;
-	ID3DX11Effect*				m_pEffect = nullptr;
+	vector<EFFECTDESC>				m_EffectDescs;
+	ID3DX11Effect*					m_pEffect = nullptr;
 
-	Ref<class CShader>			m_pShader = nullptr;
+	Ref<class CShader>				m_pShader = nullptr;
 	class CTransform*				m_pTransform = nullptr;
 
-	_bool							m_bSimulateRagdoll = false;
 protected:
 	string m_pMeshFilePath = "";
 	string m_pMeshFileName = "";
@@ -143,12 +140,9 @@ private:
 	_bool				m_bMeshCollider = false;
 
 private:
-	unordered_map<string, BONEDESC*>	m_RagdollBones;
+	unordered_map<string, BONEDESC*>		m_RagdollBones;
 	unordered_map<string, RAGDOLLBONEDESC*> m_RagdollRbs;
-
-private:
-	CHierarchyNode* handGunNode = nullptr;
-	BONEDESC* handGunBone = nullptr;
+	_bool									m_bSimulateRagdoll = false;
 
 
 public:

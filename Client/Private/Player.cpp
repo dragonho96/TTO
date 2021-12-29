@@ -5,6 +5,7 @@
 #include "EquipmentPool.h"
 #include "StateMachine.h"
 #include "WalkState.h"
+#include "RifleState.h"
 
 USING(Client)
 
@@ -54,9 +55,16 @@ HRESULT CPlayer::Initialize()
 
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_RIFLE, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_RIFLE, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_GRENADE, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_GRENADE, false);
 
-	m_pState = CStateMachine::walk;
-	m_pState->Enter(&m_pState, m_pModel);
+	m_pLowerState = CStateMachine::walk;
+	m_pLowerState->Enter(&m_pLowerState, m_pModel);
+
+	m_pUpperState = CStateMachine::rifle;
+	m_pUpperState->Enter(&m_pUpperState, m_pModel);
 
 	// list.pop_front();
 	// CGameObject* gameObject1 = list.front();
@@ -68,8 +76,10 @@ HRESULT CPlayer::Initialize()
 
 	// TODO: Organize cameras
 	// camList.pop_front();
-	//CGameObject* m_pCam = camList.front();
-	//m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
+
+
+	CGameObject* m_pCam = camList.front();
+	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
 
 	return S_OK;
 }
@@ -79,8 +89,11 @@ void CPlayer::Update(_double deltaTime)
 	if (!m_pGameObject)
 		return;
 
-	m_pState->HandleInput(&m_pState, m_pModel);
-	m_pState->Update(&m_pState, m_pModel);
+	m_pLowerState->HandleInput(&m_pLowerState, m_pModel);
+	m_pLowerState->Update(&m_pLowerState, m_pModel);
+
+	m_pUpperState->HandleInput(&m_pUpperState, m_pModel);
+	m_pUpperState->Update(&m_pUpperState, m_pModel);
 
 	static bool startRagdoll = false;
 
@@ -91,13 +104,15 @@ void CPlayer::Update(_double deltaTime)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
-		_vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
+		// _vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
+		_vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
 		look = XMVector4Normalize(XMVectorSetY(look, 0.f));
 		PxVec3 pxLook;
 		memcpy(&pxLook, &look, sizeof(PxVec3));
 
 
-		_vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
+		// _vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
+		_vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
 		PxVec3 pxRight;
 		memcpy(&pxRight, &right, sizeof(PxVec3));
 
@@ -118,6 +133,8 @@ void CPlayer::Update(_double deltaTime)
 		{
 			m_pController->move(-pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
 		}
+
+		// GRAVITY
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 
 		if (CEngine::GetInstance()->IsMouseDown(1))

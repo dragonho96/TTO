@@ -23,29 +23,29 @@ void CCrouchState::CheckAnim(CStateMachine ** pState, CModel * pModel)
 	if (CEngine::GetInstance()->IsKeyPressed('W'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_FR);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_FR, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_FL);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_FL, ANIM_TYPE::LOWER);
 		else
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_F);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_F, ANIM_TYPE::LOWER);
 	}
 	else if (CEngine::GetInstance()->IsKeyPressed('S'))
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_BR);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_BR, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_BL);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_BL, ANIM_TYPE::LOWER);
 		else
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_B);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_B, ANIM_TYPE::LOWER);
 	}
 	else
 	{
 		if (CEngine::GetInstance()->IsKeyPressed('D'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_R);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_R, ANIM_TYPE::LOWER);
 		else if (CEngine::GetInstance()->IsKeyPressed('A'))
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_L);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_L, ANIM_TYPE::LOWER);
 		else
-			pModel->SetUp_AnimationIndex((_uint)ANIM::CROUCH_IDLE);
+			pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::CROUCH_IDLE, ANIM_TYPE::LOWER);
 	}
 
 	if (CEngine::GetInstance()->IsKeyDown('C'))

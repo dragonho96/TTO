@@ -53,7 +53,8 @@ private:
 	BONEDESC*		m_pGrenadeBone = nullptr;
 	BONEDESC*		m_pToolBone = nullptr;
 
-	class CStateMachine*	m_pState = nullptr;
+	class CStateMachine*	m_pLowerState = nullptr;
+	class CStateMachine*	m_pUpperState = nullptr;
 };
 
 END

@@ -20,5 +20,5 @@ void CIdleState::Update(CStateMachine** pState, CModel* pModel)
 
 void CIdleState::Enter(CStateMachine** pState, CModel* pModel)
 {
-	pModel->SetUp_AnimationIndex((_uint)ANIM::IDLE);
+	pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::IDLE, ANIM_TYPE::LOWER);
 }

@@ -1,28 +1,25 @@
 Scene: Untitled
 GameObjects:
   - Name: Player
-    UUID: 3291589619991328035
+    UUID: 2594096167871891159
     Active: true
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [0.999991059, 0.999995291, 0.999991059]
+      Translation: [0, 2, 0]
+      Rotation: [-179.999496, 2.82734895, -179.999237]
+      Scale: [0.999975502, 0.999995291, 0.999975502]
+    Com_Collider:
+      Center: [0, 1, 0]
+      Type: Capsule
+      Radius: 0.300000012
+      Height: 1.39999998
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: true
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: Player_Walk.fbx
       HasCollider: false
-  - Name: Empty Object
-    UUID: 7468221673179586053
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ../../Assets/Texture/Height.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
