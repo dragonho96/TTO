@@ -46,7 +46,7 @@ HRESULT CPlayer::Initialize()
 
 	// EquipmentPool ¿¡ meshcontainer µî·Ï
 	// AssignMeshContainter();
-	// FindBones();
+	FindBones();
 
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
@@ -72,6 +72,11 @@ HRESULT CPlayer::Initialize()
 		return E_FAIL;
 	CGameObject* m_pCam = camList.front();
 	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
+
+
+	if (FAILED(CEngine::GetInstance()->AddTimers("Raycast")))
+		return FALSE;
+
 
 	return S_OK;
 }
@@ -128,9 +133,11 @@ void CPlayer::Update(_double deltaTime)
 
 		// GRAVITY
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
-
-		if (CEngine::GetInstance()->IsMouseDown(1))
+		
+		TimeRaycast += CEngine::GetInstance()->ComputeDeltaTime("Raycast");
+		if (TimeRaycast > 0.01f)
 		{
+			TimeRaycast = 0.0;
 			_vector vRayDir = GetPickingDir();
 			_vector vCamPos = m_pCameraTransform->GetState(CTransform::STATE_POSITION);
 
@@ -161,10 +168,12 @@ void CPlayer::Update(_double deltaTime)
 
 				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
+
+				_float xAxisAngle = GetXAxisAngle(myLookPos);
 				_float yAxisAngle = GetYAxisAngle(myLookPos);
 
 				
-				m_pModel->SetUpperRotationAngle(_float2{ 0.f, yAxisAngle });
+				m_pModel->SetUpperRotationAngle(_float2{ xAxisAngle, yAxisAngle });
 
 				//_uint numHits = hit.getNbAnyHits();
 				//ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
@@ -303,26 +312,56 @@ void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
 	equipmentPool->GetEquipment(eType, iIndex)->mesh->SetActive(true);
 }
 
+_float CPlayer::GetXAxisAngle(_vector hitPos)
+{
+	_matrix spineMat = m_pSpineBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+	_vector mySpineTempA, mySpineTempB, mySpinePos;
+	XMMatrixDecompose(&mySpineTempA, &mySpineTempB, &mySpinePos, spineMat);
+	mySpinePos = XMVectorSetW(mySpinePos, 0);
+
+	// mySpinePos-> hitpos
+	_vector hitposDir = XMVectorSubtract(hitPos, mySpinePos);
+	// mySpinePos-> hitpos.y = myspinepos.y
+	_vector lookPos = { XMVectorGetX(hitPos), XMVectorGetY(mySpinePos), XMVectorGetZ(hitPos) };
+	_vector lookDir = XMVectorSubtract(lookPos, mySpinePos);
+	_vector xVecAxisAngle = XMVector3AngleBetweenVectors(hitposDir, lookDir);
+	_float xAxisAngle = XMVectorGetX(xVecAxisAngle);
+
+
+	_vector rootRight = m_pTransform->GetState(CTransform::STATE_UP);
+
+	_vector angleBetweenUpVector = XMVector3AngleBetweenVectors(rootRight, hitposDir);
+	_float rightVecAngle = XMVectorGetX(angleBetweenUpVector);
+	if (XMConvertToRadians(90) > rightVecAngle)
+		xAxisAngle *= -1;
+	//_vector YZDir = XMVectorSubtract(hitPos, mySpinePos);
+	//_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
+	//_vector xVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, YZDir);
+	//_float xAxisAngle = XMVectorGetX(xVecAxisAngle);
+
+	// ADDLOG(("spineY: " + to_string(spineY)).c_str());
+	ADDLOG(("xAxisAngle: " + to_string(XMConvertToDegrees(xAxisAngle))).c_str());
+
+	return xAxisAngle;
+}
+
 _float CPlayer::GetYAxisAngle(_vector hitPos)
 {
 	_vector vecRootPos = m_pTransform->GetState(CTransform::STATE_POSITION);
 	vecRootPos = XMVectorSetW(vecRootPos, 0);
+	hitPos = XMVectorSetY(hitPos, XMVectorGetY(vecRootPos));
 	_vector XZDir = XMVectorSubtract(hitPos, vecRootPos);
-	// XZDir = XMVectorSetW(XZDir, 0);
-	// _vector XZDir = myLookPos - vecRootPos;
-	// XZDir = XMVector4Normalize(XZDir);
+
 
 	_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
-	// rootLook = XMVectorSetW(rootLook, 0);
-	// rootLook = XMVector4Normalize(rootLook);
+
 
 	_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
 	_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
 
 
 	_vector rootRight = m_pTransform->GetState(CTransform::STATE_RIGHT);
-	// rootRight = XMVectorSetW(rootRight, 0);
-	//rootRight = XMVector4Normalize(rootRight);
+
 	_vector angleBetweenRightVector = XMVector3AngleBetweenVectors(rootRight, XZDir);
 	_float rightVecAngle = XMVectorGetX(angleBetweenRightVector);
 	if (XMConvertToRadians(90) < rightVecAngle)

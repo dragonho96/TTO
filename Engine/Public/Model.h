@@ -109,6 +109,7 @@ private:
 	_uint									m_iPrevAnimationIndex_Upper = 32;
 	_bool									m_bFinished_Upper = false;
 	_float2									m_upperRotationAngle = { 0.f, 0.f };
+	_float2									m_curUpperRotationAngle = { 0.f, 0.f };
 
 
 	_float									m_fBlendDuration = 0.2f;

@@ -76,6 +76,7 @@ HRESULT CModel::Initialize(void * pArg)
 		for (auto& pBoneDesc : Bones)
 		{
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
+			pBoneDesc->pHierarchyNode->Set_OffSetMatrix(XMLoadFloat4x4(&pBoneDesc->OffsetMatrix));
 			SetRagdollBoneDesc(pBoneDesc);
 		}
 	}
@@ -614,6 +615,10 @@ BONEDESC * CModel::Find_Bone(string pBoneName)
 
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
+	_float	fFollowSpeed = TimeDelta * 15.f;
+	m_curUpperRotationAngle.x = Lerp(m_curUpperRotationAngle.x, m_upperRotationAngle.x, fFollowSpeed);
+	m_curUpperRotationAngle.y = Lerp(m_curUpperRotationAngle.y, m_upperRotationAngle.y, fFollowSpeed);
+	
 	if (m_bSimulateRagdoll)
 		Update_CombinedTransformationMatrix_Ragdoll();
 	else
@@ -771,13 +776,14 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 		else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
 			type = ANIM_TYPE::LOWER;
 
-		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_curUpperRotationAngle);
 	}
 
 	// Set ragdoll rb position
 	for (auto& ragdollRb : m_RagdollRbs)
 		SetRagdollRbTransform(ragdollRb.second);
 
+	
 	return S_OK;
 }
 
