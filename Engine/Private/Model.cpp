@@ -615,10 +615,10 @@ BONEDESC * CModel::Find_Bone(string pBoneName)
 
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
-	_float	fFollowSpeed = TimeDelta * 15.f;
-	m_curUpperRotationAngle.x = Lerp(m_curUpperRotationAngle.x, m_upperRotationAngle.x, fFollowSpeed);
-	m_curUpperRotationAngle.y = Lerp(m_curUpperRotationAngle.y, m_upperRotationAngle.y, fFollowSpeed);
-	
+	//_float	fFollowSpeed = TimeDelta * 15.f;
+	//m_curUpperRotationAngle.x = Lerp(m_curUpperRotationAngle.x, m_upperRotationAngle.x, fFollowSpeed);
+	//m_curUpperRotationAngle.y = Lerp(m_curUpperRotationAngle.y, m_upperRotationAngle.y, fFollowSpeed);
+	//
 	if (m_bSimulateRagdoll)
 		Update_CombinedTransformationMatrix_Ragdoll();
 	else
@@ -631,7 +631,7 @@ HRESULT CModel::Blend_Animation(_double TimeDelta)
 {
 	// Upper꺼 Lower꺼 각각 해줘야한다
 	// Lower
-	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+	m_bFinished_Lower = m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 	if (m_iAnimationIndex != m_iPrevAnimationIndex)
 	{
 		_float ratio = (m_fBlendTime / m_fBlendDuration);
@@ -741,6 +741,8 @@ HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType)
 
 		m_Animations[iAnimationIndex]->ResetCurrentTime();
 		m_fBlendTime = 0.f;
+
+		m_bFinished_Lower = false;
 	}
 	else if (eType == ANIM_TYPE::UPPER)
 	{
@@ -776,7 +778,7 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 		else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
 			type = ANIM_TYPE::LOWER;
 
-		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_curUpperRotationAngle);
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
 	}
 
 	// Set ragdoll rb position

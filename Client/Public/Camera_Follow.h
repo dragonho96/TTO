@@ -21,6 +21,7 @@ private:
 	HRESULT SetUp_Components();
 
 private:
+	CTransform* m_pPlayerTransform = nullptr;
 	CTransform* m_pTargetTransform = nullptr;
 	_vector		m_pTargetLook = { 0, 0, 1};
 public:

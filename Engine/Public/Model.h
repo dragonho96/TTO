@@ -31,6 +31,7 @@ public:
 	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType);
 	HRESULT Play_Animation(_double TimeDelta);
 	HRESULT Blend_Animation(_double TimeDelta);
+	_bool	IsLowerFinished() { return m_bFinished_Lower; }
 	_bool	IsUpperFinished() { return m_bFinished_Upper; }
 	void	SetAnimationLoop(_uint idx, _bool result);
 	void	SetUpperRotationAngle(_float2 angle) { m_upperRotationAngle = angle; }
@@ -107,10 +108,9 @@ private:
 	_uint									m_iPrevAnimationIndex = 0;
 	_uint									m_iAnimationIndex_Upper = 32;
 	_uint									m_iPrevAnimationIndex_Upper = 32;
+	_bool									m_bFinished_Lower = false;
 	_bool									m_bFinished_Upper = false;
 	_float2									m_upperRotationAngle = { 0.f, 0.f };
-	_float2									m_curUpperRotationAngle = { 0.f, 0.f };
-
 
 	_float									m_fBlendDuration = 0.2f;
 	_float									m_fBlendTime = 0.0f;

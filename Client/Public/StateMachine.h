@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine.h"
+#include "Player.h"
 BEGIN(Client)
 
 class CIdleState;
@@ -9,6 +10,7 @@ class CCrouchState;
 class CRifleState;
 class CGrenadeState;
 
+class CPlayer;
 class CStateMachine
 {
 public:
@@ -33,9 +35,9 @@ public:
 	virtual ~CStateMachine();
 
 public:
-	virtual void HandleInput(CStateMachine** pState, CModel* pModel) {};
-	virtual void Update(CStateMachine** pState, CModel* pModel) {};
-	virtual void Enter(CStateMachine** pState, CModel* pModel) {};
+	virtual void HandleInput(CStateMachine** pState, CPlayer& pPlayer) {};
+	virtual void Update(CStateMachine** pState, CPlayer& pPlayer) {};
+	virtual void Enter(CStateMachine** pState, CPlayer& pPlayer) {};
 };
 
 END

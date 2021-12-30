@@ -45,7 +45,7 @@ HRESULT CPlayer::Initialize()
 		m_pController = m_pCollider->GetController();
 
 	// EquipmentPool 에 meshcontainer 등록
-	// AssignMeshContainter();
+	//AssignMeshContainter();
 	FindBones();
 
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
@@ -59,12 +59,16 @@ HRESULT CPlayer::Initialize()
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_RIFLE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_GRENADE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_GRENADE, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_R, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_L, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_KNEEL_R, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_KNEEL_L, false);
 
 	m_pLowerState = CStateMachine::walk;
-	m_pLowerState->Enter(&m_pLowerState, m_pModel);
+	m_pLowerState->Enter(&m_pLowerState, *this);
 
 	m_pUpperState = CStateMachine::rifle;
-	m_pUpperState->Enter(&m_pUpperState, m_pModel);
+	m_pUpperState->Enter(&m_pUpperState, *this);
 
 
 	list<CGameObject*> camList = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
@@ -86,15 +90,11 @@ void CPlayer::Update(_double deltaTime)
 	if (!m_pGameObject)
 		return;
 
-	m_pLowerState->HandleInput(&m_pLowerState, m_pModel);
-	m_pLowerState->Update(&m_pLowerState, m_pModel);
 
-	m_pUpperState->HandleInput(&m_pUpperState, m_pModel);
-	m_pUpperState->Update(&m_pUpperState, m_pModel);
 
 	static bool startRagdoll = false;
 
-	// UpdateWeaponTransform();
+	UpdateWeaponTransform();
 
 
 	if (m_pController)
@@ -103,37 +103,63 @@ void CPlayer::Update(_double deltaTime)
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
 		_vector look = m_pCameraTransform->GetState(CTransform::STATE_LOOK);
 		// _vector look = m_pTransform->GetState(CTransform::STATE_LOOK);
-		look = XMVector4Normalize(XMVectorSetY(look, 0.f));
-		PxVec3 pxLook;
-		memcpy(&pxLook, &look, sizeof(PxVec3));
-
-
+		look = XMVector4Normalize(XMVectorSetW(XMVectorSetY(look, 0.f), 0.f));
 		_vector right = m_pCameraTransform->GetState(CTransform::STATE_RIGHT);
-		// _vector right = m_pTransform->GetState(CTransform::STATE_RIGHT);
-		PxVec3 pxRight;
-		memcpy(&pxRight, &right, sizeof(PxVec3));
 
-		_float fSpeedFactor = 20.f;
-		if (CEngine::GetInstance()->IsKeyPressed(VK_UP))
+		if (CEngine::GetInstance()->IsKeyPressed('W'))
 		{
-			m_pController->move(pxLook / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
+			m_velocity = look;
+			if (CEngine::GetInstance()->IsKeyPressed('D'))
+				m_velocity = XMVectorAdd(m_velocity, right);
+			else if (CEngine::GetInstance()->IsKeyPressed('A'))
+				m_velocity = XMVectorSubtract(m_velocity, right);
 		}
-		if (CEngine::GetInstance()->IsKeyPressed(VK_DOWN))
+		else if (CEngine::GetInstance()->IsKeyPressed('S'))
 		{
-			m_pController->move(-pxLook / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
+			m_velocity = -look;
+			if (CEngine::GetInstance()->IsKeyPressed('D'))
+				m_velocity = XMVectorAdd(m_velocity, right);
+			else if (CEngine::GetInstance()->IsKeyPressed('A'))
+				m_velocity = XMVectorSubtract(m_velocity, right);
 		}
-		if (CEngine::GetInstance()->IsKeyPressed(VK_RIGHT))
-		{
-			m_pController->move(pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
-		}
-		if (CEngine::GetInstance()->IsKeyPressed(VK_LEFT))
-		{
-			m_pController->move(-pxRight / fSpeedFactor, 0.f, deltaTime, PxControllerFilters{});
-		}
+		else if (CEngine::GetInstance()->IsKeyPressed('D'))
+			m_velocity = right;
+		else if (CEngine::GetInstance()->IsKeyPressed('A'))
+			m_velocity = -right;
+		else
+			m_velocity = XMVectorZero();
 
+		_float fSpeedFactor = 15.f;
+		// m_velocity = m_velocity.getNormalized();
+		m_velocity = XMVector4Normalize(m_velocity);
+		m_velocity /= fSpeedFactor;
+		// m_velocity = XMVectorClamp(m_velocity, XMVectorZero(), _vector{ 0.15f, 0.15f, 0.15f });
+		m_curVelocity = XMVectorLerp(m_curVelocity, m_velocity, deltaTime * 10.f);
+
+		
+		PxVec3 pxDir;
+		memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 		// GRAVITY
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
-		
+		m_pController->move(pxDir, 0.f, deltaTime, PxControllerFilters{});
+
+		ADDLOG(("pxDir: " + to_string(XMVectorGetX(m_curVelocity)) + ", " + to_string(XMVectorGetZ(m_curVelocity))).c_str());
+
+
+		// Get angle between CameraLook and PlayerLook
+		_vector playerLook = m_pTransform->GetState(CTransform::STATE_LOOK);
+		playerLook = XMVector4Normalize(XMVectorSetW(XMVectorSetY(playerLook, 0.f), 0.f));
+
+		_vector movingDir;
+		memcpy(&movingDir, &m_velocity, sizeof(PxVec3));
+		movingDir = XMVector4Normalize(XMVectorSetW(XMVectorSetY(movingDir, 0.f), 0.f));
+
+		m_angleBetweenCamPlayer = XMVectorGetX(XMVector4AngleBetweenVectors(playerLook, movingDir));
+		if (XMVectorGetY(XMVector3Cross(playerLook, movingDir)) < 0)
+			m_angleBetweenCamPlayer *= -1;
+
+
+
 		TimeRaycast += CEngine::GetInstance()->ComputeDeltaTime("Raycast");
 		if (TimeRaycast > 0.01f)
 		{
@@ -154,26 +180,34 @@ void CPlayer::Update(_double deltaTime)
 				//ADDLOG(("rayDir: " + rayDir).c_str());
 
 				PxU32 distance = hit.block.distance;
-				ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
+				//ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
 				PxU32 faceIndex = hit.block.faceIndex;
-				ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
+				//ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
 				// PxU32 faceIndex = hit.getTouch(0).faceIndex;
 				PxVec3 hitPos = hit.block.position;
 				PxVec3 hitNormal = hit.block.normal;
 
 				string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-				ADDLOG(("Hit Pos: " + logPos).c_str());
+				//ADDLOG(("Hit Pos: " + logPos).c_str());
 				string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
-				ADDLOG(("Hit Normal: " + logStr).c_str());
+				//ADDLOG(("Hit Normal: " + logStr).c_str());
 
 				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
 
-				_float xAxisAngle = GetXAxisAngle(myLookPos);
-				_float yAxisAngle = GetYAxisAngle(myLookPos);
+				m_targetUpperRotation.x = GetXAxisAngle(myLookPos);
+				m_targetUpperRotation.y = GetYAxisAngle(myLookPos);
 
-				
-				m_pModel->SetUpperRotationAngle(_float2{ xAxisAngle, yAxisAngle });
+				_float	fFollowSpeed = deltaTime * 15.f;
+				m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
+				m_curUpperRotation.y = Lerp(m_curUpperRotation.y, m_targetUpperRotation.y, fFollowSpeed);
+
+				m_pModel->SetUpperRotationAngle(m_curUpperRotation);
+
+				// Rotating Body
+				fFollowSpeed = deltaTime * 8.f;
+				m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
+				m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
 
 				//_uint numHits = hit.getNbAnyHits();
 				//ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
@@ -237,6 +271,12 @@ void CPlayer::Update(_double deltaTime)
 			}
 		}
 	}
+
+	m_pLowerState->HandleInput(&m_pLowerState, *this);
+	m_pLowerState->Update(&m_pLowerState, *this);
+
+	m_pUpperState->HandleInput(&m_pUpperState, *this);
+	m_pUpperState->Update(&m_pUpperState, *this);
 
 	if (CEngine::GetInstance()->IsKeyDown('9'))
 	{
@@ -327,20 +367,11 @@ _float CPlayer::GetXAxisAngle(_vector hitPos)
 	_vector xVecAxisAngle = XMVector3AngleBetweenVectors(hitposDir, lookDir);
 	_float xAxisAngle = XMVectorGetX(xVecAxisAngle);
 
-
 	_vector rootRight = m_pTransform->GetState(CTransform::STATE_UP);
-
 	_vector angleBetweenUpVector = XMVector3AngleBetweenVectors(rootRight, hitposDir);
 	_float rightVecAngle = XMVectorGetX(angleBetweenUpVector);
 	if (XMConvertToRadians(90) > rightVecAngle)
 		xAxisAngle *= -1;
-	//_vector YZDir = XMVectorSubtract(hitPos, mySpinePos);
-	//_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
-	//_vector xVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, YZDir);
-	//_float xAxisAngle = XMVectorGetX(xVecAxisAngle);
-
-	// ADDLOG(("spineY: " + to_string(spineY)).c_str());
-	ADDLOG(("xAxisAngle: " + to_string(XMConvertToDegrees(xAxisAngle))).c_str());
 
 	return xAxisAngle;
 }
@@ -359,15 +390,30 @@ _float CPlayer::GetYAxisAngle(_vector hitPos)
 	_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
 	_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
 
+	_vector crossResult = XMVector3Cross(rootLook, XZDir);
+	//ADDLOG(("cross: " + to_string(XMVectorGetX(crossResult)) + ", " + to_string(XMVectorGetY(crossResult)) + ", " + to_string(XMVectorGetZ(crossResult))).c_str());
 
 	_vector rootRight = m_pTransform->GetState(CTransform::STATE_RIGHT);
-
 	_vector angleBetweenRightVector = XMVector3AngleBetweenVectors(rootRight, XZDir);
 	_float rightVecAngle = XMVectorGetX(angleBetweenRightVector);
-	if (XMConvertToRadians(90) < rightVecAngle)
+	if (XMVectorGetY(crossResult) < 0.f)
 		yAxisAngle *= -1;
 
-	ADDLOG(("yAxisAngle@@@: " + to_string(XMConvertToDegrees(yAxisAngle))).c_str());
+	//ADDLOG(("yAxisAngle: " + to_string(XMConvertToDegrees(yAxisAngle))).c_str());
+
+	//// -70 or 70 이상 넘어가면 body rotate
+	if (XMConvertToDegrees(yAxisAngle) > 70.f)
+	{
+		m_turn90.first = true;
+		m_targetBodyRotation += 70.f;
+	}
+	else if (XMConvertToDegrees(yAxisAngle) < -70.f)
+	{
+		m_turn90.second = true;
+		m_targetBodyRotation -= 70.f;
+	}
+	else
+		m_turn90 = { false, false };
 
 	return yAxisAngle;
 }
