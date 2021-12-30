@@ -75,7 +75,7 @@ HRESULT CBoxCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
+void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj)
 {
 	m_RigidBodyDesc = desc;
 	//PxRigidDynamic* aSphereActor = thePhysics->createRigidDynamic(PxTransform(position));
@@ -134,7 +134,7 @@ void CBoxCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 			m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
 		}
 
-		m_pRigidActor->userData = this;
+		m_pRigidActor->userData = obj;
 		m_pRigidActor->attachShape(*meshShape);
 		m_pEngine->AddActor(m_pRigidActor);
 	}

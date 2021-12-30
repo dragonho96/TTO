@@ -61,7 +61,7 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 
 		_vector vTargetPos = m_pTargetTransform->GetState(CTransform::STATE_POSITION);
 
-		_vector vInvTargetLook = _vector{ 0, 0, 1 } * -10.f;
+		_vector vInvTargetLook = _vector{ 0, 0, 1 } * -15.f;
 
 		// Right-Axis Rotation
 		XMMATRIX matRot;

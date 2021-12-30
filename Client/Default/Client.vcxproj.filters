@@ -106,7 +106,10 @@
     <ClInclude Include="..\Public\RifleState.h">
       <Filter>StateMachine\RifleState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GrenadeState.h" />
+    <ClInclude Include="..\Public\GrenadeState.h">
+      <Filter>StateMachine\GrenadeState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -202,7 +205,10 @@
     <ClCompile Include="..\Private\RifleState.cpp">
       <Filter>StateMachine\RifleState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GrenadeState.cpp" />
+    <ClCompile Include="..\Private\GrenadeState.cpp">
+      <Filter>StateMachine\GrenadeState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -317,6 +323,9 @@
     </Filter>
     <Filter Include="StateMachine\GrenadeState">
       <UniqueIdentifier>{335440f6-a9a8-4650-9ace-4789732c8bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy">
+      <UniqueIdentifier>{acd197dc-386f-4366-a88c-0dd06dbef89b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

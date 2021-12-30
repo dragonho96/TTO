@@ -93,9 +93,6 @@ HRESULT CModel::Initialize(void * pArg)
 		0 < m_Animations.size())
 		CreateRagdollRbs();
 
-	// handGunNode = Find_HierarchyNode("ik_hand_gun");
-	// handGunNode = Find_HierarchyNode("hand_r");
-
 	return S_OK;
 }
 
@@ -223,7 +220,7 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	//ModelPivotMatrix = ScaleMatrix;
 	// Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ModelPivotMatrix);
 
-	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ANIM_TYPE::NONE ,XMMatrixIdentity());
+	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ANIM_TYPE::NONE, XMMatrixIdentity());
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest) {
 		return pSour->Get_Depth() < pDest->Get_Depth();
@@ -731,7 +728,7 @@ HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType)
 	if (iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
-	if (eType == ANIM_TYPE::LOWER)
+	if (eType == ANIM_TYPE::LOWER || eType == ANIM_TYPE::NONE)
 	{
 		if (m_iAnimationIndex == iAnimationIndex)
 			return S_OK;
@@ -766,26 +763,41 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 	if (m_Animations.empty() || m_iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
-	Blend_Animation(TimeDelta);
-	// m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
-
-	// 여기서 Spine쪽으로 가면 Upper anim을 따르고 thigh쪽이라면 Lower anim 을 따른다
-	ANIM_TYPE type = ANIM_TYPE::NONE;
-	for (auto& pHierarchyNodes : m_HierarchyNodes)
+	if (false == m_bAnimSeperate)
 	{
-		if (pHierarchyNodes->Get_Type() == ANIM_TYPE::UPPER)
-			type = ANIM_TYPE::UPPER;
-		else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
-			type = ANIM_TYPE::LOWER;
+		m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+		if (m_iAnimationIndex != m_iPrevAnimationIndex)
+		{
+			_float ratio = (m_fBlendTime / m_fBlendDuration);
+			m_Animations[m_iAnimationIndex]->Blend_Animation(m_Animations[m_iPrevAnimationIndex], ratio);
+			m_fBlendTime += TimeDelta;
+			if (m_fBlendTime >= m_fBlendDuration)
+				m_iPrevAnimationIndex = m_iAnimationIndex;
+		}
+		for (auto& pHierarchyNodes : m_HierarchyNodes)
+			pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, ANIM_TYPE::NONE, { 0.f, 0.f });
+	}
+	else
+	{
+		// 여기서 Spine쪽으로 가면 Upper anim을 따르고 thigh쪽이라면 Lower anim 을 따른다
+		Blend_Animation(TimeDelta);
+		ANIM_TYPE type = ANIM_TYPE::NONE;
+		for (auto& pHierarchyNodes : m_HierarchyNodes)
+		{
+			if (pHierarchyNodes->Get_Type() == ANIM_TYPE::UPPER)
+				type = ANIM_TYPE::UPPER;
+			else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
+				type = ANIM_TYPE::LOWER;
 
-		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
+			pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
+		}
 	}
 
 	// Set ragdoll rb position
 	for (auto& ragdollRb : m_RagdollRbs)
 		SetRagdollRbTransform(ragdollRb.second);
 
-	
+
 	return S_OK;
 }
 
@@ -1174,7 +1186,9 @@ void CModel::CreatePxMesh()
 	filterData.word0 = CPxManager::GROUP1;
 	// filterData.word1 = CPxManager::GROUP2;
 	shape->setQueryFilterData(filterData);
-
+	
+	// m_pRigidActor->userData = "";
+	
 	m_pRigidActor->attachShape(*shape);
 	pEngine->AddActor(m_pRigidActor);
 

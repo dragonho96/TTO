@@ -32,7 +32,7 @@ public:
 
 public:
 	virtual HRESULT SetUpDebugLine() PURE;
-	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) PURE;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, class CGameObject* obj) PURE;
 
 public:
 	RIGIDBODYDESC&	GetRigidBodyDesc() { return m_RigidBodyDesc; }

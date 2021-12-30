@@ -78,7 +78,7 @@ HRESULT CCapsuleCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
+void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj)
 {
 	m_RigidBodyDesc = desc;
 
@@ -108,7 +108,7 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 			desc.material = pMaterial;
 			desc.position = PxExtendedVec3(transform.p.x, transform.p.y, transform.p.z);
 			desc.contactOffset = 0.001f;
-			
+			desc.userData = obj;
 			//desc.behaviorCallback = 
 			//desc.reportCallback = &m_callback;
 			//CE_ASSERT(desc.isValid(), "Capsule is not valid");
@@ -116,6 +116,9 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 				m_pController = CEngine::GetInstance()->GetControllerManager()->createController(desc);
 			PxShape* shape = nullptr;
 			m_pController->getActor()->getShapes(&shape, 1);
+			m_pController->getActor()->userData = obj;
+			if (m_pController->getActor()->userData)
+				int i = 0;
 			PxFilterData filterData;
 			filterData.word0 = CPxManager::GROUP1;
 			// filterData.word1 = CPxManager::GROUP1;
@@ -151,7 +154,7 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		{
 			m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
 		}
-
+		m_pRigidActor->userData = obj;
 		m_pRigidActor->attachShape(*meshShape);
 		m_pEngine->AddActor(m_pRigidActor);
 	}

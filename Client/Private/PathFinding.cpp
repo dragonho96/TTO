@@ -30,8 +30,8 @@ void CPathFinding::Update()
 		return;
 	if (CEngine::GetInstance()->IsKeyDown('F'))
 	{
-		CEngine::GetInstance()->AddTimers("Timer_PathFinding");
-		CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
+		//CEngine::GetInstance()->AddTimers("Timer_PathFinding");
+		//CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
 
 		_float3 startPos, targetPos;
 		XMStoreFloat3(&startPos, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));

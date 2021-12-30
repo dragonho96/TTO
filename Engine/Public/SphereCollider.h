@@ -21,7 +21,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	virtual HRESULT SetUpDebugLine() override;
-	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) override;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj) override;
 public:
 	void SetSize(float fRadius);
 	float GetSize() { return m_fRadius; }

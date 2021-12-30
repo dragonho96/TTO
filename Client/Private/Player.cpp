@@ -55,6 +55,7 @@ HRESULT CPlayer::Initialize()
 
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
+	m_pModel->SetAnimSeperate(true);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_RIFLE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_RIFLE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_GRENADE, false);
@@ -94,7 +95,6 @@ void CPlayer::Update(_double deltaTime)
 
 	static bool startRagdoll = false;
 
-	UpdateWeaponTransform();
 
 
 	if (m_pController)
@@ -136,14 +136,12 @@ void CPlayer::Update(_double deltaTime)
 		// m_velocity = XMVectorClamp(m_velocity, XMVectorZero(), _vector{ 0.15f, 0.15f, 0.15f });
 		m_curVelocity = XMVectorLerp(m_curVelocity, m_velocity, deltaTime * 10.f);
 
-		
+
 		PxVec3 pxDir;
 		memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 		// GRAVITY
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 		m_pController->move(pxDir, 0.f, deltaTime, PxControllerFilters{});
-
-		ADDLOG(("pxDir: " + to_string(XMVectorGetX(m_curVelocity)) + ", " + to_string(XMVectorGetZ(m_curVelocity))).c_str());
 
 
 		// Get angle between CameraLook and PlayerLook
@@ -180,17 +178,25 @@ void CPlayer::Update(_double deltaTime)
 				//ADDLOG(("rayDir: " + rayDir).c_str());
 
 				PxU32 distance = hit.block.distance;
-				//ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
 				PxU32 faceIndex = hit.block.faceIndex;
-				//ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
 				// PxU32 faceIndex = hit.getTouch(0).faceIndex;
 				PxVec3 hitPos = hit.block.position;
 				PxVec3 hitNormal = hit.block.normal;
+				if (hit.block.actor->userData)
+					int i = 0;
 
-				string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-				//ADDLOG(("Hit Pos: " + logPos).c_str());
-				string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
-				//ADDLOG(("Hit Normal: " + logStr).c_str());
+				if (CEngine::GetInstance()->IsMouseDown(0))
+				{
+					ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
+					ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
+					string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+					string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
+					ADDLOG(("Hit Pos: " + logPos).c_str());
+					ADDLOG(("Hit Normal: " + logStr).c_str());
+					CGameObject* hitObject = static_cast<CGameObject*>(hit.block.actor->userData);
+					if (hitObject)
+						ADDLOG(hitObject->GetName().c_str());
+				}
 
 				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
@@ -296,18 +302,8 @@ void CPlayer::Update(_double deltaTime)
 
 void CPlayer::LapteUpdate(_double deltaTime)
 {
-	// Ragdoll Anim
-
-	//static int anim = 0;
-	//if (CEngine::GetInstance()->IsKeyDown('1'))
-	//	anim = 0;
-	//if (CEngine::GetInstance()->IsKeyDown('2'))
-	//	anim = 1;
-	//if (CEngine::GetInstance()->IsKeyDown('3'))
-	//	anim = 2;
-
-	//m_pModel->SetUp_AnimationIndex(anim);
 	m_pModel->Play_Animation(deltaTime);
+	UpdateWeaponTransform();
 }
 
 void CPlayer::UpdateWeaponTransform()

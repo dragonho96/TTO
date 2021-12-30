@@ -15,6 +15,7 @@ void CCrouchState::Update(CStateMachine ** pState, CPlayer& pPlayer)
 
 void CCrouchState::Enter(CStateMachine ** pState, CPlayer& pPlayer)
 {
+	m_bTurnning = false;
 	CheckAnim(pState, pPlayer);
 }
 

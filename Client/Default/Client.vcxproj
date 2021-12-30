@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\CrouchState.h" />
+    <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\EquipButtonManager.h" />
     <ClInclude Include="..\Public\Equipment.h" />
     <ClInclude Include="..\Public\EquipmentPool.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
     <ClCompile Include="..\Private\Camera_Follow.cpp" />
     <ClCompile Include="..\Private\CrouchState.cpp" />
+    <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\EquipButtonManager.cpp" />
     <ClCompile Include="..\Private\Equipment.cpp" />
     <ClCompile Include="..\Private\EquipmentPool.cpp" />

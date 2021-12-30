@@ -11,6 +11,7 @@
 #include "Grid.h"
 
 #include "Player.h"
+#include "Enemy.h"
 #include "EquipButtonManager.h"
 #include "EquipmentPool.h"
 USING(Client)
@@ -53,11 +54,11 @@ HRESULT CScene_Test::Initialize()
 
 	ReadyScript();
 
-	//if (FAILED(ReadyLayerGrid("LAYER_GRID")))
-	//	return E_FAIL;
+	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
+		return E_FAIL;
 
-	//m_pPathFinding = CPathFinding::GetInstance();
-	//m_pPathFinding->Initialize();
+	m_pPathFinding = CPathFinding::GetInstance();
+	m_pPathFinding->Initialize();
 
 	return S_OK;
 }
@@ -119,6 +120,14 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
+
+	// Get Enemy number and create enemy scripts
+
+	list<class CGameObject*> listEnemy = CEngine::GetInstance()->GetGameObjectInLayer(0, "Enemy");
+	for(auto& iter : listEnemy)
+		m_pEngine->AddScriptObject(CEnemy::Create(iter));
+
+
 	// m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
 
 	// m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());

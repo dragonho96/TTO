@@ -75,7 +75,7 @@ HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 	return S_OK;
 }
 
-void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
+void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj)
 {
 	m_RigidBodyDesc = desc;
 	memcpy(&m_fRadius, pShapeInfo, sizeof(_float));
@@ -108,7 +108,7 @@ void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc)
 		{
 			m_pRigidActor = m_pEngine->GetPhysics()->createRigidStatic(transform);
 		}
-
+		m_pRigidActor->userData = obj;
 		m_pRigidActor->attachShape(*meshShape);
 		m_pEngine->AddActor(m_pRigidActor);
 	}

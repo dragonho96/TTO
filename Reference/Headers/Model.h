@@ -35,6 +35,7 @@ public:
 	_bool	IsUpperFinished() { return m_bFinished_Upper; }
 	void	SetAnimationLoop(_uint idx, _bool result);
 	void	SetUpperRotationAngle(_float2 angle) { m_upperRotationAngle = angle; }
+	void	SetAnimSeperate(_bool result) { m_bAnimSeperate = result; }
 
 public:
 	HRESULT Bind_Buffers();
@@ -111,6 +112,7 @@ private:
 	_bool									m_bFinished_Lower = false;
 	_bool									m_bFinished_Upper = false;
 	_float2									m_upperRotationAngle = { 0.f, 0.f };
+	_bool									m_bAnimSeperate = false;
 
 	_float									m_fBlendDuration = 0.2f;
 	_float									m_fBlendTime = 0.0f;

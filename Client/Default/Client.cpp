@@ -79,7 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		TimeAcc += pEngine->ComputeDeltaTime("Timer_Default");
 
-		if (TimeAcc > 1.0 / 60.0)
+		if (TimeAcc > 1.0 / 144.0)
 		{
 			pMainApp->Update(TimeAcc);
 			//pMainApp->Tick(pGameInstance->Compute_TimeDelta(TEXT("Timer_40")));

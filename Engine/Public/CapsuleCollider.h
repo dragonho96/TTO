@@ -22,7 +22,7 @@ public:
 
 public:
 	virtual HRESULT SetUpDebugLine() override;
-	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc) override;
+	virtual void SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj) override;
 public:
 	void SetSize(pair<float, float> size);
 	pair<float, float> GetSize() { return make_pair(m_fRadius, m_fHeight); }
