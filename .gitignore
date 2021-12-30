@@ -389,3 +389,5 @@ FodyWeavers.xsd
 
 *.lib
 *.dll
+
+**/Assets/

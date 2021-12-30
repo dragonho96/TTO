@@ -31,17 +31,18 @@ HRESULT CCamera_Follow::Initialize(void * pArg)
 		return E_FAIL;
 
 	CGameObject* m_pGameObject = list.front();
-	m_pTargetTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
+	m_pPlayerTransform = dynamic_cast<CTransform*>(m_pGameObject->GetComponent("Com_Transform"));
 
+	SetUpComponents(0, "Prototype_Transform", "Com_Transform_Target", (CComponent**)&m_pTargetTransform);
 	return S_OK;
 }
 
 _uint CCamera_Follow::Update(_double TimeDelta)
 {
-	return -1;
-
 	if (nullptr == m_pTransformCom)
 		return -1;
+
+	m_pTargetTransform->SetState(CTransform::STATE_POSITION, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));
 
 	// Q || E 누르면 m_pTargetLook을 회전시긴다
 	if (GetActiveWindow() == g_hWnd)
@@ -60,7 +61,7 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 
 		_vector vTargetPos = m_pTargetTransform->GetState(CTransform::STATE_POSITION);
 
-		_vector vInvTargetLook = _vector{ 0, 0, 1 } * -5.f;
+		_vector vInvTargetLook = _vector{ 0, 0, 1 } * -10.f;
 
 		// Right-Axis Rotation
 		XMMATRIX matRot;

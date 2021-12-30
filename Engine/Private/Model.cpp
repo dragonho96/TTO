@@ -62,7 +62,7 @@ HRESULT CModel::Initialize(void * pArg)
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && m_bMeshCollider)
 		CreatePxMesh();
 
-	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
+	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ANIM_TYPE::NONE, XMMatrixIdentity());
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest)
 	{
@@ -76,6 +76,7 @@ HRESULT CModel::Initialize(void * pArg)
 		for (auto& pBoneDesc : Bones)
 		{
 			pBoneDesc->pHierarchyNode = Find_HierarchyNode(pBoneDesc->pName);
+			pBoneDesc->pHierarchyNode->Set_OffSetMatrix(XMLoadFloat4x4(&pBoneDesc->OffsetMatrix));
 			SetRagdollBoneDesc(pBoneDesc);
 		}
 	}
@@ -90,9 +91,21 @@ HRESULT CModel::Initialize(void * pArg)
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT &&
 		0 < m_Animations.size())
-			CreateRagdollRbs();
+		CreateRagdollRbs();
+
+	// handGunNode = Find_HierarchyNode("ik_hand_gun");
+	// handGunNode = Find_HierarchyNode("hand_r");
 
 	return S_OK;
+}
+
+_fmatrix CModel::Get_BoneMatrix(const char * pBoneName)
+{
+	CHierarchyNode*		pNode = Find_HierarchyNode(pBoneName);
+	if (nullptr == pNode)
+		return XMMatrixIdentity();
+
+	return pNode->Get_OffsetMatrix() * pNode->Get_CombinedTransformationMatrix();
 }
 
 HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath)
@@ -115,6 +128,46 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	if (nullptr == m_pScene)
 		return E_FAIL;
 
+	//FILESYSTEM::path pFullPath = FILESYSTEM::directory_entry(strFullPath).path();
+	//string fileName = pFullPath.stem().string();
+	//string fileExtension = pFullPath.extension().string();
+	////
+	//std::string path = "C:\\Users\\drago\\Documents\\GitHub\\TTO\\Assets\\Meshes\\Binary\\";
+	//string strFinalFullPath = path + fileName + ".glb";
+
+
+	//ifstream fin(strFinalFullPath, (ios::in | ios::ate | ios::binary));
+	//fin.seekg(0, ios::end);   // 끝위치 이동
+	//long fileSize = fin.tellg();  // 파일사이즈 구하긔
+	//fin.seekg(0, ios::beg);   // 다시 시작으로 갖다놓긔
+
+	//unsigned char* buffer = new unsigned char[fileSize];
+
+	//fin.read((char*)buffer, fileSize);
+	//fin.close();
+
+	//m_pScene = m_Importer.ReadFileFromMemory(buffer, fileSize/*, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace*/);
+	//delete[] buffer;
+
+
+	//if (nullptr == m_pScene)
+	//{
+	//}
+
+
+	//m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//if (nullptr == m_pScene)
+	//{
+	//	m_pScene = m_Importer.ReadFile(strFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+
+	//	Assimp::Exporter Exporter;
+	//	auto descr = Exporter.GetExportFormatDescription(10);
+	//	string id = descr->id;
+	//	if (aiReturn::aiReturn_FAILURE == Exporter.Export(m_pScene, descr->id, strFinalFullPath))
+	//		return E_FAIL;
+
+	//	m_pScene = m_Importer.ReadFile(strFinalFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	//}
 
 	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
@@ -170,7 +223,7 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	//ModelPivotMatrix = ScaleMatrix;
 	// Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ModelPivotMatrix);
 
-	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, XMMatrixIdentity());
+	Create_HierarchyNodes(m_pScene->mRootNode, nullptr, 0, ANIM_TYPE::NONE ,XMMatrixIdentity());
 
 	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pSour, CHierarchyNode* pDest) {
 		return pSour->Get_Depth() < pDest->Get_Depth();
@@ -252,6 +305,9 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 
 	for (auto& pMeshContainer : m_SortByMaterialMesh[iMaterialIndex])
 	{
+		if (!pMeshContainer->IsActive())
+			continue;
+
 		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 		{
 			ZeroMemory(BoneMatrices, sizeof(_matrix) * 512);
@@ -414,7 +470,7 @@ HRESULT CModel::Create_Materials(aiMaterial* pMaterial, string pMeshFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, _uint iDepth, _fmatrix PivotMatrix)
+HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, _uint iDepth, ANIM_TYPE eType, _fmatrix PivotMatrix)
 {
 	_matrix		TransformationMatrix;
 	memcpy(&TransformationMatrix, &pNode->mTransformation, sizeof(_matrix));
@@ -426,7 +482,15 @@ HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, 
 	//// RotationMatrix = XMMatrixRotationX(XMConvertToRadians(90.0f));
 	//ModelPivotMatrix = ScaleMatrix;
 
-	CHierarchyNode*		pHierarchyNode = CHierarchyNode::Create(pNode->mName.data, TransformationMatrix * PivotMatrix, pParent, iDepth);
+	if (eType == ANIM_TYPE::NONE)
+	{
+		if (!strcmp(pNode->mName.data, "spine_01"))
+			eType = ANIM_TYPE::UPPER;
+		else if (!strcmp(pNode->mName.data, "thigh_l") || !strcmp(pNode->mName.data, "thigh_r"))
+			eType = ANIM_TYPE::LOWER;
+	}
+
+	CHierarchyNode*		pHierarchyNode = CHierarchyNode::Create(pNode->mName.data, TransformationMatrix * PivotMatrix, pParent, iDepth, eType);
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
@@ -436,7 +500,7 @@ HRESULT CModel::Create_HierarchyNodes(aiNode * pNode, CHierarchyNode * pParent, 
 	m_HierarchyNodes.push_back(pHierarchyNode);
 
 	for (_uint i = 0; i < pNode->mNumChildren; ++i)
-		Create_HierarchyNodes(pNode->mChildren[i], pHierarchyNode, iDepth + 1);
+		Create_HierarchyNodes(pNode->mChildren[i], pHierarchyNode, iDepth + 1, eType);
 
 	return S_OK;
 }
@@ -479,12 +543,12 @@ HRESULT CModel::SetUp_SkinnedInfo()
 			_matrix		OffsetMatrix;
 			memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_matrix));
 			XMStoreFloat4x4(&pBoneDesc->OffsetMatrix, XMMatrixTranspose(OffsetMatrix));
-
+			pBoneDesc->pHierarchyNode->Set_OffSetMatrix(XMMatrixTranspose(OffsetMatrix));
 			// memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
 
-			CHierarchyNode* h = pBoneDesc->pHierarchyNode;
-			// memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
-			XMStoreFloat4x4(&h->m_offset, XMMatrixTranspose(OffsetMatrix));
+			//CHierarchyNode* h = pBoneDesc->pHierarchyNode;
+			//// memcpy(&h->m_offset, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_float4x4));
+			//XMStoreFloat4x4(&h->m_offset, XMMatrixTranspose(OffsetMatrix));
 
 			//SetRagdollBoneDesc(pBone->mName.data, pBoneDesc);
 
@@ -533,14 +597,67 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pBoneName)
 	return *iter;
 }
 
+BONEDESC * CModel::Find_Bone(string pBoneName)
+{
+	for (auto& pMeshContainer : m_MeshContainers)
+	{
+		vector<BONEDESC*>	Bones = pMeshContainer->Get_BoneDesc();
+
+		for (auto& pBoneDesc : Bones)
+		{
+			if (pBoneDesc->pHierarchyNode->Get_Name() == pBoneName)
+				return pBoneDesc;
+		}
+	}
+
+	return nullptr;
+}
+
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
+	//_float	fFollowSpeed = TimeDelta * 15.f;
+	//m_curUpperRotationAngle.x = Lerp(m_curUpperRotationAngle.x, m_upperRotationAngle.x, fFollowSpeed);
+	//m_curUpperRotationAngle.y = Lerp(m_curUpperRotationAngle.y, m_upperRotationAngle.y, fFollowSpeed);
+	//
 	if (m_bSimulateRagdoll)
 		Update_CombinedTransformationMatrix_Ragdoll();
 	else
 		Update_CombinedTransformationMatrices(TimeDelta);
 
 	return S_OK;
+}
+
+HRESULT CModel::Blend_Animation(_double TimeDelta)
+{
+	// Upper꺼 Lower꺼 각각 해줘야한다
+	// Lower
+	m_bFinished_Lower = m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+	if (m_iAnimationIndex != m_iPrevAnimationIndex)
+	{
+		_float ratio = (m_fBlendTime / m_fBlendDuration);
+		m_Animations[m_iAnimationIndex]->Blend_Animation(m_Animations[m_iPrevAnimationIndex], ratio);
+		m_fBlendTime += TimeDelta;
+		if (m_fBlendTime >= m_fBlendDuration)
+			m_iPrevAnimationIndex = m_iAnimationIndex;
+	}
+
+	// Upper
+	m_bFinished_Upper = m_Animations[m_iAnimationIndex_Upper]->Update_TransformationMatrices(TimeDelta);
+	if (m_iAnimationIndex_Upper != m_iPrevAnimationIndex_Upper)
+	{
+		_float ratio = (m_fBlendTime_Upper / m_fBlendDuration);
+		m_Animations[m_iAnimationIndex_Upper]->Blend_Animation(m_Animations[m_iPrevAnimationIndex_Upper], ratio);
+		m_fBlendTime_Upper += TimeDelta;
+		if (m_fBlendTime_Upper >= m_fBlendDuration)
+			m_iPrevAnimationIndex_Upper = m_iAnimationIndex_Upper;
+	}
+
+	return S_OK;
+}
+
+void CModel::SetAnimationLoop(_uint idx, _bool result)
+{
+	m_Animations[idx]->SetLoop(result);
 }
 
 HRESULT CModel::SetUp_AnimationInfo()
@@ -603,18 +720,43 @@ HRESULT CModel::SetUp_AnimationInfo()
 
 			pAnimation->Add_Channel(pChannel);
 		}
+
 		m_Animations.push_back(pAnimation);
 	}
-
 	return S_OK;
 }
 
-HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex)
+HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType)
 {
 	if (iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
-	m_iAnimationIndex = iAnimationIndex;
+	if (eType == ANIM_TYPE::LOWER)
+	{
+		if (m_iAnimationIndex == iAnimationIndex)
+			return S_OK;
+
+		m_iPrevAnimationIndex = m_iAnimationIndex;
+		m_iAnimationIndex = iAnimationIndex;
+
+		m_Animations[iAnimationIndex]->ResetCurrentTime();
+		m_fBlendTime = 0.f;
+
+		m_bFinished_Lower = false;
+	}
+	else if (eType == ANIM_TYPE::UPPER)
+	{
+		if (m_iAnimationIndex_Upper == iAnimationIndex)
+			return S_OK;
+
+		m_iPrevAnimationIndex_Upper = m_iAnimationIndex_Upper;
+		m_iAnimationIndex_Upper = iAnimationIndex;
+
+		m_Animations[iAnimationIndex]->ResetCurrentTime();
+		m_fBlendTime_Upper = 0.f;
+
+		m_bFinished_Upper = false;
+	}
 
 	return S_OK;
 }
@@ -624,15 +766,26 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 	if (m_Animations.empty() || m_iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
 
-	m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
+	Blend_Animation(TimeDelta);
+	// m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 
+	// 여기서 Spine쪽으로 가면 Upper anim을 따르고 thigh쪽이라면 Lower anim 을 따른다
+	ANIM_TYPE type = ANIM_TYPE::NONE;
 	for (auto& pHierarchyNodes : m_HierarchyNodes)
-		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex);
+	{
+		if (pHierarchyNodes->Get_Type() == ANIM_TYPE::UPPER)
+			type = ANIM_TYPE::UPPER;
+		else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
+			type = ANIM_TYPE::LOWER;
+
+		pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
+	}
 
 	// Set ragdoll rb position
 	for (auto& ragdollRb : m_RagdollRbs)
 		SetRagdollRbTransform(ragdollRb.second);
 
+	
 	return S_OK;
 }
 
@@ -659,6 +812,18 @@ void CModel::Add_ChannelToHierarchyNode(_uint iAnimationindex, CChannel * pChann
 
 
 
+
+CMeshContainer * CModel::GetMeshContainerByName(string name)
+{
+	auto	iter = find_if(m_MeshContainers.begin(), m_MeshContainers.end(), [&](CMeshContainer* pContainer)->bool
+	{
+		return pContainer->GetName() == name;
+	});
+	if (iter != m_MeshContainers.end())
+		return *iter;
+
+	return nullptr;
+}
 
 void CModel::SetRagdollBoneDesc(BONEDESC* desc)
 {

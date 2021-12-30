@@ -110,6 +110,9 @@ BASEEQUIPDESC* CEquipmentSerializer::DeserializeBase(YAML::Node & node, BASEEQUI
 		pDesc->slotSize.y = sequence[1].as<_uint>();
 	}
 
+	pDesc->mesh = nullptr;
+	pDesc->model = nullptr;
+
 	return pDesc;
 }
 

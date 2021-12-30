@@ -43,12 +43,11 @@ HRESULT CScene_Test::Initialize()
 {
 	__super::Initialize();
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
+	m_pEngine->DeserializeScene("../../Assets/Scenes/ModelTest.yaml");
 
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);
 	
-	m_pEngine->DeserializeScene("../../Assets/Scenes/ModelTest.yaml");
-
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
@@ -87,15 +86,15 @@ HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
 
-	CameraDesc.vEye = _float3(0.f, 1.f, -5.f);
+	CameraDesc.vEye = _float3(0.f, 3.f, -5.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
-	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
-		return E_FAIL;
-
-	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Follow", pLayerTag, &CameraDesc))
+	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
 	//	return E_FAIL;
+
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Camera_Follow", pLayerTag, &CameraDesc))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
 

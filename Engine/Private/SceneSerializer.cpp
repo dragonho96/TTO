@@ -127,7 +127,6 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 	}
 
 	/* Prepare prefabs*/
-	DeserializePrefab();
 	return true;
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "HierarchyNode.h"
+#include "MeshContainer.h"
 #include "Shader.h"
 
 BEGIN(Engine)
@@ -20,12 +22,20 @@ private:
 	virtual ~CModel() = default;
 public:
 	virtual HRESULT InitializePrototype();
-	virtual HRESULT Initialize(void* pArg); 
+	virtual HRESULT Initialize(void* pArg);
 	HRESULT Render(_uint iMaterialIndex, _uint iPassIndex);
 
 public:
-	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex);
+	_fmatrix Get_BoneMatrix(const char* pBoneName);
+public:
+	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType);
 	HRESULT Play_Animation(_double TimeDelta);
+	HRESULT Blend_Animation(_double TimeDelta);
+	_bool	IsLowerFinished() { return m_bFinished_Lower; }
+	_bool	IsUpperFinished() { return m_bFinished_Upper; }
+	void	SetAnimationLoop(_uint idx, _bool result);
+	void	SetUpperRotationAngle(_float2 angle) { m_upperRotationAngle = angle; }
+
 public:
 	HRESULT Bind_Buffers();
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
@@ -33,7 +43,7 @@ private:
 	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex, _fmatrix PivotMatrix);
 	HRESULT Create_VertexIndexBuffer(string pShaderFilePath);
 	HRESULT Create_Materials(aiMaterial*	pMaterial, string pMeshFilePath);
-	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0, _fmatrix PivotMatrix = XMMatrixIdentity());
+	HRESULT Create_HierarchyNodes(aiNode* pNode, class CHierarchyNode* pParent = nullptr, _uint iDepth = 0, ANIM_TYPE eType = ANIM_TYPE::NONE, _fmatrix PivotMatrix = XMMatrixIdentity());
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo();
 	HRESULT SetUp_AnimationInfo();
@@ -42,12 +52,14 @@ private:
 	void Add_ChannelToHierarchyNode(_uint iAnimationindex, class CChannel* pChannel);
 public:
 	CHierarchyNode* Find_HierarchyNode(const char* pBoneName);
+	BONEDESC* Find_Bone(string pBoneName);
 public:
 	HRESULT CreateBuffer(string pMeshFilePath, string pMeshFileName, string pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx");
 	void RemoveBuffer();
 public:
 	_bool& HasMeshCollider() { return m_bMeshCollider; }
 	void SetMeshCollider(_bool value) { m_bMeshCollider = value; }
+	CMeshContainer* GetMeshContainerByName(string name);
 
 public:
 	void SetRagdollBoneDesc(BONEDESC* desc);
@@ -58,8 +70,9 @@ public:
 	void ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::PxReal twistLo, physx::PxReal twistHi, physx::PxD6Joint* joint);
 	void SetRagdollRbTransform(RAGDOLLBONEDESC* ragdollBoneDesc);
 	void SetRagdollSimulate(_bool result);
-
+	_bool IsSimulatingRagdoll() { return m_bSimulateRagdoll; }
 	PxRigidDynamic* GetRagdollRb(string name);
+
 private:
 	void CreatePxMesh();
 
@@ -92,24 +105,33 @@ private:
 
 	vector<class CAnimation*>				m_Animations;
 	_uint									m_iAnimationIndex = 0;
+	_uint									m_iPrevAnimationIndex = 0;
+	_uint									m_iAnimationIndex_Upper = 32;
+	_uint									m_iPrevAnimationIndex_Upper = 32;
+	_bool									m_bFinished_Lower = false;
+	_bool									m_bFinished_Upper = false;
+	_float2									m_upperRotationAngle = { 0.f, 0.f };
 
+	_float									m_fBlendDuration = 0.2f;
+	_float									m_fBlendTime = 0.0f;
+	_float									m_fBlendTime_Upper = 0.0f;
+	vector<class CChannel*>					m_vecPrevChannels;
 private:
 	//ComRef<ID3D11Buffer>			m_pVB = nullptr;
 	//ComRef<ID3D11Buffer>			m_pIB = nullptr;
 
-	ID3D11Buffer*			m_pVB = nullptr;
-	ID3D11Buffer*			m_pIB = nullptr;
+	ID3D11Buffer*					m_pVB = nullptr;
+	ID3D11Buffer*					m_pIB = nullptr;
 
-	_uint					m_iStride = 0;
+	_uint							m_iStride = 0;
 
 protected:
-	vector<EFFECTDESC>			m_EffectDescs;
-	ID3DX11Effect*				m_pEffect = nullptr;
+	vector<EFFECTDESC>				m_EffectDescs;
+	ID3DX11Effect*					m_pEffect = nullptr;
 
-	Ref<class CShader>			m_pShader = nullptr;
+	Ref<class CShader>				m_pShader = nullptr;
 	class CTransform*				m_pTransform = nullptr;
 
-	_bool							m_bSimulateRagdoll = false;
 protected:
 	string m_pMeshFilePath = "";
 	string m_pMeshFileName = "";
@@ -122,8 +144,9 @@ private:
 	_bool				m_bMeshCollider = false;
 
 private:
-	unordered_map<string, BONEDESC*>	m_RagdollBones;
+	unordered_map<string, BONEDESC*>		m_RagdollBones;
 	unordered_map<string, RAGDOLLBONEDESC*> m_RagdollRbs;
+	_bool									m_bSimulateRagdoll = false;
 
 
 public:

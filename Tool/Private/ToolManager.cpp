@@ -51,6 +51,8 @@ HRESULT CToolManager::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
+	m_pEngine->DeserializePrefab();
+
 	if (FAILED(OpenScene(SCENE_TOOL)))
 		return E_FAIL;
 

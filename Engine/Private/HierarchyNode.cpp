@@ -7,12 +7,13 @@ CHierarchyNode::CHierarchyNode()
 
 }
 
-HRESULT CHierarchyNode::Initialize(const char * pNodeName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth)
+HRESULT CHierarchyNode::Initialize(const char * pNodeName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth, ANIM_TYPE eType)
 {
 	strcpy_s(m_szNodeName, pNodeName);
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(TransformationMatrix));
 	m_pParent = pParent;
 	m_iDepth = iDepth;
+	m_eType = eType;
 
 	return S_OK;
 }
@@ -26,14 +27,31 @@ HRESULT CHierarchyNode::Add_Channel(_uint iAnimationIndex, CChannel * pChannel)
 	return S_OK;
 }
 
-void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex)
+void CHierarchyNode::Update_CombinedTransformationMatrix(_uint iAnimationIndex, _uint iAnimationIndex_Upper, ANIM_TYPE eType, _float2 fUpperRotationAngle)
 {
 	_matrix		TransformationMatrix;
+	_uint		animIndex;
 
-	if (nullptr == m_Channels[iAnimationIndex])
+	if (eType == ANIM_TYPE::UPPER)
+		animIndex = iAnimationIndex_Upper;
+	else
+		animIndex = iAnimationIndex;
+
+	if (nullptr == m_Channels[animIndex])
 		TransformationMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
 	else
-		TransformationMatrix = m_Channels[iAnimationIndex]->Get_TransformationMatrix();
+		TransformationMatrix = m_Channels[animIndex]->Get_TransformationMatrix();
+
+	if (!(strcmp(m_szNodeName, "spine_02")))
+	{
+		// DO NOT USE 2
+		// idx 0 = ÁÂ¿ì
+		// idx 1 = À§¾Æ·¡
+		
+		TransformationMatrix *= XMMatrixRotationAxis(TransformationMatrix.r[0], fUpperRotationAngle.y);
+		TransformationMatrix *= XMMatrixRotationAxis(TransformationMatrix.r[1], fUpperRotationAngle.x);
+		// TransformationMatrix *= XMMatrixRotationY(XMConvertToRadians(60.f));
+	}
 
 	if (nullptr != m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
@@ -91,11 +109,11 @@ void CHierarchyNode::Reserve_Channels(_uint iNumAnimation)
 	m_Channels.resize(iNumAnimation);
 }
 
-CHierarchyNode * CHierarchyNode::Create(const char * pNodeName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth)
+CHierarchyNode * CHierarchyNode::Create(const char * pNodeName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth, ANIM_TYPE eType)
 {
 	CHierarchyNode*		pInstance = new CHierarchyNode();
 
-	if (FAILED(pInstance->Initialize(pNodeName, TransformationMatrix, pParent, iDepth)))
+	if (FAILED(pInstance->Initialize(pNodeName, TransformationMatrix, pParent, iDepth, eType)))
 	{
 		MSG_BOX("Failed to Create CHierarchyNode");
 		SafeRelease(pInstance);

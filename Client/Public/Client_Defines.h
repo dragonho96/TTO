@@ -5,6 +5,7 @@ static const unsigned int g_iWinCY = 1080;
 
 enum SCENE { SCENE_STATIC, SCENE_LOGO, SCENE_LOBBY, SCENE_LOADING, SCENE_GAMEPLAY, SCENE_TEST, SCENE_END };
 
+
 extern HWND		g_hWnd;
 extern BOOL		g_Done;
 namespace Client {}

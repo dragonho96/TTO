@@ -88,6 +88,25 @@
     <ClInclude Include="..\Public\Scene_Lobby.h">
       <Filter>01.Scenes\Lobby</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StateMachine.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IdleState.h">
+      <Filter>StateMachine\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WalkState.h">
+      <Filter>StateMachine\Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RunState.h">
+      <Filter>StateMachine\Run</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CrouchState.h">
+      <Filter>StateMachine\Crouch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RifleState.h">
+      <Filter>StateMachine\RifleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GrenadeState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -165,6 +184,25 @@
     <ClCompile Include="..\Private\Scene_Lobby.cpp">
       <Filter>01.Scenes\Lobby</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\StateMachine.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IdleState.cpp">
+      <Filter>StateMachine\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WalkState.cpp">
+      <Filter>StateMachine\Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RunState.cpp">
+      <Filter>StateMachine\Run</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CrouchState.cpp">
+      <Filter>StateMachine\Crouch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RifleState.cpp">
+      <Filter>StateMachine\RifleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GrenadeState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -258,6 +296,27 @@
     </Filter>
     <Filter Include="01.Scenes\Lobby">
       <UniqueIdentifier>{ac300dfc-b5b1-4ac5-9c27-cf41aa281234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{01213c99-1141-41c9-bd87-453e70974936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Idle">
+      <UniqueIdentifier>{4ee9be09-36ba-4265-8f70-99b8520eee61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Walk">
+      <UniqueIdentifier>{68132537-d97f-479e-8afe-97d6754b71d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Run">
+      <UniqueIdentifier>{4db48bf9-f540-4fbd-a4a7-4d3499b44b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Crouch">
+      <UniqueIdentifier>{72b53f30-571a-461f-94e1-42c163442542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\RifleState">
+      <UniqueIdentifier>{ad376561-3705-44a7-93fd-ec9748630b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\GrenadeState">
+      <UniqueIdentifier>{335440f6-a9a8-4650-9ace-4789732c8bef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

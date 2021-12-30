@@ -262,6 +262,12 @@ _double CEngine::ComputeDeltaTime(string pTimerTag)
 	return m_pTimerManager->ComputeDeltaTime(pTimerTag);
 }
 
+void CEngine::DeserializePrefab()
+{
+	CSceneSerializer serializer;
+	serializer.DeserializePrefab();
+}
+
 void CEngine::SerializeScene(const string & filePath)
 {
 	CSceneSerializer serializer;

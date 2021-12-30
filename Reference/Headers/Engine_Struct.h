@@ -2,6 +2,8 @@
 
 namespace Engine
 {
+	enum class ANIM_TYPE { LOWER, UPPER, NONE };
+
 	typedef struct tagKeyFrameDesc
 	{
 		XMFLOAT3		vScale;

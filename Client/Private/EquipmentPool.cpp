@@ -7,6 +7,7 @@ IMPLEMENT_SINGLETON(CEquipmentPool)
 CEquipmentPool::CEquipmentPool()
 {
 	SetUpEquipmentPool();
+	SetUpModel();
 }
 
 void CEquipmentPool::Free()
@@ -38,16 +39,49 @@ void CEquipmentPool::SetUpEquipmentPool()
 	serializer.Deserialize("../../Assets/Equipments/Legs.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::LEGS]);
 	serializer.Deserialize("../../Assets/Equipments/Vest.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::VEST]);
 	serializer.Deserialize("../../Assets/Equipments/Backpack.yaml", &m_EquipmentPool[(_uint)EQUIPMENT::BACKPACK]);
+}
 
+void CEquipmentPool::SetUpModel()
+{
+	// Primary Weapon
+	CGameObject* pGameObject = CEngine::GetInstance()->SpawnPrefab("AKM");
+	AssignModel(EQUIPMENT::PRIMARY, 0, pGameObject);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("M4A1");
+	AssignModel(EQUIPMENT::PRIMARY, 1, pGameObject);
+	pGameObject->SetActive(false);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("M24");
+	AssignModel(EQUIPMENT::PRIMARY, 2, pGameObject);
+	pGameObject->SetActive(false);
 
-	GEARDESC* gear = (GEARDESC*)m_EquipmentPool[(_uint)EQUIPMENT::LEGS].front();
-	int i = 0;
+	// Secondary Weapon
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("M9");
+	AssignModel(EQUIPMENT::SECONDARY, 0, pGameObject);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("M1911");
+	AssignModel(EQUIPMENT::SECONDARY, 1, pGameObject);
+	pGameObject->SetActive(false);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("G18");
+	AssignModel(EQUIPMENT::SECONDARY, 2, pGameObject);
+	pGameObject->SetActive(false);
 
-	// Read YAML File
-	// Deserialize Equipment
-	// Save in list
+	// Grenade
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("SmokeShell");
+	AssignModel(EQUIPMENT::GRENADE, 0, pGameObject);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("Frag");
+	AssignModel(EQUIPMENT::GRENADE, 1, pGameObject);
+	pGameObject->SetActive(false); 
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("Stun");
+	AssignModel(EQUIPMENT::GRENADE, 2, pGameObject);
+	pGameObject->SetActive(false);
 
-
+	// Tool
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("MedKit");
+	AssignModel(EQUIPMENT::TOOL, 0, pGameObject);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("Claymore");
+	AssignModel(EQUIPMENT::TOOL, 1, pGameObject);
+	pGameObject->SetActive(false);
+	pGameObject = CEngine::GetInstance()->SpawnPrefab("WireCutter");
+	AssignModel(EQUIPMENT::TOOL, 2, pGameObject);
+	pGameObject->SetActive(false);
 }
 
 BASEEQUIPDESC * CEquipmentPool::GetEquipment(EQUIPMENT eType, _uint iIndex)
@@ -69,4 +103,14 @@ BASEEQUIPDESC * CEquipmentPool::FindMagazine(BASEEQUIPDESC * weaponDesc, EQUIPME
 		return *iter;
 
 	return nullptr;
+}
+
+void CEquipmentPool::AssignMeshContainer(EQUIPMENT eType, _uint iIndex, CMeshContainer * pMeshContainer)
+{
+	m_EquipmentPool[(size_t)eType][iIndex]->mesh = pMeshContainer;
+}
+
+void CEquipmentPool::AssignModel(EQUIPMENT eType, _uint iIndex, CGameObject * pGameObject)
+{
+	m_EquipmentPool[(size_t)eType][iIndex]->model = pGameObject;
 }

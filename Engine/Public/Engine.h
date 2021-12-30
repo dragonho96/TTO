@@ -66,6 +66,7 @@ public:
 
 #pragma region SCENE
 public:
+	void		DeserializePrefab();
 	void		SerializeScene(const string& filePath);
 	void		DeserializeScene(const string& filePath);
 	HRESULT		SetUpCurrentScene(class CScene* pCurrentScene);

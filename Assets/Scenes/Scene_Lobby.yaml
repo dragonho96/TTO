@@ -1,5 +1,47 @@
 Scene: Untitled
 GameObjects:
+  - Name: Weight
+    UUID: 1159453446327318583
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 327.781097]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3488741111903446007
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 244.765549]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 12782937878656165500
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 3
+    Com_Transform:
+      Position: [887.852173, 410.796692]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.5, 0.5]
+      LayerDepth: 0
   - Name: ItemSelectButton1
     UUID: 12395590112999480506
     Active: true
@@ -127,48 +169,6 @@ GameObjects:
       - 5667078025410041942
       - 8992064765472229245
       - 2998650503654168551
-  - Name: Weight
-    UUID: 1159453446327318583
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 327.781097]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 3488741111903446007
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 244.765549]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 12782937878656165500
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 3
-    Com_Transform:
-      Position: [887.852173, 410.796692]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.5, 0.5]
-      LayerDepth: 0
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -1487,25 +1487,15 @@ GameObjects:
       TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
       Color: [0, 0, 0, 1]
   - Name: Player
-    UUID: 9967862499981184877
+    UUID: 15404945943225418190
     Active: true
     Layer: Player
     Type: Object
     Com_Transform:
       Translation: [0, 0, 0]
-      Rotation: [0, -0, 0]
+      Rotation: [-179.999893, -13.6645145, -179.999496]
       Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 0.600000024, 0]
-      Type: Capsule
-      Radius: 0.200000003
-      Height: 0.800000012
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Advent\
-      MeshFileName: cccc.fbx
+      MeshFilePath: ..\..\Assets\Meshes\Player\
+      MeshFileName: Player_Walk.fbx
       HasCollider: false
