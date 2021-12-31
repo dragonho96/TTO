@@ -37,8 +37,8 @@ public:
 		m_bWalkable = _walkable;
 	}
 	void SetColor(_float4 color) {
-		m_VIBuffer->SetColor(color);
-		// m_VIBuffer->SetColor({0, 0, 0, 0});
+		// m_VIBuffer->SetColor(color);
+		m_VIBuffer->SetColor({0, 0, 0, 0});
 	}
 	const _float3 GetPosition() { return m_vPosition; }
 	_bool	IsWalkable() { return m_bWalkable; }

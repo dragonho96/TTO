@@ -43,7 +43,10 @@ HRESULT CPlayer::Initialize()
 	m_pModel = dynamic_cast<CModel*>(m_pGameObject->GetComponent("Com_Model"));
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameObject->GetComponent("Com_Collider"));
 	if (m_pCollider)
+	{
 		m_pController = m_pCollider->GetController();
+		m_pController->getActor()->userData = this;
+	}
 
 	// EquipmentPool 에 meshcontainer 등록
 	//AssignMeshContainter();
@@ -130,10 +133,9 @@ void CPlayer::Update(_double deltaTime)
 		else
 			m_velocity = XMVectorZero();
 
-		_float fSpeedFactor = 15.f;
 		// m_velocity = m_velocity.getNormalized();
 		m_velocity = XMVector4Normalize(m_velocity);
-		m_velocity /= fSpeedFactor;
+		m_velocity /= m_fSpeedFactor;
 		// m_velocity = XMVectorClamp(m_velocity, XMVectorZero(), _vector{ 0.15f, 0.15f, 0.15f });
 		m_curVelocity = XMVectorLerp(m_curVelocity, m_velocity, deltaTime * 10.f);
 
@@ -142,7 +144,7 @@ void CPlayer::Update(_double deltaTime)
 		memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 		// GRAVITY
 		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
-		m_pController->move(pxDir, 0.f, deltaTime, PxControllerFilters{});
+		m_pController->move(pxDir, 0.001f, deltaTime, PxControllerFilters{});
 
 
 		// Get angle between CameraLook and PlayerLook
@@ -175,50 +177,47 @@ void CPlayer::Update(_double deltaTime)
 			// filterData.data.word1 = CPxManager::GROUP2;
 			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 20.f, hit, filterData))
 			{
-				//string camPosition = "" + to_string(XMVectorGetX(vCamPos)) + ", " + to_string(XMVectorGetY(vCamPos)) + ", " + to_string(XMVectorGetZ(vCamPos));
-				//string rayDir = "" + to_string(XMVectorGetX(vRayDir)) + ", " + to_string(XMVectorGetY(vRayDir)) + ", " + to_string(XMVectorGetZ(vRayDir));
-
-				//ADDLOG(("camPosition: " + camPosition).c_str());
-				//ADDLOG(("rayDir: " + rayDir).c_str());
-
-				PxU32 distance = hit.block.distance;
-				PxU32 faceIndex = hit.block.faceIndex;
-				// PxU32 faceIndex = hit.getTouch(0).faceIndex;
-				PxVec3 hitPos = hit.block.position;
-				PxVec3 hitNormal = hit.block.normal;
-				if (hit.block.actor->userData)
-					int i = 0;
-
-				if (CEngine::GetInstance()->IsMouseDown(0))
+				if (hit.block.actor->userData != this)
 				{
-					ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
-					ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
-					string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-					string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
-					ADDLOG(("Hit Pos: " + logPos).c_str());
-					ADDLOG(("Hit Normal: " + logStr).c_str());
-					IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
-					if (dynamic_cast<CEnemy*>(hitObject))
-						dynamic_cast<CEnemy*>(hitObject)->GetShot();
+					PxU32 distance = hit.block.distance;
+					PxU32 faceIndex = hit.block.faceIndex;
+					// PxU32 faceIndex = hit.getTouch(0).faceIndex;
+					PxVec3 hitPos = hit.block.position;
+					PxVec3 hitNormal = hit.block.normal;
+					if (hit.block.actor->userData)
+						int i = 0;
+
+					if (CEngine::GetInstance()->IsMouseDown(0))
+					{
+						ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
+						ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
+						string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+						string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
+						ADDLOG(("Hit Pos: " + logPos).c_str());
+						ADDLOG(("Hit Normal: " + logStr).c_str());
+						IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
+						if (dynamic_cast<CEnemy*>(hitObject))
+							dynamic_cast<CEnemy*>(hitObject)->GetShot();
+					}
+
+					_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
+
+
+					m_targetUpperRotation.x = GetXAxisAngle(myLookPos);
+					m_targetUpperRotation.y = GetYAxisAngle(myLookPos);
+
+					_float	fFollowSpeed = deltaTime * 15.f;
+					m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
+					m_curUpperRotation.y = Lerp(m_curUpperRotation.y, m_targetUpperRotation.y, fFollowSpeed);
+
+					m_pModel->SetUpperRotationAngle(m_curUpperRotation);
+
+					// Rotating Body
+					fFollowSpeed = deltaTime * 8.f;
+					m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
+					m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
+
 				}
-
-				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
-
-
-				m_targetUpperRotation.x = GetXAxisAngle(myLookPos);
-				m_targetUpperRotation.y = GetYAxisAngle(myLookPos);
-
-				_float	fFollowSpeed = deltaTime * 15.f;
-				m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
-				m_curUpperRotation.y = Lerp(m_curUpperRotation.y, m_targetUpperRotation.y, fFollowSpeed);
-
-				m_pModel->SetUpperRotationAngle(m_curUpperRotation);
-
-				// Rotating Body
-				fFollowSpeed = deltaTime * 8.f;
-				m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
-				m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
-
 				//_uint numHits = hit.getNbAnyHits();
 				//ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
 				//_uint closestUnitIndex = numHits - 1;
@@ -383,10 +382,7 @@ _float CPlayer::GetYAxisAngle(_vector hitPos)
 	hitPos = XMVectorSetY(hitPos, XMVectorGetY(vecRootPos));
 	_vector XZDir = XMVectorSubtract(hitPos, vecRootPos);
 
-
 	_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
-
-
 	_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
 	_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
 
@@ -399,18 +395,47 @@ _float CPlayer::GetYAxisAngle(_vector hitPos)
 	if (XMVectorGetY(crossResult) < 0.f)
 		yAxisAngle *= -1;
 
+	//_vector vecRootPos = m_pTransform->GetState(CTransform::STATE_POSITION);
+	//vecRootPos = XMVectorSetW(vecRootPos, 0);
+	//hitPos = XMVectorSetY(hitPos, XMVectorGetY(vecRootPos));
+	//_vector XZDir = XMVectorSubtract(hitPos, vecRootPos);
+
+	//_vector globalLook = {0.f, 0.f, 1.f};
+	//_vector vecTargetAngle = XMVector3AngleBetweenVectors(globalLook, XZDir);
+	//_float targetAngle = XMVectorGetX(vecTargetAngle);
+
+	//_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
+	//_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
+	//_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
+
+	//_vector crossTargetResult = XMVector3Cross(globalLook, XZDir);
+	//_vector crossRootResult = XMVector3Cross(rootLook, XZDir);
+
+	//if (XMVectorGetY(crossTargetResult) < 0.f)
+	//	targetAngle += XM_PIDIV2;
+	//if (XMVectorGetY(crossRootResult) < 0.f)
+	//	yAxisAngle *= -1;
+
 	//ADDLOG(("yAxisAngle: " + to_string(XMConvertToDegrees(yAxisAngle))).c_str());
 
 	//// -70 or 70 이상 넘어가면 body rotate
 	if (XMConvertToDegrees(yAxisAngle) > 70.f)
 	{
+
 		m_turn90.first = true;
-		m_targetBodyRotation += 70.f;
+		// m_targetBodyRotation += 70.f;
+		_vector rotateAngle = XMVector3AngleBetweenVectors(XZDirPrev, XZDir);
+		m_targetBodyRotation += XMConvertToDegrees(XMVectorGetX(rotateAngle));
+		XZDirPrev = XZDir;
 	}
 	else if (XMConvertToDegrees(yAxisAngle) < -70.f)
 	{
+
 		m_turn90.second = true;
-		m_targetBodyRotation -= 70.f;
+		// m_targetBodyRotation -= 70.f;
+		_vector rotateAngle = XMVector3AngleBetweenVectors(XZDirPrev, XZDir);
+		m_targetBodyRotation -= XMConvertToDegrees(XMVectorGetX(rotateAngle));
+		XZDirPrev = XZDir;
 	}
 	else
 		m_turn90 = { false, false };

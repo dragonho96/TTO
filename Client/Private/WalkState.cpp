@@ -18,6 +18,7 @@ void CWalkState::Update(CStateMachine** pState, CPlayer& pPlayer)
 void CWalkState::Enter(CStateMachine** pState, CPlayer& pPlayer)
 {
 	m_bTurnning = false;
+	pPlayer.m_fSpeedFactor = 45.f;
 	SwitchAnim(pState, pPlayer);
 }
 
@@ -28,7 +29,7 @@ void CWalkState::SwitchAnim(CStateMachine** pState, CPlayer& pPlayer)
 	_vector velocity;
 	if (XMVectorGetX(XMVector4Length(pPlayer.m_velocity)) == 0)
 	{
-		// Turn
+		//// Turn
 		if (pPlayer.m_turn90.first)
 		{
 			pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::TURN_R, ANIM_TYPE::LOWER);
@@ -46,7 +47,6 @@ void CWalkState::SwitchAnim(CStateMachine** pState, CPlayer& pPlayer)
 			if (!m_bTurnning)
 				pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::IDLE, ANIM_TYPE::LOWER);
 		}
-
 	}
 	else if (movingAngle > -22.5f && movingAngle <= 22.5f)
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::WALK_F, ANIM_TYPE::LOWER);

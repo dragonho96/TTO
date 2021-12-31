@@ -6334,7 +6334,8 @@ struct ExampleAppConsole
         Commands.push_back("CLASSIFY");
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("Welcome to Dear ImGui!");
+        
+		("Welcome to Dear ImGui!");
     }
     ~ExampleAppConsole()
     {

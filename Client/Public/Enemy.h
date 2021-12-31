@@ -27,7 +27,6 @@ public:
 	void FollowPlayer(_double deltaTime);
 	void GetShot();
 	void SetPathPos(list<_vector> pos) { m_pathPosition = pos; }
-	void AddDebug(string str);
 public:
 private:
 	CGameObject*	m_pGameObject = nullptr;

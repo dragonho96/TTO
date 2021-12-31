@@ -80,11 +80,11 @@ void CEnemy::FindPath()
 	_float3 startPos, targetPos;
 	XMStoreFloat3(&startPos, m_pTransform->GetState(CTransform::STATE_POSITION));
 	XMStoreFloat3(&targetPos, m_pTargetTransform->GetState(CTransform::STATE_POSITION));
-	//CPathFinding::GetInstance()->FindPath_Thread(this, startPos, targetPos);
-	list<_vector> listPos = CPathFinding::GetInstance()->FindPath(startPos, targetPos);
-	if (listPos.empty())
-		return;
-	m_pathPosition = listPos;
+	CPathFinding::GetInstance()->FindPath_Thread(this, startPos, targetPos);
+	//list<_vector> listPos = CPathFinding::GetInstance()->FindPath(startPos, targetPos);
+	//if (listPos.empty())
+	//	return;
+	//m_pathPosition = listPos;
 }
 
 void CEnemy::FollowPlayer(_double deltaTime)
@@ -129,7 +129,4 @@ void CEnemy::GetShot()
 	}
 }
 
-void CEnemy::AddDebug(string str)
-{
-	ADDLOG((m_pGameObject->GetName() + str).c_str());
-}
+

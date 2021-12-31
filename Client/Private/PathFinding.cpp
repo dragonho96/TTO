@@ -9,9 +9,7 @@ unsigned int APIENTRY ThreadPathFind(void* pArg)
 	EnterCriticalSection(&CPathFinding::GetInstance()->Get_CS());
 
 	CPathFinding::PATHPOS* pos = (CPathFinding::PATHPOS*)pArg;
-	list<_vector> list = CPathFinding::GetInstance()->FindPath(pos->start, pos->end);
-	if (!list.empty())
-		pos->obj->SetPathPos(list);
+	pos->obj->SetPathPos(CPathFinding::GetInstance()->FindPath(pos->start, pos->end));
 
 	SafeDelete(pos);
 	LeaveCriticalSection(&CPathFinding::GetInstance()->Get_CS());
@@ -36,7 +34,7 @@ void CPathFinding::Initialize()
 
 	list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
 	if (list.size() <= 0)
-		return ;
+		return;
 
 	m_pPlayerTransform = dynamic_cast<CTransform*>(list.front()->GetComponent("Com_Transform"));
 }
@@ -111,11 +109,11 @@ list<_vector> CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		if (currentNode == targetNode)
 		{
 			_double timeElapsed = CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
-			ADDLOG(to_string(timeElapsed).c_str());
+			// ADDLOG(to_string(timeElapsed).c_str());
 
 			return RetracePath(startNode, targetNode);
 		}
-		
+
 		_int curNodeX = currentNode->GetGridX();
 		_int curNodeZ = currentNode->GetGridZ();
 
@@ -205,7 +203,7 @@ list<_vector> CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 	}
 
 	m_pGrid->ResetColor();
-	
+
 	for (auto& node : path)
 	{
 		node->SetColor(_float4{ 0.f, 1.f, 0.f, 1.f });
@@ -231,7 +229,7 @@ _int CPathFinding::GetHCost(CNode * nodeA, CNode * nodeB)
 {
 	_int dstX = abs(nodeA->GetGridX() - nodeB->GetGridX());
 	_int dstZ = abs(nodeA->GetGridZ() - nodeB->GetGridZ());
-	
+
 	return (dstX + dstZ) * 10;
 }
 
