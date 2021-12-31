@@ -1187,7 +1187,7 @@ void CModel::CreatePxMesh()
 	// filterData.word1 = CPxManager::GROUP2;
 	shape->setQueryFilterData(filterData);
 	
-	// m_pRigidActor->userData = "";
+	m_pRigidActor->userData = nullptr;
 	
 	m_pRigidActor->attachShape(*shape);
 	pEngine->AddActor(m_pRigidActor);

@@ -1,7 +1,7 @@
 Scene: Untitled
 GameObjects:
   - Name: Player
-    UUID: 15523505587246534971
+    UUID: 14630801715366593454
     Active: true
     Layer: Player
     Type: Object
@@ -24,7 +24,7 @@ GameObjects:
       MeshFileName: Player_Walk.fbx
       HasCollider: false
   - Name: Terrain
-    UUID: 12682622657247022439
+    UUID: 17391814583405107154
     Active: true
     Layer: Default
     Type: Object
@@ -37,7 +37,7 @@ GameObjects:
       HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
       TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Wall
-    UUID: 9275818695551034656
+    UUID: 2725882158760797337
     Active: true
     Layer: Default
     Type: Object
@@ -50,7 +50,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Building
-    UUID: 1454598868175637209
+    UUID: 17827289544698934833
     Active: true
     Layer: Default
     Type: Object
@@ -63,7 +63,7 @@ GameObjects:
       MeshFileName: ContainerHouse.fbx
       HasCollider: true
   - Name: Wall
-    UUID: 3738052230736933598
+    UUID: 17124467207483490592
     Active: true
     Layer: Default
     Type: Object
@@ -76,7 +76,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Wall
-    UUID: 15277950067961763676
+    UUID: 9437535004500040472
     Active: true
     Layer: Default
     Type: Object
@@ -89,7 +89,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Enemy1
-    UUID: 469128357775826830
+    UUID: 11391557365461182391
     Active: true
     Layer: Enemy
     Type: Object

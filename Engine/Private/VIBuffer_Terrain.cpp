@@ -316,7 +316,8 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	PxFilterData filterData;
 	filterData.word0 = CPxManager::GROUP1;
 	// filterData.word1 = CPxManager::GROUP2;
-	shape->setQueryFilterData(filterData);
+	
+	//shape->setQueryFilterData(filterData);
 
 
 	CEngine::GetInstance()->AddActor(m_pTerrainActor);

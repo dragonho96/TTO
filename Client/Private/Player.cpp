@@ -6,6 +6,7 @@
 #include "StateMachine.h"
 #include "WalkState.h"
 #include "RifleState.h"
+#include "Enemy.h"
 
 USING(Client)
 
@@ -169,7 +170,10 @@ void CPlayer::Update(_double deltaTime)
 			//PxRaycastHit hitBuffer[bufferSize];
 			//PxRaycastBuffer hit(hitBuffer, bufferSize);
 			PxRaycastBuffer hit;
-			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 20.f, hit))
+			PxQueryFilterData filterData;
+			filterData.data.word0 = CPxManager::GROUP1;
+			filterData.data.word1 = CPxManager::GROUP2;
+			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 20.f, hit, filterData))
 			{
 				//string camPosition = "" + to_string(XMVectorGetX(vCamPos)) + ", " + to_string(XMVectorGetY(vCamPos)) + ", " + to_string(XMVectorGetZ(vCamPos));
 				//string rayDir = "" + to_string(XMVectorGetX(vRayDir)) + ", " + to_string(XMVectorGetY(vRayDir)) + ", " + to_string(XMVectorGetZ(vRayDir));
@@ -193,9 +197,9 @@ void CPlayer::Update(_double deltaTime)
 					string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
 					ADDLOG(("Hit Pos: " + logPos).c_str());
 					ADDLOG(("Hit Normal: " + logStr).c_str());
-					CGameObject* hitObject = static_cast<CGameObject*>(hit.block.actor->userData);
-					if (hitObject)
-						ADDLOG(hitObject->GetName().c_str());
+					IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
+					if (dynamic_cast<CEnemy*>(hitObject))
+						dynamic_cast<CEnemy*>(hitObject)->GetShot();
 				}
 
 				_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };

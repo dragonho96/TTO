@@ -156,7 +156,7 @@ public:
 	void					AddActor(PxRigidActor* pActor);
 	void					AddAggregateActor(PxRigidActor* pActor);
 
-	_bool					Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer& hit);
+	_bool					Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer& hit, PxQueryFilterData& filterData);
 
 #pragma endregion
 

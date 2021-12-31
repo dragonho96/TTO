@@ -348,5 +348,8 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_RectImage.fx">
       <Filter>FX</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Rect.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

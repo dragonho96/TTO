@@ -20,7 +20,15 @@ public:
 	virtual void Update(_double deltaTime);
 	virtual void LapteUpdate(_double deltaTime);
 	virtual void Render();
+public:
+	CRITICAL_SECTION Get_CS() { return m_CS; }
 
+	void FindPath();
+	void FollowPlayer(_double deltaTime);
+	void GetShot();
+	void SetPathPos(list<_vector> pos) { m_pathPosition = pos; }
+	void AddDebug(string str);
+public:
 private:
 	CGameObject*	m_pGameObject = nullptr;
 	CTransform*		m_pTransform = nullptr;
@@ -32,6 +40,15 @@ private:
 private:
 	string			m_Timer = "";
 	_float			m_fPathFinding = 0.f;
+	list<_vector>	m_pathPosition;
+
+private:
+	CRITICAL_SECTION	m_CS;
+	HANDLE				m_hThread = 0;
+
+public:
+	_vector			m_velocity = XMVectorZero();
+	_vector			m_curVelocity = XMVectorZero();
 private:
 	CStateMachine*	m_pState = nullptr;
 };

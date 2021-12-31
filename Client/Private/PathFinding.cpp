@@ -1,8 +1,23 @@
 #include "stdafx.h"
 #include "..\Public\PathFinding.h"
-
+#include "Enemy.h"
 USING(Client)
 IMPLEMENT_SINGLETON(CPathFinding)
+
+unsigned int APIENTRY ThreadPathFind(void* pArg)
+{
+	EnterCriticalSection(&CPathFinding::GetInstance()->Get_CS());
+
+	CPathFinding::PATHPOS* pos = (CPathFinding::PATHPOS*)pArg;
+	list<_vector> list = CPathFinding::GetInstance()->FindPath(pos->start, pos->end);
+	if (!list.empty())
+		pos->obj->SetPathPos(list);
+
+	SafeDelete(pos);
+	LeaveCriticalSection(&CPathFinding::GetInstance()->Get_CS());
+
+	return 0;
+}
 
 CPathFinding::CPathFinding()
 	: m_pGrid(nullptr), m_pPlayerTransform(nullptr)
@@ -11,6 +26,8 @@ CPathFinding::CPathFinding()
 
 void CPathFinding::Initialize()
 {
+	InitializeCriticalSection(&m_CS);
+
 	list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_GRID");
 	if (list.size() <= 0)
 		return;
@@ -41,13 +58,25 @@ void CPathFinding::Update()
 	}
 }
 
-void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
+HRESULT CPathFinding::FindPath_Thread(CEnemy* obj, _float3 startPos, _float3 targetPos)
+{
+	PATHPOS* pos = new PATHPOS(obj, startPos, targetPos);
+
+	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, ThreadPathFind, pos, 0, nullptr);
+
+	if (0 == m_hThread)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+list<_vector> CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 {
 	CNode* startNode = m_pGrid->NodeFromWorldPoint(startPos);
 	CNode* targetNode = m_pGrid->NodeFromWorldPoint(targetPos);
 
 	if (nullptr == startNode || nullptr == targetNode)
-		return;
+		return list<_vector>();
 
 	openSet.clear();
 	closedSet.clear();
@@ -81,11 +110,10 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 
 		if (currentNode == targetNode)
 		{
-			RetracePath(startNode, targetNode);
 			_double timeElapsed = CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
-			
 			ADDLOG(to_string(timeElapsed).c_str());
-			return;
+
+			return RetracePath(startNode, targetNode);
 		}
 		
 		_int curNodeX = currentNode->GetGridX();
@@ -126,6 +154,7 @@ void CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 			}
 		}
 	}
+	return list<_vector>();
 }
 _bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode* pTargetNode)
 {
@@ -164,9 +193,10 @@ _bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode*
 	return _bool();
 }
 
-void CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
+list<_vector> CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 {
 	list<CNode*> path;
+	list<_vector> pathPosition;
 	CNode* currentNode = endNode;
 	while (currentNode != startNode)
 	{
@@ -177,8 +207,12 @@ void CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 	m_pGrid->ResetColor();
 	
 	for (auto& node : path)
+	{
 		node->SetColor(_float4{ 0.f, 1.f, 0.f, 1.f });
+		pathPosition.emplace_back(XMLoadFloat3(&node->GetPosition()));
+	}
 
+	return pathPosition;
 }
 
 _int CPathFinding::GetMoveCost(CNode * nodeA, CNode * nodeB)
@@ -205,4 +239,9 @@ _int CPathFinding::GetHCost(CNode * nodeA, CNode * nodeB)
 
 void CPathFinding::Free()
 {
+	WaitForSingleObject(m_hThread, INFINITE);
+
+	DeleteCriticalSection(&m_CS);
+
+	DeleteObject(m_hThread);
 }

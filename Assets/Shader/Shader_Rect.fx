@@ -1,3 +1,4 @@
+#include "Shader_Defines.hpp"
 
 cbuffer Matrices
 {
@@ -58,6 +59,10 @@ technique11		DefaultDevice
 {
 	pass DefaultPass
 	{
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_NotZWrite, 0);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}

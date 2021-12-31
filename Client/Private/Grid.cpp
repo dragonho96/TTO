@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Grid.h"
+#include "Player.h"
+#include "Enemy.h"
 
 USING(Client)
 
@@ -80,26 +82,26 @@ void CGrid::SetUpGrid()
 		for (int j = 0; j < m_Desc.iSizeZ; ++j)
 		{
 			int index = i * m_Desc.iSizeZ + j;
-			_float3 position = { j * m_Desc.iSizeInterval, 1.f, i * m_Desc.iSizeInterval };
+			_float3 position = { j * m_Desc.iSizeInterval, 2.0f, i * m_Desc.iSizeInterval };
 			m_Nodes[index] = dynamic_cast<CNode*>(m_pEngine->AddGameObject(0, "GameObject_Node", "LAYER_NODE"));
 			m_Nodes[index]->SetPosition(position, i, j);
 
-			// Raycast and check if its walkable
-			PxScene* scene = CEngine::GetInstance()->GetScene();
-			PxVec3 origin;                 // [in] Ray origin
-			PxVec3 unitDir = { 0.f, 1.f, 0.f };                // [in] Normalized ray direction
-			PxReal maxDistance = 2.f;            // [in] Raycast max distance
-			PxRaycastBuffer hit;                 // [out] Raycast results
-
-												 // Raycast against all static & dynamic objects (no filtering)
-												 // The main result from this call is the closest hit, stored in the 'hit.block' structure
-			memcpy(&origin, &position, sizeof(PxVec3));
-
-			bool status = scene->raycast(origin, unitDir, maxDistance, hit);
-			if (status)
+			PxRaycastBuffer hit;
+			PxQueryFilterData filterData;
+			filterData.data.word0 = CPxManager::GROUP1;
+			// filterData.data.word1 = CPxManager::GROUP2;
+			if (CEngine::GetInstance()->Raycast(XMLoadFloat3(&position), _vector{ 0, -1, 0 }, 20.f, hit, filterData))
+			{
 				m_Nodes[index]->SetWalkable(false);
+			}
 			else
 				m_Nodes[index]->SetWalkable(true);
+
+			//bool status = scene->raycast(origin, unitDir, maxDistance, hit);
+			//if (status)
+			//	m_Nodes[index]->SetWalkable(false);
+			//else
+			//	m_Nodes[index]->SetWalkable(true);
 
 		}
 	}

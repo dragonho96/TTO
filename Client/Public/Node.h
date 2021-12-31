@@ -38,8 +38,9 @@ public:
 	}
 	void SetColor(_float4 color) {
 		m_VIBuffer->SetColor(color);
+		// m_VIBuffer->SetColor({0, 0, 0, 0});
 	}
-	_float3 GetPosition() { return m_vPosition; }
+	const _float3 GetPosition() { return m_vPosition; }
 	_bool	IsWalkable() { return m_bWalkable; }
 
 	_int GetGridX() { return m_iGridX; }

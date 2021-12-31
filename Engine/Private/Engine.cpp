@@ -574,10 +574,9 @@ void CEngine::AddAggregateActor(PxRigidActor * pActor)
 	m_pPxManager->AddAggregateActor(pActor);
 }
 
-_bool CEngine::Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer & hit)
+_bool CEngine::Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer & hit, PxQueryFilterData& filterData)
 {
-
-	return m_pPxManager->Raycast(origin, unitDir, maxDistance, hit);
+	return m_pPxManager->Raycast(origin, unitDir, maxDistance, hit, filterData);
 }
 
 PxScene * CEngine::GetScene()
