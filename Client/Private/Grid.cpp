@@ -88,8 +88,8 @@ void CGrid::SetUpGrid()
 
 			PxRaycastBuffer hit;
 			PxQueryFilterData filterData;
-			filterData.data.word0 = CPxManager::GROUP1;
-			// filterData.data.word1 = CPxManager::GROUP2;
+			// filterData.data.word0 = CPxManager::GROUP1;
+			filterData.data.word1 = CPxManager::GROUP3;
 			if (CEngine::GetInstance()->Raycast(XMLoadFloat3(&position), _vector{ 0, -1, 0 }, 20.f, hit, filterData))
 			{
 				m_Nodes[index]->SetWalkable(false);

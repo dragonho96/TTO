@@ -172,7 +172,7 @@ void CPlayer::Update(_double deltaTime)
 			PxRaycastBuffer hit;
 			PxQueryFilterData filterData;
 			filterData.data.word0 = CPxManager::GROUP1;
-			filterData.data.word1 = CPxManager::GROUP2;
+			// filterData.data.word1 = CPxManager::GROUP2;
 			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 20.f, hit, filterData))
 			{
 				//string camPosition = "" + to_string(XMVectorGetX(vCamPos)) + ", " + to_string(XMVectorGetY(vCamPos)) + ", " + to_string(XMVectorGetZ(vCamPos));

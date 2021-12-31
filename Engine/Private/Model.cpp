@@ -1184,7 +1184,7 @@ void CModel::CreatePxMesh()
 
 	PxFilterData filterData;
 	filterData.word0 = CPxManager::GROUP1;
-	// filterData.word1 = CPxManager::GROUP2;
+	filterData.word1 = CPxManager::GROUP3;
 	shape->setQueryFilterData(filterData);
 	
 	m_pRigidActor->userData = nullptr;
