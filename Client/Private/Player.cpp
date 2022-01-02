@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Player.h"
 #include "Engine.h"
+#include "GameManager.h"
 #include "HierarchyNode.h"
 #include "EquipmentPool.h"
 #include "StateMachine.h"
@@ -49,7 +50,7 @@ HRESULT CPlayer::Initialize()
 	}
 
 	// EquipmentPool ¿¡ meshcontainer µî·Ï
-	//AssignMeshContainter();
+	AssignMeshContainter();
 	FindBones();
 
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
@@ -100,7 +101,7 @@ void CPlayer::Update(_double deltaTime)
 
 	static bool startRagdoll = false;
 
-	if (m_pController)
+	if (m_pController && CGameManager::GetInstance()->GetCurrentCamera() == CGameManager::CAMERA::FOLLOW)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
@@ -217,47 +218,10 @@ void CPlayer::Update(_double deltaTime)
 					m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
 
 				}
-				//_uint numHits = hit.getNbAnyHits();
-				//ADDLOG(("Num Hits: " + to_string(numHits)).c_str());
-				//_uint closestUnitIndex = numHits - 1;
-				//_uint firstUnitIndex = 0;
-
-				//PxU32 distance = hit.getTouch(closestUnitIndex).distance;
-				//ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
-				//PxU32 faceIndex = hit.getTouch(closestUnitIndex).faceIndex;
-				//ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
-				//// PxU32 faceIndex = hit.getTouch(0).faceIndex;
-				//PxVec3 hitPos = hit.getTouch(closestUnitIndex).position;
-				//PxVec3 hitNormal = hit.getTouch(closestUnitIndex).normal;
-
-				//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-				//ADDLOG(("Hit Pos: " + logPos).c_str());
-				//string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
-				//ADDLOG(("Hit Normal: " + logStr).c_str());
 			}
 		}
-
-
-		//// Filter Raycast
-		//PxScene* scene;
-		//PxVec3 origin = ...;                 // [in] Ray origin
-		//PxVec3 unitDir = ...;                // [in] Normalized ray direction
-		//PxReal maxDistance = ...;            // [in] Raycast max distance
-		//PxRaycastBuffer hit;                 // [out] Raycast results
-
-		//									 // [in] Define filter for static objects only
-		//PxQueryFilterData filterData(PxQueryFlag::eSTATIC);
-
-		//// Raycast against static objects only
-		//// The main result from this call is the boolean 'status'
-		//bool status = scene->raycast(origin, unitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
-
 		if (CEngine::GetInstance()->IsKeyPressed('O'))
-		{
-
 			CheckEnemyInSight();
-
-		}
 	}
 
 	m_pLowerState->HandleInput(&m_pLowerState, *this);

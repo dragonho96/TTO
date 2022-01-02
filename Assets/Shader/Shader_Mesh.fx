@@ -7,7 +7,20 @@ cbuffer Matrices
 	matrix		g_ViewMatrix;
 	matrix		g_ProjMatrix;	
 }
-
+cbuffer LightDesc
+{
+    vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
+    vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
+    vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
+    vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+}
+cbuffer MaterialDesc
+{
+    vector g_vMtrlDiffuse;
+    vector g_vMtrlAmbient = vector(0.5f, 0.5f, 0.5f, 1.f);
+    vector g_vMtrlSpecular = vector(0.1f, 0.1f, 0.1f, 1.f);
+    float g_fPower = 30.f;
+}
 struct MeshBoneMatrices
 {
     matrix BoneMatrices[512];
@@ -37,6 +50,8 @@ struct VS_OUT
 {
 	float4	vPosition : SV_POSITION;
 	float2	vTexUV : TEXCOORD0;	
+    float fShade : COLOR0;
+    float fSpecular : COLOR1;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -51,7 +66,8 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 	Out.vTexUV = In.vTexUV;
-
+    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
 	return Out;
 }
 
@@ -74,7 +90,8 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 
     Out.vPosition = mul(vPosition, matWVP);
     Out.vTexUV = In.vTexUV;
-
+    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
     return Out;
 
 }
@@ -96,6 +113,9 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexUV = In.vTexUV;
 
+    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
     return Out;
 }
 
@@ -104,14 +124,20 @@ struct PS_IN
 {
 	float4	vPosition : SV_POSITION;
 	float2	vTexUV : TEXCOORD0;
+    float fShade : COLOR0;
+    float fSpecular : COLOR1;
 };
 
 vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
-	vector		vColor = (vector)0;
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
 
-	vColor = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+    vector vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
+		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
+    vColor.a = vMtrlDiffuse.a;
 
+    if (vColor.a <= 0)
+        discard;
 	return vColor;
 }
 
@@ -123,7 +149,7 @@ technique11		DefaultDevice
     {
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_Default, 0);
-		SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();

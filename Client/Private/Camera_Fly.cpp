@@ -44,7 +44,7 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 
 
 	// Q || E 누르면 m_pTargetLook을 회전시긴다
-	if (GetActiveWindow() == g_hWnd)
+	if (GetActiveWindow() == g_hWnd && m_bRolling)
 	{
 		if (m_pEngine->IsKeyPressed('W'))
 		{
@@ -83,7 +83,7 @@ _uint CCamera_Fly::Update(_double TimeDelta)
 		}
 	}
 
-	return __super::Update(TimeDelta);
+	__super::Update(TimeDelta);
 	return _uint();
 }
 

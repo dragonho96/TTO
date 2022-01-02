@@ -189,6 +189,7 @@
     <ClInclude Include="..\Public\Equipment.h" />
     <ClInclude Include="..\Public\EquipmentPool.h" />
     <ClInclude Include="..\Public\EquipmentSerializer.h" />
+    <ClInclude Include="..\Public\GameManager.h" />
     <ClInclude Include="..\Public\GrenadeState.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\IdleState.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="..\Private\Equipment.cpp" />
     <ClCompile Include="..\Private\EquipmentPool.cpp" />
     <ClCompile Include="..\Private\EquipmentSerializer.cpp" />
+    <ClCompile Include="..\Private\GameManager.cpp" />
     <ClCompile Include="..\Private\GrenadeState.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\IdleState.cpp" />

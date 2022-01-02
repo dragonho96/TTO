@@ -38,6 +38,8 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual _uint Update(_double TimeDelta);
 	virtual _uint LateUpdate(_double TimeDelta);
+public:
+	void SetRolling(_bool result) { m_bRolling = result; }
 
 protected:
 	class CTransform*			m_pTransformCom = nullptr;
@@ -45,6 +47,8 @@ protected:
 
 	CAMERADESC					m_CameraDesc;
 
+protected:
+	_bool						m_bRolling = true;
 public:
 	//virtual CGameObject* Clone_GameObject(void* pArg = nullptr) = 0;
 	virtual void Free();

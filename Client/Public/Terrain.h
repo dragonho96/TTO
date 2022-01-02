@@ -29,6 +29,8 @@ private:
 
 private:
 	CTexture*		m_pTerrainTexture = nullptr;
+	CTexture*		m_pTerrainTextureNormal = nullptr;
+	CTexture*		m_pTerrainTexture2 = nullptr;
 	CTexture*		m_pFilterTexture = nullptr;
 	CTexture*		m_pBrushTexture = nullptr;
 };

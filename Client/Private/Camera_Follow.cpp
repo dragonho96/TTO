@@ -45,7 +45,7 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 	m_pTargetTransform->SetState(CTransform::STATE_POSITION, m_pPlayerTransform->GetState(CTransform::STATE_POSITION));
 
 	// Q || E 누르면 m_pTargetLook을 회전시긴다
-	if (GetActiveWindow() == g_hWnd)
+	if (GetActiveWindow() == g_hWnd && m_bRolling)
 	{
 		static float angle = 0.f;
 		static float targetAngle = 0.f;
@@ -86,9 +86,9 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 		m_pTransformCom->SetState(CTransform::STATE_UP, XMVector3Normalize(vUp));
 
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&m_CameraDesc.vEye));
-
-		return __super::Update(TimeDelta);
 	}
+
+	return __super::Update(TimeDelta);
 }
 
 _uint CCamera_Follow::LateUpdate(_double TimeDelta)

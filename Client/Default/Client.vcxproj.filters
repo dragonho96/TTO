@@ -127,6 +127,9 @@
     <ClInclude Include="..\Public\Effect_Smoke.h">
       <Filter>02.GameObjects\Effect\Smoke</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameManager.h">
+      <Filter>97.Manager\GameManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Smoke.cpp">
       <Filter>02.GameObjects\Effect\Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameManager.cpp">
+      <Filter>97.Manager\GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +375,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Smoke">
       <UniqueIdentifier>{22acd779-b4be-4898-8153-5b3bd55fb4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\GameManager">
+      <UniqueIdentifier>{ec38d01a-d4b2-4e15-9d5b-cb6ec87baaea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

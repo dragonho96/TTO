@@ -24,6 +24,9 @@ CTerrain* CTerrain::Create(CGameObject* pObj)
 void CTerrain::Free()
 {
 	SafeRelease(m_pTerrainTexture);
+	SafeRelease(m_pTerrainTextureNormal);
+	SafeRelease(m_pTerrainTexture2);
+	SafeRelease(m_pTerrainTexture);
 	SafeRelease(m_pFilterTexture);
 	SafeRelease(m_pBrushTexture);
 }
@@ -49,7 +52,16 @@ HRESULT CTerrain::Initialize()
 	m_pTerrainTexture = CTexture::Create(
 		CEngine::GetInstance()->GetDevice(), 
 		CEngine::GetInstance()->GetDeviceContext(),
-		CTexture::TYPE_TGA, "../../Assets/Texture/Grass_%d.tga", 2);
+		CTexture::TYPE_TGA, "../../Assets/Textures/Terrain/T_LushGrass_01_D.tga");
+	m_pTerrainTextureNormal = CTexture::Create(
+		CEngine::GetInstance()->GetDevice(),
+		CEngine::GetInstance()->GetDeviceContext(),
+		CTexture::TYPE_TGA, "../../Assets/Textures/Terrain/T_LushGrass_01_N.tga");
+
+	m_pTerrainTexture2 = CTexture::Create(
+		CEngine::GetInstance()->GetDevice(),
+		CEngine::GetInstance()->GetDeviceContext(),
+		CTexture::TYPE_TGA, "../../Assets/Textures/Terrain/T_Ground_Gravel_512_D.tga");
 
 	m_pFilterTexture = CTexture::Create(
 		CEngine::GetInstance()->GetDevice(),
@@ -70,8 +82,9 @@ void CTerrain::Update(_double deltaTime)
 
 void CTerrain::LapteUpdate(_double deltaTime)
 {
-	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTexture", m_pTerrainTexture, 0);
-	m_pShader->SetUp_TextureOnShader("g_DiffuseDestTexture", m_pTerrainTexture, 1);
+	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTexture", m_pTerrainTexture);
+	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTextureNormal", m_pTerrainTextureNormal);
+	m_pShader->SetUp_TextureOnShader("g_DiffuseDestTexture", m_pTerrainTexture2);
 	m_pShader->SetUp_TextureOnShader("g_FilterTexture", m_pFilterTexture);
 	m_pShader->SetUp_TextureOnShader("g_BrushTexture", m_pBrushTexture);
 

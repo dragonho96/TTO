@@ -19,8 +19,8 @@ cbuffer LightDesc
 cbuffer MaterialDesc
 {
     vector g_vMtrlDiffuse;
-    vector g_vMtrlAmbient = vector(0.1f, 0.1f, 0.1f, 1.f);
-    vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+    vector g_vMtrlAmbient = vector(0.5f, 0.5f, 0.5f, 1.f);
+    vector g_vMtrlSpecular = vector(0.1f, 0.1f, 0.1f, 1.f);
     float g_fPower = 30.f;
 }
 
@@ -33,6 +33,7 @@ cbuffer EtcDesc
 }
 
 Texture2D g_DiffuseSourTexture;
+Texture2D g_DiffuseSourTextureNormal;
 Texture2D g_DiffuseDestTexture;
 Texture2D g_BrushTexture;
 
@@ -83,6 +84,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexUV = In.vTexUV * 5.f;  // Tiling
 
+
     vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
 	// Out.fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
@@ -115,10 +117,14 @@ struct PS_IN
 
 vector	PS_MAIN(PS_IN In) : SV_TARGET
 {
+    vector vNormal = g_DiffuseSourTextureNormal.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+    vector vWorldNormal = mul(vNormal, In.vWorldPos);
+    In.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
     vector vColor = (vector) 0;
 
-    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
-    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
+    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
 	
 	
     vector vFilter = g_FilterTexture.Sample(g_FilterSampler, In.vTexUV);

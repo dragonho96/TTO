@@ -65,13 +65,13 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Terrain.fx");
-	// m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
+	m_pTexture = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Texture/Grass.tga");
 	return S_OK;
 }
 
 HRESULT CVIBuffer_Terrain::Render()
 {
-	//m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
+	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
 
 	//_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
 	//ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);

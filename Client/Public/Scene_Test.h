@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "PathFinding.h"
+#include "GameManager.h"
 
 BEGIN(Client)
 
@@ -18,13 +19,13 @@ public:
 	virtual _uint Update(_double TimeDelta)  override;
 	virtual HRESULT Render() override;
 private:
-	HRESULT ReadyPrototypeGameObject(); // 바로 추가
 	HRESULT ReadyLayerCamera(string pLayerTag);
 	HRESULT ReadyLayerGrid(string pLayerTag);
 	HRESULT ReadyScript();
 
 private:
 	CPathFinding* m_pPathFinding = nullptr;
+	CGameManager* m_pGameManager = nullptr;
 };
 
 END
