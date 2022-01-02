@@ -50,19 +50,14 @@ HRESULT CEnemy::Initialize()
 void CEnemy::Update(_double deltaTime)
 {
 	if (CEngine::GetInstance()->IsKeyDown('6'))
-	{
 		m_pModel->SetUp_AnimationIndex(1, ANIM_TYPE::NONE);
-	}
-
 
 	m_fPathFinding += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
 	if (m_fPathFinding > 1.f)
 		FindPath();
 
-	FollowPlayer(deltaTime);
-
-	//m_pState->HandleInput(&m_pState, *this);
-	//m_pState->Update(&m_pState, *this);
+	// FollowPlayer(deltaTime);
+	CheckVisibility();
 }
 
 void CEnemy::LapteUpdate(_double deltaTime)
@@ -72,6 +67,26 @@ void CEnemy::LapteUpdate(_double deltaTime)
 
 void CEnemy::Render()
 {
+}
+
+void CEnemy::CheckVisibility()
+{
+	if (m_ePreVisibility != m_eCurVisibility)
+	{
+		switch (m_eCurVisibility)
+		{
+		case Client::VISIBILITY::VISIBLE:
+			// backward desolve
+			break;
+		case Client::VISIBILITY::INVISIBLE:
+			// red ¿‹ªÛ
+			// desolve
+			break;
+		default:
+			break;
+		}
+		m_ePreVisibility = m_eCurVisibility;
+	}
 }
 
 void CEnemy::FindPath()

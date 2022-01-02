@@ -86,6 +86,9 @@ HRESULT CPlayer::Initialize()
 	if (FAILED(CEngine::GetInstance()->AddTimers("Raycast")))
 		return FALSE;
 
+	if (FAILED(CEngine::GetInstance()->AddTimers("CheckEnemyInSight")))
+		return FALSE;
+
 
 	return S_OK;
 }
@@ -95,11 +98,7 @@ void CPlayer::Update(_double deltaTime)
 	if (!m_pGameObject)
 		return;
 
-
-
 	static bool startRagdoll = false;
-
-
 
 	if (m_pController)
 	{
@@ -255,29 +254,9 @@ void CPlayer::Update(_double deltaTime)
 
 		if (CEngine::GetInstance()->IsKeyPressed('O'))
 		{
-			const PxU32 bufferSize = 256;
 
-			PxOverlapHit hitBuffer[bufferSize];
-			PxOverlapBuffer hit(hitBuffer, bufferSize);            // [out] Overlap results
-			PxGeometry overlapShape = PxSphereGeometry(5.f);  // [in] shape to test for overlaps
-			PxTransform shapePose;    // [in] initial shape pose (at distance=0)
-			_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
-			shapePose.q = PxIdentity;
-			memcpy(&shapePose.p, &position, sizeof(_float3));
-			PxQueryFilterData fd;
-			//fd.flags = PxQueryFlag::eSTATIC;
-			fd.data.word0 = CPxManager::GROUP1;
-			bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
-			if (status)
-			{
-				for (PxU32 i = 0; i < hit.nbTouches; ++i)
-				{
-					if (static_cast<CBoxCollider*>(hit.touches[i].actor->userData))
-					{
-						int i = 0;
-					}
-				}
-			}
+			CheckEnemyInSight();
+
 		}
 	}
 
@@ -395,44 +374,17 @@ _float CPlayer::GetYAxisAngle(_vector hitPos)
 	if (XMVectorGetY(crossResult) < 0.f)
 		yAxisAngle *= -1;
 
-	//_vector vecRootPos = m_pTransform->GetState(CTransform::STATE_POSITION);
-	//vecRootPos = XMVectorSetW(vecRootPos, 0);
-	//hitPos = XMVectorSetY(hitPos, XMVectorGetY(vecRootPos));
-	//_vector XZDir = XMVectorSubtract(hitPos, vecRootPos);
-
-	//_vector globalLook = {0.f, 0.f, 1.f};
-	//_vector vecTargetAngle = XMVector3AngleBetweenVectors(globalLook, XZDir);
-	//_float targetAngle = XMVectorGetX(vecTargetAngle);
-
-	//_vector rootLook = m_pTransform->GetState(CTransform::STATE_LOOK);
-	//_vector yVecAxisAngle = XMVector3AngleBetweenVectors(rootLook, XZDir);
-	//_float yAxisAngle = XMVectorGetX(yVecAxisAngle);
-
-	//_vector crossTargetResult = XMVector3Cross(globalLook, XZDir);
-	//_vector crossRootResult = XMVector3Cross(rootLook, XZDir);
-
-	//if (XMVectorGetY(crossTargetResult) < 0.f)
-	//	targetAngle += XM_PIDIV2;
-	//if (XMVectorGetY(crossRootResult) < 0.f)
-	//	yAxisAngle *= -1;
-
-	//ADDLOG(("yAxisAngle: " + to_string(XMConvertToDegrees(yAxisAngle))).c_str());
-
 	//// -70 or 70 이상 넘어가면 body rotate
 	if (XMConvertToDegrees(yAxisAngle) > 70.f)
 	{
-
 		m_turn90.first = true;
-		// m_targetBodyRotation += 70.f;
 		_vector rotateAngle = XMVector3AngleBetweenVectors(XZDirPrev, XZDir);
 		m_targetBodyRotation += XMConvertToDegrees(XMVectorGetX(rotateAngle));
 		XZDirPrev = XZDir;
 	}
 	else if (XMConvertToDegrees(yAxisAngle) < -70.f)
 	{
-
 		m_turn90.second = true;
-		// m_targetBodyRotation -= 70.f;
 		_vector rotateAngle = XMVector3AngleBetweenVectors(XZDirPrev, XZDir);
 		m_targetBodyRotation -= XMConvertToDegrees(XMVectorGetX(rotateAngle));
 		XZDirPrev = XZDir;
@@ -470,6 +422,55 @@ _vector CPlayer::GetPickingDir()
 	vRayDir = XMVector4Normalize(vRayDir);
 
 	return vRayDir;
+}
+
+void CPlayer::CheckEnemyInSight()
+{
+	static const _float sightRange = 15.f;
+	const PxU32 bufferSize = 256;
+
+	PxOverlapHit hitBuffer[bufferSize];
+	PxOverlapBuffer hit(hitBuffer, bufferSize);            // [out] Overlap results
+	PxSphereGeometry overlapShape = PxSphereGeometry(sightRange);  // [in] shape to test for overlaps
+	PxTransform position;    // [in] initial shape pose (at distance=0)
+	_vector vecPosition = m_pTransform->GetState(CTransform::STATE_POSITION);
+	position.q = PxIdentity;
+	memcpy(&position.p, &vecPosition, sizeof(_float3));
+	PxQueryFilterData fd;
+	////fd.flags = PxQueryFlag::eSTATIC;
+	// fd.data.word0 = CPxManager::GROUP1;
+	fd.data.word1 = CPxManager::GROUP4;
+	//fd.flags = PxQueryFlag::eANY_HIT;
+	// bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
+	// bool status = CEngine::GetInstance()->GetScene()->overlap(PxBoxGeometry(10.f, 10, 10), PxTransform(shapePose), hit, fd);
+	
+	// first check if enemy is in the range
+	if (CEngine::GetInstance()->GetScene()->overlap(overlapShape, PxTransform(position), hit, fd))
+	{
+		for (PxU32 i = 0; i < hit.getNbAnyHits(); ++i)
+		{
+			// filter out player
+			if (hit.getAnyHit(i).actor->userData != this)
+			{
+				// ADDLOG(("Pos : " + to_string(enemyPos.p.x) + ", " + to_string(enemyPos.p.z)).c_str());
+
+
+				// check if there is obstacle between player and enemy
+				CEnemy* enemy = static_cast<CEnemy*>(hit.getAnyHit(i).actor->userData);
+				PxTransform enemyPos = hit.getAnyHit(i).actor->getGlobalPose();
+				PxTransform controllerPos = m_pController->getActor()->getGlobalPose();
+				PxVec3 rayDir = (enemyPos.p - controllerPos.p).getNormalized();
+				PxRaycastBuffer rayHit;
+				PxQueryFilterData filterData;
+				// filterData.data.word0 = CPxManager::GROUP1;
+				filterData.data.word1 = CPxManager::GROUP3;
+				if (CEngine::GetInstance()->Raycast(controllerPos.p, rayDir, sightRange, rayHit, filterData))
+					enemy->SetVisibility(VISIBILITY::INVISIBLE);
+				else
+					enemy->SetVisibility(VISIBILITY::VISIBLE);
+			}
+		}
+	}
 }
 
 void CPlayer::AssignMeshContainter()

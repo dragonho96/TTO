@@ -20,6 +20,11 @@ public:
 	virtual void Update(_double deltaTime);
 	virtual void LapteUpdate(_double deltaTime);
 	virtual void Render();
+
+public:
+	void CheckVisibility();
+	void SetVisibility(VISIBILITY eType) { m_eCurVisibility = eType; }
+
 public:
 	CRITICAL_SECTION Get_CS() { return m_CS; }
 
@@ -34,8 +39,11 @@ private:
 	CCollider*		m_pCollider = nullptr;
 	CModel*			m_pModel = nullptr;
 	PxController*	m_pController = nullptr;
-
 	CTransform*		m_pTargetTransform = nullptr;
+
+private:
+	VISIBILITY		m_eCurVisibility = VISIBILITY::VISIBLE;
+	VISIBILITY		m_ePreVisibility = VISIBILITY::VISIBLE;
 private:
 	string			m_Timer = "";
 	_float			m_fPathFinding = 0.f;

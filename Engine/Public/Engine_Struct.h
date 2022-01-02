@@ -4,12 +4,22 @@ namespace Engine
 {
 	enum class ANIM_TYPE { LOWER, UPPER, NONE };
 
+	typedef struct tagVertex_Matrix
+	{
+		XMFLOAT4		vRight;
+		XMFLOAT4		vUp;
+		XMFLOAT4		vLook;
+		XMFLOAT4		vPosition;
+		_float			iStartFrame;
+	}VTXMATRIX;
+
+
 	typedef struct tagKeyFrameDesc
 	{
 		XMFLOAT3		vScale;
 		XMFLOAT4		vRotation;
 		XMFLOAT3		vPosition;
-		double			Time; 
+		double			Time;
 	}KEYFRAMEDESC;
 
 	typedef struct tagBoneDesc
@@ -122,7 +132,7 @@ struct ConstantBuffer
 struct LightBufferType {
 	XMFLOAT4 diffuseColor;
 	XMFLOAT3 lightDirection;
-	float padding; 
+	float padding;
 };
 
 //struct Vertex

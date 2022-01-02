@@ -3,7 +3,6 @@
 static const unsigned int g_iWinCX = 1920;
 static const unsigned int g_iWinCY = 1080;
 
-enum SCENE { SCENE_STATIC, SCENE_LOGO, SCENE_LOBBY, SCENE_LOADING, SCENE_GAMEPLAY, SCENE_TEST, SCENE_END };
 
 
 extern HWND		g_hWnd;
@@ -12,6 +11,7 @@ namespace Client {}
 using namespace Client;
 #include "Engine.h"
 
+#include "Client_Enum.h"
 #include "Client_Struct.h"
 
 #define NO_EVENT 0

@@ -233,6 +233,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\VIBuffer_LineCapsule.h" />
     <ClInclude Include="..\Public\VIBuffer_LineSphere.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_RectInstance.h" />
     <ClInclude Include="..\Public\VIBuffer_RectUI.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
   </ItemGroup>
@@ -292,6 +293,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_RectInstance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_RectUI.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
   </ItemGroup>

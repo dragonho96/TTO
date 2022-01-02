@@ -117,11 +117,10 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGa
 			PxShape* shape = nullptr;
 			m_pController->getActor()->getShapes(&shape, 1);
 			m_pController->getActor()->userData = obj;
-			if (m_pController->getActor()->userData)
-				int i = 0;
+
 			PxFilterData filterData;
 			filterData.word0 = CPxManager::GROUP1;
-			// filterData.word1 = CPxManager::GROUP1;
+			filterData.word1 = CPxManager::GROUP4;
 			shape->setQueryFilterData(filterData);
 			//filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
 			//filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID

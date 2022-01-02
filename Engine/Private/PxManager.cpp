@@ -198,10 +198,11 @@ _bool CPxManager::Raycast(_vector origin, _vector unitDir, _float maxDistance, P
 	memcpy(&pxOrigin, &origin, sizeof(PxVec3));
 	memcpy(&pxUnitDir, &unitDir, sizeof(PxVec3));
 
-	//PxQueryFilterData filterData;
-	//filterData.data.word0 = CPxManager::GROUP1;
-	// filterData.data.word1 = CPxManager::GROUP2;
-	_bool result = m_pScene->raycast(pxOrigin, pxUnitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
-	return result;
+	return m_pScene->raycast(pxOrigin, pxUnitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
+}
+
+_bool CPxManager::Raycast(PxVec3 origin, PxVec3 unitDir, _float maxDistance, PxRaycastBuffer & hit, PxQueryFilterData & filterData)
+{
+	return m_pScene->raycast(origin, unitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
 }
 

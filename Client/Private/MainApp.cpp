@@ -6,9 +6,13 @@
 #include "Scene_Loading.h"
 #include "Scene_Test.h"
 #include "Scene_Lobby.h"
+#include "Scene_Effect.h"
 
 #include "Camera_Fly.h"
 #include "Camera_Follow.h"
+#include "Effect.h"
+#include "Effect_Fire.h"
+#include "Effect_Smoke.h"
 #include "Equipment.h"
 
 #include "Log.h"
@@ -62,12 +66,12 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	m_pEngine->DeserializePrefab();
+	// TODO
+	// m_pEngine->DeserializePrefab();
+	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
-
-	if (FAILED(OpenScene(SCENE_TEST)))
+	if (FAILED(OpenScene(SCENE_EFFECT)))
 		return E_FAIL;
 
 	ImGuiInitialize();
@@ -250,7 +254,9 @@ HRESULT CMainApp::OpenScene(SCENE eScene)
 	case SCENE_GAMEPLAY:
 		pScene = CScene_Loading::Create(m_pDevice, m_pDeviceContext, eScene, SCENE_LOADING);
 		break;
-
+	case SCENE_EFFECT:
+		pScene = CScene_Effect::Create(m_pDevice, m_pDeviceContext, SCENE_EFFECT);
+		break;
 	}
 
 	if (nullptr == pScene)
@@ -291,6 +297,12 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Rect", CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_RectInstance.fx", 10))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Fire", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Fire.fx", 6))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Smoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 3))))
+		return E_FAIL;
 
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
@@ -321,6 +333,14 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Node", CNode::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Grid", CGrid::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	
+	/* Effects */
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect", CEffect::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Fire", CEffect_Fire::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Smoke", CEffect_Smoke::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Camera */

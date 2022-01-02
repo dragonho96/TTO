@@ -6,6 +6,7 @@
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_RectUI.h"
+#include "VIBuffer_RectInstance.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_LineBox.h"
 #include "VIBuffer_LineCapsule.h"

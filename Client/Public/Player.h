@@ -42,6 +42,8 @@ public:
 	_float	GetYAxisAngle(_vector hitPos);
 
 	_vector GetPickingDir();
+	void	CheckEnemyInSight();
+
 	void AssignMeshContainter();
 	void FindBones();
 private:
@@ -77,10 +79,13 @@ private:
 	_float					m_angleBetweenCamPlayer = 0;
 
 	_float					m_fSpeedFactor = 30.f;
-	_double					TimeRaycast = 0.0;
 	pair<_bool, _bool>		m_turn90 = {false, false};
 
 	_vector XZDirPrev = {0.f, 0.f, 1.f};
+
+	_double					TimeRaycast = 0.0;
+	_double					TimeCheckEnemyInSight = 0.0;
+
 };
 
 END

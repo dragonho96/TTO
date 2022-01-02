@@ -1,10 +1,6 @@
 #pragma once
 namespace Client
 {
-	enum class	EQUIPMENTGROUP { BASE, WEAPON, MAGAZINE, GEAR };
-	enum class  EQUIPMENT : int { PRIMARY, PRIMARYMAG, SECONDARY, SECONDARYMAG, GRENADE, TOOL, HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
-	enum class  GEAR : int { HEADGEAR, TORSO, LEGS, VEST, BACKPACK, NONE };
-
 	typedef struct tagBaseEquipDesc
 	{
 		tagBaseEquipDesc() {}

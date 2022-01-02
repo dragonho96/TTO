@@ -579,6 +579,11 @@ _bool CEngine::Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRa
 	return m_pPxManager->Raycast(origin, unitDir, maxDistance, hit, filterData);
 }
 
+_bool CEngine::Raycast(PxVec3 origin, PxVec3 unitDir, _float maxDistance, PxRaycastBuffer & hit, PxQueryFilterData & filterData)
+{
+	return m_pPxManager->Raycast(origin, unitDir, maxDistance, hit, filterData);
+}
+
 PxScene * CEngine::GetScene()
 {
 	return m_pPxManager->GetScene();

@@ -109,7 +109,24 @@
     <ClInclude Include="..\Public\GrenadeState.h">
       <Filter>StateMachine\GrenadeState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Enemy.h" />
+    <ClInclude Include="..\Public\Enemy.h">
+      <Filter>02.GameObjects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scene_Effect.h">
+      <Filter>01.Scenes\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Fire.h">
+      <Filter>02.GameObjects\Effect\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Smoke.h">
+      <Filter>02.GameObjects\Effect\Smoke</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -208,7 +225,21 @@
     <ClCompile Include="..\Private\GrenadeState.cpp">
       <Filter>StateMachine\GrenadeState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Enemy.cpp" />
+    <ClCompile Include="..\Private\Enemy.cpp">
+      <Filter>02.GameObjects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scene_Effect.cpp">
+      <Filter>01.Scenes\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Fire.cpp">
+      <Filter>02.GameObjects\Effect\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Smoke.cpp">
+      <Filter>02.GameObjects\Effect\Smoke</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -327,6 +358,18 @@
     <Filter Include="02.GameObjects\Enemy">
       <UniqueIdentifier>{acd197dc-386f-4366-a88c-0dd06dbef89b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect">
+      <UniqueIdentifier>{8a6ba297-49bf-47c6-9f63-196ce3591c5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scenes\Effect">
+      <UniqueIdentifier>{0c0da219-9af9-48e2-bcf3-12905cc74003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Fire">
+      <UniqueIdentifier>{85ee36c2-1aa2-435f-9874-5a097adee1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Smoke">
+      <UniqueIdentifier>{22acd779-b4be-4898-8153-5b3bd55fb4aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -349,6 +392,15 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_RectInstance.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Fire.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Smoke.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

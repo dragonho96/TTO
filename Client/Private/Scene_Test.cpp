@@ -44,7 +44,7 @@ HRESULT CScene_Test::Initialize()
 {
 	__super::Initialize();
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
-	m_pEngine->DeserializeScene("../../Assets/Scenes/ModelTest.yaml");
+	m_pEngine->DeserializeScene("../../Assets/Scenes/Effect.yaml");
 
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);

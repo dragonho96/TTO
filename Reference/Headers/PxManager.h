@@ -75,6 +75,7 @@ public:
 
 public:
 	_bool					Raycast(_vector origin, _vector unitDir, _float maxDistance, PxRaycastBuffer& hit, PxQueryFilterData& filterData);
+	_bool					Raycast(PxVec3 origin, PxVec3 unitDir, _float maxDistance, PxRaycastBuffer& hit, PxQueryFilterData& filterData);
 
 
 	void					OnContact(const PxContactPairHeader & pairHeader, const PxContactPair * pairs, PxU32 nbPairs);
