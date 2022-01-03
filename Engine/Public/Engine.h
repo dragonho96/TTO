@@ -91,7 +91,7 @@ public:
 #pragma endregion
 
 #pragma region SCRIPTOBJECT
-	void AddScriptObject(IScriptObject* pObj);
+	IScriptObject * AddScriptObject(IScriptObject* pObj);
 #pragma endregion 
 
 #pragma region INPUT

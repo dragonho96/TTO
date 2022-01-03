@@ -1,14 +1,12 @@
 #pragma once
-#include "Engine.h"
-#include "Transform.h"
-#include "Collider.h"
-#include "Model.h"
+
+#include "Character.h"
 #include "StateMachine.h"
 BEGIN(Client)
 
-class CEnemy : public IScriptObject
+class CEnemy : public CCharacter
 {
-public:
+private:
 	explicit CEnemy();
 	explicit CEnemy(CGameObject* pObj);
 	virtual ~CEnemy() = default;
@@ -30,15 +28,10 @@ public:
 
 	void FindPath();
 	void FollowPlayer(_double deltaTime);
-	void GetShot();
+	virtual void GetDamage(_vector sourceLocation);
 	void SetPathPos(list<_vector> pos) { m_pathPosition = pos; }
 public:
 private:
-	CGameObject*	m_pGameObject = nullptr;
-	CTransform*		m_pTransform = nullptr;
-	CCollider*		m_pCollider = nullptr;
-	CModel*			m_pModel = nullptr;
-	PxController*	m_pController = nullptr;
 	CTransform*		m_pTargetTransform = nullptr;
 
 private:

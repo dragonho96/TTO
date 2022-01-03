@@ -2,9 +2,11 @@
 #include "..\Public\Enemy.h"
 #include "PathFinding.h"
 
+USING(Client)
 CEnemy::CEnemy(CGameObject * pObj)
-	: m_pGameObject(pObj)
+	:CCharacter(pObj)
 {
+	
 }
 
 CEnemy * CEnemy::Create(CGameObject * pObj)
@@ -56,7 +58,13 @@ void CEnemy::Update(_double deltaTime)
 	if (m_fPathFinding > 1.f)
 		FindPath();
 
-	// FollowPlayer(deltaTime);
+	if (m_pController)
+	{
+		// FollowPlayer(deltaTime);
+		// Gravity
+		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
+	}
+
 	CheckVisibility();
 }
 
@@ -131,16 +139,25 @@ void CEnemy::FollowPlayer(_double deltaTime)
 	PxVec3 pxDir;
 	memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 	m_pController->move(pxDir, 0.f, deltaTime, PxControllerFilters{});
-	m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 }
 
-void CEnemy::GetShot()
+void CEnemy::GetDamage(_vector sourceLocation)
 {
 	if (m_pController)
 	{
 		m_pCollider->ReleaseController();
 		m_pController = nullptr;
 		m_pModel->SetRagdollSimulate(true);
+
+		_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
+		_vector damageDir = position - sourceLocation;
+		PxVec3 pxDamageDir;
+		memcpy(&pxDamageDir, &damageDir, sizeof(PxVec3));
+		//m_pModel->GetRagdollRb("body")->addForce(pxDamageDir.getNormalized(), PxForceMode::eIMPULSE);
+		m_pModel->GetRagdollRb("body")->addForce(pxDamageDir * 100.f, PxForceMode::eIMPULSE);
+		
+		string logStr = "" + to_string(pxDamageDir.x) + " " + to_string(pxDamageDir.y) + " " + to_string(pxDamageDir.z);
+		ADDLOG(("Hit Dir: " + logStr).c_str());
 	}
 }
 

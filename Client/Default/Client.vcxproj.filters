@@ -50,7 +50,7 @@
       <Filter>02.GameObjects\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>02.GameObjects\Player</Filter>
+      <Filter>02.GameObjects\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Assets\Shader\Shader_Defines.hpp">
       <Filter>FX</Filter>
@@ -110,7 +110,7 @@
       <Filter>StateMachine\GrenadeState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Enemy.h">
-      <Filter>02.GameObjects\Enemy</Filter>
+      <Filter>02.GameObjects\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>98.Defines</Filter>
@@ -130,6 +130,8 @@
     <ClInclude Include="..\Public\GameManager.h">
       <Filter>97.Manager\GameManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Grenade.h" />
+    <ClInclude Include="..\Public\Character.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -175,7 +177,7 @@
       <Filter>02.GameObjects\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02.GameObjects\Player</Filter>
+      <Filter>02.GameObjects\Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Grid.cpp">
       <Filter>97.Manager\PathFindingManager\Grid</Filter>
@@ -229,7 +231,7 @@
       <Filter>StateMachine\GrenadeState</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Enemy.cpp">
-      <Filter>02.GameObjects\Enemy</Filter>
+      <Filter>02.GameObjects\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Scene_Effect.cpp">
       <Filter>01.Scenes\Effect</Filter>
@@ -246,6 +248,8 @@
     <ClCompile Include="..\Private\GameManager.cpp">
       <Filter>97.Manager\GameManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Grenade.cpp" />
+    <ClCompile Include="..\Private\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -300,9 +304,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Camera">
       <UniqueIdentifier>{c5074939-735e-44c2-8810-e9cf6e8b5481}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Player">
-      <UniqueIdentifier>{df44392e-0c4f-47cf-9d47-ce3bd03fdaef}</UniqueIdentifier>
     </Filter>
     <Filter Include="FX">
       <UniqueIdentifier>{bfd9097f-0a6e-415e-9acc-d189c34c374d}</UniqueIdentifier>
@@ -361,9 +362,6 @@
     <Filter Include="StateMachine\GrenadeState">
       <UniqueIdentifier>{335440f6-a9a8-4650-9ace-4789732c8bef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy">
-      <UniqueIdentifier>{acd197dc-386f-4366-a88c-0dd06dbef89b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect">
       <UniqueIdentifier>{8a6ba297-49bf-47c6-9f63-196ce3591c5a}</UniqueIdentifier>
     </Filter>
@@ -378,6 +376,18 @@
     </Filter>
     <Filter Include="97.Manager\GameManager">
       <UniqueIdentifier>{ec38d01a-d4b2-4e15-9d5b-cb6ec87baaea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Grenade">
+      <UniqueIdentifier>{1d08cb5c-bae2-44fa-b8e2-140ff8675559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Character">
+      <UniqueIdentifier>{357bd715-cd1c-4489-bcaa-48aa450bc7cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Character\Player">
+      <UniqueIdentifier>{df44392e-0c4f-47cf-9d47-ce3bd03fdaef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Character\Enemy">
+      <UniqueIdentifier>{acd197dc-386f-4366-a88c-0dd06dbef89b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

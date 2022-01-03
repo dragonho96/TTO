@@ -31,6 +31,7 @@ CModel::CModel(const CModel & rhs)
 	, m_pIB(rhs.m_pIB)
 	, m_iStride(rhs.m_iStride)
 	, m_iAnimationIndex(rhs.m_iAnimationIndex)
+	, m_pShader(rhs.m_pShader)
 {
 	for (auto& pPrototypeMeshContainer : rhs.m_MeshContainers)
 	{
@@ -41,6 +42,8 @@ CModel::CModel(const CModel & rhs)
 
 HRESULT CModel::InitializePrototype()
 {
+	m_pShader = make_shared<CShader>("../../Assets/Shader/Shader_Mesh.fx");
+
 	return S_OK;
 }
 
@@ -54,7 +57,6 @@ HRESULT CModel::Initialize(void * pArg)
 
 	m_bSimulateRagdoll = false;
 
-	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Mesh.fx");
 
 	_uint		iStartVertexIndex = 0;
 	_uint		iStartFaceIndex = 0;

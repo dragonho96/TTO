@@ -14,7 +14,7 @@ public:
 	void Update(_double deltaTime);
 	void LateUpdate(_double deltaTime);
 public:
-	void AddObject(IScriptObject* pObj);
+	IScriptObject * AddObject(IScriptObject* pObj);
 
 	list<IScriptObject*>	m_ScriptObjects;
 

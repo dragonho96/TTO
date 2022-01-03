@@ -9,8 +9,21 @@ CScriptObjectManager::CScriptObjectManager()
 
 void CScriptObjectManager::Update(_double deltaTime)
 {
-	for (auto& obj : m_ScriptObjects)
-		obj->Update(deltaTime);
+	for (auto& iter = m_ScriptObjects.begin(); iter != m_ScriptObjects.end();)
+	{
+		if ((*iter)->IsDead())
+		{
+			SafeRelease(*iter);
+			iter = m_ScriptObjects.erase(iter);
+		}
+		else
+		{
+			(*iter)->Update(deltaTime);
+			++iter;
+		}
+	}
+	//for (auto& obj : m_ScriptObjects)
+	//	obj->Update(deltaTime);
 }
 
 void CScriptObjectManager::LateUpdate(_double deltaTime)
@@ -19,10 +32,13 @@ void CScriptObjectManager::LateUpdate(_double deltaTime)
 		obj->LapteUpdate(deltaTime);
 }
 
-void CScriptObjectManager::AddObject(IScriptObject * pObj)
+IScriptObject * CScriptObjectManager::AddObject(IScriptObject * pObj)
 {
 	if (pObj)
+	{
 		m_ScriptObjects.push_back(pObj);
+		return pObj;
+	}
 }
 
 void CScriptObjectManager::Free()

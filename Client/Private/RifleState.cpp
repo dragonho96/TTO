@@ -7,11 +7,15 @@ USING(Client)
 void CRifleState::HandleInput(CStateMachine ** pState, CPlayer& pPlayer)
 {
 	if (m_bEquipping && pPlayer.m_pModel->IsUpperFinished())
+	{
+		pPlayer.EquipWeapon(EQUIPMENT::PRIMARY);
 		m_bEquipping = false;
+	}
 
 	if (!m_bUnEquipping && !m_bEquipping && CEngine::GetInstance()->IsKeyDown('3'))
 	{
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::UNEQUIP_RIFLE, ANIM_TYPE::UPPER);
+		pPlayer.UnEquipWeapon(EQUIPMENT::PRIMARY);
 		m_bUnEquipping = true;
 	}
 	if (m_bUnEquipping && pPlayer.m_pModel->IsUpperFinished())

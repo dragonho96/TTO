@@ -1,7 +1,7 @@
 Scene: Untitled
 GameObjects:
   - Name: Player
-    UUID: 5246932639118519193
+    UUID: 15007411300508441015
     Active: true
     Layer: Player
     Type: Object
@@ -23,8 +23,21 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: PlayerFinal.fbx
       HasCollider: false
+  - Name: Terrain
+    UUID: 9175999438054577974
+    Active: true
+    Layer: Terrain
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Wall
-    UUID: 4473091172823249959
+    UUID: 4103903290480697016
     Active: true
     Layer: Default
     Type: Object
@@ -37,7 +50,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Building
-    UUID: 11962945369602733008
+    UUID: 7410261662898892892
     Active: true
     Layer: Default
     Type: Object
@@ -50,7 +63,7 @@ GameObjects:
       MeshFileName: ContainerHouse.fbx
       HasCollider: true
   - Name: Wall
-    UUID: 11758860438952420921
+    UUID: 1729058228930112334
     Active: true
     Layer: Default
     Type: Object
@@ -63,7 +76,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Wall
-    UUID: 12374929995997775600
+    UUID: 10442236445263243521
     Active: true
     Layer: Default
     Type: Object
@@ -76,7 +89,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Plant
-    UUID: 2955377144588389527
+    UUID: 8447770129647333991
     Active: true
     Layer: Default
     Type: Object
@@ -89,7 +102,7 @@ GameObjects:
       MeshFileName: LakeTree.fbx
       HasCollider: false
   - Name: Rock
-    UUID: 17344670182972422821
+    UUID: 2993945600809990320
     Active: true
     Layer: Default
     Type: Object
@@ -101,21 +114,8 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Rocks\ForestRocks\1\
       MeshFileName: ForestRock1.fbx
       HasCollider: false
-  - Name: Terrain
-    UUID: 14397396610733835477
-    Active: true
-    Layer: Terrain
-    Type: Object
-    Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Enemy1
-    UUID: 10072042950888124806
+    UUID: 3087593118888913032
     Active: true
     Layer: Enemy
     Type: Object

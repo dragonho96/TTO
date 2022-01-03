@@ -78,8 +78,9 @@ HRESULT CSphereCollider::SetUpDebugLine(/* SIZE DESC */)
 void CSphereCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGameObject* obj)
 {
 	m_RigidBodyDesc = desc;
-	memcpy(&m_fRadius, pShapeInfo, sizeof(_float));
-	SetSize(m_fRadius);
+	_float inputRadius = 0.0f;
+	memcpy(&inputRadius, pShapeInfo, sizeof(_float));
+	SetSize(inputRadius);
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	{

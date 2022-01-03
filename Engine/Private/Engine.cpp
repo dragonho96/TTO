@@ -370,9 +370,9 @@ CGameObject* CEngine::SpawnPrefab(string name)
 	return m_pGameObjectManager->SpawnPrefab(name);
 }
 
-void CEngine::AddScriptObject(IScriptObject * pObj)
+IScriptObject * CEngine::AddScriptObject(IScriptObject * pObj)
 {
-	m_pScriptObjectManager->AddObject(pObj);
+	return m_pScriptObjectManager->AddObject(pObj);
 }
 
 void CEngine::InitializeInput()

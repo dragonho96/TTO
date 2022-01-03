@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include "..\Public\Player.h"
 #include "Engine.h"
+#include "Equipment.h"
 #include "GameManager.h"
 #include "HierarchyNode.h"
 #include "EquipmentPool.h"
-#include "StateMachine.h"
 #include "WalkState.h"
 #include "RifleState.h"
 #include "Enemy.h"
+#include "Grenade.h"
+
 
 USING(Client)
 
 CPlayer::CPlayer(CGameObject* pObj)
+	: CCharacter(pObj)
 {
 }
 
@@ -55,9 +58,10 @@ HRESULT CPlayer::Initialize()
 
 	m_pGameObject->AddComponent(0, "Prototype_Equipment", "Com_Equipment");
 	m_pEquipment = dynamic_cast<CEquipment*>(m_pGameObject->GetComponent("Com_Equipment"));
-
-
-
+	m_pPrimaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::PRIMARY)->model;
+	m_pSecondaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::SECONDARY)->model;
+	m_pGrenade = m_pEquipment->GetCurrentEquipment(EQUIPMENT::GRENADE)->model;
+	m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
 	m_pModel->SetAnimSeperate(true);
@@ -65,6 +69,7 @@ HRESULT CPlayer::Initialize()
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_RIFLE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_GRENADE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_GRENADE, false);
+	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::THROW_GRENADE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_R, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_L, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_LOWER::TURN_KNEEL_R, false);
@@ -197,14 +202,14 @@ void CPlayer::Update(_double deltaTime)
 						ADDLOG(("Hit Normal: " + logStr).c_str());
 						IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
 						if (dynamic_cast<CEnemy*>(hitObject))
-							dynamic_cast<CEnemy*>(hitObject)->GetShot();
+							dynamic_cast<CEnemy*>(hitObject)->GetDamage(m_pTransform->GetState(CTransform::STATE_POSITION));
 					}
 
-					_vector myLookPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
+					_vector cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
 
-					m_targetUpperRotation.x = GetXAxisAngle(myLookPos);
-					m_targetUpperRotation.y = GetYAxisAngle(myLookPos);
+					m_targetUpperRotation.x = GetXAxisAngle(cursorHitPos);
+					m_targetUpperRotation.y = GetYAxisAngle(cursorHitPos);
 
 					_float	fFollowSpeed = deltaTime * 15.f;
 					m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
@@ -217,6 +222,8 @@ void CPlayer::Update(_double deltaTime)
 					m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
 					m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
 
+					if (CEngine::GetInstance()->IsKeyDown('T'))
+						SetGrenadeTrajectory(cursorHitPos, 1.f);
 				}
 			}
 		}
@@ -254,12 +261,10 @@ void CPlayer::LapteUpdate(_double deltaTime)
 
 void CPlayer::UpdateWeaponTransform()
 {
-	m_pPrimaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::PRIMARY)->model;
-	m_pSecondaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::SECONDARY)->model;
-	m_pGrenade = m_pEquipment->GetCurrentEquipment(EQUIPMENT::GRENADE)->model;
-	m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
+	if (m_pWeaponInHand != m_pPrimaryWeapon)
+		SetObjectTransform(m_pPrimaryWeapon, m_pSlingBone);
 
-	SetObjectTransform(m_pPrimaryWeapon, m_pHandBone);
+	SetObjectTransform(m_pWeaponInHand, m_pHandBone);
 	SetObjectTransform(m_pSecondaryWeapon, m_pRThighBone);
 	SetObjectTransform(m_pGrenade, m_pGrenadeBone);
 	SetObjectTransform(m_pTool, m_pToolBone);
@@ -282,9 +287,30 @@ void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
 	}
 }
 
-void CPlayer::ChangeWeapon(EQUIPMENT eType, _uint iIndex)
+void CPlayer::EquipWeapon(EQUIPMENT eType)
 {
+	if (eType == EQUIPMENT::PRIMARY)
+	{
+		m_pWeaponInHand = m_pPrimaryWeapon;
+	}
+	else if (eType == EQUIPMENT::GRENADE)
+	{
+		m_pWeaponInHand = CEngine::GetInstance()->SpawnPrefab("Frag");
+		m_pGrenadeInHand = dynamic_cast<CGrenade*>(CEngine::GetInstance()->AddScriptObject(CGrenade::Create(m_pWeaponInHand)));
+	}
+}
 
+void CPlayer::UnEquipWeapon(EQUIPMENT eType)
+{
+	if (eType == EQUIPMENT::PRIMARY)
+	{
+		m_pWeaponInHand = nullptr;
+	}
+	else if (eType == EQUIPMENT::GRENADE)
+	{
+		m_pGrenadeInHand->SetDead();
+		m_pWeaponInHand = nullptr;
+	}
 }
 
 void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
@@ -292,6 +318,64 @@ void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
 	CEquipmentPool* equipmentPool = CEquipmentPool::GetInstance();
 
 	equipmentPool->GetEquipment(eType, iIndex)->mesh->SetActive(true);
+}
+
+void CPlayer::ThrowGrenade()
+{
+	m_pGrenadeInHand->OnThrow(_vector{ 0, 1, 0, 0 });
+}
+
+void CPlayer::SetGrenadeTrajectory(_vector target, _float time)
+{
+	_vector scale, rot, origin;
+	_matrix originMatrix = m_pHandBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+	XMMatrixDecompose(&scale, &rot, &origin, originMatrix);
+	origin = XMVectorSetW(origin, 0.f);
+
+	// Calculate Velocity
+	_vector distance = target - origin;
+	_vector distanceXZ = distance;
+	distanceXZ = XMVectorSetW(XMVectorSetY(distanceXZ, 0.f), 0.f);
+
+	_float sY = XMVectorGetY(distance);
+	_float sXZ = XMVectorGetX(XMVector4Length(distanceXZ));
+
+	_float Vxz = sXZ * time; 
+	_float Vy = (sY / time) + (0.5f * 9.81 * time);
+
+	_vector velocity = XMVector3Normalize(distanceXZ);
+	velocity *= Vxz;
+	velocity = XMVectorSetY(velocity, Vy);
+
+	// Calucate Pos In Time
+	VisualizeTrajectory(origin, velocity);
+}
+
+void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity)
+{
+	_uint lineSegment = 10;
+	for (int i = 0; i < lineSegment; ++i)
+	{
+		_vector pos = CalculatePosInTime(origin, initialVelocity, i / (_float)lineSegment);
+		ADDLOG(("cross: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
+	}
+}
+
+_vector CPlayer::CalculatePosInTime(_vector origin, _vector initialVelocity, _float time)
+{
+	origin = XMVectorSetW(origin, 0.f);
+	initialVelocity = XMVectorSetW(initialVelocity, 0.f);
+
+	_vector Vxz = initialVelocity;
+	Vxz = XMVectorSetY(Vxz, 0.f);
+
+
+	_vector result = origin + initialVelocity * time;
+	_float sY = (-0.5f * 9.81 * (time * time)) + (XMVectorGetY(initialVelocity) * time) + XMVectorGetY(origin);
+
+	result = XMVectorSetY(result, sY);
+
+	return result;
 }
 
 _float CPlayer::GetXAxisAngle(_vector hitPos)
@@ -504,6 +588,7 @@ void CPlayer::FindBones()
 	m_pGrenadeBone = m_pModel->Find_Bone("slot_grenade");
 	m_pToolBone = m_pModel->Find_Bone("slot_gadget");
 	m_pSpineBone = m_pModel->Find_Bone("spine_02");
+	m_pSlingBone = m_pModel->Find_Bone("sling");
 }
 
 void CPlayer::Render()

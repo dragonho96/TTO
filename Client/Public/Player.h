@@ -1,13 +1,9 @@
 #pragma once
-#include "Engine.h"
-#include "Transform.h"
-#include "Collider.h"
-#include "Model.h"
-#include "Equipment.h"
+#include "Character.h"
 #include "StateMachine.h"
 
 BEGIN(Client)
-class CPlayer : public IScriptObject
+class CPlayer : public CCharacter
 {
 public:
 	friend class CIdleState;
@@ -30,14 +26,20 @@ public:
 	virtual void Update(_double deltaTime);
 	virtual void LapteUpdate(_double deltaTime);
 	virtual void Render();
-
+public:
+	virtual void GetDamage(_vector sourceLocation) {}
 public:
 	void UpdateWeaponTransform();
 	void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
 
-	void ChangeWeapon(EQUIPMENT eType, _uint iIndex);
+	void EquipWeapon(EQUIPMENT eType);
+	void UnEquipWeapon(EQUIPMENT eType);
 	void ChangeGear(EQUIPMENT eType, _uint iIndex);
 
+	void	ThrowGrenade();
+	void	SetGrenadeTrajectory(_vector target, _float time);
+	void	VisualizeTrajectory(_vector origin, _vector initialVelocity);
+	_vector	CalculatePosInTime(_vector origin, _vector initialVelocity, _float time);
 	_float	GetXAxisAngle(_vector hitPos);
 	_float	GetYAxisAngle(_vector hitPos);
 
@@ -49,13 +51,8 @@ public:
 private:
 	CTransform*		m_pCameraTransform = nullptr;
 
-	CGameObject*	m_pGameObject = nullptr;
-	CTransform*		m_pTransform = nullptr;
-	CCollider*		m_pCollider = nullptr;
-	CModel*			m_pModel = nullptr;
-	PxController*	m_pController = nullptr;
-
-	CEquipment*		m_pEquipment = nullptr;
+	class CGrenade*			m_pGrenadeInHand = nullptr;
+	class CEquipment*		m_pEquipment = nullptr;
 	CGameObject*	m_pWeaponInHand = nullptr;
 	CGameObject*	m_pPrimaryWeapon = nullptr;
 	CGameObject*	m_pSecondaryWeapon = nullptr;
@@ -66,6 +63,7 @@ private:
 	BONEDESC*		m_pGrenadeBone = nullptr;
 	BONEDESC*		m_pToolBone = nullptr;
 	BONEDESC*		m_pSpineBone = nullptr;
+	BONEDESC*		m_pSlingBone = nullptr;
 
 	class CStateMachine*	m_pLowerState = nullptr;
 	class CStateMachine*	m_pUpperState = nullptr;
@@ -85,7 +83,6 @@ private:
 
 	_double					TimeRaycast = 0.0;
 	_double					TimeCheckEnemyInSight = 0.0;
-
 };
 
 END

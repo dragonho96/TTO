@@ -370,7 +370,7 @@ void CInspector::DrawCollider()
 			if (dynamic_cast<CSphereCollider*>(pComponent))
 			{
 				float radius = dynamic_cast<CSphereCollider*>(pComponent)->GetSize();
-				ImGui::DragFloat("Radius", &radius, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+				ImGui::DragFloat("Radius", &radius, 0.01f, 0.01f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
 				dynamic_cast<CSphereCollider*>(pComponent)->SetSize(radius);
 			}
 			else if (dynamic_cast<CBoxCollider*>(pComponent))

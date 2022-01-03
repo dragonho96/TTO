@@ -21,6 +21,11 @@ void CCollider::Free()
 	__super::Free();
 	if (m_isCloned)
 		SafeRelease(m_pDebugLine);
+	if (m_pRigidActor)
+	{
+		m_pRigidActor->release();
+		m_pRigidActor = nullptr;
+	}
 }
 
 HRESULT CCollider::InitializePrototype()

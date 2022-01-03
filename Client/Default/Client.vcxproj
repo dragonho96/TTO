@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Fly.h" />
     <ClInclude Include="..\Public\Camera_Follow.h" />
+    <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="..\Public\EquipmentPool.h" />
     <ClInclude Include="..\Public\EquipmentSerializer.h" />
     <ClInclude Include="..\Public\GameManager.h" />
+    <ClInclude Include="..\Public\Grenade.h" />
     <ClInclude Include="..\Public\GrenadeState.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\IdleState.h" />
@@ -231,6 +233,7 @@
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
     <ClCompile Include="..\Private\Camera_Follow.cpp" />
+    <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\CrouchState.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\Effect_Fire.cpp" />
@@ -241,6 +244,7 @@
     <ClCompile Include="..\Private\EquipmentPool.cpp" />
     <ClCompile Include="..\Private\EquipmentSerializer.cpp" />
     <ClCompile Include="..\Private\GameManager.cpp" />
+    <ClCompile Include="..\Private\Grenade.cpp" />
     <ClCompile Include="..\Private\GrenadeState.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\IdleState.cpp" />
