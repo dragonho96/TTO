@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Player.h"
 #include "Engine.h"
-#include "Equipment.h"
 #include "GameManager.h"
 #include "HierarchyNode.h"
 #include "EquipmentPool.h"
@@ -51,6 +50,8 @@ HRESULT CPlayer::Initialize()
 		m_pController = m_pCollider->GetController();
 		m_pController->getActor()->userData = this;
 	}
+
+	// m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 
 	// EquipmentPool ¿¡ meshcontainer µî·Ï
 	AssignMeshContainter();
@@ -327,6 +328,9 @@ void CPlayer::ThrowGrenade()
 
 void CPlayer::SetGrenadeTrajectory(_vector target, _float time)
 {
+	return;
+
+
 	_vector scale, rot, origin;
 	_matrix originMatrix = m_pHandBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
 	XMMatrixDecompose(&scale, &rot, &origin, originMatrix);
@@ -353,12 +357,15 @@ void CPlayer::SetGrenadeTrajectory(_vector target, _float time)
 
 void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity)
 {
+	list<_vector> listPoints;
 	_uint lineSegment = 10;
 	for (int i = 0; i < lineSegment; ++i)
 	{
 		_vector pos = CalculatePosInTime(origin, initialVelocity, i / (_float)lineSegment);
+		listPoints.push_back(pos);
 		ADDLOG(("cross: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
 	}
+	// dynamic_cast<CEffect_Trajectory*>(m_pGrenadeTrajectory)->SetPoints(listPoints);
 }
 
 _vector CPlayer::CalculatePosInTime(_vector origin, _vector initialVelocity, _float time)

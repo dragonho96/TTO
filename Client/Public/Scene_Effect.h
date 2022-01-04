@@ -21,6 +21,8 @@ private:
 	HRESULT ReadyLayerCamera(string pLayerTag);
 	HRESULT ReadyLayerEffect(string pLayerTag);
 	HRESULT ReadyScript();
+
+	CGameObject* m_pTrajectory = nullptr;
 };
 
 END

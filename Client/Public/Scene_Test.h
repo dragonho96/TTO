@@ -26,6 +26,7 @@ private:
 private:
 	CPathFinding* m_pPathFinding = nullptr;
 	CGameManager* m_pGameManager = nullptr;
+	CGameObject* m_pTrajectory = nullptr;
 };
 
 END

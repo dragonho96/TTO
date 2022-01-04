@@ -44,8 +44,10 @@ HRESULT CScene_Effect::Initialize()
 	ReadyScript();
 
 
-	if (FAILED(ReadyLayerEffect("LAYER_EFFECT")))
-		return E_FAIL;
+	//if (FAILED(ReadyLayerEffect("LAYER_EFFECT")))
+	//	return E_FAIL;
+
+	m_pTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 
 
 	return S_OK;

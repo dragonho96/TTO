@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "StateMachine.h"
+#include "Equipment.h"
 
 BEGIN(Client)
 class CPlayer : public CCharacter
@@ -50,8 +51,10 @@ public:
 	void FindBones();
 private:
 	CTransform*		m_pCameraTransform = nullptr;
-
+	CGameObject*		m_pGrenadeTrajectory = nullptr;
 	class CGrenade*			m_pGrenadeInHand = nullptr;
+
+
 	class CEquipment*		m_pEquipment = nullptr;
 	CGameObject*	m_pWeaponInHand = nullptr;
 	CGameObject*	m_pPrimaryWeapon = nullptr;

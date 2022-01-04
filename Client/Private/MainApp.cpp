@@ -13,6 +13,7 @@
 #include "Effect.h"
 #include "Effect_Fire.h"
 #include "Effect_Smoke.h"
+#include "Effect_Trajectory.h"
 #include "Equipment.h"
 
 #include "Log.h"
@@ -37,9 +38,9 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	//ImGui_ImplDX11_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
+	//ImGui::DestroyContext();
 
 	SafeRelease(m_pRenderer);
 
@@ -67,14 +68,14 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	// TODO
-	 m_pEngine->DeserializePrefab();
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+	// m_pEngine->DeserializePrefab();
+	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
+
+	if (FAILED(OpenScene(SCENE_EFFECT)))
 		return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_TEST)))
-		return E_FAIL;
-
-	ImGuiInitialize();
+	//ImGuiInitialize();
 
 	return S_OK;
 }
@@ -93,9 +94,9 @@ _uint CMainApp::Update(_double dDeltaTime)
 	// TODO: Fix Update Order
 	m_pEngine->UpdatePx(dDeltaTime);
 
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplDX11_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	//ImGui::NewFrame();
 	return 0;
 }
 
@@ -113,11 +114,11 @@ HRESULT CMainApp::Render()
 	// ImGui
 
 
-	m_pEngine->UpdateImGui();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
+	//m_pEngine->UpdateImGui();
+	//ImGui::Render();
+	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//ImGui::UpdatePlatformWindows();
+	//ImGui::RenderPlatformWindowsDefault();
 
 	m_pEngine->Present();
 
@@ -303,7 +304,9 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Smoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 3))))
 		return E_FAIL;
-
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_GrenadeTrajectory.fx", 6))))
+		return E_FAIL;
+	
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
@@ -341,6 +344,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Fire", CEffect_Fire::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Smoke", CEffect_Smoke::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Trajectory", CEffect_Trajectory::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Camera */

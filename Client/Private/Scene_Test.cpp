@@ -56,6 +56,7 @@ HRESULT CScene_Test::Initialize()
 
 	ReadyScript();
 
+
 	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
 		return E_FAIL;
 

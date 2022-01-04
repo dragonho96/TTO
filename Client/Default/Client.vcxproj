@@ -185,6 +185,7 @@
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\Effect_Fire.h" />
     <ClInclude Include="..\Public\Effect_Smoke.h" />
+    <ClInclude Include="..\Public\Effect_Trajectory.h" />
     <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\EquipButtonManager.h" />
     <ClInclude Include="..\Public\Equipment.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\Effect_Fire.cpp" />
     <ClCompile Include="..\Private\Effect_Smoke.cpp" />
+    <ClCompile Include="..\Private\Effect_Trajectory.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\EquipButtonManager.cpp" />
     <ClCompile Include="..\Private\Equipment.cpp" />
@@ -281,8 +283,11 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Assets\Shader\DebugLine.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Fire.fx" />
+    <FxCompile Include="..\..\Assets\Shader\Shader_GrenadeTrajectory.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx" />
+    <FxCompile Include="..\..\Assets\Shader\Shader_PointInstance.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_RectImage.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_RectInstance.fx" />

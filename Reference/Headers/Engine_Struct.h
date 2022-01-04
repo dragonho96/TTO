@@ -4,6 +4,12 @@ namespace Engine
 {
 	enum class ANIM_TYPE { LOWER, UPPER, NONE };
 
+	typedef struct tagVertex_Point
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vSize;
+	}VTXPOINT;
+
 	typedef struct tagVertex_Matrix
 	{
 		XMFLOAT4		vRight;
@@ -79,6 +85,11 @@ namespace Engine
 		XMFLOAT3		vPos;
 		XMFLOAT4		vColor;
 	}VTXCOLOR;
+
+	typedef struct tagLineIndices16
+	{
+		unsigned short	_0, _1;
+	}LINEINDICES16;
 
 	typedef struct tagPolygonIndices16
 	{

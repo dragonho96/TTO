@@ -115,7 +115,7 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 	RemoveBuffer();
 
 	// TODO: Shader Copy?
-	m_pShader = make_unique<CShader>(pShaderFilePath);
+	m_pShader = make_shared<CShader>(pShaderFilePath);
 
 	m_pMeshFilePath = pMeshFilePath;
 	m_pMeshFileName = pMeshFileName;

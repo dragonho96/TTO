@@ -130,8 +130,13 @@
     <ClInclude Include="..\Public\GameManager.h">
       <Filter>97.Manager\GameManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Grenade.h" />
-    <ClInclude Include="..\Public\Character.h" />
+    <ClInclude Include="..\Public\Grenade.h">
+      <Filter>02.GameObjects\Grenade</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Character.h">
+      <Filter>02.GameObjects\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Trajectory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -248,8 +253,13 @@
     <ClCompile Include="..\Private\GameManager.cpp">
       <Filter>97.Manager\GameManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Grenade.cpp" />
-    <ClCompile Include="..\Private\Character.cpp" />
+    <ClCompile Include="..\Private\Grenade.cpp">
+      <Filter>02.GameObjects\Grenade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character.cpp">
+      <Filter>02.GameObjects\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Trajectory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -420,6 +430,15 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_Smoke.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\DebugLine.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_GrenadeTrajectory.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_PointInstance.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

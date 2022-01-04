@@ -1497,5 +1497,5 @@ GameObjects:
       Scale: [1, 1, 1]
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Player\
-      MeshFileName: Player_Walk.fbx
+      MeshFileName: PlayerFinal.fbx
       HasCollider: false

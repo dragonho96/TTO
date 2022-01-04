@@ -193,6 +193,9 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\RectInstance">
       <UniqueIdentifier>{239f6e3b-cab2-427f-ad79-df6e90999c80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\PointInstance">
+      <UniqueIdentifier>{8f326a3e-b7a2-4014-a55f-5203220d23a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -387,6 +390,7 @@
     <ClInclude Include="..\Public\VIBuffer_RectInstance.h">
       <Filter>01.Utility\03.Components\VIBuffer\RectInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_PointInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -563,5 +567,6 @@
     <ClCompile Include="..\Private\VIBuffer_RectInstance.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\RectInstance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_PointInstance.cpp" />
   </ItemGroup>
 </Project>

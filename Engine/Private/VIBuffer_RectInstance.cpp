@@ -1,5 +1,5 @@
-#include "..\public\VIBuffer_RectInstance.h"
-#include "PipeLine.h"
+#include "..\Public\VIBuffer_RectInstance.h"
+#include "Pipeline.h"
 
 CVIBuffer_RectInstance::CVIBuffer_RectInstance(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)	
