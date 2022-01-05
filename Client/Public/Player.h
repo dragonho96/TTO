@@ -53,7 +53,7 @@ private:
 	CTransform*		m_pCameraTransform = nullptr;
 	CGameObject*		m_pGrenadeTrajectory = nullptr;
 	class CGrenade*			m_pGrenadeInHand = nullptr;
-
+	_vector				m_ThrowingDir;
 
 	class CEquipment*		m_pEquipment = nullptr;
 	CGameObject*	m_pWeaponInHand = nullptr;

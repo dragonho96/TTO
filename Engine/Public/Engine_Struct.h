@@ -4,6 +4,13 @@ namespace Engine
 {
 	enum class ANIM_TYPE { LOWER, UPPER, NONE };
 
+	typedef struct tagVertex_LinePoint
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vSize;
+		_uint			iIndex;
+	}VTXLINEPOINT;
+
 	typedef struct tagVertex_Point
 	{
 		XMFLOAT3		vPosition;

@@ -81,15 +81,14 @@ void CGrenade::Render()
 {
 }
 
-void CGrenade::OnThrow(_vector dir)
+void CGrenade::OnThrow(_vector dir, _float forcePower)
 {
-	_float forcePower = 1.f;
 	PxVec3 forceDir;
 	memcpy(&forceDir, &dir, sizeof(PxVec3));
 	forceDir *= forcePower;
 
 	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->addForce(forceDir, PxForceMode::eACCELERATION);
+	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->addForce(forceDir, PxForceMode::eFORCE);
 
 	m_bThrown = true;
 }

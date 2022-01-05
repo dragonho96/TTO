@@ -9,6 +9,7 @@
 #include "VIBuffer_RectInstance.h"
 #include "VIBuffer_PointInstance.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Line.h"
 #include "VIBuffer_LineBox.h"
 #include "VIBuffer_LineCapsule.h"
 #include "VIBuffer_LineSphere.h"

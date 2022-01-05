@@ -306,6 +306,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_GrenadeTrajectory.fx", 6))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 10))))
+		return E_FAIL;
 	
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))

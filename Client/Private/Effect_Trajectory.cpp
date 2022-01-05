@@ -60,9 +60,9 @@ HRESULT CEffect_Trajectory::Render()
 
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(m_pTransformCom->GetWorldMatrix()), sizeof(_matrix));
-	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
-	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
+	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(m_pTransformCom->GetWorldMatrix()), sizeof(_matrix));
+	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
+	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
 	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_vCamPosition", &CEngine::GetInstance()->GetCamPosition(), sizeof(_vector));
 
 	if (FAILED(m_pVIBufferCom->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", m_pTextureCom)))
@@ -77,6 +77,11 @@ HRESULT CEffect_Trajectory::Render()
 	return S_OK;
 }
 
+void CEffect_Trajectory::SetPoints(list<_vector> points)
+{
+	m_pVIBufferCom->SetPoints(points);
+}
+
 HRESULT CEffect_Trajectory::SetUp_Components()
 {
 	/* For.Com_Transform */
@@ -88,11 +93,11 @@ HRESULT CEffect_Trajectory::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_PointInstance", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_Line", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Textures/Effects/Smoke/T_SmokeBall_01_8_8.tga");
+	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Textures/Trajectory/Trajectory.png");
 
 
 	return S_OK;

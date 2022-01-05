@@ -21,7 +21,7 @@ public:
 	virtual void LapteUpdate(_double deltaTime);
 	virtual void Render();
 public:
-	void OnThrow(_vector dir);
+	void OnThrow(_vector dir, _float forcePower);
 	void Explode();
 private:
 	CGameObject*	m_pGameObject = nullptr;

@@ -5,7 +5,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_PointInstance;
+class CVIBuffer_Line;
 END
 
 
@@ -23,12 +23,14 @@ public:
 	virtual _uint LateUpdate(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void SetPoints(list<_vector> points);
 private:
 	CTexture*			m_pTextureCom = nullptr;
 
 	CRenderer*					m_pRendererCom = nullptr;
 	CTransform*					m_pTransformCom = nullptr;
-	CVIBuffer_PointInstance*		m_pVIBufferCom = nullptr;
+	CVIBuffer_Line*		m_pVIBufferCom = nullptr;
 
 	CShader*					m_pShader = nullptr;
 

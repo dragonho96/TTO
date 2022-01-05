@@ -3,6 +3,7 @@
 
 #include "Engine.h"
 #include "Terrain.h"
+#include "Effect_Trajectory.h"
 
 #include "Camera_Fly.h"
 
@@ -56,6 +57,16 @@ HRESULT CScene_Effect::Initialize()
 _uint CScene_Effect::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
+
+	// Setup Point values
+
+	list<_vector> points;
+	for (int i = 0; i < 10; ++i)
+		points.emplace_back(_vector{i * 0.5f, 0, 0, 0});
+
+
+	dynamic_cast<CEffect_Trajectory*>(m_pTrajectory)->SetPoints(points);
+
 
 	return _uint();
 }

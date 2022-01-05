@@ -63,7 +63,7 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 		m_iNumPrimitive = m_iNumInstance;
 		m_iNumVerticesPerPrimitive = 2;
 		m_eIndexFormat = DXGI_FORMAT_R16_UINT;
-		m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+		m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 
 		/* For.D3D11_BUFFER_DESC */
 		m_IBDesc.ByteWidth = sizeof(LINEINDICES16) * m_iNumPrimitive;
@@ -89,8 +89,8 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 	if (FAILED(__super::Create_Buffers()))
 	return E_FAIL;	
 
-	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB)))
-		return E_FAIL;
+	//if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB)))
+	//	return E_FAIL;
 
 #pragma region VERTEXINSTANCEBUFFER
 
@@ -111,7 +111,7 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 		pInstanceVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
 		pInstanceVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
 		pInstanceVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pInstanceVertices[i].vPosition = _float4((i * 1) , 0, 0, 1.f);
+		pInstanceVertices[i].vPosition = _float4(rand() % 5 , rand() % 5, rand() % 5, 1.f);
 		m_InstanceMatrices.push_back(pInstanceVertices[i]);
 	}
 	m_VBInstanceSubResourceData.pSysMem = pInstanceVertices;
