@@ -12,7 +12,7 @@ GameObjects:
     Com_Collider:
       Center: [0, 1, 0]
       Type: Capsule
-      Radius: 0.300000012
+      Radius: 0.15
       Height: 1
       RigidBody:
         Enabled: true
@@ -62,57 +62,20 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
       MeshFileName: ContainerHouse.fbx
       HasCollider: true
-  - Name: Wall
-    UUID: 1729058228930112334
+  - Name: Sphere
+    UUID: 2993945600809990321
     Active: true
-    Layer: Default
+    Layer: Sphere
     Type: Object
+    RenderGroup: 2
     Com_Transform:
-      Translation: [19.2952023, 0.157170042, 9.08861351]
-      Rotation: [0, -87.4419174, 0]
-      Scale: [0.999999881, 1, 0.999999881]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
-      MeshFileName: WallCastle.fbx
-      HasCollider: true
-  - Name: Wall
-    UUID: 10442236445263243521
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [17.9048424, 0.158284172, 10.0431852]
-      Rotation: [178.961609, -15.5516605, -178.738739]
-      Scale: [0.999897242, 1.00000036, 0.999997616]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
-      MeshFileName: WallCastle.fbx
-      HasCollider: true
-  - Name: Plant
-    UUID: 8447770129647333991
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [9.1486702, 0, 2.89463353]
+      Translation: [0, 2, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Plants\Tree\
-      MeshFileName: LakeTree.fbx
-      HasCollider: false
-  - Name: Rock
-    UUID: 2993945600809990320
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [18.6953068, 0, 4.73196554]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Rocks\ForestRocks\1\
-      MeshFileName: ForestRock1.fbx
+      MeshFilePath: ..\..\Assets\Meshes\Sphere\
+      MeshFileName: Sphere.fbx
+      ShaderPath: ../../Assets/Shader/Shader_Fresnel.fx
       HasCollider: false
   - Name: Enemy1
     UUID: 3087593118888913032

@@ -30,9 +30,13 @@ private:
 
 	CRenderer*					m_pRendererCom = nullptr;
 	CTransform*					m_pTransformCom = nullptr;
-	CVIBuffer_Line*		m_pVIBufferCom = nullptr;
-
+	CVIBuffer_Line*				m_pVIBufferCom = nullptr;
 	CShader*					m_pShader = nullptr;
+
+	CGameObject*				m_pSphere = nullptr;
+	CTransform*					m_pSphereTransform = nullptr;
+	CShader*					m_pSphereShader = nullptr;
+
 
 private:
 	HRESULT SetUp_Components();

@@ -431,11 +431,14 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
+	int renderGroup = 0;
+	if (obj["RenderGroup"])
+		renderGroup = obj["RenderGroup"].as<int>();
 
 	CGameObject* deserializedObject = m_pEngine->AddGameObject(0, "Prototype_EmptyGameObject", layer);
 
 	deserializedObject->SetInfo(name, layer, uuid, active);
-
+	dynamic_cast<CEmptyGameObject*>(deserializedObject)->SetRenderGroup((CRenderer::RENDER)renderGroup);
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)
 	{
@@ -542,9 +545,12 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 	{
 		string meshFilePath = modelCom["MeshFilePath"].as<string>();
 		string meshFileName = modelCom["MeshFileName"].as<string>();
+		string shaderFilePath = "";
+		if (modelCom["ShaderPath"])
+			shaderFilePath = modelCom["ShaderPath"].as<string>();
 		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
-		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, "", hasCollider, deserializedObject->GetComponent("Com_Transform"));
+		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
 		deserializedObject->AddModelComponent(0, pModel);
 		//if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
 		//	MSG_BOX("Failed to AddComponent Prototype_Model");

@@ -114,12 +114,16 @@ HRESULT CModel::CreateBuffer(string pMeshFilePath, string pMeshFileName, string 
 
 	RemoveBuffer();
 
+	if (pShaderFilePath == "")
+		m_pShaderFilePath = "../../Assets/Shader/Shader_Mesh.fx";
+	else
+		m_pShaderFilePath = pShaderFilePath;
+
+	m_pShader = make_shared<CShader>(m_pShaderFilePath);
 	// TODO: Shader Copy?
-	m_pShader = make_shared<CShader>(pShaderFilePath);
 
 	m_pMeshFilePath = pMeshFilePath;
 	m_pMeshFileName = pMeshFileName;
-	m_pShaderFilePath = pShaderFilePath;
 
 	string strFullPath = pMeshFilePath + pMeshFileName;
 
@@ -260,6 +264,7 @@ HRESULT CModel::Bind_Buffers()
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
+
 
 	_uint		iOffSet = 0;
 	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
@@ -657,6 +662,14 @@ HRESULT CModel::Blend_Animation(_double TimeDelta)
 void CModel::SetAnimationLoop(_uint idx, _bool result)
 {
 	m_Animations[idx]->SetLoop(result);
+}
+
+_uint CModel::GetCurrentKeyFrame(ANIM_TYPE eType)
+{
+	if (eType == ANIM_TYPE::UPPER)
+		return m_Animations[m_iAnimationIndex_Upper]->GetCurrentKeyFrame();
+	else
+		return m_Animations[m_iAnimationIndex]->GetCurrentKeyFrame();
 }
 
 HRESULT CModel::SetUp_AnimationInfo()

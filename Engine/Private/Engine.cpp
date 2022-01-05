@@ -152,10 +152,6 @@ ID3D11ShaderResourceView* CEngine::GetShaderResourceView()
 	return m_pGraphicDevice->GetShaderResourceView();
 }
 
-ID3D11Buffer * CEngine::GetConstantBuffer()
-{
-	return m_pGraphicDevice->GetConstantBuffer();
-}
 
 SpriteBatch * CEngine::GetSpriteBatch()
 {
@@ -461,9 +457,7 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 
 CComponent * CEngine::CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
 {
-	string pShaderPath = "../../Assets/Shader/Shader_Mesh.fx";
-
-	return m_pModelManager->CloneModel(pMeshFilePath, pMeshFileName, pShaderPath, meshCollider, pArg);
+	return m_pModelManager->CloneModel(pMeshFilePath, pMeshFileName, pShaderFilePath, meshCollider, pArg);
 }
 
 const LIGHTDESC * CEngine::GetLightDesc(_uint iIndex) const

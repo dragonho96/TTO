@@ -43,7 +43,6 @@ public:
 public:
 	XMMATRIX					GetViewMatrix() { return g_View; }
 	XMMATRIX					GetProjectionMatrix() { return g_Projection; }
-	ID3D11Buffer*				GetConstantBuffer() { return g_pConstantBuffer.Get(); }
 
 
 	void						ChangeProj(_uint iWidth, _uint iHeight);
@@ -63,8 +62,6 @@ private:
 	ComRef<ID3D11InputLayout>			g_pVertexLayout = NULL;
 	ComRef<ID3D11Buffer>				g_pVertexBuffer = NULL;
 	ComRef<ID3D11Buffer>				g_pIndexBuffer = NULL;
-	ComRef<ID3D11Buffer>				g_pConstantBuffer = NULL;
-	ComRef<ID3D11Buffer>				g_pLightBuffer = NULL;
 	ComRef<ID3D11SamplerState>			m_sampleState = NULL;
 
 	Scope<DirectX::SpriteBatch>			m_pSpriteBatch;
@@ -82,8 +79,6 @@ public:
 	HRESULT ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight);
 	HRESULT ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iHeight);
 	HRESULT ReadyViewport(_uint iWidth, _uint iHeight);
-	HRESULT ReadyConstantBuffer();
-	void	SetLightBuffer();
 
 public:
 	virtual void Free() override;

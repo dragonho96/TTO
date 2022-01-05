@@ -15,6 +15,8 @@ public:
 	_bool Update_TransformationMatrices(_double TimeDelta);
 	HRESULT Blend_Animation(CAnimation* prevAnim, _float ratio);
 	HRESULT ResetCurrentTime();
+
+	_uint	GetCurrentKeyFrame() { return (_uint)m_CurrrentTime; };
 	vector<class CChannel*> GetChannels() { return m_Channels; }
 
 	char* GetName() { return m_AnimationName; }

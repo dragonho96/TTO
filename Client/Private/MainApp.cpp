@@ -38,9 +38,9 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	//ImGui_ImplDX11_Shutdown();
-	//ImGui_ImplWin32_Shutdown();
-	//ImGui::DestroyContext();
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	SafeRelease(m_pRenderer);
 
@@ -68,14 +68,14 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	// TODO
-	// m_pEngine->DeserializePrefab();
-	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-	//	return E_FAIL;
-
-	if (FAILED(OpenScene(SCENE_EFFECT)))
+	m_pEngine->DeserializePrefab();
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	//ImGuiInitialize();
+	if (FAILED(OpenScene(SCENE_TEST)))
+		return E_FAIL;
+
+	ImGuiInitialize();
 
 	return S_OK;
 }
@@ -94,9 +94,9 @@ _uint CMainApp::Update(_double dDeltaTime)
 	// TODO: Fix Update Order
 	m_pEngine->UpdatePx(dDeltaTime);
 
-	//ImGui_ImplDX11_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//ImGui::NewFrame();
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	return 0;
 }
 
@@ -105,8 +105,6 @@ HRESULT CMainApp::Render()
 	if (g_Done)
 		return _uint();
 
-	m_pEngine->ClearBackBufferView(_float4(0.1f, 0.5f, 0.f, 1.f));
-	m_pEngine->ClearDepthStencilView(1.f, 0);
 	m_pEngine->RenderClient();
 	/* 필요한 객체들을 백버퍼에 그린다. */
 	m_pRenderer->DrawRenderGroup();
@@ -114,11 +112,11 @@ HRESULT CMainApp::Render()
 	// ImGui
 
 
-	//m_pEngine->UpdateImGui();
-	//ImGui::Render();
-	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//ImGui::UpdatePlatformWindows();
-	//ImGui::RenderPlatformWindowsDefault();
+	m_pEngine->UpdateImGui();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 
 	m_pEngine->Present();
 
@@ -306,7 +304,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_GrenadeTrajectory.fx", 6))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 10))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 20))))
 		return E_FAIL;
 	
 	/* Collider*/

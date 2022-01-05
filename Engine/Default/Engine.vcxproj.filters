@@ -199,6 +199,12 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\Line">
       <UniqueIdentifier>{3d1ee31d-c97c-408e-b650-9049d37ef230}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.RenderTargets">
+      <UniqueIdentifier>{614dc949-9e28-4d2f-848b-d01c5667245a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.RenderTargets\Manager">
+      <UniqueIdentifier>{cc55947f-09c9-47ef-b268-a14579de8f99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -396,7 +402,15 @@
     <ClInclude Include="..\Public\VIBuffer_PointInstance.h">
       <Filter>01.Utility\03.Components\VIBuffer\PointInstance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Line.h" />
+    <ClInclude Include="..\Public\VIBuffer_Line.h">
+      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\06.RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TargetManager.h">
+      <Filter>01.Utility\06.RenderTargets\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -576,6 +590,14 @@
     <ClCompile Include="..\Private\VIBuffer_PointInstance.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\PointInstance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_Line.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Line.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\06.RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TargetManager.cpp">
+      <Filter>01.Utility\06.RenderTargets\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

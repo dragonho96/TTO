@@ -38,8 +38,8 @@ public:
 	void ChangeGear(EQUIPMENT eType, _uint iIndex);
 
 	void	ThrowGrenade();
-	void	SetGrenadeTrajectory(_vector target, _float time);
-	void	VisualizeTrajectory(_vector origin, _vector initialVelocity);
+	void	SetGrenadeTrajectory(_bool result);
+	void	VisualizeTrajectory(_vector origin, _vector initialVelocity, _float time);
 	_vector	CalculatePosInTime(_vector origin, _vector initialVelocity, _float time);
 	_float	GetXAxisAngle(_vector hitPos);
 	_float	GetYAxisAngle(_vector hitPos);
@@ -53,7 +53,7 @@ private:
 	CTransform*		m_pCameraTransform = nullptr;
 	CGameObject*		m_pGrenadeTrajectory = nullptr;
 	class CGrenade*			m_pGrenadeInHand = nullptr;
-	_vector				m_ThrowingDir;
+	_vector				m_ThrowingVelocity;
 
 	class CEquipment*		m_pEquipment = nullptr;
 	CGameObject*	m_pWeaponInHand = nullptr;
@@ -83,6 +83,8 @@ private:
 	pair<_bool, _bool>		m_turn90 = {false, false};
 
 	_vector XZDirPrev = {0.f, 0.f, 1.f};
+
+	_vector					m_cursorHitPos = { 0, 0, 0, 0 };
 
 	_double					TimeRaycast = 0.0;
 	_double					TimeCheckEnemyInSight = 0.0;

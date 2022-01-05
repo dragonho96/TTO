@@ -81,7 +81,7 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 	if (collider)
 		dynamic_cast<CCollider*>(collider)->LateUpdate(TimeDelta);
 
-	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_PRIORITY, this);
+	return m_pRendererCom->AddRenderGroup(m_eRenderGroup, this);
 }
 
 HRESULT CEmptyGameObject::Render()
@@ -104,7 +104,7 @@ HRESULT CEmptyGameObject::Render()
 		for (_uint i = 0; i < iNumMaterials; ++i)
 		{
 			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-
+			string myname = GetName();
 			// TODO: Handle passIndex
 			pModel->Render(i, 0);
 		}

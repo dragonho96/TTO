@@ -136,7 +136,9 @@
     <ClInclude Include="..\Public\Character.h">
       <Filter>02.GameObjects\Character</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Effect_Trajectory.h" />
+    <ClInclude Include="..\Public\Effect_Trajectory.h">
+      <Filter>02.GameObjects\Effect\Trajectory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -259,7 +261,9 @@
     <ClCompile Include="..\Private\Character.cpp">
       <Filter>02.GameObjects\Character</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Effect_Trajectory.cpp" />
+    <ClCompile Include="..\Private\Effect_Trajectory.cpp">
+      <Filter>02.GameObjects\Effect\Trajectory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -399,6 +403,9 @@
     <Filter Include="02.GameObjects\Character\Enemy">
       <UniqueIdentifier>{acd197dc-386f-4366-a88c-0dd06dbef89b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Trajectory">
+      <UniqueIdentifier>{5fddfe74-47d7-4ff8-a924-2009f58e7a8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -432,13 +439,16 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_Smoke.fx">
       <Filter>FX</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\DebugLine.fx">
-      <Filter>FX</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_GrenadeTrajectory.fx">
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_PointInstance.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Fresnel.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\DebugLine.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

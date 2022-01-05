@@ -29,6 +29,18 @@ HRESULT CEffect_Trajectory::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pShader = m_pVIBufferCom->GetShader();
+
+	list<CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "Sphere");
+	if (list.size() > 0)
+	{
+		m_pSphere = list.front();
+		m_pSphereTransform = dynamic_cast<CTransform*>(m_pSphere->GetComponent("Com_Transform"));
+		CModel* model = dynamic_cast<CModel*>(m_pSphere->GetComponent("Com_Model"));
+
+		m_pSphereShader = model->GetShader();
+	}
+
+
 	return S_OK;
 }
 _uint CEffect_Trajectory::Update(_double TimeDelta)
@@ -49,6 +61,23 @@ _uint CEffect_Trajectory::LateUpdate(_double TimeDelta)
 		return -1;
 
 	m_pVIBufferCom->Update(TimeDelta);
+	
+
+
+	static float fPower = 1.f;
+	static float factor = 1.f;
+	if (fPower > 5.f)
+		factor = -1.f;
+	if (fPower < 0.5f)
+		factor = 1.f;
+	fPower += TimeDelta * 3.f * factor;
+		_vector camPos = CEngine::GetInstance()->GetCamPosition();
+	_vector color = _vector{ 1, 0, 0, 0 };
+
+	m_pSphereShader->SetUp_ValueOnShader("g_vCamPosition", &camPos, sizeof(_vector));
+	m_pSphereShader->SetUp_ValueOnShader("vColor", &color, sizeof(_vector));
+	m_pSphereShader->SetUp_ValueOnShader("fPower", &fPower, sizeof(float));
+
 
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
@@ -58,19 +87,24 @@ HRESULT CEffect_Trajectory::Render()
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
+	if (!IsActive())
+		return S_OK;
+
+
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
 	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(m_pTransformCom->GetWorldMatrix()), sizeof(_matrix));
 	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
-	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_vCamPosition", &CEngine::GetInstance()->GetCamPosition(), sizeof(_vector));
+	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &CEngine::GetInstance()->GetCamPosition(), sizeof(_vector));
 
-	if (FAILED(m_pVIBufferCom->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", m_pTextureCom)))
+	if (FAILED(m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTextureCom)))
 		return E_FAIL;
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
 	m_pVIBufferCom->Render(0);
+
 
 	RELEASE_INSTANCE(CEngine);
 
@@ -80,6 +114,10 @@ HRESULT CEffect_Trajectory::Render()
 void CEffect_Trajectory::SetPoints(list<_vector> points)
 {
 	m_pVIBufferCom->SetPoints(points);
+	_vector lastPosition = points.back();
+	lastPosition = XMVectorSetW(lastPosition, 1.f);
+
+	m_pSphereTransform->SetState(CTransform::STATE_POSITION, lastPosition);
 }
 
 HRESULT CEffect_Trajectory::SetUp_Components()

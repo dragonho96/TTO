@@ -25,6 +25,8 @@ public:
 	virtual _uint LateUpdate(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void SetRenderGroup(CRenderer::RENDER type) { m_eRenderGroup = type; }
 private:
 	HRESULT SetUpComponents();
 	virtual void LinkTranformWithParent();
@@ -33,6 +35,8 @@ private:
 private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
+private:
+	CRenderer::RENDER m_eRenderGroup = CRenderer::RENDER_PRIORITY;
 };
 
 END

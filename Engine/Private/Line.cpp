@@ -70,8 +70,6 @@ void CLine::Render()
 	cb1.mView = XMMatrixTranspose(CEngine::GetInstance()->GetViewMatrix());
 	cb1.mProjection = XMMatrixTranspose(CEngine::GetInstance()->GetProjectionMatrix());
 
-	CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
-		CEngine::GetInstance()->GetConstantBuffer(), 0, NULL, &cb1, 0, 0);
 
 	CEngine::GetInstance()->GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 	CEngine::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(m_eTopology);

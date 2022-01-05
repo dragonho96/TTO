@@ -47,7 +47,7 @@ protected:
 
 protected:
 	Ref<CShader>				m_pShader;
-
+	string						m_shaderPath = "";
 protected:
 	void*						m_pVertices = nullptr;
 	class CTransform*			m_pObjTransform = nullptr;

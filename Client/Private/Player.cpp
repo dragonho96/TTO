@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "..\Public\Player.h"
 #include "Engine.h"
 #include "GameManager.h"
@@ -10,7 +10,6 @@
 #include "Grenade.h"
 #include "Effect_Trajectory.h"
 
-static float force = 30.f;
 
 USING(Client)
 
@@ -54,8 +53,9 @@ HRESULT CPlayer::Initialize()
 	}
 
 	m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
+	m_pGrenadeTrajectory->SetActive(false);
 
-	// EquipmentPool ¿¡ meshcontainer µî·Ï
+	// EquipmentPool ì— meshcontainer ë“±ë¡
 	AssignMeshContainter();
 	FindBones();
 
@@ -106,8 +106,7 @@ void CPlayer::Update(_double deltaTime)
 {
 	if (!m_pGameObject)
 		return;
-	if (CEngine::GetInstance()->IsKeyPressed('K'))
-		force += 1.f;
+
 
 	static bool startRagdoll = false;
 
@@ -210,11 +209,11 @@ void CPlayer::Update(_double deltaTime)
 							dynamic_cast<CEnemy*>(hitObject)->GetDamage(m_pTransform->GetState(CTransform::STATE_POSITION));
 					}
 
-					_vector cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
+					m_cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
 
-					m_targetUpperRotation.x = GetXAxisAngle(cursorHitPos);
-					m_targetUpperRotation.y = GetYAxisAngle(cursorHitPos);
+					m_targetUpperRotation.x = GetXAxisAngle(m_cursorHitPos);
+					m_targetUpperRotation.y = GetYAxisAngle(m_cursorHitPos);
 
 					_float	fFollowSpeed = deltaTime * 15.f;
 					m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
@@ -226,14 +225,6 @@ void CPlayer::Update(_double deltaTime)
 					fFollowSpeed = deltaTime * 8.f;
 					m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
 					m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
-
-					if (m_pGrenadeInHand)
-					{
-						_vector pos = XMVectorSetW(m_pTransform->GetState(CTransform::STATE_POSITION), 0.f);
-						_float length = XMVectorGetX(XMVector3Length(cursorHitPos - pos));
-						// SetGrenadeTrajectory(cursorHitPos, length * 0.2f);
-						SetGrenadeTrajectory(cursorHitPos,	1.f);
-					}
 				}
 			}
 		}
@@ -318,7 +309,8 @@ void CPlayer::UnEquipWeapon(EQUIPMENT eType)
 	}
 	else if (eType == EQUIPMENT::GRENADE)
 	{
-		m_pGrenadeInHand->SetDead();
+		if (m_pGrenadeInHand)
+			m_pGrenadeInHand->SetDead();
 		m_pGrenadeInHand = nullptr;
 		m_pWeaponInHand = nullptr;
 	}
@@ -333,53 +325,76 @@ void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
 
 void CPlayer::ThrowGrenade()
 {
-	m_ThrowingDir = XMVector3Normalize(XMVectorSetW(m_ThrowingDir, 0.f));
-	m_pGrenadeInHand->OnThrow(m_ThrowingDir, force);
+	if (m_pGrenadeInHand)
+	{
+		m_pGrenadeInHand->OnThrow(m_ThrowingVelocity, 0);
+		m_pGrenadeInHand = nullptr;
+		m_pWeaponInHand = nullptr;
+	}
 }
 
-void CPlayer::SetGrenadeTrajectory(_vector target, _float time)
+void CPlayer::SetGrenadeTrajectory(_bool result)
 {
+	if (!result)
+	{
+		m_pGrenadeTrajectory->SetActive(false);
+		return;
+	}
+
+	if (nullptr == m_pGrenadeInHand)
+		return;
+
+	m_pGrenadeTrajectory->SetActive(true);
+	_vector pos = XMVectorSetW(m_pTransform->GetState(CTransform::STATE_POSITION), 0.f);
+	_float length = XMVectorGetX(XMVector3Length(m_cursorHitPos - pos));
+	_float time = log10(length + 1);
+
 	_vector scale, rot, origin;
 	_matrix originMatrix = m_pHandBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
 	XMMatrixDecompose(&scale, &rot, &origin, originMatrix);
 	origin = XMVectorSetW(origin, 0.f);
 
 	// Calculate Velocity
-	_vector distance = target - origin;
+	_vector distance = m_cursorHitPos - origin;
 	_vector distanceXZ = distance;
 	distanceXZ = XMVectorSetW(XMVectorSetY(distanceXZ, 0.f), 0.f);
 
 	_float sY = XMVectorGetY(distance);
 	_float sXZ = XMVectorGetX(XMVector4Length(distanceXZ));
 
-	_float Vxz = sXZ * time; 
+	_float Vxz = sXZ / time;
 	_float Vy = (sY / time) + (0.5f * 9.81 * time);
 
-	_vector velocity = XMVector3Normalize(distanceXZ);
-	velocity *= Vxz;
-	velocity = XMVectorSetY(velocity, Vy);
+	m_ThrowingVelocity = XMVector3Normalize(distanceXZ);
+	m_ThrowingVelocity *= Vxz;
+	m_ThrowingVelocity = XMVectorSetY(m_ThrowingVelocity, Vy);
+
+	if (CEngine::GetInstance()->IsKeyDown('H'))
+	{
+		//ADDLOG(("" + to_string(length)).c_str());
+	}
 
 	// Calucate Pos In Time
-	VisualizeTrajectory(origin, velocity);
+	VisualizeTrajectory(origin, m_ThrowingVelocity, time);
 }
 
-void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity)
+void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity, _float time)
 {
 	list<_vector> listPoints;
-	_uint lineSegment = 10;
+	_uint lineSegment = 20;
 	for (int i = 0; i < lineSegment; ++i)
 	{
-		_vector pos = CalculatePosInTime(origin, initialVelocity, i / (_float)lineSegment);
+		_vector pos = CalculatePosInTime(origin, initialVelocity, (time / (_float)lineSegment) * (i + 1));
 		listPoints.push_back(pos);
-		ADDLOG(("cross: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
 	}
 	dynamic_cast<CEffect_Trajectory*>(m_pGrenadeTrajectory)->SetPoints(listPoints);
 
-	auto iter = listPoints.begin();
-	_vector first = listPoints.front();
-	listPoints.pop_front();
-	_vector second = listPoints.front();
-	m_ThrowingDir = second - first;
+	// auto iter = listPoints.begin();
+	// _vector first = listPoints.front();
+	// listPoints.pop_front();
+	// _vector second = listPoints.front();
+	// m_ThrowingDir = second - first;
+	// ADDLOG(("m_ThrowingDir: " + to_string(XMVectorGetX(m_ThrowingDir)) + ", " + to_string(XMVectorGetY(m_ThrowingDir)) + ", " + to_string(XMVectorGetZ(m_ThrowingDir))).c_str());
 }
 
 _vector CPlayer::CalculatePosInTime(_vector origin, _vector initialVelocity, _float time)
@@ -406,8 +421,13 @@ _float CPlayer::GetXAxisAngle(_vector hitPos)
 	XMMatrixDecompose(&mySpineTempA, &mySpineTempB, &mySpinePos, spineMat);
 	mySpinePos = XMVectorSetW(mySpinePos, 0);
 
+	_vector hitposDir;
 	// mySpinePos-> hitpos
-	_vector hitposDir = XMVectorSubtract(hitPos, mySpinePos);
+	if (m_pGrenadeTrajectory->IsActive())
+		hitposDir = XMVectorSetW(m_ThrowingVelocity, 0.f);
+	else
+		hitposDir = XMVectorSubtract(hitPos, mySpinePos);
+
 	// mySpinePos-> hitpos.y = myspinepos.y
 	_vector lookPos = { XMVectorGetX(hitPos), XMVectorGetY(mySpinePos), XMVectorGetZ(hitPos) };
 	_vector lookDir = XMVectorSubtract(lookPos, mySpinePos);
@@ -443,7 +463,7 @@ _float CPlayer::GetYAxisAngle(_vector hitPos)
 	if (XMVectorGetY(crossResult) < 0.f)
 		yAxisAngle *= -1;
 
-	//// -70 or 70 ÀÌ»ó ³Ñ¾î°¡¸é body rotate
+	//// -70 or 70 ì´ìƒ ë„˜ì–´ê°€ë©´ body rotate
 	if (XMConvertToDegrees(yAxisAngle) > 70.f)
 	{
 		m_turn90.first = true;
@@ -512,7 +532,7 @@ void CPlayer::CheckEnemyInSight()
 	//fd.flags = PxQueryFlag::eANY_HIT;
 	// bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
 	// bool status = CEngine::GetInstance()->GetScene()->overlap(PxBoxGeometry(10.f, 10, 10), PxTransform(shapePose), hit, fd);
-	
+
 	// first check if enemy is in the range
 	if (CEngine::GetInstance()->GetScene()->overlap(overlapShape, PxTransform(position), hit, fd))
 	{

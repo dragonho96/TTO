@@ -45,9 +45,6 @@ HRESULT CGraphicDevice::ReadyGraphicDevice(HWND hWnd, _uint iWidth, _uint iHeigh
 	if (FAILED(ReadyViewport(iWidth, iHeight)))
 		return E_FAIL;
 
-	if (FAILED(ReadyConstantBuffer()))
-		return E_FAIL;
-
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 
 	m_pSpriteBatch = make_unique<DirectX::SpriteBatch>(m_pDeviceContext.Get());
@@ -124,7 +121,7 @@ HRESULT CGraphicDevice::Initialize(_uint iWidth, _uint iHeight)
 	//CEngine::GetInstance()->GetDeviceContext()->UpdateSubresource(
 	//	g_pLightBuffer.Get(), 0, NULL, &lb, 0, 0);
 
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	// m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
 	return S_OK;
 }
@@ -136,7 +133,7 @@ void CGraphicDevice::Render()
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	// m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 
 	//debug->Render();
 	//texture->Set();
@@ -157,8 +154,10 @@ void CGraphicDevice::Render()
 void CGraphicDevice::RenderClient()
 {
 	// TODO: Call OMSetRenderTargets for ImGui
+	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f };
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 
@@ -170,7 +169,6 @@ void CGraphicDevice::SetRTV2()
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV2.Get(), ClearColor);
 
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV2.GetAddressOf(), m_pDepthStencilRTV.Get());
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 }
 
 void CGraphicDevice::SetRTV()
@@ -319,49 +317,43 @@ HRESULT CGraphicDevice::ReadySwapChain(HWND hWnd, _uint iWidth, _uint iHeight)
 HRESULT CGraphicDevice::ReadyBackBufferRenderTargetView(_uint iWidth, _uint iHeight)
 {
 	ID3D11Texture2D*			pBackBufferTexture = nullptr;
-	ID3D11Texture2D*			pBackBufferTexture2 = nullptr;
+	// ID3D11Texture2D*			pBackBufferTexture2 = nullptr;
 
 	// Look what this is
 	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture);
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
 		return E_FAIL;
 
+	SafeRelease(pBackBufferTexture);
 
 
-	D3D11_TEXTURE2D_DESC textureDesc;
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = iWidth;
-	textureDesc.Height = iHeight;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; // DXGI_FORMAT_D24_UNORM_S8_UINT;DXGI_FORMAT_R16G16B16A16_FLOAT
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
+	//D3D11_TEXTURE2D_DESC textureDesc;
+	//ZeroMemory(&textureDesc, sizeof(textureDesc));
+	//textureDesc.Width = iWidth;
+	//textureDesc.Height = iHeight;
+	//textureDesc.MipLevels = 1;
+	//textureDesc.ArraySize = 1;
+	//textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; // DXGI_FORMAT_D24_UNORM_S8_UINT;DXGI_FORMAT_R16G16B16A16_FLOAT
+	//textureDesc.SampleDesc.Count = 1;
+	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	//textureDesc.CPUAccessFlags = 0;
+	//textureDesc.MiscFlags = 0;
 
-	//m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture);
-	//if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, NULL, &m_pBackBufferRTV)))
+	//m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture2);
+	//if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, &m_pBackBufferRTV2)))
 	//	return E_FAIL;
 
-	m_pDevice->CreateTexture2D(&textureDesc, NULL, &pBackBufferTexture2);
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture2, NULL, &m_pBackBufferRTV2)))
-		return E_FAIL;
+	//D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	//shaderResourceViewDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	//shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	//shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	//shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-	shaderResourceViewDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+	//if (FAILED(m_pDevice->CreateShaderResourceView(pBackBufferTexture2, &shaderResourceViewDesc, &m_pShaderResourceView)))
+	//	return E_FAIL;
 
-
-	if (FAILED(m_pDevice->CreateShaderResourceView(pBackBufferTexture2, &shaderResourceViewDesc, &m_pShaderResourceView)))
-		return E_FAIL;
-
-	//m_pDevice->CreateShaderResourceView(pBackBufferTexture, &shaderResourceViewDesc, &m_pShaderResourceView);
-	SafeRelease(pBackBufferTexture);
-	SafeRelease(pBackBufferTexture2);
+	//SafeRelease(pBackBufferTexture2);
 
 	return S_OK;
 }
@@ -389,15 +381,6 @@ HRESULT CGraphicDevice::ReadyDepthStencilRenderTargetView(_uint iWidth, _uint iH
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
 		return E_FAIL;
 
-	//D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	//ZeroMemory(&descDSV, sizeof(descDSV));
-	//descDSV.Format = TextureDesc.Format;
-	//descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	//descDSV.Texture2D.MipSlice = 0;
-
-	//if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, &descDSV, &m_pDepthStencilRTV)))
-	//	return E_FAIL;
-
 	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilRTV)))
 		return E_FAIL;
 
@@ -420,61 +403,6 @@ HRESULT CGraphicDevice::ReadyViewport(_uint iWidth, _uint iHeight)
 	m_pDeviceContext->RSSetViewports(1, &ViewPortDesc);
 
 	return S_OK;
-}
-
-HRESULT CGraphicDevice::ReadyConstantBuffer()
-{
-	HRESULT hr;
-	D3D11_BUFFER_DESC desc = { 0 };
-	desc.Usage = D3D11_USAGE_DEFAULT; // can be dynamic
-	desc.ByteWidth = sizeof(ConstantBuffer);
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = 0; // Change to D3D11_CUP_ACCESS for USAGE_DYNAMIC
-	hr = m_pDevice->CreateBuffer(&desc, NULL, &g_pConstantBuffer);
-	if (FAILED(hr))
-		return hr;
-	
-	//D3D11_SAMPLER_DESC samplerDesc = { };
-	//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	//samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	//samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	//samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	//samplerDesc.MipLODBias = 0.0f;
-	//samplerDesc.MaxAnisotropy = 1;
-	//samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	//samplerDesc.BorderColor[0] = 0;
-	//samplerDesc.BorderColor[1] = 0;
-	//samplerDesc.BorderColor[2] = 0;
-	//samplerDesc.BorderColor[3] = 0;
-	//samplerDesc.MinLOD = 0;
-	//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	//// Create the texture sampler state.
-	//hr = m_pDevice->CreateSamplerState(&samplerDesc, &m_sampleState);
-	//if (FAILED(hr))
-	//{
-	//	return false;
-	//}
-
-	//D3D11_BUFFER_DESC lightBufferDesc;
-	//ZeroMemory(&lightBufferDesc, sizeof(lightBufferDesc));
-	//lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	//lightBufferDesc.ByteWidth = sizeof(LightBufferType);
-	//lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//lightBufferDesc.CPUAccessFlags = 0;
-	////D3D11_SUBRESOURCE_DATA InitData;
-	////ZeroMemory(&InitData, sizeof(InitData));
-	////InitData.pSysMem = vertices;
-	//hr = m_pDevice->CreateBuffer(&lightBufferDesc, NULL, &g_pLightBuffer);
-	//if (FAILED(hr))
-	//	return hr;
-
-
-	return S_OK;
-}
-
-void CGraphicDevice::SetLightBuffer()
-{
 }
 
 

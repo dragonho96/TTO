@@ -36,6 +36,7 @@ public:
 	void	SetAnimationLoop(_uint idx, _bool result);
 	void	SetUpperRotationAngle(_float2 angle) { m_upperRotationAngle = angle; }
 	void	SetAnimSeperate(_bool result) { m_bAnimSeperate = result; }
+	_uint	GetCurrentKeyFrame(ANIM_TYPE eType);
 
 public:
 	HRESULT Bind_Buffers();
@@ -77,7 +78,6 @@ public:
 private:
 	void CreatePxMesh();
 
-
 public:
 	_uint Get_NumMaterials() const {
 		return (_uint)m_ModelTextures.size();
@@ -86,6 +86,7 @@ public:
 	string GetMeshFileName() { return m_pMeshFileName; }
 	string GetShaderFilePath() { return m_pShaderFilePath; }
 
+	CShader*	GetShader() { return m_pShader.get(); }
 
 private:
 	const aiScene*		m_pScene = nullptr;
@@ -138,7 +139,7 @@ protected:
 	string m_pMeshFilePath = "";
 	string m_pMeshFileName = "";
 	string m_pShaderFilePath = "";
-
+	CTexture* m_pTextureCube;
 private:
 	PxVec3*				m_pxVertices = nullptr;
 	PxU32*				m_pxIndices = nullptr;

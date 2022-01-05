@@ -67,6 +67,7 @@ void CGrenade::Update(_double deltaTime)
 		m_pTransform->SetPxMatrix(pxMat);
 
 		m_TimeExplosion += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
+		ADDLOG(("m_TimeExplosion : " + to_string(m_TimeExplosion)).c_str());
 		if (m_TimeExplosion >= 4.5f)
 			Explode();
 	}
@@ -85,11 +86,14 @@ void CGrenade::OnThrow(_vector dir, _float forcePower)
 {
 	PxVec3 forceDir;
 	memcpy(&forceDir, &dir, sizeof(PxVec3));
-	forceDir *= forcePower;
+	// forceDir *= forcePower;
+	
+	ADDLOG(("m_ThrowingDir: " + to_string(XMVectorGetX(dir)) + ", " + to_string(XMVectorGetY(dir)) + ", " + to_string(XMVectorGetZ(dir))).c_str());
 
 	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->addForce(forceDir, PxForceMode::eFORCE);
-
+	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->addForce(forceDir, PxForceMode::eIMPULSE);
+	
+	CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
 	m_bThrown = true;
 }
 

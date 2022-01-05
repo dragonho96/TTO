@@ -7,10 +7,11 @@ void CGrenadeState::HandleInput(CStateMachine ** pState, CPlayer& pPlayer)
 {
 	if (m_bThrowing)
 	{
+		if (pPlayer.m_pModel->GetCurrentKeyFrame(ANIM_TYPE::UPPER) == 18)
+			pPlayer.ThrowGrenade();
+
 		if (pPlayer.m_pModel->IsUpperFinished())
-		{
 			m_bThrowing = false;
-		}
 		else
 			return;
 	}
@@ -45,14 +46,20 @@ void CGrenadeState::HandleInput(CStateMachine ** pState, CPlayer& pPlayer)
 		{
 			// Wait till animation is over
 			pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::THROW_GRENADE, ANIM_TYPE::UPPER);
-			pPlayer.ThrowGrenade();
+			pPlayer.SetGrenadeTrajectory(false);
 			m_bThrowing = true;
 		}
 		else
+		{
 			pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::AIM_GRENADE, ANIM_TYPE::UPPER);
+			pPlayer.SetGrenadeTrajectory(true);
+		}
 	}
 	else
+	{
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::IDLE_GRENADE, ANIM_TYPE::UPPER);
+		pPlayer.SetGrenadeTrajectory(false);
+	}
 
 }
 

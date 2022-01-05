@@ -214,6 +214,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\PxManager.h" />
     <ClInclude Include="..\Public\RectTransform.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Scene.h" />
     <ClInclude Include="..\Public\SceneManager.h" />
     <ClInclude Include="..\Public\SceneSerializer.h" />
@@ -221,6 +222,7 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\ShaderBuffer.h" />
     <ClInclude Include="..\Public\SphereCollider.h" />
+    <ClInclude Include="..\Public\TargetManager.h" />
     <ClInclude Include="..\Public\Text.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Sound.h" />
@@ -277,12 +279,14 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\PxManager.cpp" />
     <ClCompile Include="..\Private\RectTransform.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Scene.cpp" />
     <ClCompile Include="..\Private\SceneManager.cpp" />
     <ClCompile Include="..\Private\SceneSerializer.cpp" />
     <ClCompile Include="..\Private\ScriptObjectManager.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SphereCollider.cpp" />
+    <ClCompile Include="..\Private\TargetManager.cpp" />
     <ClCompile Include="..\Private\Text.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Sound.cpp" />

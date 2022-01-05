@@ -1,8 +1,9 @@
 #include "..\public\VIBuffer_Rect.h"
 
-CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string shaderPath)
 	: CVIBuffer(pDevice, pDeviceContext)	
 {
+	m_shaderPath = shaderPath;
 }
 
 CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect & rhs)
@@ -108,9 +109,9 @@ HRESULT CVIBuffer_Rect::Render()
 	return S_OK;
 }
 
-CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string shaderPath)
 {
-	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(pDevice, pDeviceContext);
+	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(pDevice, pDeviceContext, shaderPath);
 
 	if (FAILED(pInstance->InitializePrototype()))
 	{
