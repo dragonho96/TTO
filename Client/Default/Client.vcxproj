@@ -184,6 +184,8 @@
     <ClInclude Include="..\Public\CrouchState.h" />
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\Effect_Fire.h" />
+    <ClInclude Include="..\Public\Effect_Impact.h" />
+    <ClInclude Include="..\Public\Effect_ImpactSmoke.h" />
     <ClInclude Include="..\Public\Effect_Smoke.h" />
     <ClInclude Include="..\Public\Effect_Trajectory.h" />
     <ClInclude Include="..\Public\Enemy.h" />
@@ -238,6 +240,8 @@
     <ClCompile Include="..\Private\CrouchState.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\Effect_Fire.cpp" />
+    <ClCompile Include="..\Private\Effect_Impact.cpp" />
+    <ClCompile Include="..\Private\Effect_ImpactSmoke.cpp" />
     <ClCompile Include="..\Private\Effect_Smoke.cpp" />
     <ClCompile Include="..\Private\Effect_Trajectory.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />

@@ -9,6 +9,7 @@
 #include "ScriptObjectManager.h"
 #include "LightManager.h"
 #include "PxManager.h"
+#include "TargetManager.h"
 
 BEGIN(Engine)
 
@@ -35,7 +36,6 @@ public:
 	IDXGISwapChain*				GetSwapChain();
 	ID3D11RenderTargetView*		GetRenderTargetView();
 	ID3D11DepthStencilView*		GetDepthStencilRenderTargetView();
-	ID3D11ShaderResourceView*	GetShaderResourceView();
 	SpriteBatch*				GetSpriteBatch();
 	SpriteFont*					GetSpriteFont();
 
@@ -124,6 +124,16 @@ public:
 	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
 #pragma endregion
 
+#pragma region RENDERTARGET
+	HRESULT Add_RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, string pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor);
+	HRESULT Add_MRT(string pMRTTag, string pRenderTargetTag);
+	HRESULT Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
+	HRESULT End_MRT(ID3D11DeviceContext* pDeviceContext);
+	HRESULT Ready_DebugBuffer(string pTargetTag, _float fX, _float fY, _float fWidth, _float fHeight);
+	HRESULT Render_DebugBuffers(string pMRTTag);
+	ID3D11ShaderResourceView* GetShaderResourceView(string pTargetTag);
+#pragma endregion
+
 #pragma region PIPELINE
 	_matrix GetTransform(CPipeline::TYPE eType);
 	_vector GetCamPosition();
@@ -171,6 +181,7 @@ private:
 	class CScriptObjectManager*		m_pScriptObjectManager = nullptr;
 	class CLightManager*			m_pLightManager = nullptr;
 	class CModelManager*			m_pModelManager = nullptr;
+	class CTargetManager*			m_pTargetManager = nullptr;
 
 	class CPxManager*				m_pPxManager = nullptr;
 	class CImGuiManager*			m_pImGuiManager = nullptr;

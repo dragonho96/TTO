@@ -205,6 +205,12 @@
     <Filter Include="01.Utility\06.RenderTargets\Manager">
       <UniqueIdentifier>{cc55947f-09c9-47ef-b268-a14579de8f99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\RectViewport">
+      <UniqueIdentifier>{d1b90eca-0a14-4b91-8f6c-330f89302936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\LineInstance">
+      <UniqueIdentifier>{b14476d1-7019-432a-8016-36397d935367}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -411,6 +417,10 @@
     <ClInclude Include="..\Public\TargetManager.h">
       <Filter>01.Utility\06.RenderTargets\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect_Viewport.h">
+      <Filter>01.Utility\03.Components\VIBuffer\RectViewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LineInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -599,5 +609,9 @@
     <ClCompile Include="..\Private\TargetManager.cpp">
       <Filter>01.Utility\06.RenderTargets\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect_Viewport.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\RectViewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LineInstance.cpp" />
   </ItemGroup>
 </Project>

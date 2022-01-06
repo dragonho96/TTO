@@ -48,7 +48,10 @@ HRESULT CScene_Effect::Initialize()
 	//if (FAILED(ReadyLayerEffect("LAYER_EFFECT")))
 	//	return E_FAIL;
 
-	m_pTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
+	// m_pTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
+
+	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
+	m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
 
 
 	return S_OK;
@@ -60,12 +63,14 @@ _uint CScene_Effect::Update(_double TimeDelta)
 
 	// Setup Point values
 
-	list<_vector> points;
-	for (int i = 0; i < 10; ++i)
-		points.emplace_back(_vector{i * 0.5f, 0, 0, 0});
+	//list<_vector> points;
+	//for (int i = 0; i < 10; ++i)
+	//	points.emplace_back(_vector{i * 0.5f, 0, 0, 0});
+	//dynamic_cast<CEffect_Trajectory*>(m_pTrajectory)->SetPoints(points);
 
 
-	dynamic_cast<CEffect_Trajectory*>(m_pTrajectory)->SetPoints(points);
+
+
 
 
 	return _uint();

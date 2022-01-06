@@ -1,15 +1,19 @@
 #include "..\Public\RenderTarget.h"
+#include "VIBuffer_Rect_Viewport.h"
+
 USING(Engine)
 CRenderTarget::CRenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
 {
-	SafeAddRef(m_pDeviceContext);
-	SafeAddRef(m_pDevice);
+	//SafeAddRef(m_pDeviceContext);
+	//SafeAddRef(m_pDevice);
 }
 
 HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
 {
+	m_vClearColor = vClearColor;
+
 	D3D11_TEXTURE2D_DESC		TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
@@ -34,7 +38,7 @@ HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT Forma
 	RenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	RenderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture2D, &RenderTargetViewDesc, &m_pRenderTargetView)))
+	if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture2D.Get(), &RenderTargetViewDesc, &m_pRenderTargetView)))
 		return E_FAIL;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC		ShaderResourceViewDesc;
@@ -44,12 +48,42 @@ HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT Forma
 	ShaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	ShaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, &ShaderResourceViewDesc, &m_pShaderResourceView)))
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D.Get(), &ShaderResourceViewDesc, &m_pShaderResourceView)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
+HRESULT CRenderTarget::Clear()
+{
+	if (nullptr == m_pRenderTargetView)
+		return E_FAIL;
+
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), (_float*)&m_vClearColor);
+
+	return S_OK;
+}
+#ifdef _DEBUG
+
+HRESULT CRenderTarget::Ready_DebugBuffer(_float fX, _float fY, _float fWidth, _float fHeight)
+{
+	m_pDebugBuffer = CVIBuffer_Rect_Viewport::Create(m_pDevice, m_pDeviceContext, fX, fY, fWidth, fHeight, "../Shaders/Shader_Rect_Viewport.fx");
+	if (nullptr == m_pDebugBuffer)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Render_DebugBuffer()
+{
+	m_pDebugBuffer->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", m_pShaderResourceView.Get());
+
+	m_pDebugBuffer->GetShader()->Render(0);
+
+	return S_OK;
+}
+
+#endif // _DEBUG
 CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
 {
 	CRenderTarget*	pInstance = new CRenderTarget(pDevice, pDeviceContext);
@@ -64,10 +98,12 @@ CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 
 void CRenderTarget::Free()
 {
-	SafeRelease(m_pShaderResourceView);
-	SafeRelease(m_pRenderTargetView);
-	SafeRelease(m_pTexture2D);
+	SafeRelease(m_pDebugBuffer);
 
-	SafeRelease(m_pDeviceContext);
-	SafeRelease(m_pDevice);
+	//SafeRelease(m_pShaderResourceView);
+	//SafeRelease(m_pRenderTargetView);
+	//SafeRelease(m_pTexture2D);
+
+	//SafeRelease(m_pDeviceContext);
+	//SafeRelease(m_pDevice);
 }

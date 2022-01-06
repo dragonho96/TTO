@@ -150,12 +150,14 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		m_pModel->SetRagdollSimulate(true);
 
 		_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
-		_vector damageDir = position - sourceLocation;
+		_vector damageDir = XMVector3Normalize(position - sourceLocation);
 		PxVec3 pxDamageDir;
 		memcpy(&pxDamageDir, &damageDir, sizeof(PxVec3));
+		_float fDamagePower = XMVectorGetX(XMVector4Length(position - sourceLocation)) * 500.f;
 		//m_pModel->GetRagdollRb("body")->addForce(pxDamageDir.getNormalized(), PxForceMode::eIMPULSE);
-		m_pModel->GetRagdollRb("body")->addForce(pxDamageDir * 100.f, PxForceMode::eIMPULSE);
-		
+		m_pModel->GetRagdollRb("body")->addForce(pxDamageDir * fDamagePower, PxForceMode::eIMPULSE);
+		ADDLOG(("Hit Damage: " + to_string(fDamagePower)).c_str());
+
 		string logStr = "" + to_string(pxDamageDir.x) + " " + to_string(pxDamageDir.y) + " " + to_string(pxDamageDir.z);
 		ADDLOG(("Hit Dir: " + logStr).c_str());
 	}

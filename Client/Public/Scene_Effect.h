@@ -23,6 +23,7 @@ private:
 	HRESULT ReadyScript();
 
 	CGameObject* m_pTrajectory = nullptr;
+	CGameObject* m_pEffect = nullptr;
 };
 
 END

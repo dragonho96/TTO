@@ -11,7 +11,7 @@ public:
 	virtual void LapteUpdate(_double deltaTime) = 0;
 
 public:
-	void SetDead() { m_bDead = false; };
+	void SetDead() { m_bDead = true; };
 	_bool	IsDead() { return m_bDead; }
 protected:
 	_bool		m_bDead = false;

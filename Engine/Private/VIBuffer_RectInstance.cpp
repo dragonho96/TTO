@@ -154,7 +154,7 @@ HRESULT CVIBuffer_RectInstance::Initialize(void * pArg)
 		pIV->vRight = _float4(1.f, 0.f, 0.f, 0.f);
 		pIV->vUp = _float4(0.f, 1.f, 0.f, 0.f);
 		pIV->vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pIV->vPosition = _float4(-2, 2, i * (0.1f), 1.f);
+		pIV->vPosition = _float4(0, 0, 0, 1.f);
 		pIV->iStartFrame = rand() % 36;
 		m_InstanceMatrices.push_back(pIV);
 	}

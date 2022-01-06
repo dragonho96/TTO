@@ -332,6 +332,21 @@ HRESULT CShader::SetUp_TextureOnShader(const char * pConstantName, vector<MODELT
 	return S_OK;
 }
 
+HRESULT CShader::SetUp_TextureOnShader(const char * pConstantName, ID3D11ShaderResourceView * pSRV)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName)->AsShaderResource();
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	if (FAILED(pVariable->SetResource(pSRV)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 ID3D11InputLayout * CShader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_SHADER_DESC * effectVsDesc, vector<D3D11_SIGNATURE_PARAMETER_DESC>& params)
 {
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;

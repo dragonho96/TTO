@@ -20,7 +20,9 @@ CEngine::CEngine()
 	, m_pScriptObjectManager(CScriptObjectManager::GetInstance())
 	, m_pLightManager(CLightManager::GetInstance())
 	, m_pModelManager(CModelManager::GetInstance())
+	, m_pTargetManager(CTargetManager::GetInstance())
 {
+	SafeAddRef(m_pTargetManager);
 	SafeAddRef(m_pLightManager);
 	SafeAddRef(m_pScriptObjectManager);
 	SafeAddRef(m_pPipeline);
@@ -68,47 +70,50 @@ _uint CEngine::Update(_double dTimeDelta)
 void CEngine::ReleaseEngine()
 {
 	if (0 != CEngine::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CEngine");
+		MSG_BOX("Failed to Delete CEngine");
 
 	if (0 != CSound::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CSound");
+		MSG_BOX("Failed to Delete CSound");
 
 	if (0 != CImGuiManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CImGuiManager");
+		MSG_BOX("Failed to Delete CImGuiManager");
 
 
 	if (0 != CInputManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CInputManager");
+		MSG_BOX("Failed to Delete CInputManager");
 
 	if (0 != CTimerManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CTimer_Manager");
+		MSG_BOX("Failed to Delete CTimer_Manager");
 
 	if (0 != CSceneManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CSceneManager");
+		MSG_BOX("Failed to Delete CSceneManager");
 
 	if (0 != CScriptObjectManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CScriptObjectManager");
+		MSG_BOX("Failed to Delete CScriptObjectManager");
 
 	if (0 != CGameObjectManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CGameObjectManager");
+		MSG_BOX("Failed to Delete CGameObjectManager");
 
 	if (0 != CPipeline::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CPipeline");
+		MSG_BOX("Failed to Delete CPipeline");
 
 	if (0 != CModelManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CModelManager");
+		MSG_BOX("Failed to Delete CModelManager");
 
 	if (0 != CComponentManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CComponentManager");
+		MSG_BOX("Failed to Delete CComponentManager");
 
 	if (0 != CPxManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CPhysX");
+		MSG_BOX("Failed to Delete CPhysX");
 
 	if (0 != CLightManager::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CLightManager");
+		MSG_BOX("Failed to Delete CLightManager");
+
+	if (0 != CTargetManager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Delete CTargetManager");
 
 	if (0 != CGraphicDevice::GetInstance()->DestroyInstance())
-		MSG_BOX("Failed to Deleting CGraphic_Device");
+		MSG_BOX("Failed to Delete CGraphic_Device");
 
 
 	
@@ -145,11 +150,6 @@ ID3D11RenderTargetView * CEngine::GetRenderTargetView()
 ID3D11DepthStencilView * CEngine::GetDepthStencilRenderTargetView()
 {
 	return m_pGraphicDevice->GetDepthStencilRenderTargetView();
-}
-
-ID3D11ShaderResourceView* CEngine::GetShaderResourceView()
-{
-	return m_pGraphicDevice->GetShaderResourceView();
 }
 
 
@@ -476,6 +476,43 @@ HRESULT CEngine::AddLight(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceC
 	return m_pLightManager->AddLight(pDevice, pDeviceContext, LightDesc);
 }
 
+HRESULT CEngine::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
+{
+	return m_pTargetManager->Add_RenderTarget(pDevice, pDeviceContext, pRenderTargetTag, iWidth, iHeight, Format, vClearColor);
+}
+
+HRESULT CEngine::Add_MRT(string pMRTTag, string pRenderTargetTag)
+{
+	return m_pTargetManager->Add_MRT(pMRTTag, pRenderTargetTag);
+}
+
+HRESULT CEngine::Begin_MRT(ID3D11DeviceContext * pDeviceContext, string pMRTTag)
+{
+	return m_pTargetManager->Begin_MRT(pDeviceContext, pMRTTag);
+}
+
+HRESULT CEngine::End_MRT(ID3D11DeviceContext * pDeviceContext)
+{
+	return m_pTargetManager->End_MRT(pDeviceContext);
+}
+
+HRESULT CEngine::Ready_DebugBuffer(string pTargetTag, _float fX, _float fY, _float fWidth, _float fHeight)
+{
+	return m_pTargetManager->Ready_DebugBuffer(pTargetTag, fX, fY, fWidth, fHeight);
+}
+
+HRESULT CEngine::Render_DebugBuffers(string pMRTTag)
+{
+	return m_pTargetManager->Render_DebugBuffers(pMRTTag);
+}
+
+ID3D11ShaderResourceView * CEngine::GetShaderResourceView(string pTargetTag)
+{
+	return m_pTargetManager->GetShaderResourceView(pTargetTag);
+}
+
+
+
 _matrix CEngine::GetTransform(CPipeline::TYPE eType)
 {
 	if (nullptr == m_pPipeline)
@@ -592,6 +629,7 @@ PxCooking * CEngine::GetCooking()
 
 void CEngine::Free()
 {
+	SafeRelease(m_pTargetManager);
 	SafeRelease(m_pLightManager);
 	SafeRelease(m_pScriptObjectManager);
 	SafeRelease(m_pPipeline);

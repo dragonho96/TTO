@@ -101,7 +101,7 @@ void CCapsuleCollider::SetUpRigidActor(void* pShapeInfo, RIGIDBODYDESC desc, CGa
 			PxCapsuleControllerDesc desc;
 			desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
 			desc.radius = radius;
-			desc.height = height / 2.f;
+			desc.height = height;
 			desc.slopeLimit = 0.f/*cosf(D3DXToRadian(45.f))*/;
 			//desc.stepOffset = 0.2f;
 			desc.upDirection = PxVec3(0.0, 1.0, 0.0);

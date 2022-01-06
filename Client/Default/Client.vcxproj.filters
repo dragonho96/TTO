@@ -139,6 +139,10 @@
     <ClInclude Include="..\Public\Effect_Trajectory.h">
       <Filter>02.GameObjects\Effect\Trajectory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Impact.h">
+      <Filter>02.GameObjects\Effect\Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_ImpactSmoke.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -264,6 +268,10 @@
     <ClCompile Include="..\Private\Effect_Trajectory.cpp">
       <Filter>02.GameObjects\Effect\Trajectory</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_Impact.cpp">
+      <Filter>02.GameObjects\Effect\Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_ImpactSmoke.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -405,6 +413,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Trajectory">
       <UniqueIdentifier>{5fddfe74-47d7-4ff8-a924-2009f58e7a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Impact">
+      <UniqueIdentifier>{3dc86b0f-cd96-4f90-b1b8-d223413ed513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\ImpactSmoke">
+      <UniqueIdentifier>{4f825c52-049b-4eb9-88d6-a8702093c089}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

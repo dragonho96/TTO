@@ -14,6 +14,8 @@
 #include "Effect_Fire.h"
 #include "Effect_Smoke.h"
 #include "Effect_Trajectory.h"
+#include "Effect_Impact.h"
+#include "Effect_ImpactSmoke.h"
 #include "Equipment.h"
 
 #include "Log.h"
@@ -68,11 +70,11 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	// TODO
-	m_pEngine->DeserializePrefab();
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	//m_pEngine->DeserializePrefab();
+	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
 
-	if (FAILED(OpenScene(SCENE_TEST)))
+	if (FAILED(OpenScene(SCENE_EFFECT)))
 		return E_FAIL;
 
 	ImGuiInitialize();
@@ -302,8 +304,11 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Smoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 3))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_GrenadeTrajectory.fx", 6))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ImpactSmoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 1))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance_Impact", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_PointInstance.fx", 12))))
+		return E_FAIL;
+
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 20))))
 		return E_FAIL;
 	
@@ -346,6 +351,10 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Smoke", CEffect_Smoke::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Trajectory", CEffect_Trajectory::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Impact", CEffect_Impact::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_ImpactSmoke", CEffect_ImpactSmoke::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Camera */

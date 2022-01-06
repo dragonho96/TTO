@@ -234,11 +234,13 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClInclude Include="..\Public\VIBuffer_Line.h" />
     <ClInclude Include="..\Public\VIBuffer_LineBox.h" />
     <ClInclude Include="..\Public\VIBuffer_LineCapsule.h" />
+    <ClInclude Include="..\Public\VIBuffer_LineInstance.h" />
     <ClInclude Include="..\Public\VIBuffer_LineSphere.h" />
     <ClInclude Include="..\Public\VIBuffer_PointInstance.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="..\Public\VIBuffer_RectInstance.h" />
     <ClInclude Include="..\Public\VIBuffer_RectUI.h" />
+    <ClInclude Include="..\Public\VIBuffer_Rect_Viewport.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
   </ItemGroup>
   <ItemGroup>
@@ -298,11 +300,13 @@ xcopy /y ..\..\Engine\bin\*.dll				..\..\Client\bin\</Command>
     <ClCompile Include="..\Private\VIBuffer_Line.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineBox.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineCapsule.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_LineInstance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_LineSphere.cpp" />
     <ClCompile Include="..\Private\VIBuffer_PointInstance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_RectInstance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_RectUI.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Rect_Viewport.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,7 +1,22 @@
 Scene: Untitled
 GameObjects:
+  - Name: Sphere
+    UUID: 9967862885829788330
+    Active: true
+    Layer: Sphere
+    Type: Object
+    RenderGroup: 2
+    Com_Transform:
+      Translation: [0, 1.41669273, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sphere\
+      MeshFileName: Sphere.fbx
+      ShaderPath: ..\..\Assets\Shader\Shader_Fresnel.fx
+      HasCollider: false
   - Name: Player
-    UUID: 15007411300508441015
+    UUID: 10776407504068666600
     Active: true
     Layer: Player
     Type: Object
@@ -12,7 +27,7 @@ GameObjects:
     Com_Collider:
       Center: [0, 1, 0]
       Type: Capsule
-      Radius: 0.15
+      Radius: 0.150000006
       Height: 1
       RigidBody:
         Enabled: true
@@ -23,21 +38,8 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: PlayerFinal.fbx
       HasCollider: false
-  - Name: Terrain
-    UUID: 9175999438054577974
-    Active: true
-    Layer: Terrain
-    Type: Object
-    Com_Transform:
-      Translation: [0, 0, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Wall
-    UUID: 4103903290480697016
+    UUID: 9683079154794310973
     Active: true
     Layer: Default
     Type: Object
@@ -50,7 +52,7 @@ GameObjects:
       MeshFileName: WallCastle.fbx
       HasCollider: true
   - Name: Building
-    UUID: 7410261662898892892
+    UUID: 5421662392459739464
     Active: true
     Layer: Default
     Type: Object
@@ -62,23 +64,21 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
       MeshFileName: ContainerHouse.fbx
       HasCollider: true
-  - Name: Sphere
-    UUID: 2993945600809990321
+  - Name: Terrain
+    UUID: 17695790923272776425
     Active: true
-    Layer: Sphere
+    Layer: Terrain
     Type: Object
-    RenderGroup: 2
     Com_Transform:
-      Translation: [0, 2, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Sphere\
-      MeshFileName: Sphere.fbx
-      ShaderPath: ../../Assets/Shader/Shader_Fresnel.fx
-      HasCollider: false
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Enemy1
-    UUID: 3087593118888913032
+    UUID: 275437264038788754
     Active: true
     Layer: Enemy
     Type: Object

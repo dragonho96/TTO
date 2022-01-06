@@ -128,7 +128,7 @@ struct PS_IN
     float fSpecular : COLOR1;
 };
 
-vector	PS_MAIN(PS_IN In) : SV_TARGET
+vector	PS_MAIN(PS_IN In) : SV_TARGET0
 {
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
 

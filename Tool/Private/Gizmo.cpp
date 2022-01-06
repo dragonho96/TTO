@@ -132,7 +132,7 @@ void CGizmo::LateUpdate()
 		ImVec2 textureRect = { imageRect.x, imageRect.y/* - ImGui::GetFontSize() * 2*/ };
 		//imageRect.y -= ImGui::GetFontSize() * 2;
 		CEngine::GetInstance()->ChangeProj(textureRect.x, textureRect.y);
-		ImGui::Image((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView()),
+		ImGui::Image((ImTextureID)(CEngine::GetInstance()->GetShaderResourceView("Target_EditorWindow")),
 			imageRect, ImVec2(0, 0), ImVec2(1, 1));
 		CEngine::GetInstance()->ChangeProj(imageRect.x, imageRect.y);
 	}

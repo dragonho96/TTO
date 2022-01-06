@@ -1,28 +1,28 @@
-#include "..\public\VIBuffer_Rect.h"
+#include "..\Public\VIBuffer_Rect_Viewport.h"
 
-CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string shaderPath)
+CVIBuffer_Rect_Viewport::CVIBuffer_Rect_Viewport(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)	
 {
-	m_shaderPath = shaderPath;
 }
 
-CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect & rhs)
+CVIBuffer_Rect_Viewport::CVIBuffer_Rect_Viewport(const CVIBuffer_Rect_Viewport & rhs)
 	: CVIBuffer(rhs)
 {
 }
 
-HRESULT CVIBuffer_Rect::InitializePrototype()
+HRESULT CVIBuffer_Rect_Viewport::InitializePrototype(_float fX, _float fY, _float fWidth, _float fHeight, string pShaderFilePath)
 {
 	if (FAILED(__super::InitializePrototype()))
 		return E_FAIL;	
+
+	m_shaderPath = pShaderFilePath;
 
 #pragma region VERTEXBUFFER
 
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 4;
 	m_iNumVertexBuffers = 1;
-	m_iNumVerticesPerPrimitive = 3;
-
+	
 	/* For.D3D11_BUFFER_DESC */
 	m_VBDesc.ByteWidth = m_iStride * m_iNumVertices;
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -34,16 +34,23 @@ HRESULT CVIBuffer_Rect::InitializePrototype()
 	m_pVertices = new VTXTEX[m_iNumVertices];
 	ZeroMemory(m_pVertices, sizeof(VTXTEX) * m_iNumVertices);
 
-	((VTXTEX*)m_pVertices)[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+
+	_uint	iNumViewports = 1;
+
+	D3D11_VIEWPORT			ViewportDesc;
+
+	m_pDeviceContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	((VTXTEX*)m_pVertices)[0].vPosition = _float3(fX / (ViewportDesc.Width * 0.5f) - 1.f, fY / (ViewportDesc.Height * -0.5f) + 1.f, 0.f);
 	((VTXTEX*)m_pVertices)[0].vTexUV = _float2(0.f, 0.f);
 
-	((VTXTEX*)m_pVertices)[1].vPosition = _float3(0.5f, 0.5f, 0.f);
+	((VTXTEX*)m_pVertices)[1].vPosition = _float3((fX + fWidth) / (ViewportDesc.Width * 0.5f) - 1.f, fY / (ViewportDesc.Height * -0.5f) + 1.f, 0.f);
 	((VTXTEX*)m_pVertices)[1].vTexUV = _float2(1.f, 0.f);
 
-	((VTXTEX*)m_pVertices)[2].vPosition = _float3(0.5f, -0.5f, 0.f);
+	((VTXTEX*)m_pVertices)[2].vPosition = _float3((fX + fWidth) / (ViewportDesc.Width * 0.5f) - 1.f, (fY + fHeight) / (ViewportDesc.Height * -0.5f) + 1.f, 0.f);
 	((VTXTEX*)m_pVertices)[2].vTexUV = _float2(1.f, 1.f);
 
-	((VTXTEX*)m_pVertices)[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
+	((VTXTEX*)m_pVertices)[3].vPosition = _float3(fX / (ViewportDesc.Width * 0.5f) - 1.f, (fY + fHeight) / (ViewportDesc.Height * -0.5f) + 1.f, 0.f);
 	((VTXTEX*)m_pVertices)[3].vTexUV = _float2(0.f, 1.f);
 
 	/* For.D3D11_SUBRESOURCE_DATA */
@@ -54,6 +61,7 @@ HRESULT CVIBuffer_Rect::InitializePrototype()
 #pragma region INDEXBUFFER
 
 	m_iNumPrimitive = 2;
+	m_iNumVerticesPerPrimitive = 3;
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -83,58 +91,50 @@ HRESULT CVIBuffer_Rect::InitializePrototype()
 	if (FAILED(__super::Create_Buffers()))
 		return E_FAIL;
 
-	//D3D11_INPUT_ELEMENT_DESC		ElmentDesc[] = {
-	//	,
-
-	//};
 
 	SafeDeleteArray(pIndices);
 
+
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Rect::Initialize(void * pArg)
-{
-	// m_pShader = make_unique<CShader>("../Shaders/Shader_Rect.fx");
 
+
+HRESULT CVIBuffer_Rect_Viewport::Initialize(void * pArg)
+{
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	m_pShader = make_unique<CShader>("../../Assets/Shader/Shader_Rect.fx");
+
+	m_pShader = make_unique<CShader>(m_shaderPath);
+
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Rect::Render()
+CVIBuffer_Rect_Viewport * CVIBuffer_Rect_Viewport::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _float fX, _float fY, _float fWidth, _float fHeight, string pShaderFilePath)
 {
-	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
-	__super::Render();
-	return S_OK;
-}
+	CVIBuffer_Rect_Viewport*	pInstance = new CVIBuffer_Rect_Viewport(pDevice, pDeviceContext);
 
-CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string shaderPath)
-{
-	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(pDevice, pDeviceContext, shaderPath);
-
-	if (FAILED(pInstance->InitializePrototype()))
+	if (FAILED(pInstance->InitializePrototype(fX, fY, fWidth, fHeight, pShaderFilePath)))
 	{
-		MSG_BOX("Failed To Creating CVIBuffer_Rect");
+		MSG_BOX("Failed To Create CVIBuffer_Rect_Viewport");
 		SafeRelease(pInstance);
 	}
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Rect::Clone(void * pArg)
+CComponent * CVIBuffer_Rect_Viewport::Clone(void * pArg)
 {
-	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(*this);
+	CVIBuffer_Rect_Viewport*	pInstance = new CVIBuffer_Rect_Viewport(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Creating CVIBuffer_Rect");
+		MSG_BOX("Failed To Creating CVIBuffer_Rect_Viewport");
 		SafeRelease(pInstance);
 	}
 	return pInstance;
 }
 
-void CVIBuffer_Rect::Free()
+void CVIBuffer_Rect_Viewport::Free()
 {
 	__super::Free();
 }

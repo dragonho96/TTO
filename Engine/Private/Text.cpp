@@ -71,8 +71,8 @@ HRESULT CText::Render()
 	float xFactor = winSize.x / 1280.f;
 	float yFactor = winSize.y / 720.f;
 
-	CD3D11_RECT rt((desc.posX - (desc.sizeX / 2.f)) * xFactor, (desc.posY - (desc.sizeY / 2.f)) * yFactor, 
-		(desc.posX + (desc.sizeX / 2.f)) * xFactor,  (desc.posY + (desc.sizeY / 2.f)) * yFactor);
+	CD3D11_RECT rt((LONG)(desc.posX - (desc.sizeX / 2.f)) * xFactor, (LONG)(desc.posY - (desc.sizeY / 2.f)) * yFactor,
+		(LONG)(desc.posX + (desc.sizeX / 2.f)) * xFactor, (LONG)(desc.posY + (desc.sizeY / 2.f)) * yFactor);
 	_float2 vPos = { (float)rt.left, (float)rt.top };
 
 	ComRef<ID3D11RasterizerState> scissorState = nullptr;

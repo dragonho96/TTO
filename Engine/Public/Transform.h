@@ -53,6 +53,8 @@ public:
 		memcpy(&m_WorldMatrix.m[eState][0], &vData, sizeof(_float3));
 	}
 
+	void SetLook(_fvector vLook);
+
 	const _float4x4 GetMatrix() { return m_WorldMatrix; }
 	void SetMatrix(const _float4x4 _matrix) { m_WorldMatrix = _matrix; }
 

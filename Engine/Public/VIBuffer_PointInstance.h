@@ -16,13 +16,19 @@ public:
 	HRESULT Update(_double TimeDelta);
 	HRESULT Render(_uint iPassIndex);
 
+public:
+public:
+	vector<VTXMATRIX*>&		GetInstanceMatrices() {
+		return m_InstanceMatrices;
+	};
+
 private:
 	ID3D11Buffer*			m_pVBInstance = nullptr;
 	D3D11_BUFFER_DESC		m_VBInstanceDesc;
 	D3D11_SUBRESOURCE_DATA	m_VBInstanceSubResourceData;
 
-	_uint			m_iNumInstance = 0;
-	vector<VTXMATRIX>		m_InstanceMatrices;
+	_uint					m_iNumInstance = 0;
+	vector<VTXMATRIX*>		m_InstanceMatrices;
 	string					m_shaderPath = "";
 public:
 	static CVIBuffer_PointInstance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, string pShaderFilePath, _uint iNumInstance = 1);

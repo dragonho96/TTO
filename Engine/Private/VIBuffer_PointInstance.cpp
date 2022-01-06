@@ -26,14 +26,12 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 		return E_FAIL;
 
 	m_iNumInstance = iNumInstance;
-	// m_iNumVertexBuffers = 1;
 	m_iNumVertexBuffers = 2;
 
 #pragma region VERTEXBUFFER
 
 	m_iStride = sizeof(VTXPOINT);
-	// m_iNumVertices = m_iNumInstance * 2;
-	m_iNumVertices = 2;
+	m_iNumVertices = m_iNumInstance;
 
 	m_VBDesc.ByteWidth = m_iStride * m_iNumVertices;
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -45,52 +43,21 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 	m_pVertices = new VTXPOINT[m_iNumVertices];
 	ZeroMemory(m_pVertices, sizeof(VTXPOINT) * m_iNumVertices);
 
-	((VTXPOINT*)m_pVertices)[0].vPosition = _float3(0.0f, 0.0f, 0.f);
-	((VTXPOINT*)m_pVertices)[0].vSize = _float2(1.0f, 1.0f);
-
-	((VTXPOINT*)m_pVertices)[1].vPosition = _float3(1.0f, 0.0f, 0.f);
-	((VTXPOINT*)m_pVertices)[1].vSize = _float2(1.0f, 1.0f);
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		((VTXPOINT*)m_pVertices)[i].vPosition = _float3(0.0f, 0.0f, 0.f);
+		((VTXPOINT*)m_pVertices)[i].vSize = _float2(1.0f, 1.0f);
+	}
 
 	/* For.D3D11_SUBRESOURCE_DATA */
 	m_VBSubResourceData.pSysMem = m_pVertices;
 
 #pragma endregion VERTEXBUFFER
 
-	// m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
-
-	#pragma region INDEXBUFFER
-	
-		m_iNumPrimitive = m_iNumInstance;
-		m_iNumVerticesPerPrimitive = 2;
-		m_eIndexFormat = DXGI_FORMAT_R16_UINT;
-		m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-
-		/* For.D3D11_BUFFER_DESC */
-		m_IBDesc.ByteWidth = sizeof(LINEINDICES16) * m_iNumPrimitive;
-		m_IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		m_IBDesc.CPUAccessFlags = 0;
-		m_IBDesc.MiscFlags = 0;
-		m_IBDesc.StructureByteStride = 0;
-	
-		LINEINDICES16*		pIndices = new LINEINDICES16[m_iNumPrimitive];
-		ZeroMemory(pIndices, sizeof(LINEINDICES16) * m_iNumPrimitive);
-	
-		for (_uint i = 0; i < m_iNumPrimitive; ++i)
-		{
-			pIndices[i]._0 = 0;
-			pIndices[i]._1 = 1;
-		}
-	
-		m_IBSubResourceData.pSysMem = pIndices;
-		
-	#pragma endregion
+	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	if (FAILED(__super::Create_Buffers()))
 	return E_FAIL;	
-
-	//if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB)))
-	//	return E_FAIL;
 
 #pragma region VERTEXINSTANCEBUFFER
 
@@ -104,26 +71,13 @@ HRESULT CVIBuffer_PointInstance::InitializePrototype(string pShaderFilePath, _ui
 	m_VBInstanceDesc.StructureByteStride = sizeof(VTXMATRIX);
 
 	VTXMATRIX*			pInstanceVertices = new VTXMATRIX[m_iNumInstance];
-
-
-	for (_uint i = 0; i < m_iNumInstance; ++i)
-	{
-		pInstanceVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-		pInstanceVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-		pInstanceVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pInstanceVertices[i].vPosition = _float4(rand() % 5 , rand() % 5, rand() % 5, 1.f);
-		m_InstanceMatrices.push_back(pInstanceVertices[i]);
-	}
 	m_VBInstanceSubResourceData.pSysMem = pInstanceVertices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBInstanceDesc, &m_VBInstanceSubResourceData, &m_pVBInstance)))
 		return E_FAIL;
 
 	SafeDeleteArray(pInstanceVertices);
-	SafeDeleteArray(pIndices);
-
 #pragma endregion 
-
 
 	m_shaderPath = pShaderFilePath;
 
@@ -136,6 +90,17 @@ HRESULT CVIBuffer_PointInstance::Initialize(void * pArg)
 {
 	m_pShader = make_unique<CShader>(m_shaderPath);
 
+	for (_uint i = 0; i < m_iNumInstance; ++i)
+	{
+		VTXMATRIX*		pIV = new VTXMATRIX();
+		pIV->vRight = _float4(1.f, 0.f, 0.f, 0.f);
+		pIV->vUp = _float4(0.f, 1.f, 0.f, 0.f);
+		pIV->vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		pIV->vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+		pIV->iStartFrame = 0;
+		m_InstanceMatrices.push_back(pIV);
+	}
+
 	return S_OK;
 }
 
@@ -145,22 +110,22 @@ HRESULT CVIBuffer_PointInstance::Update(_double TimeDelta)
 
 	CPipeline*		pPipeLine = GET_INSTANCE(CPipeline);
 
-	sort(m_InstanceMatrices.begin(), m_InstanceMatrices.end(), [&](VTXMATRIX SourMatrix, VTXMATRIX DestMatrix) {
-		_vector		SourPosition = XMVector4Transform(XMLoadFloat4(&SourMatrix.vPosition), pPipeLine->Get_Transform(CPipeline::D3DTS_VIEW));
-		_vector		DestPosition = XMVector4Transform(XMLoadFloat4(&DestMatrix.vPosition), pPipeLine->Get_Transform(CPipeline::D3DTS_VIEW));
+	//sort(m_InstanceMatrices.begin(), m_InstanceMatrices.end(), [&](VTXMATRIX* SourMatrix, VTXMATRIX* DestMatrix) {
+	//	_vector		SourPosition = XMVector4Transform(XMLoadFloat4(&SourMatrix->vPosition), pPipeLine->Get_Transform(CPipeline::D3DTS_VIEW));
+	//	_vector		DestPosition = XMVector4Transform(XMLoadFloat4(&DestMatrix->vPosition), pPipeLine->Get_Transform(CPipeline::D3DTS_VIEW));
 
-		if (XMVectorGetZ(SourPosition) > XMVectorGetZ(DestPosition))
-			return true;
+	//	if (XMVectorGetZ(SourPosition) > XMVectorGetZ(DestPosition))
+	//		return true;
 
-		return false;
-	});
+	//	return false;
+	//});
 
 	if (FAILED(m_pDeviceContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource)))
 		return E_FAIL;
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		((VTXMATRIX*)SubResource.pData)[i] = m_InstanceMatrices[i];
+		((VTXMATRIX*)SubResource.pData)[i] = *m_InstanceMatrices[i];
 	}
 
 	m_pDeviceContext->Unmap(m_pVBInstance, 0);
@@ -190,11 +155,11 @@ HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
 	};
 
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVBBuffers, iStrides, iOffset);
-	m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat , 0);
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
-	m_pShader->Render();
+	m_pShader->Render(iPassIndex);
+	m_pDeviceContext->DrawInstanced(1, m_iNumInstance, 0, 0);
 
-	m_pDeviceContext->DrawIndexedInstanced(2, m_iNumInstance, 0, 0, 0);
+	return S_OK;
 
 	return S_OK;
 }

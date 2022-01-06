@@ -20,6 +20,17 @@ _float CTransform::GetScale(STATE eState)
 	return XMVectorGetX(XMVector3Length(GetState(eState)));	
 }
 
+void CTransform::SetLook(_fvector vLook)
+{
+	SetState(CTransform::STATE_LOOK, XMVector3Normalize(vLook));
+
+	_vector	vRight = XMVector3Cross(_vector{ 0.f, 1.f, 0.f, 0.f }, vLook);
+	SetState(CTransform::STATE_RIGHT, XMVector3Normalize(vRight));
+
+	_vector	vUp = XMVector3Cross(vLook, vRight);
+	SetState(CTransform::STATE_UP, XMVector3Normalize(vUp));
+}
+
 void CTransform::SetPxMatrix(PxMat44 mat)
 {
 	memcpy(&m_WorldMatrix, &mat, sizeof(_float4x4));
@@ -41,7 +52,7 @@ HRESULT CTransform::InitializePrototype()
 
 HRESULT CTransform::Initialize(void * pArg)
 {
-	//XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
 	if (nullptr != pArg)
 		memcpy(&m_TransformDesc, pArg, sizeof(TRANSFORMDESC));

@@ -1,5 +1,6 @@
 #include "..\Public\TargetManager.h"
 #include "RenderTarget.h"
+#include "Engine.h"
 
 IMPLEMENT_SINGLETON(CTargetManager)
 USING(Engine)
@@ -9,7 +10,7 @@ CTargetManager::CTargetManager()
 
 }
 
-HRESULT CTargetManager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
+HRESULT CTargetManager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
 {
 	if (nullptr != Find_RenderTarget(pRenderTargetTag))
 		return E_FAIL;
@@ -23,7 +24,7 @@ HRESULT CTargetManager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceCon
 	return S_OK;
 }
 
-HRESULT CTargetManager::Add_MRT(const _tchar * pMRTTag, const _tchar * pRenderTargetTag)
+HRESULT CTargetManager::Add_MRT(string pMRTTag, string pRenderTargetTag)
 {
 	CRenderTarget*		pRenderTarget = Find_RenderTarget(pRenderTargetTag);
 	if (nullptr == pRenderTarget)
@@ -46,7 +47,7 @@ HRESULT CTargetManager::Add_MRT(const _tchar * pMRTTag, const _tchar * pRenderTa
 	return S_OK;
 }
 
-HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, const _tchar* pMRTTag)
+HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag)
 {
 	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
 	if (nullptr == pMRTList)
@@ -60,27 +61,64 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, const _tc
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
-		ID3D11RenderTargetView*		pRTV = pRenderTarget->Get_RenderTargetView();
+		pRenderTarget->Clear();
 
-		/*pRTV->Clear();*/
+		ID3D11RenderTargetView*		pRTV = pRenderTarget->Get_RenderTargetView();
 		pRenderTargets[iIndex++] = pRTV;
 	}
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	pDeviceContext->OMSetRenderTargets(pMRTList->size(), pRenderTargets, m_pDepthStencilView);
 
 	return S_OK;
 }
 
-HRESULT CTargetManager::End_MRT()
+HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
 {
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+
+	 SafeRelease(m_pBackBufferRTV);
+	 SafeRelease(m_pDepthStencilView);
 	return S_OK;
 }
 
-
-
-CRenderTarget * CTargetManager::Find_RenderTarget(const _tchar * pRenderTagetTag)
+#ifdef _DEBUG
+HRESULT CTargetManager::Ready_DebugBuffer(string pTargetTag, _float fX, _float fY, _float fWidth, _float fHeight)
 {
-	auto	iter = find_if(m_RenderTargets.begin(), m_RenderTargets.end(), CTagFinder(pRenderTagetTag));
+	CRenderTarget*	pRenderTarget = Find_RenderTarget(pTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Ready_DebugBuffer(fX, fY, fWidth, fHeight);
+}
+HRESULT CTargetManager::Render_DebugBuffers(string pMRTTag)
+{
+	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	for (auto& pRenderTarget : *pMRTList)
+		pRenderTarget->Render_DebugBuffer();
+
+	return S_OK;
+}
+ID3D11ShaderResourceView * CTargetManager::GetShaderResourceView(string pTargetTag)
+{
+	CRenderTarget* renderTarget = Find_RenderTarget(pTargetTag);
+	if (renderTarget)
+		return renderTarget->GetShaderResourceView();
+
+	return nullptr;
+}
+#endif // _DEBUG
+
+CRenderTarget * CTargetManager::Find_RenderTarget(string pRenderTagetTag)
+{
+	auto	iter = find_if(m_RenderTargets.begin(), m_RenderTargets.end(), STagFinder(pRenderTagetTag));
 
 	if (iter == m_RenderTargets.end())
 		return nullptr;
@@ -88,9 +126,9 @@ CRenderTarget * CTargetManager::Find_RenderTarget(const _tchar * pRenderTagetTag
 	return iter->second;
 }
 
-list<class CRenderTarget*>* CTargetManager::Find_MRT(const _tchar * pMRTTag)
+list<class CRenderTarget*>* CTargetManager::Find_MRT(string pMRTTag)
 {
-	auto	iter = find_if(m_MRTs.begin(), m_MRTs.end(), CTagFinder(pMRTTag));
+	auto	iter = find_if(m_MRTs.begin(), m_MRTs.end(), STagFinder(pMRTTag));
 
 	if (iter == m_MRTs.end())
 		return nullptr;

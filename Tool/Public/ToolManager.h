@@ -14,6 +14,9 @@ public:
 	void Render();
 	void Release();
 
+public:
+	HRESULT ReadyRenderTargets();
+
 private:
 	HRESULT OpenScene(SCENE eScene);
 	HRESULT ReadyPrototypeComponent();

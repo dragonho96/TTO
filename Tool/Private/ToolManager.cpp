@@ -19,7 +19,7 @@
 
 USING(Tool)
 
-static string strScene = "../../Assets/Scenes/ModelTest.yaml";
+static string strScene = "../../Assets/Scenes/RT.yaml";
 
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())
@@ -51,7 +51,7 @@ HRESULT CToolManager::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	m_pEngine->DeserializePrefab();
+	// m_pEngine->DeserializePrefab();
 
 	if (FAILED(OpenScene(SCENE_TOOL)))
 		return E_FAIL;
@@ -60,6 +60,8 @@ HRESULT CToolManager::Initialize()
 
 	m_pEngine->DeserializeScene(strScene);
 
+	if (FAILED(ReadyRenderTargets()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -103,6 +105,8 @@ void CToolManager::Update(_double dDeltaTime)
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);
 
+
+
 	m_pEngine->UpdateImGui();
 }
 
@@ -113,12 +117,12 @@ void CToolManager::Render()
 
 	//m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
 	//m_pEngine->ClearDepthStencilView(1.f, 0);
-	m_pEngine->SetRTV2();
+
+	m_pEngine->Begin_MRT(m_pDeviceContext, "MRT_EditorWindow");
 	m_pRenderer->DrawRenderGroup();
 	m_pEngine->Present();
-
+	m_pEngine->End_MRT(m_pDeviceContext);
 	//// IMGUI Rendering
-	m_pEngine->SetRTV();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO();
@@ -147,6 +151,20 @@ void CToolManager::Release()
 	SafeRelease(m_pRenderer);
 	SafeRelease(m_pEngine);
 	CEngine::ReleaseEngine();
+}
+
+HRESULT CToolManager::ReadyRenderTargets()
+{
+	_uint	iNumViewports = 1;
+	D3D11_VIEWPORT			ViewportDesc;
+	m_pDeviceContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	if (FAILED(m_pEngine->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_EditorWindow", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->Add_MRT("MRT_EditorWindow", "Target_EditorWindow")))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CToolManager::OpenScene(SCENE eScene)
