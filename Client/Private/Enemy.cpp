@@ -54,9 +54,9 @@ void CEnemy::Update(_double deltaTime)
 	if (CEngine::GetInstance()->IsKeyDown('6'))
 		m_pModel->SetUp_AnimationIndex(1, ANIM_TYPE::NONE);
 
-	m_fPathFinding += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
-	if (m_fPathFinding > 1.f)
-		FindPath();
+	//m_fPathFinding += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
+	//if (m_fPathFinding > 1.f)
+	//	FindPath();
 
 	if (m_pController)
 	{

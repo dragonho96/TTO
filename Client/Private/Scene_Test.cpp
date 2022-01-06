@@ -57,11 +57,11 @@ HRESULT CScene_Test::Initialize()
 	ReadyScript();
 
 
-	if (FAILED(ReadyLayerGrid("LAYER_GRID")))
-		return E_FAIL;
+	//if (FAILED(ReadyLayerGrid("LAYER_GRID")))
+	//	return E_FAIL;
 
-	m_pPathFinding = CPathFinding::GetInstance();
-	m_pPathFinding->Initialize();
+	//m_pPathFinding = CPathFinding::GetInstance();
+	//m_pPathFinding->Initialize();
 
 	m_pGameManager = CGameManager::GetInstance();
 	m_pGameManager->Initialize();
@@ -73,8 +73,8 @@ _uint CScene_Test::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
 
-	if (m_pPathFinding)
-		m_pPathFinding->Update();
+	//if (m_pPathFinding)
+	//	m_pPathFinding->Update();
 	if (m_pGameManager)
 		m_pGameManager->Update(TimeDelta);
 	return _uint();

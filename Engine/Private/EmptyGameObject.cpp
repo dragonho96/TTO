@@ -104,7 +104,12 @@ HRESULT CEmptyGameObject::Render()
 		for (_uint i = 0; i < iNumMaterials; ++i)
 		{
 			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-			string myname = GetName();
+			// TODO: Handle passIndex
+			pModel->Render(i, 3);
+		}
+		for (_uint i = 0; i < iNumMaterials; ++i)
+		{
+			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 			// TODO: Handle passIndex
 			pModel->Render(i, 0);
 		}

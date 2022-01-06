@@ -20,6 +20,7 @@ GameObjects:
     Active: true
     Layer: Player
     Type: Object
+    RenderGroup: 1
     Com_Transform:
       Translation: [12.3405237, 2.00000119, 5.05167866]
       Rotation: [0, -0, 0]

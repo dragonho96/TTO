@@ -3,9 +3,9 @@
 
 cbuffer Matrices
 {
-	matrix		g_WorldMatrix;
-	matrix		g_ViewMatrix;
-	matrix		g_ProjMatrix;	
+    matrix g_WorldMatrix;
+    matrix g_ViewMatrix;
+    matrix g_ProjMatrix;
 }
 cbuffer LightDesc
 {
@@ -28,28 +28,28 @@ struct MeshBoneMatrices
 
 MeshBoneMatrices g_BoneMatrices;
 
-Texture2D		g_DiffuseTexture;
+Texture2D g_DiffuseTexture;
 
-SamplerState	g_DiffuseSampler
+SamplerState g_DiffuseSampler
 {
-	AddressU = mirror;
-	AddressV = mirror;
+    AddressU = mirror;
+    AddressV = mirror;
 };
 
 struct VS_IN
 {
-	float3	vPosition : POSITION; /* 로컬스페이스 */
-	float3	vNormal : NORMAL;
-	float2	vTexUV : TEXCOORD0;
-	float3	vTangent : TANGENT;
+    float3 vPosition : POSITION; /* 로컬스페이스 */
+    float3 vNormal : NORMAL;
+    float2 vTexUV : TEXCOORD0;
+    float3 vTangent : TANGENT;
     uint4 vBlendIndex : BLENDINDEX;
     float4 vBlendWeight : BLENDWEIGHT;
 };
 
 struct VS_OUT
 {
-	float4	vPosition : SV_POSITION;
-	float2	vTexUV : TEXCOORD0;	
+    float4 vPosition : SV_POSITION;
+    float2 vTexUV : TEXCOORD0;
     float fShade : COLOR0;
     float fSpecular : COLOR1;
 };
@@ -57,18 +57,18 @@ struct VS_OUT
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
 VS_OUT VS_MAIN(VS_IN In)
 {
-	VS_OUT		Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
 
-	matrix		matWV, matWVP;
+    matrix matWV, matWVP;
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
 
-	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-	Out.vTexUV = In.vTexUV;
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexUV = In.vTexUV;
     vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
-	return Out;
+    return Out;
 }
 
 VS_OUT VS_MAIN_ANIM(VS_IN In)
@@ -122,13 +122,13 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
 
 struct PS_IN
 {
-	float4	vPosition : SV_POSITION;
-	float2	vTexUV : TEXCOORD0;
+    float4 vPosition : SV_POSITION;
+    float2 vTexUV : TEXCOORD0;
     float fShade : COLOR0;
     float fSpecular : COLOR1;
 };
 
-vector	PS_MAIN(PS_IN In) : SV_TARGET0
+vector PS_MAIN(PS_IN In) : SV_TARGET0
 {
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
 
@@ -138,23 +138,28 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET0
 
     if (vColor.a <= 0)
         discard;
-	return vColor;
+    return vColor;
+}
+
+vector PS_MAIN_WALL(PS_IN In) : SV_TARGET0
+{
+    vector vColor = { 1, 1, 0, 1 };
+    return vColor;
 }
 
 
-
-technique11		DefaultDevice
+technique11 DefaultDevice
 {
     pass NonAnimation
     {
-		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_Default, 0);
-		SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
-    }	
+    }
     pass Animation
     {
         SetRasterizerState(Rasterizer_Solid);
@@ -174,5 +179,15 @@ technique11		DefaultDevice
         VertexShader = compile vs_5_0 VS_MAIN_ANIM_RAGDOLL();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+    pass BehindWall
+    {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_NotZTest, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_ANIM();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_WALL();
     }
 }

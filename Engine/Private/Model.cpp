@@ -288,16 +288,21 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
-	//if (0 < m_Animations.size())
-	//	iPassIndex = 1;
+	if (m_Animations.size() <= 0 && iPassIndex == 3)
+		return E_FAIL;
+
+
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	{
-		if (m_bSimulateRagdoll)
-			iPassIndex = 2;
-		else if (0 < m_Animations.size())
-			iPassIndex = 1;
-		else
-			iPassIndex = 0;
+		if (iPassIndex != 3)
+		{
+			if (m_bSimulateRagdoll)
+				iPassIndex = 2;
+			else if (0 < m_Animations.size())
+				iPassIndex = 1;
+			else
+				iPassIndex = 0;
+		}
 	}
 	else
 		iPassIndex = 0;
@@ -312,7 +317,7 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 		if (!pMeshContainer->IsActive())
 			continue;
 
-		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT && 0 < m_Animations.size())
 		{
 			ZeroMemory(BoneMatrices, sizeof(_matrix) * 512);
 
@@ -1201,9 +1206,9 @@ void CModel::CreatePxMesh()
 	filterData.word0 = CPxManager::GROUP1;
 	filterData.word1 = CPxManager::GROUP3;
 	shape->setQueryFilterData(filterData);
-	
+
 	m_pRigidActor->userData = nullptr;
-	
+
 	m_pRigidActor->attachShape(*shape);
 	pEngine->AddActor(m_pRigidActor);
 
