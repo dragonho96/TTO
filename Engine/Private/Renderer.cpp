@@ -1,9 +1,13 @@
 #include "..\public\Renderer.h"
 #include "GameObject.h"
 #include "EmptyUI.h"
+#include "TargetManager.h"
+#include "LightManager.h"
+#include "VIBuffer_Rect_Viewport.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
+	, m_pTargetManager(CTargetManager::GetInstance())
 {
 
 }
@@ -18,6 +22,48 @@ HRESULT CRenderer::InitializePrototype()
 {
 	if (FAILED(__super::InitializePrototype()))
 		return E_FAIL;
+
+	_uint	iNumViewports = 1;
+
+	D3D11_VIEWPORT			ViewportDesc;
+
+	m_pDeviceContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	/* Target_Diffuse */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Diffuse", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	/* Target_Normal*/
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Normal", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	/* Target_Shade */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shade", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	/* MRT_Deferred */
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Diffuse")))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Normal")))
+		return E_FAIL;
+
+	/* MRT_LightAcc */
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_LightAcc", "Target_Shade")))
+		return E_FAIL;
+
+	m_pVIBuffer = CVIBuffer_Rect_Viewport::Create(m_pDevice, m_pDeviceContext, 0.f, 0.f, ViewportDesc.Width, ViewportDesc.Height, "../../Assets/Shader/Shader_Rect_Viewport.fx");
+	if (nullptr == m_pVIBuffer)
+		return E_FAIL;
+
+
+#ifdef _DEBUG
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Diffuse", 0.f, 0.f, 200.f, 200.f)))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Normal", 0.f, 200.f, 200.f, 200.f)))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shade", 200.f, 0.f, 200.f, 200.f)))
+		return E_FAIL;
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -51,6 +97,12 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(RenderNonAlpha()))
 		return E_FAIL;
 
+	if (FAILED(Render_LightAcc()))
+		return E_FAIL;
+
+	if (FAILED(Render_Blend()))
+		return E_FAIL;
+
 	if (FAILED(RenderAlpha()))
 		return E_FAIL;
 
@@ -58,6 +110,12 @@ HRESULT CRenderer::DrawRenderGroup()
 		return E_FAIL;
 
 	if (FAILED(RenderText()))
+		return E_FAIL;
+
+
+	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
 		return E_FAIL;
 
 	return S_OK;
@@ -82,6 +140,13 @@ HRESULT CRenderer::RenderPriority()
 
 HRESULT CRenderer::RenderNonAlpha()
 {
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_Deferred")))
+		return E_FAIL;
+
+
 	for (auto& pGameObject : m_RenderGroups[RENDER_NONALPHA])
 	{
 		if (nullptr != pGameObject)
@@ -93,6 +158,48 @@ HRESULT CRenderer::RenderNonAlpha()
 		}
 	}
 	m_RenderGroups[RENDER_NONALPHA].clear();
+
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_LightAcc()
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	CLightManager*		pLights = GET_INSTANCE(CLightManager);
+
+	m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_LightAcc");
+
+	pLights->Render_Lights();
+
+	m_pTargetManager->End_MRT(m_pDeviceContext);
+
+	RELEASE_INSTANCE(CLightManager);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Blend()
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	ID3D11ShaderResourceView*	pDiffuseSRV = m_pTargetManager->GetShaderResourceView("Target_Diffuse");
+	if (nullptr == pDiffuseSRV)
+		return E_FAIL;
+	ID3D11ShaderResourceView*	pShadeSRV = m_pTargetManager->GetShaderResourceView("Target_Shade");
+	if (nullptr == pShadeSRV)
+		return E_FAIL;
+
+	m_pVIBuffer->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", pDiffuseSRV);
+	m_pVIBuffer->GetShader()->SetUp_TextureOnShader("g_ShadeTexture", pShadeSRV);
+
+	m_pVIBuffer->Render(3);
 
 	return S_OK;
 }
@@ -193,5 +300,6 @@ CComponent * CRenderer::Clone(void * pArg)
 
 void CRenderer::Free()
 {
+	SafeRelease(m_pVIBuffer);
 	__super::Free();
 }

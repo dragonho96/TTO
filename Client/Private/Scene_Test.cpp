@@ -51,6 +51,9 @@ HRESULT CScene_Test::Initialize()
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);
 	
+	if (FAILED(ReadyLayerLights("LAYER_LIGHT")))
+		return E_FAIL;
+
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
@@ -83,6 +86,26 @@ _uint CScene_Test::Update(_double TimeDelta)
 HRESULT CScene_Test::Render()
 {
 	__super::Render();
+
+	return S_OK;
+}
+
+HRESULT CScene_Test::ReadyLayerLights(string pLayerTag)
+{
+	CEngine*		pEngine = GET_INSTANCE(CEngine);
+
+	LIGHTDESC			LightDesc;
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }

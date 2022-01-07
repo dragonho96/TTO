@@ -14,7 +14,7 @@ protected:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual HRESULT Render();
+	virtual HRESULT Render(_uint iPassIndex = 0);
 	virtual HRESULT RenderDebug(_float4x4 pxMat);
 	virtual HRESULT RenderDebug(_float3 relativePos);
 

@@ -431,7 +431,7 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 	// auto uuid = obj["UUID"].as<uint64_t>();
 	auto layer = obj["Layer"].as<string>();
 	auto active = obj["Active"].as<_bool>();
-	int renderGroup = 0;
+	int renderGroup = 1;
 	if (obj["RenderGroup"])
 		renderGroup = obj["RenderGroup"].as<int>();
 

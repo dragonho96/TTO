@@ -77,9 +77,9 @@ HRESULT CRenderTarget::Ready_DebugBuffer(_float fX, _float fY, _float fWidth, _f
 HRESULT CRenderTarget::Render_DebugBuffer()
 {
 	m_pDebugBuffer->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", m_pShaderResourceView.Get());
+	// m_pDebugBuffer->GetShader()->Render(0);
 
-	m_pDebugBuffer->GetShader()->Render(0);
-
+	m_pDebugBuffer->Render();
 	return S_OK;
 }
 

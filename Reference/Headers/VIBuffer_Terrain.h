@@ -18,7 +18,7 @@ public:
 public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint iPassIndex = 0) override;
 
 public:
 	HRESULT CreateBuffer(void** pVertices);

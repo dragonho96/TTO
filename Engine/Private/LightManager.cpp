@@ -28,6 +28,14 @@ HRESULT CLightManager::AddLight(ID3D11Device * pDevice, ID3D11DeviceContext * pD
 	return S_OK;
 }
 
+HRESULT CLightManager::Render_Lights()
+{
+	for (auto& pLight : m_Lights)
+		pLight->Render_Light();
+
+	return S_OK;
+}
+
 void CLightManager::Free()
 {
 	for (auto& pLight : m_Lights)

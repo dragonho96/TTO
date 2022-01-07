@@ -23,11 +23,17 @@ public:
 	HRESULT AddRenderGroup(RENDER eRenderID, class CGameObject* pRenderObject);
 	HRESULT DrawRenderGroup();
 private:
+	class CTargetManager*					m_pTargetManager = nullptr;
+	class CVIBuffer_Rect_Viewport*			m_pVIBuffer = nullptr;
+
+private:
 	list<class CGameObject*>			m_RenderGroups[RENDER_END];
 	typedef list<class CGameObject*>	RENDERGROUPS;
 private:
 	HRESULT RenderPriority();
 	HRESULT RenderNonAlpha();
+	HRESULT Render_LightAcc();
+	HRESULT Render_Blend();
 	HRESULT RenderAlpha();
 	HRESULT RenderUI();
 	HRESULT RenderText();

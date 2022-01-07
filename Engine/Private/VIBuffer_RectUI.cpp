@@ -104,7 +104,7 @@ HRESULT CVIBuffer_RectUI::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_RectUI::Render()
+HRESULT CVIBuffer_RectUI::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
@@ -126,7 +126,7 @@ HRESULT CVIBuffer_RectUI::Render()
 		m_pShader->Render(1);
 	}
 	else
-		m_pShader->Render();
+		m_pShader->Render(iPassIndex);
 
 
 	if (m_IBSubResourceData.pSysMem)

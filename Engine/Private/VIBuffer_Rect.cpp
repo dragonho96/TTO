@@ -103,10 +103,10 @@ HRESULT CVIBuffer_Rect::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Rect::Render()
+HRESULT CVIBuffer_Rect::Render(_uint iPassIndex)
 {
 	m_pShader->SetUp_ValueOnShader("vColor", &m_Color, sizeof(_float4));
-	__super::Render();
+	__super::Render(iPassIndex);
 	return S_OK;
 }
 

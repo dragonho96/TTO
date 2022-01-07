@@ -19,11 +19,9 @@ public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor);
 	HRESULT Clear();
 
-#ifdef _DEBUG
 public:
 	HRESULT Ready_DebugBuffer(_float fX, _float fY, _float fWidth, _float fHeight);
 	HRESULT Render_DebugBuffer();
-#endif
 private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;

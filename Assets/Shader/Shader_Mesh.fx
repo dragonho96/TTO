@@ -49,9 +49,13 @@ struct VS_IN
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
-    float fShade : COLOR0;
-    float fSpecular : COLOR1;
+
+    //float4 vPosition : SV_POSITION;
+    //float2 vTexUV : TEXCOORD0;
+    //float fShade : COLOR0;
+    //float fSpecular : COLOR1;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -65,9 +69,12 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
-    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+    
+    
+    //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    // Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
     return Out;
 }
 
@@ -87,13 +94,17 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 
    
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    // vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+
 
     Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
-    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
-    return Out;
 
+    // vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    // Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
+    return Out;
 }
 
 VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
@@ -111,10 +122,11 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
 
-    vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+    //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    //Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
 
     return Out;
 }
@@ -123,28 +135,56 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
-    float fShade : COLOR0;
-    float fSpecular : COLOR1;
+
+    //float4 vPosition : SV_POSITION;
+    //float2 vTexUV : TEXCOORD0;
+    //float fShade : COLOR0;
+    //float fSpecular : COLOR1;
 };
 
-vector PS_MAIN(PS_IN In) : SV_TARGET0
+struct PS_OUT
 {
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
+};
 
-    vector vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
-		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
-    vColor.a = vMtrlDiffuse.a;
+struct PS_OUT_BEHIND_WALL
+{
+    vector vDiffuse : SV_TARGET0;
+};
 
-    if (vColor.a <= 0)
-        discard;
-    return vColor;
+
+PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+
+	/* In.vNormal.xyz : -1 ~ 1 */ 
+	/* Out.vNormal.xyz : 0 ~ 1 */
+
+    Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
+
+    return Out;
+  //  vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+
+  //  vector vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
+		//(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
+  //  vColor.a = vMtrlDiffuse.a;
+
+  //  if (vColor.a <= 0)
+  //      discard;
+  //  return vColor;
 }
 
-vector PS_MAIN_WALL(PS_IN In) : SV_TARGET0
+PS_OUT_BEHIND_WALL PS_MAIN_WALL(PS_IN In)
 {
-    vector vColor = { 1, 1, 0, 1 };
-    return vColor;
+    PS_OUT_BEHIND_WALL Out = (PS_OUT_BEHIND_WALL) 0;
+
+    Out.vDiffuse = vector(1.f, 0.5f, 0.f, 1.f);
+    return Out;
 }
 
 

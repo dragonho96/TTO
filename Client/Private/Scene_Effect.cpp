@@ -38,6 +38,8 @@ HRESULT CScene_Effect::Initialize()
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
 	m_pEngine->DeserializeScene("../../Assets/Scenes/Effect.yaml");
 
+	if (FAILED(ReadyLayerLights("LAYER_LIGHT")))
+		return E_FAIL;
 
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
@@ -51,7 +53,7 @@ HRESULT CScene_Effect::Initialize()
 	// m_pTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 
 	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
-	m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
+	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
 
 
 	return S_OK;
@@ -79,6 +81,26 @@ _uint CScene_Effect::Update(_double TimeDelta)
 HRESULT CScene_Effect::Render()
 {
 	__super::Render();
+
+	return S_OK;
+}
+
+HRESULT CScene_Effect::ReadyLayerLights(string pLayerTag)
+{
+	CEngine*		pEngine = GET_INSTANCE(CEngine);
+
+	LIGHTDESC			LightDesc;
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }

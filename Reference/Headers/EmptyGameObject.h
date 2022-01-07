@@ -36,7 +36,7 @@ private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 private:
-	CRenderer::RENDER m_eRenderGroup = CRenderer::RENDER_PRIORITY;
+	CRenderer::RENDER m_eRenderGroup = CRenderer::RENDER_NONALPHA;
 };
 
 END

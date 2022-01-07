@@ -8,22 +8,6 @@ cbuffer Matrices
 	matrix		g_ProjMatrix;	
 }
 
-cbuffer LightDesc
-{
-    vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-    vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-    vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-    vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
-}
-
-cbuffer MaterialDesc
-{
-    vector g_vMtrlDiffuse;
-    vector g_vMtrlAmbient = vector(0.5f, 0.5f, 0.5f, 1.f);
-    vector g_vMtrlSpecular = vector(0.1f, 0.1f, 0.1f, 1.f);
-    float g_fPower = 30.f;
-}
-
 cbuffer EtcDesc
 {
     vector g_vBrushPos;
@@ -64,11 +48,16 @@ struct VS_IN
 
 struct VS_OUT
 {
-	float4	vPosition : SV_POSITION;
-    float fShade : COLOR0;
-    float fSpecular : COLOR1;
-	float2	vTexUV : TEXCOORD0;
+    float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
+    float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+
+	//float4	vPosition : SV_POSITION;
+ //   float fShade : COLOR0;
+ //   float fSpecular : COLOR1;
+	//float2	vTexUV : TEXCOORD0;
+ //   float4 vWorldPos : TEXCOORD1;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -85,16 +74,18 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexUV = In.vTexUV * 5.f;  // Tiling
 
 
+    //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    //Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
     vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-	// Out.fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
-    Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+    Out.vNormal = normalize(vWorldNormal.xyz);
 
     vector vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 
-    vector vLook = vWorldPos - g_vCamPosition;
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(vWorldNormal));
+    //vector vLook = vWorldPos - g_vCamPosition;
+    //vector vReflect = reflect(normalize(g_vLightDir), normalize(vWorldNormal));
 
-    Out.fSpecular = pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), g_fPower);
+    //Out.fSpecular = pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), g_fPower);
 
     Out.vWorldPos = vWorldPos;
 
@@ -108,32 +99,35 @@ VS_OUT VS_MAIN(VS_IN In)
 
 struct PS_IN
 {
-	float4	vPosition : SV_POSITION;
-    float fShade : COLOR0;
-    float fSpecular : COLOR1;
-	float2	vTexUV : TEXCOORD0;
+    float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
+    float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+
+	// float4	vPosition : SV_POSITION;
+    // float fShade : COLOR0;
+    // float fSpecular : COLOR1;
+	// float2	vTexUV : TEXCOORD0;
+    // float4 vWorldPos : TEXCOORD1;
 };
 
-vector	PS_MAIN(PS_IN In) : SV_TARGET
+struct PS_OUT
 {
-    vector vNormal = g_DiffuseSourTextureNormal.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
-    vector vWorldNormal = mul(vNormal, In.vWorldPos);
-    In.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
+};
 
-    vector vColor = (vector) 0;
+PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
 
-    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
-    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
+    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 20.f);
 	
 	
     vector vFilter = g_FilterTexture.Sample(g_FilterSampler, In.vTexUV);
 
     vector vMtrlDiffuse = vSourDiffuse * vFilter.r + vDestDiffuse * (1.f - vFilter.r);
-
-    vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
-		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
-    vColor.a = vMtrlDiffuse.a;
 
     if (g_vBrushPos.x - g_fRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fRange &&
 		g_vBrushPos.z - g_fRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fRange)
@@ -143,13 +137,50 @@ vector	PS_MAIN(PS_IN In) : SV_TARGET
 
         vector vBrush = g_BrushTexture.Sample(g_DiffuseSampler, vTexUV);
 
-        vColor += vBrush;
+        vMtrlDiffuse += vBrush;
     }
 
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb, 1.f);
+    Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
 
-
-    return vColor;
+    return Out;
 }
+
+//vector	PS_MAIN(PS_IN In) : SV_TARGET
+//{
+//    vector vNormal = g_DiffuseSourTextureNormal.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+//    vector vWorldNormal = mul(vNormal, In.vWorldPos);
+//    In.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
+//    vector vColor = (vector) 0;
+
+//    vector vSourDiffuse = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+//    vector vDestDiffuse = g_DiffuseDestTexture.Sample(g_DiffuseSampler, In.vTexUV * 10.f);
+	
+	
+//    vector vFilter = g_FilterTexture.Sample(g_FilterSampler, In.vTexUV);
+
+//    vector vMtrlDiffuse = vSourDiffuse * vFilter.r + vDestDiffuse * (1.f - vFilter.r);
+
+//    vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(In.fShade + (g_vLightAmbient * g_vMtrlAmbient)) +
+//		(g_vLightSpecular * g_vMtrlSpecular) * In.fSpecular;
+//    vColor.a = vMtrlDiffuse.a;
+
+//    if (g_vBrushPos.x - g_fRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fRange &&
+//		g_vBrushPos.z - g_fRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fRange)
+//    {
+//        float2 vTexUV = float2((In.vWorldPos.x - (g_vBrushPos.x - g_fRange)) / (2.f * g_fRange),
+//			((g_vBrushPos.z + g_fRange) - In.vWorldPos.z) / (2.f * g_fRange));
+
+//        vector vBrush = g_BrushTexture.Sample(g_DiffuseSampler, vTexUV);
+
+//        vColor += vBrush;
+//    }
+
+
+
+//    return vColor;
+//}
 
 technique11		DefaultDevice
 {

@@ -94,6 +94,9 @@ HRESULT CVIBuffer_Rect_Viewport::InitializePrototype(_float fX, _float fY, _floa
 
 	SafeDeleteArray(pIndices);
 
+	// m_pShader = make_shared<CShader>(m_shaderPath);
+	m_pShader = make_shared<CShader>("../../Assets/Shader/Shader_Rect_Viewport.fx");
+	// m_pShader = make_shared<CShader>("../Shaders/Shader_Rect_Viewport.fx");
 
 	return S_OK;
 }
@@ -105,7 +108,7 @@ HRESULT CVIBuffer_Rect_Viewport::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pShader = make_unique<CShader>(m_shaderPath);
+	// m_pShader = make_unique<CShader>(m_shaderPath);
 
 	return S_OK;
 }

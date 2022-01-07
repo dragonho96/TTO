@@ -15,7 +15,7 @@ public:
 	virtual HRESULT InitializePrototype();
 	virtual HRESULT Initialize(void* pArg);
 public:
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint iPassIndex = 0) override;
 public:
 	static CVIBuffer_RectUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CComponent* Clone(void* pArg) override;

@@ -142,7 +142,9 @@
     <ClInclude Include="..\Public\Effect_Impact.h">
       <Filter>02.GameObjects\Effect\Impact</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Effect_ImpactSmoke.h" />
+    <ClInclude Include="..\Public\Effect_ImpactSmoke.h">
+      <Filter>02.GameObjects\Effect\ImpactSmoke</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -271,7 +273,9 @@
     <ClCompile Include="..\Private\Effect_Impact.cpp">
       <Filter>02.GameObjects\Effect\Impact</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Effect_ImpactSmoke.cpp" />
+    <ClCompile Include="..\Private\Effect_ImpactSmoke.cpp">
+      <Filter>02.GameObjects\Effect\ImpactSmoke</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -463,6 +467,9 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\DebugLine.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Rect_Viewport.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

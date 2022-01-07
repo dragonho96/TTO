@@ -69,14 +69,14 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Terrain::Render()
+HRESULT CVIBuffer_Terrain::Render(_uint iPassIndex)
 {
 	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
 
 	//_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
 	//ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
 	//m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
-	__super::Render();
+	__super::Render(iPassIndex);
 
 	return S_OK;
 }

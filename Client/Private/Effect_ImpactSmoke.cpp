@@ -94,7 +94,8 @@ _uint CEffect_ImpactSmoke::LateUpdate(_double TimeDelta)
 
 	m_pVIBufferCom->Update(TimeDelta);
 
-	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
+	// return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
+	return -1;
 }
 
 HRESULT CEffect_ImpactSmoke::Render()
@@ -151,8 +152,8 @@ HRESULT CEffect_ImpactSmoke::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Renderer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
+	//if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
+	//	return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ImpactSmoke", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))

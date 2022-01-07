@@ -56,7 +56,7 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 
 
 
-HRESULT CVIBuffer::Render()
+HRESULT CVIBuffer::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
@@ -74,7 +74,7 @@ HRESULT CVIBuffer::Render()
 		m_pDeviceContext->IASetIndexBuffer(m_pIB.Get(), m_eIndexFormat, 0);
 	m_pDeviceContext->IASetPrimitiveTopology(m_ePrimitive);
 
-	m_pShader->Render();
+	m_pShader->Render(iPassIndex);
 
 	if (m_IBSubResourceData.pSysMem)
 		m_pDeviceContext->DrawIndexed(m_iNumPrimitive * m_iNumVerticesPerPrimitive, 0, 0);

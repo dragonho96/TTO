@@ -15,10 +15,12 @@ public:
 	}
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc);
+	HRESULT Render_Light();
 private:
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
-	LIGHTDESC				m_LightDesc;
+	ID3D11Device*					m_pDevice = nullptr;
+	ID3D11DeviceContext*			m_pDeviceContext = nullptr;
+	LIGHTDESC						m_LightDesc;
+	class CVIBuffer_Rect_Viewport*	m_pVIBuffer = nullptr;
 public:
 	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
 	virtual void Free() override;

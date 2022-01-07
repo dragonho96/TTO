@@ -296,6 +296,7 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_RectImage.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_RectInstance.fx" />
+    <FxCompile Include="..\..\Assets\Shader\Shader_Rect_Viewport.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Smoke.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>

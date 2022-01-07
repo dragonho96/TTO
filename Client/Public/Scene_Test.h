@@ -19,6 +19,7 @@ public:
 	virtual _uint Update(_double TimeDelta)  override;
 	virtual HRESULT Render() override;
 private:
+	HRESULT ReadyLayerLights(string pLayerTag);
 	HRESULT ReadyLayerCamera(string pLayerTag);
 	HRESULT ReadyLayerGrid(string pLayerTag);
 	HRESULT ReadyScript();
