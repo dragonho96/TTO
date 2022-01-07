@@ -12,11 +12,15 @@ public:
 	virtual ~CTargetManager() = default;
 
 public:
+	HRESULT Initialize(ID3D11DeviceContext * pDeviceContext);
+public:
 	HRESULT Add_RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, string pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor);
 	HRESULT Add_MRT(string pMRTTag, string pRenderTargetTag);
 
 	/* 내가 지정한 렌더타겟 그룹을 장치에 바인드해놓는다. */
 	HRESULT Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
+	HRESULT Set_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
+	HRESULT Clear_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
 
 	/* 원상태로 복구한다. */
 	HRESULT End_MRT(ID3D11DeviceContext* pDeviceContext);

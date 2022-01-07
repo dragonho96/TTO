@@ -60,8 +60,8 @@ HRESULT CToolManager::Initialize()
 
 	m_pEngine->DeserializeScene(strScene);
 
-	if (FAILED(ReadyRenderTargets()))
-		return E_FAIL;
+	//if (FAILED(ReadyRenderTargets()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -115,13 +115,12 @@ void CToolManager::Render()
 	if (g_Done)
 		return;
 
-	//m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
-	//m_pEngine->ClearDepthStencilView(1.f, 0);
+	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
+	m_pEngine->ClearDepthStencilView(1.f, 0);
 
-	m_pEngine->Begin_MRT(m_pDeviceContext, "MRT_EditorWindow");
 	m_pRenderer->DrawRenderGroup();
-	m_pEngine->Present();
-	m_pEngine->End_MRT(m_pDeviceContext);
+	//// m_pEngine->Present();
+	//m_pEngine->End_MRT(m_pDeviceContext);
 	//// IMGUI Rendering
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -187,6 +186,7 @@ HRESULT CToolManager::ReadyPrototypeComponent()
 	/* Prepare Renderer */
 	if (FAILED(m_pEngine->AddPrototype(0, "Prototype_Renderer", m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+	SafeAddRef(m_pRenderer);
 
 	return S_OK;
 }

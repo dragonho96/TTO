@@ -10,6 +10,13 @@ CTargetManager::CTargetManager()
 
 }
 
+HRESULT CTargetManager::Initialize(ID3D11DeviceContext * pDeviceContext)
+{
+	pDeviceContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
+
+	return S_OK;
+}
+
 HRESULT CTargetManager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, string pRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
 {
 	if (nullptr != Find_RenderTarget(pRenderTargetTag))
@@ -53,7 +60,7 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pM
 	if (nullptr == pMRTList)
 		return E_FAIL;
 
-	pDeviceContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
+	// pDeviceContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
 
 	ID3D11RenderTargetView*		pRenderTargets[8] = { nullptr };
 
@@ -66,25 +73,60 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pM
 		ID3D11RenderTargetView*		pRTV = pRenderTarget->Get_RenderTargetView();
 		pRenderTargets[iIndex++] = pRTV;
 	}
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
-		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	//	pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	pDeviceContext->OMSetRenderTargets(pMRTList->size(), pRenderTargets, m_pDepthStencilView);
 
 	return S_OK;
 }
 
-HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
+HRESULT CTargetManager::Set_MRT(ID3D11DeviceContext * pDeviceContext, string pMRTTag)
 {
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
-		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
 
-	pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+	// pDeviceContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
 
-	 SafeRelease(m_pBackBufferRTV);
-	 SafeRelease(m_pDepthStencilView);
+	ID3D11RenderTargetView*		pRenderTargets[8] = { nullptr };
+
+	_uint		iIndex = 0;
+
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		ID3D11RenderTargetView*		pRTV = pRenderTarget->Get_RenderTargetView();
+		pRenderTargets[iIndex++] = pRTV;
+	}
+
+	pDeviceContext->OMSetRenderTargets(pMRTList->size(), pRenderTargets, m_pDepthStencilView);
+
 	return S_OK;
 }
+
+HRESULT CTargetManager::Clear_MRT(ID3D11DeviceContext * pDeviceContext, string pMRTTag)
+{
+	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	for (auto& pRenderTarget : *pMRTList)
+		pRenderTarget->Clear();
+	return S_OK;
+}
+
+HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
+{
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	
+	pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+
+	 //SafeRelease(m_pBackBufferRTV);
+	 //SafeRelease(m_pDepthStencilView);
+	return S_OK;
+}
+
 
 #ifdef _DEBUG
 HRESULT CTargetManager::Ready_DebugBuffer(string pTargetTag, _float fX, _float fY, _float fWidth, _float fHeight)
@@ -138,6 +180,9 @@ list<class CRenderTarget*>* CTargetManager::Find_MRT(string pMRTTag)
 
 void CTargetManager::Free()
 {
+	SafeRelease(m_pBackBufferRTV);
+	SafeRelease(m_pDepthStencilView);
+
 	for (auto& Pair : m_MRTs)
 	{
 		for (auto& pRenderTarget : Pair.second)

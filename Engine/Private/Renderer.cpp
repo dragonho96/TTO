@@ -4,6 +4,7 @@
 #include "TargetManager.h"
 #include "LightManager.h"
 #include "VIBuffer_Rect_Viewport.h"
+#include "Engine.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -51,6 +52,17 @@ HRESULT CRenderer::InitializePrototype()
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_LightAcc", "Target_Shade")))
 		return E_FAIL;
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_EditorWindow", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+			return E_FAIL;
+		if (FAILED(m_pTargetManager->Add_MRT("MRT_EditorWindow", "Target_EditorWindow")))
+			return E_FAIL;
+	}
+
+
+
+
 	m_pVIBuffer = CVIBuffer_Rect_Viewport::Create(m_pDevice, m_pDeviceContext, 0.f, 0.f, ViewportDesc.Width, ViewportDesc.Height, "../../Assets/Shader/Shader_Rect_Viewport.fx");
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
@@ -91,6 +103,38 @@ HRESULT CRenderer::AddRenderGroup(RENDER eRenderID, CGameObject * pRenderObject)
 
 HRESULT CRenderer::DrawRenderGroup()
 {
+	m_pTargetManager->Initialize(m_pDeviceContext);
+
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		m_pTargetManager->Clear_MRT(m_pDeviceContext, "MRT_EditorWindow");
+		m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow");
+	}
+
+	//if (FAILED(m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_Deferred")))
+	//	return E_FAIL;
+
+	//for (auto& pGameObject : m_RenderGroups[RENDER_NONALPHA])
+	//{
+	//	if (nullptr != pGameObject)
+	//	{
+	//		if (FAILED(pGameObject->Render()))
+	//			return E_FAIL;
+
+	//		SafeRelease(pGameObject);
+	//	}
+	//}
+	//m_RenderGroups[RENDER_NONALPHA].clear();
+
+	//if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+	//	return E_FAIL;
+
+
+
+
 	if (FAILED(RenderPriority()))
 		return E_FAIL;
 
@@ -112,12 +156,19 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(RenderText()))
 		return E_FAIL;
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
+			return E_FAIL;
+		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
+			return E_FAIL;
+	}
 
-	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
-		return E_FAIL;
-
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -159,9 +210,17 @@ HRESULT CRenderer::RenderNonAlpha()
 	}
 	m_RenderGroups[RENDER_NONALPHA].clear();
 
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+			return E_FAIL;
+	}
 
-	if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -177,7 +236,17 @@ HRESULT CRenderer::Render_LightAcc()
 
 	pLights->Render_Lights();
 
-	m_pTargetManager->End_MRT(m_pDeviceContext);
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+			return E_FAIL;
+	}
+	// m_pTargetManager->End_MRT(m_pDeviceContext);
 
 	RELEASE_INSTANCE(CLightManager);
 

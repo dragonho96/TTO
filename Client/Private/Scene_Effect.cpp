@@ -141,7 +141,7 @@ HRESULT CScene_Effect::ReadyLayerEffect(string pLayerTag)
 
 HRESULT CScene_Effect::ReadyScript()
 {
-	// m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
+	m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
 
 	// m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 	return S_OK;

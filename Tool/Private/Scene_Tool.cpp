@@ -44,6 +44,7 @@ HRESULT CScene_Tool::Initialize()
 	if (FAILED(Ready_Layer_Camera("LAYER_TOOL")))
 		return E_FAIL;
 
+	ReadyLayerLights("LAYER_LIGHTS");
 	return S_OK;
 }
 
@@ -132,7 +133,25 @@ HRESULT CScene_Tool::Ready_Layer_Camera(string pLayerTag)
 
 	return S_OK;
 }
+HRESULT CScene_Tool::ReadyLayerLights(string pLayerTag)
+{
+	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
+	LIGHTDESC			LightDesc;
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CEngine);
+
+	return S_OK;
+}
 
 
 CScene_Tool * CScene_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iLevelIndex)
