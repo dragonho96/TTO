@@ -13,18 +13,12 @@ END
 
 BEGIN(Client)
 
-class CEffect_ImpactSmoke final : public CGameObject
+class CEffect_Explosion final : public CGameObject
 {
 public:
-	typedef struct _tagInstanceForce
-	{
-		_vector vForceDir;
-		_float	fForcePower;
-	}INSTNACEFORCE;
-public:
-	explicit CEffect_ImpactSmoke(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CEffect_ImpactSmoke(const CEffect_ImpactSmoke& rhs);
-	virtual ~CEffect_ImpactSmoke() = default;
+	explicit CEffect_Explosion(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CEffect_Explosion(const CEffect_Explosion& rhs);
+	virtual ~CEffect_Explosion() = default;
 public:
 	virtual HRESULT InitializePrototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -33,32 +27,25 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-
-public:
-	void Play(_vector vPos, _vector vNormalDir);
-	void Reset(_vector vPos, _vector vNormalDir);
-
-
+	void Play(_vector vPos);
+	void Reset(_vector vPos);
 private:
 	CTexture*					m_pTextureCom = nullptr;
 	CTexture*					m_pTextureGreyCom = nullptr;
 	CRenderer*					m_pRendererCom = nullptr;
 	CTransform*					m_pTransformCom = nullptr;
 	CVIBuffer_RectInstance*		m_pVIBufferCom = nullptr;
-	vector<INSTNACEFORCE>		m_InstanceForce;
-	_vector						m_vNormalDir;
 
 	CShader*					m_pShader = nullptr;
 private:
 	_float						m_fFrame = 0.f;
-private:
 	_bool						m_bPlaying = false;
 
 private:
 	HRESULT SetUp_Components();
 
 public:
-	static CEffect_ImpactSmoke* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	static CEffect_Explosion* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

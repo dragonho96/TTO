@@ -54,9 +54,11 @@ public:
 	}
 
 	void SetLook(_fvector vLook);
+	void SetScale(_float3 vScale);
 
 	const _float4x4 GetMatrix() { return m_WorldMatrix; }
 	void SetMatrix(const _float4x4 _matrix) { m_WorldMatrix = _matrix; }
+	void SetMatrix(const _matrix _matrix) { XMStoreFloat4x4(&m_WorldMatrix, _matrix); }
 
 	void SetPxMatrix(PxMat44 mat);
 	void SetPxPosition(PxExtendedVec3 vec3);

@@ -20,10 +20,16 @@ public:
 private:
 	HRESULT SetUp_Components();
 
+public:
+	_float GetAngle() { return angle; }
+
 private:
 	CTransform* m_pPlayerTransform = nullptr;
 	CTransform* m_pTargetTransform = nullptr;
 	_vector		m_pTargetLook = { 0, 0, 1};
+
+	_float		angle = 0.f;
+	_float		targetAngle = 0.f;
 public:
 	static CCamera_Follow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CGameObject* Clone(void* pArg) override;

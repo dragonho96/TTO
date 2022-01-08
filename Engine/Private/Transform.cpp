@@ -20,15 +20,34 @@ _float CTransform::GetScale(STATE eState)
 	return XMVectorGetX(XMVector3Length(GetState(eState)));	
 }
 
-void CTransform::SetLook(_fvector vLook)
+void CTransform::SetLook(_fvector vDirection)
 {
-	SetState(CTransform::STATE_LOOK, XMVector3Normalize(vLook));
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vUp = GetState(CTransform::STATE_UP);
 
-	_vector	vRight = XMVector3Cross(_vector{ 0.f, 1.f, 0.f, 0.f }, vLook);
-	SetState(CTransform::STATE_RIGHT, XMVector3Normalize(vRight));
+	_vector		vRight = XMVector3Cross(vUp, vDirection);
 
-	_vector	vUp = XMVector3Cross(vLook, vRight);
-	SetState(CTransform::STATE_UP, XMVector3Normalize(vUp));
+	vRight = XMVector3Normalize(vRight) * GetScale(CTransform::STATE_RIGHT);
+	_vector		vLook = XMVector3Cross(vRight, vUp);
+	vLook = XMVector3Normalize(vLook) * GetScale(CTransform::STATE_LOOK);
+
+	SetState(CTransform::STATE_RIGHT, vRight);
+	SetState(CTransform::STATE_LOOK, vLook);
+}
+
+void CTransform::SetScale(_float3 vScale)
+{
+	// SetMatrix( XMMatrixScaling(vScale.x, vScale.y, vScale.z) * XMLoadFloat4x4(&m_WorldMatrix));
+	m_WorldMatrix;
+	SetMatrix(XMMatrixMultiply(XMLoadFloat4x4(&m_WorldMatrix), XMMatrixScaling(vScale.x, vScale.y, vScale.z)));
+	m_WorldMatrix;
+	//_float4x4 mat;
+	//memcpy(&mat, &XMMatrixIdentity(), sizeof(_float4x4));
+	//mat._11 = vScale.x;
+	//mat._22 = vScale.y;
+	//mat._33 = vScale.z;
+	//_matrix newMat = XMLoadFloat4x4(&mat) * XMLoadFloat4x4(&m_WorldMatrix);
+	//SetMatrix(newMat);
 }
 
 void CTransform::SetPxMatrix(PxMat44 mat)

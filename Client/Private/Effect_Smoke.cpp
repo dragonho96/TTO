@@ -46,7 +46,8 @@ _uint CEffect_Smoke::Update(_double TimeDelta)
 		if (vtx->iStartFrame >= 64)
 		{
 			vtx->iStartFrame = 0.f;
-			vtx->vPosition = XMFLOAT4(1, 2, 1 + (count * 0.5f), 1);
+			// vtx->vPosition = XMFLOAT4(1, 2, 1 + (count * 0.5f), 1);
+			vtx->vPosition = XMFLOAT4(0, 0,-0.1f, 1);
 		}
 		count++;
 		//_vector position = XMLoadFloat4(&vtx->vPosition);

@@ -23,6 +23,17 @@ private:
 	CAMERA				m_eCurCamera = CAMERA::FOLLOW;
 	CVIBuffer_RectUI*	m_pSceneMask = nullptr;
 	_float				m_fMastAlpha = 0.f;
+
+public:
+	void PlayMuzzleEffect();
+	void PlayImpactSmokeEffect(_vector vPos, _vector vNormal);
+	void PlayImpactEffect(_vector vPos);
+	void PlayExplosion(_vector vPos);
+private:
+	class CEffect_Muzzle* m_pMuzzleEffect = nullptr;
+	class CEffect_ImpactSmoke* m_pImpactSmokeEffect = nullptr;
+	class CEffect_Impact* m_pImpactEffect = nullptr;
+	class CEffect_Explosion* m_pExplosion = nullptr;
 public:
 	virtual void Free() override;
 };

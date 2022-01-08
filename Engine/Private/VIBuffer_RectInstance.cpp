@@ -222,7 +222,7 @@ HRESULT CVIBuffer_RectInstance::Render(_uint iPassIndex)
 	//m_pDeviceContext->IASetInputLayout(m_EffectDescs[iPassIndex].pLayout);
 	//if (FAILED(m_EffectDescs[iPassIndex].pPass->Apply(0, m_pDeviceContext)))
 	//	return E_FAIL;
-	m_pShader->Render();
+	m_pShader->Render(iPassIndex);
 
 	/* 0 : 인스턴스하나당 인덱스버퍼의 인덱슬르 몇개 활용하여 그리는지? */
 	m_pDeviceContext->DrawIndexedInstanced(6, m_iNumInstance, 0, 0, 0);

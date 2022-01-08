@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "..\public\Effect_Fire.h"
+#include "..\public\Effect_Explosion.h"
 
-CEffect_Fire::CEffect_Fire(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CEffect_Explosion::CEffect_Explosion(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
 }
 
-CEffect_Fire::CEffect_Fire(const CEffect_Fire & rhs)
+CEffect_Explosion::CEffect_Explosion(const CEffect_Explosion & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CEffect_Fire::InitializePrototype()
+HRESULT CEffect_Explosion::InitializePrototype()
 {
 	if (FAILED(__super::InitializePrototype()))
 		return E_FAIL;
@@ -19,7 +19,7 @@ HRESULT CEffect_Fire::InitializePrototype()
 	return S_OK;
 }
 
-HRESULT CEffect_Fire::Initialize(void * pArg)
+HRESULT CEffect_Explosion::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -31,8 +31,11 @@ HRESULT CEffect_Fire::Initialize(void * pArg)
 	return S_OK;
 }
 
-_uint CEffect_Fire::Update(_double TimeDelta)
+_uint CEffect_Explosion::Update(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (0 > __super::Update(TimeDelta))
 		return -1;
 
@@ -53,21 +56,36 @@ _uint CEffect_Fire::Update(_double TimeDelta)
 		// 역행렬 만들기.
 		_matrix matBill = XMLoadFloat4x4(&f44Bill);
 		matBill = XMMatrixInverse(nullptr, matBill);
-
-		memcpy(&instanceMatrices[i]->vRight, &(matBill.r[0] * 5.f), sizeof(_float4));
-		memcpy(&instanceMatrices[i]->vUp, &(matBill.r[1] * 5.f), sizeof(_float4));
+		_float fSize = 10.f;
+		memcpy(&instanceMatrices[i]->vRight, &(matBill.r[0] * fSize), sizeof(_float4));
+		memcpy(&instanceMatrices[i]->vUp, &(matBill.r[1] * fSize), sizeof(_float4));
 		memcpy(&instanceMatrices[i]->vLook, &matBill.r[2], sizeof(_float4));
 
-		instanceMatrices[i]->iStartFrame += 36 * TimeDelta;
-		if (instanceMatrices[i]->iStartFrame >= 36)
-			instanceMatrices[i]->iStartFrame = 0.f;
+		//_vector pos = XMLoadFloat4(&instanceMatrices[i]->vPosition);
+		//_vector moveDistance = m_InstanceForce[i].vForceDir * m_InstanceForce[i].fForcePower * TimeDelta;
+		//_vector gravity = _vector{ 0, 0.f, 0, 0 } *TimeDelta;
+		//pos += moveDistance;
+		//pos += gravity;
+		//memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
+
+		instanceMatrices[i]->iStartFrame += 64 * TimeDelta;
+		if (instanceMatrices[i]->iStartFrame >= 64)
+			m_bPlaying = false;
+			// instanceMatrices[i]->iStartFrame = 0.f;
 	}
+
+	//m_fFrame += 36.0f * TimeDelta;
+	//if (m_fFrame >= 36)
+	//	m_fFrame = 0.f;
 
 	return _uint();
 }
 
-_uint CEffect_Fire::LateUpdate(_double TimeDelta)
+_uint CEffect_Explosion::LateUpdate(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (nullptr == m_pRendererCom)
 		return -1;
 
@@ -79,8 +97,10 @@ _uint CEffect_Fire::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Fire::Render()
+HRESULT CEffect_Explosion::Render()
 {
+	if (!m_bPlaying)
+		return S_OK;
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
@@ -93,9 +113,7 @@ HRESULT CEffect_Fire::Render()
 	_uint	iFrame = (_uint)m_fFrame;
 	m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("i_indexUV", &iFrame, sizeof(_uint));
 
-	if (FAILED(m_pVIBufferCom->GetShader()->SetUp_TextureOnShader("g_FireColorTexture", m_pTextureCom)))
-		return E_FAIL;
-	if (FAILED(m_pVIBufferCom->GetShader()->SetUp_TextureOnShader("g_FireGreyTexture", m_pTextureGreyCom)))
+	if (FAILED(m_pVIBufferCom->GetShader()->SetUp_TextureOnShader("g_Texture", m_pTextureCom)))
 		return E_FAIL;
 
 	if (FAILED(__super::Render()))
@@ -108,7 +126,25 @@ HRESULT CEffect_Fire::Render()
 	return S_OK;
 }
 
-HRESULT CEffect_Fire::SetUp_Components()
+void CEffect_Explosion::Play(_vector vPos)
+{
+	m_bPlaying = true;
+	Reset(vPos);
+}
+
+void CEffect_Explosion::Reset(_vector vPos)
+{
+	vector<VTXMATRIX*> instanceMatrices = m_pVIBufferCom->GetInstanceMatrices();
+	for (int i = 0; i < instanceMatrices.size(); ++i)
+	{
+		_vector pos = { 0, 0, 0, 1 };
+		// memcpy(&instanceMatrices[i]->vPosition, &XMVectorSetW(vPos, 1.f), sizeof(_vector));
+		memcpy(&instanceMatrices[i]->vPosition, &XMVectorSetW(vPos, 1.f),  sizeof(_vector));
+		instanceMatrices[i]->iStartFrame = 0;
+	}
+}
+
+HRESULT CEffect_Explosion::SetUp_Components()
 {
 	/* For.Com_Transform */
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Transform", "Com_Transform", (CComponent**)&m_pTransformCom)))
@@ -119,42 +155,42 @@ HRESULT CEffect_Fire::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Fire", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ImpactSmoke", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Textures/Effects/Fire/T_Fire_Tiled_D.tga");
-	m_pTextureGreyCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Textures/Effects/Fire/T_Fire_SubUV.tga");
+	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Textures/Effects/Explosion/Fireballs1_2K.tga");
+	// m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_TGA, "../../Assets/Textures/Effects/Explosion/Smoke1c_2k.tga");
 
 	return S_OK;
 }
 
-CEffect_Fire * CEffect_Fire::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CEffect_Explosion * CEffect_Explosion::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CEffect_Fire*		pInstance = new CEffect_Fire(pDevice, pDeviceContext);
+	CEffect_Explosion*		pInstance = new CEffect_Explosion(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->InitializePrototype()))
 	{
-		MSG_BOX("Failed to Creating CEffect_Fire");
+		MSG_BOX("Failed to Creating CEffect_Explosion");
 		SafeRelease(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CEffect_Fire::Clone(void * pArg)
+CGameObject * CEffect_Explosion::Clone(void * pArg)
 {
-	CEffect_Fire*		pInstance = new CEffect_Fire(*this);
+	CEffect_Explosion*		pInstance = new CEffect_Explosion(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Creating CEffect_Fire");
+		MSG_BOX("Failed to Creating CEffect_Explosion");
 		SafeRelease(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CEffect_Fire::Free()
+void CEffect_Explosion::Free()
 {
 	__super::Free();
 

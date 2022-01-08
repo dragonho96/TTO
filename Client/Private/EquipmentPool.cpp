@@ -7,7 +7,7 @@ IMPLEMENT_SINGLETON(CEquipmentPool)
 CEquipmentPool::CEquipmentPool()
 {
 	SetUpEquipmentPool();
-	// SetUpModel();
+	SetUpModel();
 }
 
 void CEquipmentPool::Free()
@@ -46,42 +46,42 @@ void CEquipmentPool::SetUpModel()
 	// Primary Weapon
 	CGameObject* pGameObject = CEngine::GetInstance()->SpawnPrefab("AKM");
 	AssignModel(EQUIPMENT::PRIMARY, 0, pGameObject);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("M4A1");
-	AssignModel(EQUIPMENT::PRIMARY, 1, pGameObject);
-	pGameObject->SetActive(false);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("M24");
-	AssignModel(EQUIPMENT::PRIMARY, 2, pGameObject);
-	pGameObject->SetActive(false);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("M4A1");
+	//AssignModel(EQUIPMENT::PRIMARY, 1, pGameObject);
+	//pGameObject->SetActive(false);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("M24");
+	//AssignModel(EQUIPMENT::PRIMARY, 2, pGameObject);
+	//pGameObject->SetActive(false);
 
-	// Secondary Weapon
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("M9");
-	AssignModel(EQUIPMENT::SECONDARY, 0, pGameObject);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("M1911");
-	AssignModel(EQUIPMENT::SECONDARY, 1, pGameObject);
-	pGameObject->SetActive(false);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("G18");
-	AssignModel(EQUIPMENT::SECONDARY, 2, pGameObject);
-	pGameObject->SetActive(false);
+	//// Secondary Weapon
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("M9");
+	//AssignModel(EQUIPMENT::SECONDARY, 0, pGameObject);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("M1911");
+	//AssignModel(EQUIPMENT::SECONDARY, 1, pGameObject);
+	//pGameObject->SetActive(false);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("G18");
+	//AssignModel(EQUIPMENT::SECONDARY, 2, pGameObject);
+	//pGameObject->SetActive(false);
 
-	// Grenade
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("SmokeShell");
-	AssignModel(EQUIPMENT::GRENADE, 0, pGameObject);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("Frag");
-	AssignModel(EQUIPMENT::GRENADE, 1, pGameObject);
-	pGameObject->SetActive(false); 
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("Stun");
-	AssignModel(EQUIPMENT::GRENADE, 2, pGameObject);
-	pGameObject->SetActive(false);
+	//// Grenade
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("SmokeShell");
+	//AssignModel(EQUIPMENT::GRENADE, 0, pGameObject);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("Frag");
+	//AssignModel(EQUIPMENT::GRENADE, 1, pGameObject);
+	//pGameObject->SetActive(false); 
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("Stun");
+	//AssignModel(EQUIPMENT::GRENADE, 2, pGameObject);
+	//pGameObject->SetActive(false);
 
-	// Tool
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("MedKit");
-	AssignModel(EQUIPMENT::TOOL, 0, pGameObject);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("Claymore");
-	AssignModel(EQUIPMENT::TOOL, 1, pGameObject);
-	pGameObject->SetActive(false);
-	pGameObject = CEngine::GetInstance()->SpawnPrefab("WireCutter");
-	AssignModel(EQUIPMENT::TOOL, 2, pGameObject);
-	pGameObject->SetActive(false);
+	//// Tool
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("MedKit");
+	//AssignModel(EQUIPMENT::TOOL, 0, pGameObject);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("Claymore");
+	//AssignModel(EQUIPMENT::TOOL, 1, pGameObject);
+	//pGameObject->SetActive(false);
+	//pGameObject = CEngine::GetInstance()->SpawnPrefab("WireCutter");
+	//AssignModel(EQUIPMENT::TOOL, 2, pGameObject);
+	//pGameObject->SetActive(false);
 }
 
 BASEEQUIPDESC * CEquipmentPool::GetEquipment(EQUIPMENT eType, _uint iIndex)

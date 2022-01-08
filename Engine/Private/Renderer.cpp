@@ -77,6 +77,8 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 #endif // _DEBUG
 
+	m_pTargetManager->Initialize(m_pDeviceContext);
+
 	return S_OK;
 }
 
@@ -84,6 +86,7 @@ HRESULT CRenderer::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -103,37 +106,13 @@ HRESULT CRenderer::AddRenderGroup(RENDER eRenderID, CGameObject * pRenderObject)
 
 HRESULT CRenderer::DrawRenderGroup()
 {
-	m_pTargetManager->Initialize(m_pDeviceContext);
+	//m_pTargetManager->Initialize(m_pDeviceContext);
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
 	{
 		m_pTargetManager->Clear_MRT(m_pDeviceContext, "MRT_EditorWindow");
 		m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow");
 	}
-
-	//if (FAILED(m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_Deferred")))
-	//	return E_FAIL;
-
-	//for (auto& pGameObject : m_RenderGroups[RENDER_NONALPHA])
-	//{
-	//	if (nullptr != pGameObject)
-	//	{
-	//		if (FAILED(pGameObject->Render()))
-	//			return E_FAIL;
-
-	//		SafeRelease(pGameObject);
-	//	}
-	//}
-	//m_RenderGroups[RENDER_NONALPHA].clear();
-
-	//if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
-	//	return E_FAIL;
-
-
-
 
 	if (FAILED(RenderPriority()))
 		return E_FAIL;
@@ -279,6 +258,7 @@ HRESULT CRenderer::RenderAlpha()
 	{
 		if (nullptr != pGameObject)
 		{
+
 			if (FAILED(pGameObject->Render()))
 				return E_FAIL;
 

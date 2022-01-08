@@ -47,8 +47,7 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 	// Q || E 누르면 m_pTargetLook을 회전시긴다
 	if (GetActiveWindow() == g_hWnd && m_bRolling)
 	{
-		static float angle = 0.f;
-		static float targetAngle = 0.f;
+
 		float speed = 8.f;
 		if (m_pEngine->IsKeyPressed('Q'))
 			targetAngle -= XMConvertToRadians(45.f) * TimeDelta * speed;

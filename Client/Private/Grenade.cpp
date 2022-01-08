@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Grenade.h"
 #include "Enemy.h"
-
+#include "GameManager.h"
 
 USING(Client)
 CGrenade::CGrenade(CGameObject * pObj)
@@ -132,7 +132,8 @@ void CGrenade::Explode()
 			}
 		}
 	}
-
+	CGameManager::GetInstance()->PlayImpactEffect(vecPosition);
+	CGameManager::GetInstance()->PlayExplosion(vecPosition);
 	CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
 	SetDead();
 }

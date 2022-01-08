@@ -4,6 +4,10 @@
 #include "Engine.h"
 #include "Terrain.h"
 #include "Effect_Trajectory.h"
+#include "Effect_Muzzle.h"
+#include "Effect_Impact.h"
+#include "Effect_ImpactSmoke.h"
+#include "Effect_Explosion.h"
 
 #include "Camera_Fly.h"
 
@@ -52,9 +56,12 @@ HRESULT CScene_Effect::Initialize()
 
 	// m_pTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 
-	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
-	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
-
+	//CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Fire", "Fire");
+	//CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Smoke", "Smoke");
+	m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion");
+	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Muzzle", "Muzzle");
+	CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
+	//m_pEffect= CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
 
 	return S_OK;
 }
@@ -63,17 +70,8 @@ _uint CScene_Effect::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
 
-	// Setup Point values
-
-	//list<_vector> points;
-	//for (int i = 0; i < 10; ++i)
-	//	points.emplace_back(_vector{i * 0.5f, 0, 0, 0});
-	//dynamic_cast<CEffect_Trajectory*>(m_pTrajectory)->SetPoints(points);
-
-
-
-
-
+	if (m_pEngine->IsMouseDown(0))
+		dynamic_cast<CEffect_Explosion*>(m_pEffect)->Play(_vector{ 1, 1, 0 });
 
 	return _uint();
 }
@@ -128,11 +126,11 @@ HRESULT CScene_Effect::ReadyLayerEffect(string pLayerTag)
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Effect_Fire", pLayerTag))
-	//	return E_FAIL;
-
-	if (nullptr == pEngine->AddGameObject(0, "GameObject_Effect_Smoke", pLayerTag))
+	if (nullptr == pEngine->AddGameObject(0, "GameObject_Effect_Fire", pLayerTag))
 		return E_FAIL;
+
+	//if (nullptr == pEngine->AddGameObject(0, "GameObject_Effect_Smoke", pLayerTag))
+	//	return E_FAIL;
 
 	RELEASE_INSTANCE(CEngine);
 

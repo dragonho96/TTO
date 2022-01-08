@@ -512,7 +512,6 @@ ID3D11ShaderResourceView * CEngine::GetShaderResourceView(string pTargetTag)
 }
 
 
-
 _matrix CEngine::GetTransform(CPipeline::TYPE eType)
 {
 	if (nullptr == m_pPipeline)

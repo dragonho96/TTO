@@ -261,6 +261,9 @@ HRESULT CModel::Bind_Buffers()
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
+	if (m_pMeshFileName.length() == 0 || m_pMeshFileName.length() == 0)
+		return S_OK;
+
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
@@ -290,6 +293,9 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 
 	if (m_Animations.size() <= 0 && iPassIndex == 3)
 		return E_FAIL;
+
+	if (m_pMeshFileName.length() == 0 || m_pMeshFileName.length() == 0)
+		return S_OK;
 
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)

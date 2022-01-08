@@ -33,7 +33,8 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Reset();
+	void Play(_vector vPos);
+	void Reset(_vector vPos);
 
 private:
 	CTexture*					m_pTextureCom = nullptr;
@@ -47,7 +48,7 @@ private:
 	CShader*					m_pShader = nullptr;
 private:
 	_float						m_fFrame = 0.f;
-
+	_bool						m_bPlaying = false;
 private:
 	HRESULT SetUp_Components();
 

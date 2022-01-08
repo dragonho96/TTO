@@ -145,6 +145,12 @@
     <ClInclude Include="..\Public\Effect_ImpactSmoke.h">
       <Filter>02.GameObjects\Effect\ImpactSmoke</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Explosion.h">
+      <Filter>02.GameObjects\Effect\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Muzzle.h">
+      <Filter>02.GameObjects\Effect\Muzzle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -275,6 +281,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_ImpactSmoke.cpp">
       <Filter>02.GameObjects\Effect\ImpactSmoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Explosion.cpp">
+      <Filter>02.GameObjects\Effect\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Muzzle.cpp">
+      <Filter>02.GameObjects\Effect\Muzzle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,6 +435,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\ImpactSmoke">
       <UniqueIdentifier>{4f825c52-049b-4eb9-88d6-a8702093c089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Explosion">
+      <UniqueIdentifier>{f7c9feb2-091c-46dd-9c03-ca28815f33a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Muzzle">
+      <UniqueIdentifier>{fb583a28-8aad-44b5-b78a-0c927a02976c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

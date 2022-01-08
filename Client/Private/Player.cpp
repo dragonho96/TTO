@@ -198,6 +198,12 @@ void CPlayer::Update(_double deltaTime)
 
 					if (CEngine::GetInstance()->IsMouseDown(0))
 					{
+						CGameManager::GetInstance()->PlayMuzzleEffect();
+
+						_vector impactPos = { hitPos.x, hitPos.y, hitPos.z };
+						_vector impactNormal = { hitNormal.x, hitNormal.y, hitNormal.z };
+						CGameManager::GetInstance()->PlayImpactSmokeEffect(impactPos, impactNormal);
+
 						ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
 						ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
 						string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
@@ -207,6 +213,7 @@ void CPlayer::Update(_double deltaTime)
 						IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
 						if (dynamic_cast<CEnemy*>(hitObject))
 							dynamic_cast<CEnemy*>(hitObject)->GetDamage(m_pTransform->GetState(CTransform::STATE_POSITION));
+
 					}
 
 					m_cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };

@@ -39,6 +39,9 @@ HRESULT CEffect_ImpactSmoke::Initialize(void * pArg)
 
 _uint CEffect_ImpactSmoke::Update(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (0 > __super::Update(TimeDelta))
 		return -1;
 
@@ -59,10 +62,10 @@ _uint CEffect_ImpactSmoke::Update(_double TimeDelta)
 		// 역행렬 만들기.
 		_matrix matBill = XMLoadFloat4x4(&f44Bill);
 		matBill = XMMatrixInverse(nullptr, matBill);
-
-		memcpy(&instanceMatrices[i]->vRight, &matBill.r[0], sizeof(_float4));
-		memcpy(&instanceMatrices[i]->vUp, &matBill.r[1], sizeof(_float4));
-		memcpy(&instanceMatrices[i]->vLook, &matBill.r[2], sizeof(_float4));
+		_float fSize = 2.f;
+		memcpy(&instanceMatrices[i]->vRight, &(matBill.r[0] * fSize), sizeof(_float4));
+		memcpy(&instanceMatrices[i]->vUp, &(matBill.r[1] * fSize), sizeof(_float4));
+		memcpy(&instanceMatrices[i]->vLook, &(matBill.r[2] * fSize), sizeof(_float4));
 
 		_vector pos = XMLoadFloat4(&instanceMatrices[i]->vPosition);
 		_vector moveDistance = m_InstanceForce[i].vForceDir * m_InstanceForce[i].fForcePower * TimeDelta;
@@ -71,35 +74,48 @@ _uint CEffect_ImpactSmoke::Update(_double TimeDelta)
 		pos += gravity;
 		memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
 
-		instanceMatrices[i]->iStartFrame += 100.f * TimeDelta;
+
+		ADDLOG(("pos: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
+
+
+
+		instanceMatrices[i]->iStartFrame += 20.f * TimeDelta;
 		if (instanceMatrices[i]->iStartFrame >= 64)
-			Reset();
+			m_bPlaying = false;
 
 		m_InstanceForce[i].fForcePower -= 2 * TimeDelta;
 		if (m_InstanceForce[i].fForcePower < 0.f)
-			Reset();
+			m_bPlaying = false;
 
 	}
+
+	m_pVIBufferCom->Update(TimeDelta);
+
 
 	return _uint();
 }
 
 _uint CEffect_ImpactSmoke::LateUpdate(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (nullptr == m_pRendererCom)
 		return -1;
 
 	if (0 > __super::LateUpdate(TimeDelta))
 		return -1;
 
-	m_pVIBufferCom->Update(TimeDelta);
+	//m_pVIBufferCom->Update(TimeDelta);
 
-	// return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
-	return -1;
+	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
 HRESULT CEffect_ImpactSmoke::Render()
 {
+	if (!m_bPlaying)
+		return S_OK;
+
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
@@ -119,24 +135,30 @@ HRESULT CEffect_ImpactSmoke::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render(0);
+	m_pVIBufferCom->Render(1);
 
 	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
 }
 
-void CEffect_ImpactSmoke::Reset()
+void CEffect_ImpactSmoke::Play(_vector vPos, _vector vNormalDir)
 {
-	m_pTransformCom->SetLook(m_vNormalDir);
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vector{ 0, 0, 0, 1 });
+	m_bPlaying = true;
+	Reset(vPos, vNormalDir);
+}
+
+void CEffect_ImpactSmoke::Reset(_vector vPos, _vector vNormalDir)
+{
+	//m_pTransformCom->SetLook(vNormalDir);
+	//m_pTransformCom->SetState(CTransform::STATE_POSITION, _vector{ 0, 0, 0, 1 });
 	// m_pTransformCom->SetState(CTransform::STATE_LOOK, m_vNormalDir);
 
 	vector<VTXMATRIX*> instanceMatrices = m_pVIBufferCom->GetInstanceMatrices();
 	for (int i = 0; i < instanceMatrices.size(); ++i)
 	{
 		_vector pos = { 0, 0, 0, 1 };
-		memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
+		memcpy(&instanceMatrices[i]->vPosition, &XMVectorSetW(vPos, 1.f), sizeof(_vector));
 		instanceMatrices[i]->iStartFrame = 0;
 
 		_matrix mat = m_pTransformCom->GetWorldMatrix() * XMMatrixRotationRollPitchYaw(XMConvertToRadians(10 - (rand() % 20)), 0.f, XMConvertToRadians(10 - (rand() % 20)));
@@ -152,8 +174,8 @@ HRESULT CEffect_ImpactSmoke::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Renderer */
-	//if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
-	//	return E_FAIL;
+	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_Renderer", "Com_Renderer", (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::SetUpComponents(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ImpactSmoke", "Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))

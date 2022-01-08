@@ -16,6 +16,8 @@
 #include "Effect_Trajectory.h"
 #include "Effect_Impact.h"
 #include "Effect_ImpactSmoke.h"
+#include "Effect_Explosion.h"
+#include "Effect_Muzzle.h"
 #include "Equipment.h"
 
 #include "Log.h"
@@ -40,9 +42,9 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	//ImGui_ImplDX11_Shutdown();
-	//ImGui_ImplWin32_Shutdown();
-	//ImGui::DestroyContext();
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	SafeRelease(m_pRenderer);
 
@@ -70,14 +72,14 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	// TODO
-	//m_pEngine->DeserializePrefab();
-	//if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-	//	return E_FAIL;
-
-	if (FAILED(OpenScene(SCENE_EFFECT)))
+	m_pEngine->DeserializePrefab();
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
-	// ImGuiInitialize();
+	if (FAILED(OpenScene(SCENE_TEST)))
+		return E_FAIL;
+
+	ImGuiInitialize();
 
 	return S_OK;
 }
@@ -96,9 +98,9 @@ _uint CMainApp::Update(_double dDeltaTime)
 	// TODO: Fix Update Order
 	m_pEngine->UpdatePx(dDeltaTime);
 
-	//ImGui_ImplDX11_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//ImGui::NewFrame();
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	return 0;
 }
 
@@ -114,11 +116,11 @@ HRESULT CMainApp::Render()
 	// ImGui
 
 
-	//m_pEngine->UpdateImGui();
-	//ImGui::Render();
-	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//ImGui::UpdatePlatformWindows();
-	//ImGui::RenderPlatformWindowsDefault();
+	m_pEngine->UpdateImGui();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 
 	m_pEngine->Present();
 
@@ -277,7 +279,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	// For.Prototype_Renderer
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Renderer", m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	SafeAddRef(m_pRenderer);
+	// SafeAddRef(m_pRenderer);
 
 	/* Transform */
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Transform", CTransform::Create(m_pDevice, m_pDeviceContext))))
@@ -306,7 +308,11 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ImpactSmoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 1))))
 		return E_FAIL;
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance_Impact", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_PointInstance.fx", 12))))
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Muzzle", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 1))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_ExplosionSmoke", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Smoke.fx", 5))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance_Impact", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_PointInstance.fx", 50))))
 		return E_FAIL;
 
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 20))))
@@ -355,6 +361,10 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Impact", CEffect_Impact::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_ImpactSmoke", CEffect_ImpactSmoke::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Explosion", CEffect_Explosion::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Muzzle", CEffect_Muzzle::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Camera */

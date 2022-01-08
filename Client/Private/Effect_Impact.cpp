@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "..\public\Effect_Impact.h"
-static _vector impactColor = _vector{ 1, 0, 0, 1 };
+static _vector impactColor = _vector{ 1, 1, 0, 1 };
 static _float2 impactSize = _float2{ 0.05f, 0.05f };
+static _float timer = 0.f;
+
 CEffect_Impact::CEffect_Impact(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
@@ -32,15 +34,19 @@ HRESULT CEffect_Impact::Initialize(void * pArg)
 	size_t iNumInstance = m_pVIBufferCom->GetInstanceMatrices().size();
 	m_InstanceForce.resize(iNumInstance);
 
-	m_vNormalDir = { 0.f, 1.f, 0.f, 0.f };
-	Reset();
+	m_vNormalDir = { 1.f, 0.f, 0.f, 0.f };
+	// Reset();
 	return S_OK;
 }
 
 _uint CEffect_Impact::Update(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (0 > __super::Update(TimeDelta))
 		return -1;
+	timer += TimeDelta;
 	vector<VTXMATRIX*> instanceMatrices = m_pVIBufferCom->GetInstanceMatrices();
 	for (int i = 0; i < instanceMatrices.size(); ++i)
 	{
@@ -50,18 +56,23 @@ _uint CEffect_Impact::Update(_double TimeDelta)
 		pos += moveDistance;
 		pos += gravity;
 		memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
-		m_InstanceForce[i].fForcePower -= 13 * TimeDelta;
-		if (m_InstanceForce[i].fForcePower < 0.f)
-			Reset();
+		m_InstanceForce[i].vForceDir = XMVectorSetY(m_InstanceForce[i].vForceDir, XMVectorGetY(m_InstanceForce[i].vForceDir) - TimeDelta);
+		//if (XMVectorGetY(m_InstanceForce[i].vForceDir) < 0.f)
+		//	Reset();
+		if (timer > 1.f)
+			m_bPlaying = false;
 	}
 
-	impactColor = XMVectorSetX(impactColor, XMVectorGetX(impactColor) + TimeDelta);
+	// impactColor = XMVectorSetX(impactColor, XMVectorGetX(impactColor) + TimeDelta);
 
 	return _uint();
 }
 
 _uint CEffect_Impact::LateUpdate(_double TimeDelta)
 {
+	if (!m_bPlaying)
+		return 0;
+
 	if (nullptr == m_pRendererCom)
 		return -1;
 
@@ -75,6 +86,9 @@ _uint CEffect_Impact::LateUpdate(_double TimeDelta)
 
 HRESULT CEffect_Impact::Render()
 {
+	if (!m_bPlaying)
+		return S_OK;
+
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
@@ -104,23 +118,38 @@ HRESULT CEffect_Impact::Render()
 	return S_OK;
 }
 
-void CEffect_Impact::Reset()
+void CEffect_Impact::Play(_vector vPos)
 {
-	m_pTransformCom->SetLook(m_vNormalDir);
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vector{ 0, 0, 0, 1 });
+	m_bPlaying = true;
+	Reset(vPos);
+}
+
+void CEffect_Impact::Reset(_vector vPos)
+{
+	timer = 0.f;
+	_vector offsetPosition = m_vNormalDir * 0.75f;
+	_vector vPosition = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	vPosition += offsetPosition;
+
+	// m_pTransformCom->LookAtForLandObject(vPosition);
+	//m_pTransformCom->SetLook(XMVector3Normalize(m_vNormalDir));
+	//m_pTransformCom->SetState(CTransform::STATE_POSITION, _vector{ 0, 0, 0, 1 });
 	// m_pTransformCom->SetState(CTransform::STATE_LOOK, m_vNormalDir);
 
 	vector<VTXMATRIX*> instanceMatrices = m_pVIBufferCom->GetInstanceMatrices();
 	for (int i = 0; i < instanceMatrices.size(); ++i)
 	{
-		_vector pos = { 0, 0, 0, 1 };
-		memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
+		// _vector pos = { 0, 0, 0, 1 };
+		_vector pos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+		// memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
+		memcpy(&instanceMatrices[i]->vPosition, &vPos, sizeof(_vector));
 
-		_matrix mat = m_pTransformCom->GetWorldMatrix() * XMMatrixRotationRollPitchYaw(XMConvertToRadians(10 - (rand() % 20)), 0.f, XMConvertToRadians(10 - (rand() % 20)));
-		m_InstanceForce[i].vForceDir = XMVector3Normalize(mat.r[CTransform::STATE_LOOK]);
-		m_InstanceForce[i].fForcePower = (_float)(11);
+		_matrix mat = m_pTransformCom->GetWorldMatrix() * XMMatrixRotationRollPitchYaw(XMConvertToRadians(20 - (rand() % 40)), 0.f, XMConvertToRadians(20 - (rand() % 40)));
+		m_InstanceForce[i].vForceDir = XMVector3Normalize(mat.r[CTransform::STATE_UP]);
+		// m_InstanceForce[i].vForceDir = m_pTransformCom->GetState(CTransform::STATE_UP);
+		m_InstanceForce[i].fForcePower = (_float)(15);
 	}
-	impactColor = _vector{ 0, 1, 0, 1 };
+	// impactColor = _vector{ 0, 1, 0, 1 };
 }
 
 HRESULT CEffect_Impact::SetUp_Components()
