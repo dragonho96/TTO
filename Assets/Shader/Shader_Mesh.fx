@@ -94,11 +94,11 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 
    
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
-    // vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 
 
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.vNormal = mul(vNormal, g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
 
     // vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
@@ -117,12 +117,14 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
 		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
 		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
 		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 
     matWV = mul(BoneMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+   //  Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.vNormal = mul(vNormal, g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
 
     //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
