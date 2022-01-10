@@ -187,6 +187,19 @@ HRESULT CGameObject::AddComponent(_uint iSceneIndex, string pPrototypeTag, strin
 	return S_OK;
 }
 
+HRESULT CGameObject::AddComponent(string pComponentTag, CComponent * pComponent)
+{
+	if (GetComponent(pComponentTag))
+	{
+		MSG_BOX("Component already exist");
+		return E_FAIL;
+	}
+
+	m_Components.emplace(pComponentTag, pComponent);
+
+	return S_OK;
+}
+
 HRESULT CGameObject::AddModelComponent(_uint iSceneIndex, CComponent * pModel)
 {
 	if (nullptr != GetComponent("Com_Model"))

@@ -24,6 +24,7 @@ public:
 	void DrawTransform();
 	void DrawBuffer();
 	void DrawModel();
+	void DrawLight();
 
 public:
 	void DrawRectTransform();

@@ -19,10 +19,17 @@ const LIGHTDESC * CLightManager::GetLightDesc(_uint iIndex) const
 
 HRESULT CLightManager::AddLight(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc)
 {
-	CLight*		pLight = CLight::Create(pDevice, pDeviceContext, LightDesc);
+	CLight*		pLight = CLight::Create(pDevice, pDeviceContext, LightDesc, nullptr);
 	if (nullptr == pLight)
 		return E_FAIL;
 
+	m_Lights.push_back(pLight);
+
+	return S_OK;
+}
+
+HRESULT CLightManager::AddLight(CLight * pLight)
+{
 	m_Lights.push_back(pLight);
 
 	return S_OK;

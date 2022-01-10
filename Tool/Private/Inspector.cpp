@@ -12,6 +12,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "EmptyUI.h"
+#include "Light.h"
 
 USING(Tool)
 CInspector::CInspector()
@@ -112,6 +113,15 @@ void CInspector::UpdateGameObject()
 			g_pObjFocused->AddModelComponent(0, pModel);
 		}
 
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Light"))
+		{
+			CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), LIGHTDESC{}, dynamic_cast<CTransform*>(g_pObjFocused->GetComponent("Com_Transform")));
+			if (FAILED(g_pObjFocused->AddComponent("Com_Light", pLight)))
+				MSG_BOX("Failed to AddComponent");
+		}
+
 		ImGui::EndPopup();
 	}
 
@@ -130,6 +140,10 @@ void CInspector::UpdateGameObject()
 	ImGui::Separator();
 
 	DrawCollider();
+
+	ImGui::Separator();
+
+	DrawLight();
 }
 
 void CInspector::UpdateUI()
@@ -544,6 +558,44 @@ void CInspector::DrawModel()
 
 		if (bDelete)
 			g_pObjFocused->RemoveComponent("Com_Model");
+	}
+}
+
+void CInspector::DrawLight()
+{
+	CComponent* pLight = nullptr;
+	if (pLight = g_pObjFocused->GetComponent("Com_Light"))
+	{
+		bool bDelete = false;
+
+		if (dynamic_cast<CLight*>(pLight))
+		{
+			bool open = ImGui::TreeNodeEx("Light");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 10);
+			if (ImGui::Button("X##RemoveComponent"))
+				bDelete = true;
+
+			if (open)
+			{
+				LIGHTDESC& lightDesc = dynamic_cast<CLight*>(pLight)->GetDesc();
+				const char* items[] = { "Directional", "Point", "Spot"};
+				static int lightType = lightDesc.eType;
+				ImGui::Combo("combo", &lightType, items, IM_ARRAYSIZE(items));
+				lightDesc.eType = (LIGHTDESC::TYPE)lightType;
+
+				ImGui::DragFloat("Light Range", &lightDesc.fLightRange, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+				ImGui::DragFloat("Light Angle", &lightDesc.fLightAngle, 0.1f, 0.1f, 100.f, "%.3f", ImGuiSliderFlags_ClampOnInput);
+
+				ImGui::ColorEdit4("vDiffuse##2f", (float*)&lightDesc.vDiffuse, ImGuiColorEditFlags_Float);
+				ImGui::ColorEdit4("vAmbient##2f", (float*)&lightDesc.vAmbient, ImGuiColorEditFlags_Float);
+				ImGui::ColorEdit4("vSpecular##2f", (float*)&lightDesc.vSpecular, ImGuiColorEditFlags_Float);
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (bDelete)
+			g_pObjFocused->RemoveComponent("Com_Light");
 	}
 }
 

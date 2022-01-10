@@ -1,28 +1,34 @@
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 
 BEGIN(Engine)
 
-class CLight final : public CBase
+class ENGINE_DLL CLight final : public CComponent
 {
 private:
 	explicit CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CLight(const CLight& rhs);
 	virtual ~CLight() = default;
 public:
 	const LIGHTDESC* GetLightDesc() const {
 		return &m_LightDesc;
 	}
+
+	LIGHTDESC& GetDesc() { return m_LightDesc; }
+
 public:
-	HRESULT Initialize(const LIGHTDESC& LightDesc);
+	HRESULT Initialize(const LIGHTDESC& LightDesc, class CTransform* pTransform);
 	HRESULT Render_Light();
 private:
-	ID3D11Device*					m_pDevice = nullptr;
-	ID3D11DeviceContext*			m_pDeviceContext = nullptr;
+	//ID3D11Device*					m_pDevice = nullptr;
+	//ID3D11DeviceContext*			m_pDeviceContext = nullptr;
 	LIGHTDESC						m_LightDesc;
 	class CVIBuffer_Rect_Viewport*	m_pVIBuffer = nullptr;
+	class CTransform*				m_pTransform = nullptr;
 public:
-	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
+	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc, CTransform* pTransform);
+	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };
 

@@ -23,6 +23,7 @@
 #include "Texture.h"
 
 #include "Model.h"
+#include "Light.h"
 
 BEGIN(Engine)
 

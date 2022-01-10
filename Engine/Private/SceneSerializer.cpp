@@ -255,6 +255,32 @@ void CSceneSerializer::SerializeObject(YAML::Emitter & out, CGameObject * obj)
 		out << YAML::EndMap;
 	}
 
+	if (obj->GetComponent("Com_Light"))
+	{
+		CLight* pLight = dynamic_cast<CLight*>(obj->GetComponent("Com_Light"));
+		const LIGHTDESC* lightDesc = pLight->GetLightDesc();
+		out << YAML::Key << "Com_Light";
+		out << YAML::BeginMap;
+
+		out << YAML::Key << "Type" << YAML::Value << lightDesc->eType;
+		out << YAML::Key << "Range" << YAML::Value << lightDesc->fLightRange;
+		out << YAML::Key << "Angle" << YAML::Value << lightDesc->fLightAngle;
+
+		out << YAML::Key << "Diffuse";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << lightDesc->vDiffuse.x << lightDesc->vDiffuse.y << lightDesc->vDiffuse.z << lightDesc->vDiffuse.w << YAML::EndSeq;
+
+		out << YAML::Key << "Ambient";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << lightDesc->vAmbient.x << lightDesc->vAmbient.y << lightDesc->vAmbient.z << lightDesc->vAmbient.w << YAML::EndSeq;
+
+		out << YAML::Key << "Specular";
+		out << YAML::Value << YAML::Flow;
+		out << YAML::BeginSeq << lightDesc->vSpecular.x << lightDesc->vSpecular.y << lightDesc->vSpecular.z << lightDesc->vSpecular.w << YAML::EndSeq;
+
+		out << YAML::EndMap;
+	}
+
 	if (0 < obj->GetChildren().size())
 	{
 		out << YAML::Key << "Children";
@@ -552,12 +578,34 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 
 		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
 		deserializedObject->AddModelComponent(0, pModel);
-		//if (deserializedObject->AddComponent(0, "Prototype_Model", "Com_Model", deserializedObject->GetComponent("Com_Transform")))
-		//	MSG_BOX("Failed to AddComponent Prototype_Model");
+	}
 
-		//CModel* pMesh = dynamic_cast<CModel*>(deserializedObject->GetComponent("Com_Model"));
-		//pMesh->SetMeshCollider(hasCollider);
-		//pMesh->CreateBuffer(meshFilePath, meshFileName);
+	auto lightCom = obj["Com_Light"];
+	if (lightCom)
+	{
+		LIGHTDESC			lightDesc;
+		lightDesc.eType = (LIGHTDESC::TYPE)lightCom["Type"].as<_int>();
+		lightDesc.fLightRange = lightCom["Range"].as<_float>();
+		lightDesc.fLightAngle = lightCom["Angle"].as<_float>();
+		auto sequence = lightCom["Diffuse"];
+		lightDesc.vDiffuse.x = sequence[0].as<_float>();
+		lightDesc.vDiffuse.y = sequence[1].as<_float>();
+		lightDesc.vDiffuse.z = sequence[2].as<_float>();
+		lightDesc.vDiffuse.w = sequence[3].as<_float>();
+		sequence = lightCom["Ambient"];
+		lightDesc.vAmbient.x = sequence[0].as<_float>();
+		lightDesc.vAmbient.y = sequence[1].as<_float>();
+		lightDesc.vAmbient.z = sequence[2].as<_float>();
+		lightDesc.vAmbient.w = sequence[3].as<_float>();
+		sequence = lightCom["Specular"];
+		lightDesc.vSpecular.x = sequence[0].as<_float>();
+		lightDesc.vSpecular.y = sequence[1].as<_float>();
+		lightDesc.vSpecular.z = sequence[2].as<_float>();
+		lightDesc.vSpecular.w = sequence[3].as<_float>();
+
+		CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), lightDesc, dynamic_cast<CTransform*>(deserializedObject->GetComponent("Com_Transform")));
+		if (FAILED(deserializedObject->AddComponent("Com_Light", pLight)))
+			MSG_BOX("Failed to AddComponent");
 	}
 
 	return deserializedObject;

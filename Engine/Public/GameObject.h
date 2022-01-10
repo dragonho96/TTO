@@ -69,6 +69,7 @@ protected:
 public:
 	HRESULT SetUpComponents(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, CComponent** pOut = nullptr, void* pArg = nullptr);
 	HRESULT AddComponent(_uint iSceneIndex, string pPrototypeTag, string pComponentTag, void* pArg = nullptr);
+	HRESULT AddComponent(string pComponentTag, CComponent* pComponent);
 	HRESULT AddModelComponent(_uint iSceneIndex, CComponent* pModel);
 	CComponent* GetComponent(string pComponentTag);
 	HRESULT RemoveComponent(string pComponentTag);
