@@ -71,12 +71,16 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	// TODO
-	m_pEngine->DeserializePrefab();
-	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	Client::SCENE eScene = SCENE_TEST;
 
-	if (FAILED(OpenScene(SCENE_TEST)))
+	if (eScene == SCENE_TEST)
+	{
+		m_pEngine->DeserializePrefab();
+		if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
+			return E_FAIL;
+	}
+
+	if (FAILED(OpenScene(eScene)))
 		return E_FAIL;
 
 	ImGuiInitialize();

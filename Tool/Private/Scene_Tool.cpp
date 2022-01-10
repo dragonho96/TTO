@@ -148,6 +148,17 @@ HRESULT CScene_Tool::ReadyLayerLights(string pLayerTag)
 	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
 		return E_FAIL;
 
+	LightDesc.eType = LIGHTDESC::LIGHT_POINT;
+	LightDesc.vLightPos = _float4(5.f, 5.f, 0.f, 1.f);
+	LightDesc.fLightRange = 10.f;
+	LightDesc.vDiffuse = _float4(0.f, 0.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+
+
 	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;

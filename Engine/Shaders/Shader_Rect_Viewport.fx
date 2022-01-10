@@ -139,26 +139,5 @@ technique11		DefaultDevice
 		PixelShader = compile ps_5_0 PS_MAIN_DIRECTION();
 	}
 
-	pass Point
-	{
-		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_NotZTest, 0);
-		SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-
-		VertexShader = compile vs_5_0 VS_MAIN_VIEWPORT();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass Blend
-	{
-		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_NotZTest, 0);
-		SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-
-		VertexShader = compile vs_5_0 VS_MAIN_VIEWPORT();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_BLEND();
-	}
 
 }

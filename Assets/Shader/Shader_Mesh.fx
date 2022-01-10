@@ -7,20 +7,7 @@ cbuffer Matrices
     matrix g_ViewMatrix;
     matrix g_ProjMatrix;
 }
-cbuffer LightDesc
-{
-    vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-    vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-    vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-    vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
-}
-cbuffer MaterialDesc
-{
-    vector g_vMtrlDiffuse;
-    vector g_vMtrlAmbient = vector(0.5f, 0.5f, 0.5f, 1.f);
-    vector g_vMtrlSpecular = vector(0.1f, 0.1f, 0.1f, 1.f);
-    float g_fPower = 30.f;
-}
+
 struct MeshBoneMatrices
 {
     matrix BoneMatrices[512];
@@ -51,6 +38,7 @@ struct VS_OUT
     float4 vPosition : SV_POSITION;
     float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 
     //float4 vPosition : SV_POSITION;
     //float2 vTexUV : TEXCOORD0;
@@ -71,7 +59,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
-    
+    Out.vProjPos = Out.vPosition;
     
     //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     // Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
@@ -98,8 +86,9 @@ VS_OUT VS_MAIN_ANIM(VS_IN In)
 
 
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = mul(vNormal, g_WorldMatrix);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     Out.vTexUV = In.vTexUV;
+    Out.vProjPos = Out.vPosition;
 
     // vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     // Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
@@ -126,6 +115,7 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
    //  Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vNormal = mul(vNormal, g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
+    Out.vProjPos = Out.vPosition;
 
     //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     //Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
@@ -139,6 +129,7 @@ struct PS_IN
     float4 vPosition : SV_POSITION;
     float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 
     //float4 vPosition : SV_POSITION;
     //float2 vTexUV : TEXCOORD0;
@@ -150,11 +141,13 @@ struct PS_OUT
 {
     vector vDiffuse : SV_TARGET0;
     vector vNormal : SV_TARGET1;
+    vector vDepth : SV_TARGET2;
 };
 
 struct PS_OUT_BEHIND_WALL
 {
     vector vDiffuse : SV_TARGET0;
+
 };
 
 
@@ -168,6 +161,12 @@ PS_OUT PS_MAIN(PS_IN In)
 	/* Out.vNormal.xyz : 0 ~ 1 */
 
     Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
+
+    // In.vProjPos.w = view space상의 z값
+    // 0- 1사이 값만 저장 가능하기에 far로 나눠서 저장할 수 있게 만든다
+    // In.vProjPos.z / In.vProjPos.w 는 결국 In.vPosition.z가 아닌가?
+    Out.vDepth = vector(In.vProjPos.w / 300.f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
+
 
     return Out;
   //  vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);

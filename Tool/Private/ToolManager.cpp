@@ -115,7 +115,7 @@ void CToolManager::Render()
 	if (g_Done)
 		return;
 
-	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f));
+	m_pEngine->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pEngine->ClearDepthStencilView(1.f, 0);
 
 	m_pRenderer->DrawRenderGroup();

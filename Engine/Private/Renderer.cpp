@@ -31,15 +31,23 @@ HRESULT CRenderer::InitializePrototype()
 	m_pDeviceContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
 	/* Target_Diffuse */
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Diffuse", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Diffuse", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(1.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	/* Target_Normal*/
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Normal", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Normal", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	/* Target_Depth*/
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Depth", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 
 	/* Target_Shade */
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shade", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shade", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	/* Target_Specular */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Specular", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	/* MRT_Deferred */
@@ -47,9 +55,13 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Normal")))
 		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Depth")))
+		return E_FAIL;
 
 	/* MRT_LightAcc */
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_LightAcc", "Target_Shade")))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_LightAcc", "Target_Specular")))
 		return E_FAIL;
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
@@ -73,7 +85,11 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Normal", 0.f, 200.f, 200.f, 200.f)))
 		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Depth", 0.f, 400.f, 200.f, 200.f)))
+		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shade", 200.f, 0.f, 200.f, 200.f)))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Specular", 200.f, 200.f, 200.f, 200.f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -135,13 +151,13 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(RenderText()))
 		return E_FAIL;
 
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
-	{
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	//{
 		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
 			return E_FAIL;
-	}
+	//}
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
 	{
@@ -243,11 +259,15 @@ HRESULT CRenderer::Render_Blend()
 	ID3D11ShaderResourceView*	pShadeSRV = m_pTargetManager->GetShaderResourceView("Target_Shade");
 	if (nullptr == pShadeSRV)
 		return E_FAIL;
+	ID3D11ShaderResourceView*	pSpecularSRV = m_pTargetManager->GetShaderResourceView("Target_Specular");
+	if (nullptr == pSpecularSRV)
+		return E_FAIL;
 
 	m_pVIBuffer->GetShader()->SetUp_TextureOnShader("g_DiffuseTexture", pDiffuseSRV);
 	m_pVIBuffer->GetShader()->SetUp_TextureOnShader("g_ShadeTexture", pShadeSRV);
+	m_pVIBuffer->GetShader()->SetUp_TextureOnShader("g_SpecularTexture", pSpecularSRV);
 
-	m_pVIBuffer->Render(3);
+	m_pVIBuffer->Render(4);
 
 	return S_OK;
 }

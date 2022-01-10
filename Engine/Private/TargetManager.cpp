@@ -76,6 +76,7 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pDeviceContext, string pM
 	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
 	//	pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+
 	pDeviceContext->OMSetRenderTargets(pMRTList->size(), pRenderTargets, m_pDepthStencilView);
 
 	return S_OK;
@@ -117,7 +118,11 @@ HRESULT CTargetManager::Clear_MRT(ID3D11DeviceContext * pDeviceContext, string p
 
 HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
 {
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	// Clear textures that was bound before
+	//ID3D11ShaderResourceView*const pSRV[8] = { nullptr };
+	//CEngine::GetInstance()->GetDeviceContext()->PSSetShaderResources(0, 8, pSRV);
+
+	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 		pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	
 	pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);

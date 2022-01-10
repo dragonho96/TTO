@@ -60,8 +60,12 @@ namespace Engine
 
 	typedef struct tagLightDesc
 	{
+		enum TYPE { LIGHT_DIRECTION, LIGHT_POINT, LIGHT_SPOT, LIGHT_END };
+		TYPE			eType = LIGHT_END;
 		XMFLOAT4		vLightDir;
-
+		XMFLOAT4		vLightPos;
+		_float			fLightRange;
+		_float			fLightAngle;
 		XMFLOAT4		vDiffuse;
 		XMFLOAT4		vAmbient;
 		XMFLOAT4		vSpecular;
