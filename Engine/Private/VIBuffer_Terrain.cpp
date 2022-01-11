@@ -71,12 +71,26 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 
 HRESULT CVIBuffer_Terrain::Render(_uint iPassIndex)
 {
-	m_pShader->SetUp_ValueOnShader("g_LightViewMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(0)), sizeof(_matrix));
-	m_pShader->SetUp_ValueOnShader("g_LightProjMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(0)), sizeof(_matrix));
 	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
 
-	m_pShader->SetUp_ValueOnShader("lightPosition", &CLightManager::GetInstance()->GetPosition(0), sizeof(_float3));
-
+	if (iPassIndex != 4)
+	{
+		_uint ligtIndex = 0;
+		m_pShader->SetUp_ValueOnShader(("g_LightViewMatrix" + to_string(ligtIndex)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader(("g_LightProjMatrix" + to_string(ligtIndex)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader(("lightPosition" + to_string(ligtIndex)).c_str(), &CLightManager::GetInstance()->GetPosition(ligtIndex), sizeof(_float3));
+		ligtIndex++;
+		m_pShader->SetUp_ValueOnShader(("g_LightViewMatrix" + to_string(ligtIndex)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader(("g_LightProjMatrix" + to_string(ligtIndex)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader(("lightPosition" + to_string(ligtIndex)).c_str(), &CLightManager::GetInstance()->GetPosition(ligtIndex), sizeof(_float3));
+	}
+	else
+	{
+		_uint ligtIndex = CLightManager::GetInstance()->GetCurrentIndex();
+		m_pShader->SetUp_ValueOnShader("g_LightViewMatrix0", &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader("g_LightProjMatrix0", &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(ligtIndex)), sizeof(_matrix));
+		m_pShader->SetUp_ValueOnShader("lightPosition0", &CLightManager::GetInstance()->GetPosition(ligtIndex), sizeof(_float3));
+	}
 
 
 	if (iPassIndex == 4)
@@ -84,10 +98,21 @@ HRESULT CVIBuffer_Terrain::Render(_uint iPassIndex)
 	else
 	{
 		CTargetManager*		pTargetManager = GET_INSTANCE(CTargetManager);
-		ID3D11ShaderResourceView*	pShadowSRV = pTargetManager->GetShaderResourceView("Target_Shadow");
+		_uint iLightIndex = 0;
+
+		string targetName = "Target_Shadow" + to_string(iLightIndex);
+
+		ID3D11ShaderResourceView*	pShadowSRV = pTargetManager->GetShaderResourceView(targetName);
 		if (nullptr == pShadowSRV)
 			return E_FAIL;
-		m_pShader->SetUp_TextureOnShader("depthMapTexture", pShadowSRV);
+		m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(iLightIndex)).c_str(), pShadowSRV);
+
+		iLightIndex++;
+		targetName = "Target_Shadow" + to_string(iLightIndex);
+		pShadowSRV = pTargetManager->GetShaderResourceView(targetName);
+		if (nullptr == pShadowSRV)
+			return E_FAIL;
+		m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(iLightIndex)).c_str(), pShadowSRV);
 		RELEASE_INSTANCE(CTargetManager);
 	}
 

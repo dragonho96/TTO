@@ -7,12 +7,15 @@ cbuffer Matrices
 	matrix		g_ViewMatrix;
 	matrix		g_ProjMatrix;	
 
-    matrix g_LightViewMatrix;
-    matrix g_LightProjMatrix;
+    matrix g_LightViewMatrix0;
+    matrix g_LightProjMatrix0;
+    matrix g_LightViewMatrix1;
+    matrix g_LightProjMatrix1;
 }
 cbuffer LightBuffer
 {
-    float3 lightPosition;
+    float3 lightPosition0;
+    float3 lightPosition1;
 };
 
 cbuffer EtcDesc
@@ -29,7 +32,10 @@ Texture2D g_DiffuseDestTexture;
 Texture2D g_BrushTexture;
 
 Texture2D g_DiffuseTexture;
-Texture2D depthMapTexture;
+
+Texture2D depthMapTexture0;
+Texture2D depthMapTexture1;
+
 SamplerState g_DiffuseSampler
 {
     Filter = min_mag_mip_linear;
@@ -63,19 +69,14 @@ struct VS_IN
 
 struct VS_OUT
 {
-    //float4 vPosition : SV_POSITION;
-    //float3 vNormal : NORMAL;
-    //float2 vTexUV : TEXCOORD0;
-    //float4 vWorldPos : TEXCOORD1;
-    //float4 vProjPos : TEXCOORD2;
-    //float4 vLightDepthPosition : TEXCOORD3;
-
     float4 vPosition : SV_POSITION;
     float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
-    float4 lightViewPosition : TEXCOORD1;
-    float3 lightPos : TEXCOORD2;
-    float4 vProjPos : TEXCOORD3;
+    float4 lightViewPosition0 : TEXCOORD1;
+    float3 lightPos0 : TEXCOORD2;
+    float4 lightViewPosition1 : TEXCOORD3;
+    float3 lightPos1 : TEXCOORD4;
+    float4 vProjPos : TEXCOORD5;
 };
 
 /* 정점의 스페이스 변환. (월드, 뷰, 투영행렬의 곱.)*/
@@ -102,10 +103,13 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vProjPos = Out.vPosition;
 
+    Out.lightViewPosition0 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightViewMatrix0);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightProjMatrix0);
 
-    Out.lightViewPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-    Out.lightViewPosition = mul(Out.lightViewPosition, g_LightViewMatrix);
-    Out.lightViewPosition = mul(Out.lightViewPosition, g_LightProjMatrix);
+    Out.lightViewPosition1 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightViewMatrix1);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightProjMatrix1);
 
     Out.vTexUV = In.vTexUV;
 
@@ -114,7 +118,8 @@ VS_OUT VS_MAIN(VS_IN In)
 
     float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     
-    Out.lightPos = normalize(lightPosition.xyz - worldPosition.xyz);
+    Out.lightPos0 = normalize(lightPosition0.xyz - worldPosition.xyz);
+    Out.lightPos1 = normalize(lightPosition1.xyz - worldPosition.xyz);
 
 
     return Out;
@@ -133,8 +138,8 @@ VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH(VS_IN In)
 
     matrix matLightWV, matLightWVP;
 
-    matLightWV = mul(g_WorldMatrix, g_LightViewMatrix);
-    matLightWVP = mul(matLightWV, g_LightProjMatrix);
+    matLightWV = mul(g_WorldMatrix, g_LightViewMatrix0);
+    matLightWVP = mul(matLightWV, g_LightProjMatrix0);
     Out.vPosition = mul(vector(In.vPosition, 1.f), matLightWVP);
 
     Out.vLightDepthPosition = Out.vPosition;
@@ -151,19 +156,14 @@ VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH(VS_IN In)
 
 struct PS_IN
 {
-    //float4 vPosition : SV_POSITION;
-    //float3 vNormal : NORMAL;
-    //float2 vTexUV : TEXCOORD0;
-    //float4 vWorldPos : TEXCOORD1;
-    //float4 vProjPos : TEXCOORD2;
-    //float4 vLightDepthPosition : TEXCOORD3;
-
     float4 vPosition : SV_POSITION;
     float3 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
-    float4 lightViewPosition : TEXCOORD1;
-    float3 lightPos : TEXCOORD2;
-    float4 vProjPos : TEXCOORD3;
+    float4 lightViewPosition0 : TEXCOORD1;
+    float3 lightPos0 : TEXCOORD2;
+    float4 lightViewPosition1 : TEXCOORD3;
+    float3 lightPos1 : TEXCOORD4;
+    float4 vProjPos : TEXCOORD5;
 };
 
 struct PS_OUT
@@ -215,24 +215,24 @@ PS_OUT PS_MAIN(PS_IN In)
     bias = 0.0001f;
 
     color = vector(0.1f, 0.1f, 0.1f, 1.f);
-    diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
+    diffuseColor = vector(0.1f, 0.1f, 0.1f, 1.f);
 
 
 
-    projectTexCoord.x = In.lightViewPosition.x / In.lightViewPosition.w / 2.f + 0.5f;
-    projectTexCoord.y = -In.lightViewPosition.y / In.lightViewPosition.w / 2.f + 0.5f;
+    projectTexCoord.x = In.lightViewPosition0.x / In.lightViewPosition0.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition0.y / In.lightViewPosition0.w / 2.f + 0.5f;
 
     if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
     {
-        depthValue = depthMapTexture.Sample(g_SamplerClamp, projectTexCoord).r;
+        depthValue = depthMapTexture0.Sample(g_SamplerClamp, projectTexCoord).x;
 
-        lightDepthValue = In.lightViewPosition.z / In.lightViewPosition.w;
+        lightDepthValue = In.lightViewPosition0.z / In.lightViewPosition0.w;
         lightDepthValue = lightDepthValue - bias;
 
         if (lightDepthValue < depthValue)
         {
             // 이 픽셀의 빛의 양을 계산합니다.
-            lightIntensity = saturate(dot(In.vNormal, In.lightPos));
+            lightIntensity = saturate(dot(In.vNormal, In.lightPos0));
  
             if (lightIntensity > 0.0f)
             {
@@ -240,12 +240,37 @@ PS_OUT PS_MAIN(PS_IN In)
                 color += (diffuseColor * lightIntensity);
  
                 // 최종 빛의 색상을 채웁니다.
-                color = saturate(color);
             }
         }
 
     }
 
+    projectTexCoord.x = In.lightViewPosition1.x / In.lightViewPosition1.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition1.y / In.lightViewPosition1.w / 2.f + 0.5f;
+
+    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        depthValue = depthMapTexture1.Sample(g_SamplerClamp, projectTexCoord).x;
+
+        lightDepthValue = In.lightViewPosition1.z / In.lightViewPosition1.w;
+        lightDepthValue = lightDepthValue - bias;
+
+        if (lightDepthValue < depthValue)
+        {
+            // 이 픽셀의 빛의 양을 계산합니다.
+            lightIntensity = saturate(dot(In.vNormal, In.lightPos1));
+ 
+            if (lightIntensity > 0.0f)
+            {
+                // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
+                color += (diffuseColor * lightIntensity);
+            }
+        }
+
+    }
+
+
+    color = saturate(color);
         // 이 텍스처 좌표 위치에서 샘플러를 사용하여 텍스처에서 픽셀 색상을 샘플링합니다.
     textureColor = g_DiffuseSourTexture.Sample(g_DiffuseSampler, In.vTexUV);
  

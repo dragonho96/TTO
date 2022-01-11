@@ -22,6 +22,8 @@ public:
 	HRESULT Set_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
 	HRESULT Clear_MRT(ID3D11DeviceContext* pDeviceContext, string pMRTTag);
 
+	HRESULT Begin_SingleRT(ID3D11DeviceContext* pDeviceContext, string pTargetTag);
+
 	/* 원상태로 복구한다. */
 	HRESULT End_MRT(ID3D11DeviceContext* pDeviceContext);
 

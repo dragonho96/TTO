@@ -22,9 +22,14 @@ public:
 	_matrix GetProjMatrix(_uint index);
 	_vector GetPosition(_uint index);
 
+	void SetCurrentIndex(_uint index) { m_iCurrentIndex = index; };
+	_uint GetCurrentIndex() { return m_iCurrentIndex; };
+	_uint	GetNumLights() { return m_Lights.size(); }
 private:
-	list<class CLight*>				m_Lights;
-	typedef list<class CLight*>		LIGHTS;
+	vector<class CLight*>				m_Lights;
+	typedef vector<class CLight*>		LIGHTS;
+private:
+	_uint							m_iCurrentIndex = 0;
 public:
 	virtual void Free() override;
 };

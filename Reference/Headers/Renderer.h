@@ -31,6 +31,7 @@ private:
 	typedef list<class CGameObject*>	RENDERGROUPS;
 private:
 	HRESULT RenderPriority();
+	HRESULT RenderLightDepth();
 	HRESULT RenderNonAlpha();
 	HRESULT Render_LightAcc();
 	HRESULT Render_Blend();

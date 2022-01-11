@@ -97,7 +97,7 @@ HRESULT CEmptyGameObject::Render(_uint iPassIndex)
 	if (modelCom)
 	{
 		CModel* pModel = dynamic_cast<CModel*>(modelCom);
-		pModel->Bind_Buffers();
+		pModel->Bind_Buffers(iPassIndex);
 		
 		_uint		iNumMaterials = pModel->Get_NumMaterials();
 

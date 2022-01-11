@@ -39,7 +39,7 @@ public:
 	_uint	GetCurrentKeyFrame(ANIM_TYPE eType);
 
 public:
-	HRESULT Bind_Buffers();
+	HRESULT Bind_Buffers(_uint iPassIndex);
 	HRESULT SetUp_TextureOnShader(const char* pConstantName, _uint iMaterialIndex, aiTextureType eTextureType);
 private:
 	HRESULT Create_MeshContainer(aiMesh* pMesh, _uint* pStartVertexIndex, _uint* pStartFaceIndex, _fmatrix PivotMatrix);

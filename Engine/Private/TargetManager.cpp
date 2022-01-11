@@ -116,6 +116,21 @@ HRESULT CTargetManager::Clear_MRT(ID3D11DeviceContext * pDeviceContext, string p
 	return S_OK;
 }
 
+HRESULT CTargetManager::Begin_SingleRT(ID3D11DeviceContext * pDeviceContext, string pTargetTag)
+{
+	CRenderTarget* renderTarget = Find_RenderTarget(pTargetTag);
+
+	if (nullptr == renderTarget)
+		return E_FAIL;
+
+	ID3D11RenderTargetView*		pRenderTargets[8] = { nullptr };
+	pRenderTargets[0] = renderTarget->Get_RenderTargetView();
+
+	pDeviceContext->OMSetRenderTargets(1, pRenderTargets, m_pDepthStencilView);
+
+	return S_OK;
+}
+
 HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
 {
 	// Clear textures that was bound before
