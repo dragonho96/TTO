@@ -75,7 +75,7 @@ _uint CEffect_Smoke::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Smoke::Render()
+HRESULT CEffect_Smoke::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;

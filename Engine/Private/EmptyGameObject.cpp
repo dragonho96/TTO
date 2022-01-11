@@ -84,14 +84,14 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(m_eRenderGroup, this);
 }
 
-HRESULT CEmptyGameObject::Render()
+HRESULT CEmptyGameObject::Render(_uint iPassIndex)
 {
 	if (!m_bIsActive)
 		return S_OK;
 
 	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
-		dynamic_cast<CVIBuffer*>(buffer)->Render();
+		dynamic_cast<CVIBuffer*>(buffer)->Render(iPassIndex);
 
 	CComponent* modelCom = GetComponent("Com_Model");
 	if (modelCom)
@@ -111,7 +111,7 @@ HRESULT CEmptyGameObject::Render()
 		{
 			pModel->SetUp_TextureOnShader("g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 			// TODO: Handle passIndex
-			pModel->Render(i, 0);
+			pModel->Render(i, iPassIndex);
 		}
 	}
 

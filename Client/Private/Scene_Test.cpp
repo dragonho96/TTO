@@ -50,9 +50,6 @@ HRESULT CScene_Test::Initialize()
 
 	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
 	RELEASE_INSTANCE(CEquipmentPool);
-	
-	if (FAILED(ReadyLayerLights("LAYER_LIGHT")))
-		return E_FAIL;
 
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
@@ -90,57 +87,6 @@ HRESULT CScene_Test::Render()
 	return S_OK;
 }
 
-HRESULT CScene_Test::ReadyLayerLights(string pLayerTag)
-{
-	CEngine*		pEngine = GET_INSTANCE(CEngine);
-
-	//LIGHTDESC			LightDesc;
-	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	//LightDesc.eType = LIGHTDESC::LIGHT_DIRECTION;
-	//LightDesc.vLightDir = _float4(-1.f, -1.f, -1.f, 0.f);
-	//LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	//LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	//LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
-
-	//if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
-	//	return E_FAIL;
-
-	//LightDesc.eType = LIGHTDESC::LIGHT_POINT;
-	//LightDesc.vLightPos = _float4(15.f, 5.f, 0.f, 1.f);
-	//LightDesc.fLightRange = 10.f;
-	//LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	//if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
-	//	return E_FAIL;
-
-	//LightDesc.eType = LIGHTDESC::LIGHT_POINT;
-	//LightDesc.vLightPos = _float4(5.f, 5.f, 0.f, 1.f);
-	//LightDesc.fLightRange = 10.f;
-	//LightDesc.vDiffuse = _float4(0.f, 0.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	//if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
-	//	return E_FAIL;
-
-	//LightDesc.eType = LIGHTDESC::LIGHT_SPOT;
-	//LightDesc.vLightDir = _float4(0.f, -1.f, 0.f, 0.f);
-	//LightDesc.vLightPos = _float4(5.f, 5.f, 10.f, 1.f);
-	//LightDesc.fLightRange = 10.f;
-	//LightDesc.fLightAngle = 10.f;
-	//LightDesc.vDiffuse = _float4(0.f, 0.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	//if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
-	//	return E_FAIL;
-
-	RELEASE_INSTANCE(CEngine);
-
-	return S_OK;
-}
 
 HRESULT CScene_Test::ReadyLayerCamera(string pLayerTag)
 {

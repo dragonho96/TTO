@@ -71,11 +71,26 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 
 HRESULT CVIBuffer_Terrain::Render(_uint iPassIndex)
 {
+	m_pShader->SetUp_ValueOnShader("g_LightViewMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(0)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_LightProjMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(0)), sizeof(_matrix));
 	m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTexture);
 
-	//_matrix		ViewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
-	//ViewMatrix = XMMatrixInverse(nullptr, ViewMatrix);
-	//m_pShader->SetUp_ValueOnShader("g_vCamPosition", &ViewMatrix.r[3], sizeof(_vector));
+	m_pShader->SetUp_ValueOnShader("lightPosition", &CLightManager::GetInstance()->GetPosition(0), sizeof(_float3));
+
+
+
+	if (iPassIndex == 4)
+		iPassIndex = 1;
+	else
+	{
+		CTargetManager*		pTargetManager = GET_INSTANCE(CTargetManager);
+		ID3D11ShaderResourceView*	pShadowSRV = pTargetManager->GetShaderResourceView("Target_Shadow");
+		if (nullptr == pShadowSRV)
+			return E_FAIL;
+		m_pShader->SetUp_TextureOnShader("depthMapTexture", pShadowSRV);
+		RELEASE_INSTANCE(CTargetManager);
+	}
+
 	__super::Render(iPassIndex);
 
 	return S_OK;

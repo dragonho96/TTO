@@ -54,7 +54,7 @@ _uint CBackground::LateUpdate(_double TimeDelta)
 	return NO_EVENT;
 }
 
-HRESULT CBackground::Render()
+HRESULT CBackground::Render(_uint iPassIndex)
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;

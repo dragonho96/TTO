@@ -82,7 +82,7 @@ _uint CEffect_Trajectory::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Trajectory::Render()
+HRESULT CEffect_Trajectory::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;

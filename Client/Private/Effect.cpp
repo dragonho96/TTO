@@ -56,7 +56,7 @@ _uint CEffect::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect::Render()
+HRESULT CEffect::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;

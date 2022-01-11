@@ -98,7 +98,7 @@ _uint CEmptyUI::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_UI, this);
 }
 
-HRESULT CEmptyUI::Render()
+HRESULT CEmptyUI::Render(_uint iPassIndex)
 {
 	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)

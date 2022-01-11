@@ -97,7 +97,7 @@ _uint CEffect_Explosion::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Explosion::Render()
+HRESULT CEffect_Explosion::Render(_uint iPassIndex)
 {
 	if (!m_bPlaying)
 		return S_OK;

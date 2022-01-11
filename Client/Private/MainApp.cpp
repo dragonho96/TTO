@@ -71,7 +71,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	Client::SCENE eScene = SCENE_TEST;
+	Client::SCENE eScene = SCENE_EFFECT;
 
 	if (eScene == SCENE_TEST)
 	{

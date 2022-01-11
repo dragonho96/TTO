@@ -42,9 +42,6 @@ HRESULT CScene_Effect::Initialize()
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
 	m_pEngine->DeserializeScene("../../Assets/Scenes/Effect.yaml");
 
-	if (FAILED(ReadyLayerLights("LAYER_LIGHT")))
-		return E_FAIL;
-
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
@@ -83,25 +80,6 @@ HRESULT CScene_Effect::Render()
 	return S_OK;
 }
 
-HRESULT CScene_Effect::ReadyLayerLights(string pLayerTag)
-{
-	CEngine*		pEngine = GET_INSTANCE(CEngine);
-
-	LIGHTDESC			LightDesc;
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-
-	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	if (FAILED(pEngine->AddLight(m_pDevice, m_pDeviceContext, LightDesc)))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CEngine);
-
-	return S_OK;
-}
 
 HRESULT CScene_Effect::ReadyLayerCamera(string pLayerTag)
 {

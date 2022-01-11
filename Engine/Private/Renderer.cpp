@@ -50,6 +50,10 @@ HRESULT CRenderer::InitializePrototype()
 	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Specular", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	/* Target_Shadow */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shadow", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
+		return E_FAIL;
+
 	/* MRT_Deferred */
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Diffuse")))
 		return E_FAIL;
@@ -57,6 +61,11 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Depth")))
 		return E_FAIL;
+
+
+	if (FAILED(m_pTargetManager->Add_MRT("MRT_Shadow", "Target_Shadow")))
+		return E_FAIL;
+
 
 	/* MRT_LightAcc */
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_LightAcc", "Target_Shade")))
@@ -90,6 +99,9 @@ HRESULT CRenderer::InitializePrototype()
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shade", 200.f, 0.f, 200.f, 200.f)))
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Specular", 200.f, 200.f, 200.f, 200.f)))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow", 0.f, 600.f, 200.f, 200.f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -157,6 +169,8 @@ HRESULT CRenderer::DrawRenderGroup()
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
 			return E_FAIL;
+		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Shadow")))
+			return E_FAIL;
 	//}
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
@@ -188,6 +202,28 @@ HRESULT CRenderer::RenderNonAlpha()
 {
 	if (nullptr == m_pTargetManager)
 		return E_FAIL;
+
+	// Light depth를 구한다
+
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	{
+		if (FAILED(m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_Shadow")))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_RenderGroups[RENDER_NONALPHA])
+		{
+			if (nullptr != pGameObject)
+			{
+				if (FAILED(pGameObject->Render(4)))
+					return E_FAIL;
+
+				// SafeRelease(pGameObject);
+			}
+		}
+		if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+			return E_FAIL;
+	}
+
 
 	if (FAILED(m_pTargetManager->Begin_MRT(m_pDeviceContext, "MRT_Deferred")))
 		return E_FAIL;

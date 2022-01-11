@@ -79,7 +79,7 @@ _uint CEffect_Fire::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Fire::Render()
+HRESULT CEffect_Fire::Render(_uint iPassIndex)
 {
 	if (nullptr == m_pVIBufferCom)
 		return E_FAIL;

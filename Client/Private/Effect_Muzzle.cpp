@@ -79,7 +79,7 @@ _uint CEffect_Muzzle::LateUpdate(_double TimeDelta)
 	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CEffect_Muzzle::Render()
+HRESULT CEffect_Muzzle::Render(_uint iPassIndex)
 {
 	if (!m_bPlaying)
 		return S_OK;

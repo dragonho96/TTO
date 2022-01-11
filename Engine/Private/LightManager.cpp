@@ -43,6 +43,21 @@ HRESULT CLightManager::Render_Lights()
 	return S_OK;
 }
 
+_matrix CLightManager::GetViewMatrix(_uint index)
+{
+	return m_Lights.front()->GetViewMatrix();
+}
+
+_matrix CLightManager::GetProjMatrix(_uint index)
+{
+	return m_Lights.front()->GetProjMatrix();
+}
+
+_vector CLightManager::GetPosition(_uint index)
+{
+	return m_Lights.front()->GetPosition();
+}
+
 void CLightManager::Free()
 {
 	for (auto& pLight : m_Lights)

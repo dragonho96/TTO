@@ -44,6 +44,8 @@ HRESULT CLight::Initialize(const LIGHTDESC & LightDesc, CTransform* pTransform)
 	return S_OK;
 }
 
+
+
 HRESULT CLight::Render_Light()
 {
 	_uint iPassIndex = 1;
@@ -104,6 +106,27 @@ HRESULT CLight::Render_Light()
 
 
 	return S_OK;
+}
+
+_matrix CLight::GetViewMatrix()
+{
+	//_vector upVector = m_pTransform->GetState(CTransform::STATE_UP);
+	//_vector	posVector = m_pTransform->GetState(CTransform::STATE_POSITION);
+	//_vector lookVector = m_pTransform->GetState(CTransform::STATE_LOOK);
+	//return XMMatrixLookAtLH(posVector, lookVector, upVector);
+
+	return XMMatrixInverse(nullptr, m_pTransform->GetWorldMatrix());
+}
+
+_matrix CLight::GetProjMatrix()
+{
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
+	// return XMMatrixOrthographicLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
+}
+
+_vector CLight::GetPosition()
+{
+	return m_pTransform->GetState(CTransform::STATE_POSITION);
 }
 
 CLight * CLight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc, CTransform* pTransform)

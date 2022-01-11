@@ -23,7 +23,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual _uint Update(_double TimeDelta) override;
 	virtual _uint LateUpdate(_double TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint iPassIndex = 0) override;
 
 public:
 	void SetRenderGroup(CRenderer::RENDER type) { m_eRenderGroup = type; }

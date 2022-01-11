@@ -16,7 +16,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual _uint	Update(_double dDeltaTime);
 	virtual _uint	LateUpdate(_double dDeltaTime);
-	virtual HRESULT Render();
+	virtual HRESULT Render(_uint iPassIndex = 0);
 
 public:
 	void SetDead();

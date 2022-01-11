@@ -24,7 +24,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual _uint Update(_double TimeDelta) override;
 	virtual _uint LateUpdate(_double TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint iPassIndex) override;
 
 private:
 	CTexture*					m_pTextureCom = nullptr;

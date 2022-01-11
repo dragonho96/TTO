@@ -82,6 +82,8 @@ void CTerrain::Update(_double deltaTime)
 
 void CTerrain::LapteUpdate(_double deltaTime)
 {
+
+
 	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTexture", m_pTerrainTexture);
 	m_pShader->SetUp_TextureOnShader("g_DiffuseSourTextureNormal", m_pTerrainTextureNormal);
 	m_pShader->SetUp_TextureOnShader("g_DiffuseDestTexture", m_pTerrainTexture2);

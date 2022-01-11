@@ -20,6 +20,12 @@ public:
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc, class CTransform* pTransform);
 	HRESULT Render_Light();
+
+public:
+	_matrix GetViewMatrix();
+	_matrix GetProjMatrix();
+	_vector GetPosition();
+
 private:
 	//ID3D11Device*					m_pDevice = nullptr;
 	//ID3D11DeviceContext*			m_pDeviceContext = nullptr;

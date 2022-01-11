@@ -17,6 +17,11 @@ public:
 	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
 	HRESULT AddLight(class CLight* pLight);
 	HRESULT Render_Lights();
+
+	_matrix GetViewMatrix(_uint index);
+	_matrix GetProjMatrix(_uint index);
+	_vector GetPosition(_uint index);
+
 private:
 	list<class CLight*>				m_Lights;
 	typedef list<class CLight*>		LIGHTS;

@@ -61,7 +61,7 @@ _uint CGameObject::LateUpdate(_double dDeltaTime)
 	return _uint();
 }
 
-HRESULT CGameObject::Render()
+HRESULT CGameObject::Render(_uint iPassIndex)
 {
 
 	return S_OK;

@@ -268,6 +268,16 @@ HRESULT CModel::Bind_Buffers()
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
 
+	m_pShader->SetUp_ValueOnShader("g_LightViewMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(0)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_LightProjMatrix", &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(0)), sizeof(_matrix));
+
+	m_pShader->SetUp_ValueOnShader("lightPosition", &CLightManager::GetInstance()->GetPosition(0), sizeof(_float3));
+
+
+
+
+
+
 
 	_uint		iOffSet = 0;
 	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
@@ -306,13 +316,23 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 				iPassIndex = 2;
 			else if (0 < m_Animations.size())
 				iPassIndex = 1;
-			else
-				iPassIndex = 0;
+			//else
+			//	iPassIndex = 0;
 		}
 	}
 	else
 		iPassIndex = 0;
 	// m_pShader->Render(iPassIndex);
+
+	if (iPassIndex == 0)
+	{
+		CTargetManager*		pTargetManager = GET_INSTANCE(CTargetManager);
+		ID3D11ShaderResourceView*	pShadowSRV = pTargetManager->GetShaderResourceView("Target_Shadow");
+		if (nullptr == pShadowSRV)
+			return E_FAIL;
+		m_pShader->SetUp_TextureOnShader("depthMapTexture", pShadowSRV);
+		RELEASE_INSTANCE(CTargetManager);
+	}
 
 	m_pShader->SetInputLayout(iPassIndex);
 
