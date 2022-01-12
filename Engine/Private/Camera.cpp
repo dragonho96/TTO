@@ -1,6 +1,7 @@
 #include "..\public\Camera.h"
 #include "Pipeline.h"
 #include "Transform.h"
+#include "Engine.h"
 #include <dsound.h>
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -56,8 +57,9 @@ _uint CCamera::Update(_double TimeDelta)
 	__super::Update(TimeDelta);
 	if (m_bRolling)
 	{
+		_float2 winSize = m_pEngine->GetCurrentWindowSize();
 		m_pPipeline->Set_Transform(CPipeline::D3DTS_VIEW, m_pTransformCom->GetWorldMatrixInverse());
-		m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH(/*XM_PIDIV2*//*0.25f * 3.14f*/XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f));
+		m_pPipeline->Set_Transform(CPipeline::D3DTS_PROJ, XMMatrixPerspectiveFovLH(/*XM_PIDIV2*//*0.25f * 3.14f*/XMConvertToRadians(60.0f), winSize.x / winSize.y, 0.2f, 300.f));
 	}
 
 	return _uint();

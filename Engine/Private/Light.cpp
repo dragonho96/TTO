@@ -47,6 +47,9 @@ HRESULT CLight::Initialize(const LIGHTDESC & LightDesc, CTransform* pTransform)
 	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, m_targetName, ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
 		return E_FAIL;
 
+	if (FAILED(m_pTargetManager->Ready_DebugBuffer(m_targetName, 0.f + (numLights * 200.f), 600.f, 200.f, 200.f)))
+		return E_FAIL;
+
 	m_pRenderTarget = m_pTargetManager->Find_RenderTarget(m_targetName);
 
 	CLightManager::GetInstance()->AddLight(this);
@@ -118,6 +121,12 @@ HRESULT CLight::Render_Light()
 	return S_OK;
 }
 
+HRESULT CLight::Render_DebugBuffer()
+{
+	m_pRenderTarget->Render_DebugBuffer();
+	return S_OK;
+}
+
 _matrix CLight::GetViewMatrix()
 {
 	//_vector upVector = m_pTransform->GetState(CTransform::STATE_UP);
@@ -130,7 +139,8 @@ _matrix CLight::GetViewMatrix()
 
 _matrix CLight::GetProjMatrix()
 {
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60), _float(1920) / 1080.0f, 0.2f, 300.f);
+	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), winSize.x / winSize.y, 0.2f, 300.f);
 	// return XMMatrixOrthographicLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
 }
 

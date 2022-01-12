@@ -20,6 +20,7 @@ public:
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc, class CTransform* pTransform);
 	HRESULT Render_Light();
+	HRESULT Render_DebugBuffer();
 
 public:
 	_matrix GetViewMatrix();

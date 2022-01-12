@@ -174,13 +174,12 @@ HRESULT CRenderer::DrawRenderGroup()
 
 	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 	//{
-	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Shadow")))
-		return E_FAIL;
+		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
+			return E_FAIL;
+		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
+			return E_FAIL;
 	//}
+	CLightManager::GetInstance()->Render_DebugBuffer();
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
 	{
@@ -231,11 +230,27 @@ HRESULT CRenderer::RenderLightDepth()
 			}
 		}
 
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+		{
+			if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
+				return E_FAIL;
+		}
+	}
+	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+	{
+		if (FAILED(m_pTargetManager->Set_MRT(m_pDeviceContext, "MRT_EditorWindow")))
+			return E_FAIL;
+	}
+	else
+	{
 		if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
 			return E_FAIL;
 	}
-	if (FAILED(m_pTargetManager->End_MRT(m_pDeviceContext)))
-		return E_FAIL;
 
 
 	return S_OK;

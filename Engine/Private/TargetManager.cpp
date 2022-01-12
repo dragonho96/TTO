@@ -100,6 +100,7 @@ HRESULT CTargetManager::Set_MRT(ID3D11DeviceContext * pDeviceContext, string pMR
 		pRenderTargets[iIndex++] = pRTV;
 	}
 
+	pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	pDeviceContext->OMSetRenderTargets(pMRTList->size(), pRenderTargets, m_pDepthStencilView);
 
 	return S_OK;
@@ -122,7 +123,7 @@ HRESULT CTargetManager::Begin_SingleRT(ID3D11DeviceContext * pDeviceContext, str
 
 	if (nullptr == renderTarget)
 		return E_FAIL;
-
+	renderTarget->Clear();
 	ID3D11RenderTargetView*		pRenderTargets[8] = { nullptr };
 	pRenderTargets[0] = renderTarget->Get_RenderTargetView();
 

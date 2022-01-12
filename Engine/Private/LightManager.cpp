@@ -61,6 +61,14 @@ HRESULT CLightManager::Render_Lights()
 	return S_OK;
 }
 
+HRESULT CLightManager::Render_DebugBuffer()
+{
+	for (auto& iter : m_RenderLights)
+		iter->Render_DebugBuffer();
+
+	return S_OK;
+}
+
 _matrix CLightManager::GetViewMatrix(_uint index)
 {
 	auto iter = m_RenderLights.begin();

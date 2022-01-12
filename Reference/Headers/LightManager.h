@@ -18,6 +18,7 @@ public:
 	HRESULT AddLight(class CLight* pLight);
 	HRESULT SortLight();
 	HRESULT Render_Lights();
+	HRESULT Render_DebugBuffer();
 
 	_matrix						GetViewMatrix(_uint index);
 	_matrix						GetProjMatrix(_uint index);

@@ -329,7 +329,11 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 		}
 	}
 	else
-		iPassIndex = 0;
+	{
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL&&
+			iPassIndex != 4)
+			iPassIndex = 0;
+	}
 	// m_pShader->Render(iPassIndex);
 
 	if (iPassIndex == 0)
