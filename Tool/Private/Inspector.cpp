@@ -115,12 +115,37 @@ void CInspector::UpdateGameObject()
 
 		ImGui::Separator();
 
-		if (ImGui::MenuItem("Light"))
+
+		ImGui::Text("Light");
+		ImGui::Indent();
+		LIGHTDESC desc;
+		desc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+		desc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+		desc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+		desc.fLightRange = 10.f;
+		desc.fLightAngle = 20.f;
+		if (ImGui::MenuItem("Directional"))
 		{
-			CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), LIGHTDESC{}, dynamic_cast<CTransform*>(g_pObjFocused->GetComponent("Com_Transform")));
+			desc.eType = LIGHTDESC::LIGHT_DIRECTION;
+			CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), desc, dynamic_cast<CTransform*>(g_pObjFocused->GetComponent("Com_Transform")));
 			if (FAILED(g_pObjFocused->AddComponent("Com_Light", pLight)))
 				MSG_BOX("Failed to AddComponent");
 		}
+		if (ImGui::MenuItem("Point"))
+		{
+			desc.eType = LIGHTDESC::LIGHT_POINT;
+			CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), desc, dynamic_cast<CTransform*>(g_pObjFocused->GetComponent("Com_Transform")));
+			if (FAILED(g_pObjFocused->AddComponent("Com_Light", pLight)))
+				MSG_BOX("Failed to AddComponent");
+		}
+		if (ImGui::MenuItem("Spot"))
+		{
+			desc.eType = LIGHTDESC::LIGHT_SPOT;
+			CComponent* pLight = CLight::Create(CEngine::GetInstance()->GetDevice(), CEngine::GetInstance()->GetDeviceContext(), desc, dynamic_cast<CTransform*>(g_pObjFocused->GetComponent("Com_Transform")));
+			if (FAILED(g_pObjFocused->AddComponent("Com_Light", pLight)))
+				MSG_BOX("Failed to AddComponent");
+		}
+		ImGui::Unindent();
 
 		ImGui::EndPopup();
 	}
@@ -546,7 +571,7 @@ void CInspector::DrawModel()
 							g_pObjFocused->RemoveComponent("Com_Model");
 							CComponent* pModel = CEngine::GetInstance()->CloneModel(szDir, szTextureFileName, "", false, g_pObjFocused->GetComponent("Com_Transform"));
 							g_pObjFocused->AddModelComponent(0, pModel);
-						
+
 						}
 					}
 					ImGui::EndDragDropTarget();
@@ -578,7 +603,7 @@ void CInspector::DrawLight()
 			if (open)
 			{
 				LIGHTDESC& lightDesc = dynamic_cast<CLight*>(pLight)->GetDesc();
-				const char* items[] = { "Directional", "Point", "Spot"};
+				const char* items[] = { "Directional", "Point", "Spot" };
 				static int lightType = lightDesc.eType;
 				ImGui::Combo("combo", &lightType, items, IM_ARRAYSIZE(items));
 				lightDesc.eType = (LIGHTDESC::TYPE)lightType;
@@ -606,7 +631,7 @@ void CInspector::DrawRectTransform()
 		MSG_BOX("Failed to Get Transform");
 
 	CRectTransform::RECTTRANSFORMDESC desc = dynamic_cast<CRectTransform*>(pObjTransform)->GetTransformDesc();
-	
+
 	ImGui::Separator();
 	if (ImGui::TreeNodeEx("Rect Transform"))
 	{
