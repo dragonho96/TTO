@@ -276,6 +276,10 @@ HRESULT CModel::Bind_Buffers(_uint iPassIndex)
 			m_pShader->SetUp_ValueOnShader(("g_LightViewMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(i)), sizeof(_matrix));
 			m_pShader->SetUp_ValueOnShader(("g_LightProjMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(i)), sizeof(_matrix));
 			m_pShader->SetUp_ValueOnShader(("lightPosition" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetPosition(i), sizeof(_float3));
+			m_pShader->SetUp_ValueOnShader(("lightDir" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetDirection(i), sizeof(_float3));
+
+			_float fAngle = CLightManager::GetInstance()->GetAngle(i);
+			m_pShader->SetUp_ValueOnShader(("lightAngle" + to_string(i)).c_str(), &fAngle, sizeof(_float));
 		}
 	}
 	else
@@ -338,12 +342,12 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 
 	if (iPassIndex == 0)
 	{
-
 		_uint iNumLights = CLightManager::GetInstance()->GetNumRenderLights();
 		for (int i = 0; i < iNumLights; ++i)
 		{
 			ID3D11ShaderResourceView*	pShadowSRV = CLightManager::GetInstance()->GetShaderResourceView(i);
-			m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(i)).c_str(), pShadowSRV);
+			if (pShadowSRV)
+				m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(i)).c_str(), pShadowSRV);
 		}
 		//CTargetManager*		pTargetManager = GET_INSTANCE(CTargetManager);
 		//_uint iLightIndex = 0;

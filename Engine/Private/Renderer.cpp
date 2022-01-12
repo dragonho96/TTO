@@ -225,8 +225,6 @@ HRESULT CRenderer::RenderLightDepth()
 			{
 				if (FAILED(pGameObject->Render(4)))
 					return E_FAIL;
-
-				// SafeRelease(pGameObject);
 			}
 		}
 

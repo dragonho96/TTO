@@ -46,7 +46,7 @@ HRESULT CLightManager::SortLight()
 	{
 		if (light->GetLightDesc()->eType == LIGHTDESC::TYPE::LIGHT_DIRECTION)
 			m_RenderLights.push_front(light);
-		else
+		else if (light->GetLightDesc()->eType == LIGHTDESC::TYPE::LIGHT_SPOT)
 			m_RenderLights.push_back(light);
 	}
 
@@ -93,6 +93,22 @@ _vector CLightManager::GetPosition(_uint index)
 	return (*iter)->GetPosition();
 }
 
+_vector CLightManager::GetDirection(_uint index)
+{
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetDirection();
+}
+
+_float CLightManager::GetAngle(_uint index)
+{
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetAngle();
+}
+
 ID3D11ShaderResourceView * CLightManager::GetShaderResourceView(_uint index)
 {
 	auto iter = m_RenderLights.begin();
@@ -111,8 +127,8 @@ string CLightManager::GetTargetName(_uint index)
 
 void CLightManager::Free()
 {
-	for (auto& pLight : m_Lights)
-		SafeRelease(pLight);
+	//for (auto& pLight : m_Lights)
+	//	SafeRelease(pLight);
 
 	m_Lights.clear();
 }

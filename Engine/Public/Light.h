@@ -26,6 +26,8 @@ public:
 	_matrix GetViewMatrix();
 	_matrix GetProjMatrix();
 	_vector GetPosition();
+	_vector GetDirection();
+	_float	GetAngle();
 	ID3D11ShaderResourceView* GetShaderResourceView();
 
 	string GetTargetName() { return m_targetName; };

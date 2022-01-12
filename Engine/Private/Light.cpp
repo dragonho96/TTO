@@ -41,16 +41,19 @@ HRESULT CLight::Initialize(const LIGHTDESC & LightDesc, CTransform* pTransform)
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 
-	CTargetManager* m_pTargetManager = CTargetManager::GetInstance();
-	_uint numLights = CLightManager::GetInstance()->GetNumLights();
-	m_targetName = "Target_Shadow" + to_string(numLights);
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, m_targetName, ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
-		return E_FAIL;
+	if (m_LightDesc.eType != LIGHTDESC::LIGHT_POINT)
+	{
+		CTargetManager* m_pTargetManager = CTargetManager::GetInstance();
+		_uint numLights = CLightManager::GetInstance()->GetNumLights();
+		m_targetName = "Target_Shadow" + to_string(numLights);
+		if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, m_targetName, ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
+			return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Ready_DebugBuffer(m_targetName, 0.f + (numLights * 200.f), 600.f, 200.f, 200.f)))
-		return E_FAIL;
+		if (FAILED(m_pTargetManager->Ready_DebugBuffer(m_targetName, 0.f + (numLights * 200.f), 600.f, 200.f, 200.f)))
+			return E_FAIL;
 
-	m_pRenderTarget = m_pTargetManager->Find_RenderTarget(m_targetName);
+		m_pRenderTarget = m_pTargetManager->Find_RenderTarget(m_targetName);
+	}
 
 	CLightManager::GetInstance()->AddLight(this);
 
@@ -123,25 +126,21 @@ HRESULT CLight::Render_Light()
 
 HRESULT CLight::Render_DebugBuffer()
 {
-	m_pRenderTarget->Render_DebugBuffer();
+	if (m_pRenderTarget)
+		m_pRenderTarget->Render_DebugBuffer();
 	return S_OK;
 }
 
 _matrix CLight::GetViewMatrix()
 {
-	//_vector upVector = m_pTransform->GetState(CTransform::STATE_UP);
-	//_vector	posVector = m_pTransform->GetState(CTransform::STATE_POSITION);
-	//_vector lookVector = m_pTransform->GetState(CTransform::STATE_LOOK);
-	//return XMMatrixLookAtLH(posVector, lookVector, upVector);
-
 	return XMMatrixInverse(nullptr, m_pTransform->GetWorldMatrix());
 }
 
 _matrix CLight::GetProjMatrix()
 {
 	_float2 winSize = CEngine::GetInstance()->GetCurrentWindowSize();
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), winSize.x / winSize.y, 0.2f, 300.f);
-	// return XMMatrixOrthographicLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
+	_float angle = 60.f;
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(angle), winSize.x / winSize.y, 0.2f, 300.f);
 }
 
 _vector CLight::GetPosition()
@@ -149,9 +148,22 @@ _vector CLight::GetPosition()
 	return m_pTransform->GetState(CTransform::STATE_POSITION);
 }
 
+_vector CLight::GetDirection()
+{
+	return XMVector3Normalize(XMVectorSetW(m_pTransform->GetState(CTransform::STATE_LOOK), 0.f));
+}
+
+_float CLight::GetAngle()
+{
+	return m_LightDesc.fLightAngle;
+}
+
 ID3D11ShaderResourceView * CLight::GetShaderResourceView()
 {
-	return m_pRenderTarget->GetShaderResourceView();
+	if (m_pRenderTarget)
+		return m_pRenderTarget->GetShaderResourceView();
+
+	return nullptr;
 }
 
 CLight * CLight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc, CTransform* pTransform)

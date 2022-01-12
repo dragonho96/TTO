@@ -238,11 +238,13 @@ PS_OUT PS_MAIN(PS_IN In)
  
             if (lightIntensity > 0.0f)
             {
+                // 이거 빼면 다 어두워짐
+
                 // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
                 color += (diffuseColor * lightIntensity);
  
                 // 최종 빛의 색상을 채웁니다.
-                color - saturate(color);
+                color = saturate(color);
             }
         }
 
@@ -254,7 +256,7 @@ PS_OUT PS_MAIN(PS_IN In)
         {
                 // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
             color += (diffuseColor * lightIntensity);
-            color - saturate(color);
+            color = saturate(color);
         }
     }
 
@@ -271,21 +273,22 @@ PS_OUT PS_MAIN(PS_IN In)
         lightDepthValue = In.lightViewPosition1.z / In.lightViewPosition1.w;
         lightDepthValue = lightDepthValue - bias;
 
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos1);
+
         if (lightDepthValue < depthValue)
         {
             // 이 픽셀의 빛의 양을 계산합니다.
-            // lightIntensity = saturate(dot(In.vNormal, In.lightPos1));
-            float fLightRange = 40.f;
-            float fLightLength = length(In.lightPos1);
-            float3 vLightDir = normalize(In.lightPos1);
-
-            float fAtt = max((fLightRange - fLightLength), 0.f) / fLightRange;
-
-            lightIntensity = pow(max(dot(normalize(In.vNormal), vLightDir), 0.f), 10.f) * fAtt;
-            if (lightIntensity > 0.0f)
+            //lightIntensity = saturate(dot(In.vNormal, In.lightPos0));
+            // lightIntensity = saturate(dot(In.vNormal, lightDir));
+            float angle = dot(normalize(ogLightDir), pixDir);
+            float cutoff = cos(radians(20.f));
+            
+            if (angle > cutoff)
             {
-                // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
                 color += (diffuseColor * lightIntensity);
+                color = saturate(color);
             }
         }
 

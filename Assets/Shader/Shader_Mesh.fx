@@ -11,12 +11,38 @@ cbuffer Matrices
     matrix g_LightProjMatrix0;
     matrix g_LightViewMatrix1;
     matrix g_LightProjMatrix1;
+    matrix g_LightViewMatrix2;
+    matrix g_LightProjMatrix2;
+    matrix g_LightViewMatrix3;
+    matrix g_LightProjMatrix3;
+    matrix g_LightViewMatrix4;
+    matrix g_LightProjMatrix4;
+    matrix g_LightViewMatrix5;
+    matrix g_LightProjMatrix5;
 }
 
 cbuffer LightBuffer
 {
     float3 lightPosition0;
     float3 lightPosition1;
+    float3 lightPosition2;
+    float3 lightPosition3;
+    float3 lightPosition4;
+    float3 lightPosition5;
+
+    float3 lightDir0;
+    float3 lightDir1;
+    float3 lightDir2;
+    float3 lightDir3;
+    float3 lightDir4;
+    float3 lightDir5;
+
+    float lightAngle0;
+    float lightAngle1;
+    float lightAngle2;
+    float lightAngle3;
+    float lightAngle4;
+    float lightAngle5;
 };
 
 struct MeshBoneMatrices
@@ -30,6 +56,10 @@ Texture2D g_DiffuseTexture;
 
 Texture2D depthMapTexture0;
 Texture2D depthMapTexture1;
+Texture2D depthMapTexture2;
+Texture2D depthMapTexture3;
+Texture2D depthMapTexture4;
+Texture2D depthMapTexture5;
 
 SamplerState g_DiffuseSampler
 {
@@ -62,7 +92,18 @@ struct VS_OUT
     float3 lightPos0 : TEXCOORD2;
     float4 lightViewPosition1 : TEXCOORD3;
     float3 lightPos1 : TEXCOORD4;
-    float4 vProjPos : TEXCOORD5;
+    float4 lightViewPosition2 : TEXCOORD5;
+    float3 lightPos2 : TEXCOORD6;
+    float4 lightViewPosition3 : TEXCOORD7;
+    float3 lightPos3 : TEXCOORD8;
+    float4 lightViewPosition4 : TEXCOORD9;
+    float3 lightPos4 : TEXCOORD10;
+    float4 lightViewPosition5 : TEXCOORD11;
+    float3 lightPos5 : TEXCOORD12;
+
+
+
+    float4 vProjPos : TEXCOORD13;
 };
 
 struct VS_OUT_LIGHT_DEPTH
@@ -103,6 +144,21 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightViewMatrix1);
     Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightProjMatrix1);
 
+    Out.lightViewPosition2 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightViewMatrix2);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightProjMatrix2);
+
+    Out.lightViewPosition3 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightViewMatrix3);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightProjMatrix3);
+
+    Out.lightViewPosition4 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightViewMatrix4);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightProjMatrix4);
+
+    Out.lightViewPosition5 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightViewMatrix5);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightProjMatrix5);
     Out.vTexUV = In.vTexUV;
 
     Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
@@ -110,9 +166,14 @@ VS_OUT VS_MAIN(VS_IN In)
 
     float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     
-    Out.lightPos0 = normalize(lightPosition0.xyz - worldPosition.xyz);
-    Out.lightPos1 = normalize(lightPosition1.xyz - worldPosition.xyz);
-
+    // Out.lightPos0 = normalize(lightPosition0.xyz - worldPosition.xyz);
+    // Out.lightPos1 = normalize(lightPosition1.xyz - worldPosition.xyz);
+    Out.lightPos0 = lightPosition0.xyz - worldPosition.xyz;
+    Out.lightPos1 = lightPosition1.xyz - worldPosition.xyz;
+    Out.lightPos2 = lightPosition2.xyz - worldPosition.xyz;
+    Out.lightPos3 = lightPosition3.xyz - worldPosition.xyz;
+    Out.lightPos4 = lightPosition4.xyz - worldPosition.xyz;
+    Out.lightPos5 = lightPosition5.xyz - worldPosition.xyz;
     return Out;
 }
 
@@ -198,7 +259,18 @@ struct PS_IN
     float3 lightPos0 : TEXCOORD2;
     float4 lightViewPosition1 : TEXCOORD3;
     float3 lightPos1 : TEXCOORD4;
-    float4 vProjPos : TEXCOORD5;
+    float4 lightViewPosition2 : TEXCOORD5;
+    float3 lightPos2 : TEXCOORD6;
+    float4 lightViewPosition3 : TEXCOORD7;
+    float3 lightPos3 : TEXCOORD8;
+    float4 lightViewPosition4 : TEXCOORD9;
+    float3 lightPos4 : TEXCOORD10;
+    float4 lightViewPosition5 : TEXCOORD11;
+    float3 lightPos5 : TEXCOORD12;
+
+
+
+    float4 vProjPos : TEXCOORD13;
 };
 
 struct PS_IN_LIGHT_DEPTH
@@ -231,18 +303,6 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
- //   Out.vDiffuse = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
-
-	///* In.vNormal.xyz : -1 ~ 1 */ 
-	///* Out.vNormal.xyz : 0 ~ 1 */
-
- //   Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
-
- //   // In.vProjPos.w = view space상의 z값
- //   // 0- 1사이 값만 저장 가능하기에 far로 나눠서 저장할 수 있게 만든다
- //   // In.vProjPos.z / In.vProjPos.w 는 결국 In.vPosition.z가 아닌가?
- //   Out.vDepth = vector(In.vProjPos.w / 300.f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
-
     float bias;
     float4 color;
     float4 diffuseColor;
@@ -259,7 +319,7 @@ PS_OUT PS_MAIN(PS_IN In)
     diffuseColor = vector(0.1f, 0.1f, 0.1f, 1.f);
     lightDir = -(-1.f, -1.f, -1.f);
 
-
+    
     projectTexCoord.x = In.lightViewPosition0.x / In.lightViewPosition0.w / 2.f + 0.5f;
     projectTexCoord.y = -In.lightViewPosition0.y / In.lightViewPosition0.w / 2.f + 0.5f;
 
@@ -282,7 +342,7 @@ PS_OUT PS_MAIN(PS_IN In)
                 color += (diffuseColor * lightIntensity);
  
                 // 최종 빛의 색상을 채웁니다.
-                color - saturate(color);
+                color = saturate(color);
             }
         }
 
@@ -294,10 +354,12 @@ PS_OUT PS_MAIN(PS_IN In)
         {
                 // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
             color += (diffuseColor * lightIntensity);
-            color - saturate(color);
+            color = saturate(color);
         }
     }
 
+
+    diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
 
     projectTexCoord.x = In.lightViewPosition1.x / In.lightViewPosition1.w / 2.f + 0.5f;
     projectTexCoord.y = -In.lightViewPosition1.y / In.lightViewPosition1.w / 2.f + 0.5f;
@@ -309,18 +371,129 @@ PS_OUT PS_MAIN(PS_IN In)
         lightDepthValue = In.lightViewPosition1.z / In.lightViewPosition1.w;
         lightDepthValue = lightDepthValue - bias;
 
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos1);
+
         if (lightDepthValue < depthValue)
         {
-            // 이 픽셀의 빛의 양을 계산합니다.
-            lightIntensity = saturate(dot(In.vNormal, In.lightPos1));
- 
-            if (lightIntensity > 0.0f)
+            float angle = dot(normalize(lightDir1), pixDir);
+            float cutoff = cos(radians(lightAngle1));
+            
+            if (angle > cutoff)
             {
-                // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
                 color += (diffuseColor * lightIntensity);
+                color = saturate(color);
             }
         }
+    }
 
+    projectTexCoord.x = In.lightViewPosition2.x / In.lightViewPosition2.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition2.y / In.lightViewPosition2.w / 2.f + 0.5f;
+
+    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        depthValue = depthMapTexture2.Sample(g_SamplerClamp, projectTexCoord).x;
+
+        lightDepthValue = In.lightViewPosition2.z / In.lightViewPosition2.w;
+        lightDepthValue = lightDepthValue - bias;
+
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos2);
+
+        if (lightDepthValue < depthValue)
+        {
+            float angle = dot(normalize(lightDir2), pixDir);
+            float cutoff = cos(radians(lightAngle2));
+            
+            if (angle > cutoff)
+            {
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
+                color += (diffuseColor * lightIntensity);
+                color = saturate(color);
+            }
+        }
+    }
+
+    projectTexCoord.x = In.lightViewPosition3.x / In.lightViewPosition3.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition3.y / In.lightViewPosition3.w / 2.f + 0.5f;
+
+    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        depthValue = depthMapTexture3.Sample(g_SamplerClamp, projectTexCoord).x;
+
+        lightDepthValue = In.lightViewPosition3.z / In.lightViewPosition3.w;
+        lightDepthValue = lightDepthValue - bias;
+
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos3);
+
+        if (lightDepthValue < depthValue)
+        {
+            float angle = dot(normalize(lightDir3), pixDir);
+            float cutoff = cos(radians(lightAngle3));
+            
+            if (angle > cutoff)
+            {
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
+                color += (diffuseColor * lightIntensity);
+                color = saturate(color);
+            }
+        }
+    }
+
+    projectTexCoord.x = In.lightViewPosition4.x / In.lightViewPosition4.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition4.y / In.lightViewPosition4.w / 2.f + 0.5f;
+
+    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        depthValue = depthMapTexture4.Sample(g_SamplerClamp, projectTexCoord).x;
+
+        lightDepthValue = In.lightViewPosition4.z / In.lightViewPosition4.w;
+        lightDepthValue = lightDepthValue - bias;
+
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos4);
+
+        if (lightDepthValue < depthValue)
+        {
+            float angle = dot(normalize(lightDir4), pixDir);
+            float cutoff = cos(radians(lightAngle4));
+            
+            if (angle > cutoff)
+            {
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
+                color += (diffuseColor * lightIntensity);
+                color = saturate(color);
+            }
+        }
+    }
+
+    projectTexCoord.x = In.lightViewPosition5.x / In.lightViewPosition5.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.lightViewPosition5.y / In.lightViewPosition5.w / 2.f + 0.5f;
+
+    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        depthValue = depthMapTexture5.Sample(g_SamplerClamp, projectTexCoord).x;
+
+        lightDepthValue = In.lightViewPosition5.z / In.lightViewPosition5.w;
+        lightDepthValue = lightDepthValue - bias;
+
+        float3 ogLightDir = float3(0.f, 0.f, 1.f);
+        float3 pixDir = -normalize(In.lightPos5);
+
+        if (lightDepthValue < depthValue)
+        {
+            float angle = dot(normalize(lightDir5), pixDir);
+            float cutoff = cos(radians(lightAngle5));
+            
+            if (angle > cutoff)
+            {
+                lightIntensity = 1 - ((1 - angle) / (1 - cutoff));
+                color += (diffuseColor * lightIntensity);
+                color = saturate(color);
+            }
+        }
     }
 
 
