@@ -45,7 +45,7 @@ private:
 	ID3D11RenderTargetView*				m_pBackBufferRTV = nullptr;
 	ID3D11DepthStencilView*				m_pDepthStencilView = nullptr;
 
-private:
+public:
 	class CRenderTarget* Find_RenderTarget(string pRenderTagetTag);
 	list<class CRenderTarget*>* Find_MRT(string pMRTTag);
 

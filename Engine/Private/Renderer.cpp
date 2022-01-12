@@ -51,10 +51,10 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 
 	/* Target_Shadow */
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shadow0", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shadow1", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
-		return E_FAIL;
+	//if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shadow0", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
+	//	return E_FAIL;
+	//if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, "Target_Shadow1", ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
+	//	return E_FAIL;
 
 	/* MRT_Deferred */
 	if (FAILED(m_pTargetManager->Add_MRT("MRT_Deferred", "Target_Diffuse")))
@@ -65,10 +65,10 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 
 
-	if (FAILED(m_pTargetManager->Add_MRT("MRT_Shadow", "Target_Shadow0")))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Add_MRT("MRT_Shadow", "Target_Shadow1")))
-		return E_FAIL;
+	//if (FAILED(m_pTargetManager->Add_MRT("MRT_Shadow", "Target_Shadow0")))
+	//	return E_FAIL;
+	//if (FAILED(m_pTargetManager->Add_MRT("MRT_Shadow", "Target_Shadow1")))
+	//	return E_FAIL;
 
 
 	/* MRT_LightAcc */
@@ -105,10 +105,10 @@ HRESULT CRenderer::InitializePrototype()
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Specular", 200.f, 200.f, 200.f, 200.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow0", 0.f, 600.f, 200.f, 200.f)))
-		return E_FAIL;
-	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow1", 0.f, 800.f, 200.f, 200.f)))
-		return E_FAIL;
+	//if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow0", 0.f, 600.f, 200.f, 200.f)))
+	//	return E_FAIL;
+	//if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow1", 0.f, 800.f, 200.f, 200.f)))
+	//	return E_FAIL;
 #endif // _DEBUG
 
 	m_pTargetManager->Initialize(m_pDeviceContext);
@@ -209,12 +209,14 @@ HRESULT CRenderer::RenderPriority()
 
 HRESULT CRenderer::RenderLightDepth()
 {
-	_uint numLights = CLightManager::GetInstance()->GetNumLights();
+	CLightManager::GetInstance()->SortLight();
+
+	_uint numLights = CLightManager::GetInstance()->GetNumRenderLights();
 	for (int i = 0; i < numLights; ++i)
 	{
 		CLightManager::GetInstance()->SetCurrentIndex(i);
 
-		string targetName = "Target_Shadow" + to_string(i);
+		string targetName = CLightManager::GetInstance()->GetTargetName(i);
 		if (FAILED(m_pTargetManager->Begin_SingleRT(m_pDeviceContext, targetName)))
 			return E_FAIL;
 

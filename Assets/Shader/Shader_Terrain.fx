@@ -118,8 +118,8 @@ VS_OUT VS_MAIN(VS_IN In)
 
     float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     
-    Out.lightPos0 = normalize(lightPosition0.xyz - worldPosition.xyz);
-    Out.lightPos1 = normalize(lightPosition1.xyz - worldPosition.xyz);
+    Out.lightPos0 = lightPosition0.xyz - worldPosition.xyz;
+    Out.lightPos1 = lightPosition1.xyz - worldPosition.xyz;
 
 
     return Out;
@@ -211,12 +211,13 @@ PS_OUT PS_MAIN(PS_IN In)
     float lightDepthValue;
     float lightIntensity;
     float4 textureColor;
+    float3 lightDir;
 
     bias = 0.0001f;
 
     color = vector(0.1f, 0.1f, 0.1f, 1.f);
     diffuseColor = vector(0.1f, 0.1f, 0.1f, 1.f);
-
+    lightDir = -(-1.f, -1.f, -1.f);
 
 
     projectTexCoord.x = In.lightViewPosition0.x / In.lightViewPosition0.w / 2.f + 0.5f;
@@ -232,7 +233,8 @@ PS_OUT PS_MAIN(PS_IN In)
         if (lightDepthValue < depthValue)
         {
             // 이 픽셀의 빛의 양을 계산합니다.
-            lightIntensity = saturate(dot(In.vNormal, In.lightPos0));
+            //lightIntensity = saturate(dot(In.vNormal, In.lightPos0));
+            lightIntensity = saturate(dot(In.vNormal, lightDir));
  
             if (lightIntensity > 0.0f)
             {
@@ -240,10 +242,24 @@ PS_OUT PS_MAIN(PS_IN In)
                 color += (diffuseColor * lightIntensity);
  
                 // 최종 빛의 색상을 채웁니다.
+                color - saturate(color);
             }
         }
 
     }
+    else
+    {
+        lightIntensity = saturate(dot(In.vNormal, lightDir));
+        if (lightIntensity > 0.0f)
+        {
+                // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.
+            color += (diffuseColor * lightIntensity);
+            color - saturate(color);
+        }
+    }
+
+
+    diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
 
     projectTexCoord.x = In.lightViewPosition1.x / In.lightViewPosition1.w / 2.f + 0.5f;
     projectTexCoord.y = -In.lightViewPosition1.y / In.lightViewPosition1.w / 2.f + 0.5f;
@@ -258,8 +274,14 @@ PS_OUT PS_MAIN(PS_IN In)
         if (lightDepthValue < depthValue)
         {
             // 이 픽셀의 빛의 양을 계산합니다.
-            lightIntensity = saturate(dot(In.vNormal, In.lightPos1));
- 
+            // lightIntensity = saturate(dot(In.vNormal, In.lightPos1));
+            float fLightRange = 40.f;
+            float fLightLength = length(In.lightPos1);
+            float3 vLightDir = normalize(In.lightPos1);
+
+            float fAtt = max((fLightRange - fLightLength), 0.f) / fLightRange;
+
+            lightIntensity = pow(max(dot(normalize(In.vNormal), vLightDir), 0.f), 10.f) * fAtt;
             if (lightIntensity > 0.0f)
             {
                 // 확산 색과 광 강도의 양에 따라 최종 확산 색을 결정합니다.

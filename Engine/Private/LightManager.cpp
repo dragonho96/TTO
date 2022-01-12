@@ -30,7 +30,25 @@ HRESULT CLightManager::AddLight(ID3D11Device * pDevice, ID3D11DeviceContext * pD
 
 HRESULT CLightManager::AddLight(CLight * pLight)
 {
+	//if (pLight->GetLightDesc()->eType == LIGHTDESC::TYPE::LIGHT_DIRECTION)
+	//	m_Lights.push_back(pLight);
+
 	m_Lights.push_back(pLight);
+
+	return S_OK;
+}
+
+HRESULT CLightManager::SortLight()
+{
+	m_RenderLights.clear();
+
+	for (auto& light : m_Lights)
+	{
+		if (light->GetLightDesc()->eType == LIGHTDESC::TYPE::LIGHT_DIRECTION)
+			m_RenderLights.push_front(light);
+		else
+			m_RenderLights.push_back(light);
+	}
 
 	return S_OK;
 }
@@ -45,17 +63,42 @@ HRESULT CLightManager::Render_Lights()
 
 _matrix CLightManager::GetViewMatrix(_uint index)
 {
-	return m_Lights[index]->GetViewMatrix();
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetViewMatrix();
 }
 
 _matrix CLightManager::GetProjMatrix(_uint index)
 {
-	return m_Lights[index]->GetProjMatrix();
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetProjMatrix();
 }
 
 _vector CLightManager::GetPosition(_uint index)
 {
-	return m_Lights[index]->GetPosition();
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetPosition();
+}
+
+ID3D11ShaderResourceView * CLightManager::GetShaderResourceView(_uint index)
+{
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetShaderResourceView();
+}
+
+string CLightManager::GetTargetName(_uint index)
+{
+	auto iter = m_RenderLights.begin();
+	advance(iter, index);
+
+	return (*iter)->GetTargetName();
 }
 
 void CLightManager::Free()

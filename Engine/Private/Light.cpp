@@ -2,6 +2,8 @@
 #include "VIBuffer_Rect_Viewport.h"
 #include "TargetManager.h"
 #include "Engine.h"
+#include "RenderTarget.h"
+
 
 CLight::CLight(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -38,6 +40,14 @@ HRESULT CLight::Initialize(const LIGHTDESC & LightDesc, CTransform* pTransform)
 	m_pVIBuffer = CVIBuffer_Rect_Viewport::Create(m_pDevice, m_pDeviceContext, 0.f, 0.f, ViewportDesc.Width, ViewportDesc.Height, "../Bin/ShaderFiles/Shader_Rect_Viewport.fx");
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
+
+	CTargetManager* m_pTargetManager = CTargetManager::GetInstance();
+	_uint numLights = CLightManager::GetInstance()->GetNumLights();
+	m_targetName = "Target_Shadow" + to_string(numLights);
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, m_targetName, ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 1.f, 0.f))))
+		return E_FAIL;
+
+	m_pRenderTarget = m_pTargetManager->Find_RenderTarget(m_targetName);
 
 	CLightManager::GetInstance()->AddLight(this);
 
@@ -77,7 +87,7 @@ HRESULT CLight::Render_Light()
 	_matrix viewMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW);
 	viewMatrix = XMMatrixInverse(nullptr, viewMatrix);
 	// viewMatrix = XMMatrixIdentity();
-	m_pVIBuffer->GetShader()->SetUp_ValueOnShader("g_ViewMatrixInv123", &XMMatrixTranspose(viewMatrix), sizeof(_float4x4));
+	m_pVIBuffer->GetShader()->SetUp_ValueOnShader("g_ViewMatrixInv", &XMMatrixTranspose(viewMatrix), sizeof(_float4x4));
 
 	_matrix projMatrix = CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ);
 	projMatrix = XMMatrixInverse(nullptr, projMatrix);
@@ -120,13 +130,18 @@ _matrix CLight::GetViewMatrix()
 
 _matrix CLight::GetProjMatrix()
 {
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(60), _float(1920) / 1080.0f, 0.2f, 300.f);
 	// return XMMatrixOrthographicLH(XMConvertToRadians(60.0f), _float(1920) / 1080.0f, 0.2f, 300.f);
 }
 
 _vector CLight::GetPosition()
 {
 	return m_pTransform->GetState(CTransform::STATE_POSITION);
+}
+
+ID3D11ShaderResourceView * CLight::GetShaderResourceView()
+{
+	return m_pRenderTarget->GetShaderResourceView();
 }
 
 CLight * CLight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc, CTransform* pTransform)
