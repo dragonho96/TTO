@@ -290,7 +290,6 @@ HRESULT CModel::Bind_Buffers(_uint iPassIndex)
 		m_pShader->SetUp_ValueOnShader("lightPosition0", &CLightManager::GetInstance()->GetPosition(lightIndex), sizeof(_float3));
 	}
 
-
 	_uint		iOffSet = 0;
 	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
 	m_pDeviceContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
@@ -319,29 +318,43 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (m_pMeshFileName.length() == 0 || m_pMeshFileName.length() == 0)
 		return S_OK;
 
-
-	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
+	// 0이 아닌값이라면 lightDepth render
+	if (iPassIndex != 0)
 	{
-		if (iPassIndex != 3)
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 		{
-			if (m_bSimulateRagdoll)
-				iPassIndex = 2;
-			else if (0 < m_Animations.size())
-				iPassIndex = 1;
-			//else
-			//	iPassIndex = 0;
+			// Characters
+			if (0 < m_Animations.size())
+			{
+				if (m_bSimulateRagdoll)
+					iPassIndex = 6;
+				else
+					iPassIndex = 5;
+			}
+			// Normal mesh
+			else
+			{
+				iPassIndex = 4;
+			}
 		}
-	}
-	else
-	{
-		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL&&
-			iPassIndex != 4)
-			iPassIndex = 0;
+		else
+		{
+			if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
+				iPassIndex = 4;
+		}
 	}
 	// m_pShader->Render(iPassIndex);
 
 	if (iPassIndex == 0)
 	{
+		if (0 < m_Animations.size())
+		{
+			if (m_bSimulateRagdoll)
+				iPassIndex = 2;
+			else
+				iPassIndex = 1;
+		}
+
 		_uint iNumLights = CLightManager::GetInstance()->GetNumRenderLights();
 		for (int i = 0; i < iNumLights; ++i)
 		{

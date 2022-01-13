@@ -75,7 +75,7 @@ _uint CEffect_ImpactSmoke::Update(_double TimeDelta)
 		memcpy(&instanceMatrices[i]->vPosition, &pos, sizeof(_vector));
 
 
-		ADDLOG(("pos: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
+		//ADDLOG(("pos: " + to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
 
 
 
@@ -218,9 +218,8 @@ void CEffect_ImpactSmoke::Free()
 {
 	__super::Free();
 
-	SafeRelease(m_pTransformCom);
 	SafeRelease(m_pTextureCom);
 	SafeRelease(m_pTextureGreyCom);
 	SafeRelease(m_pVIBufferCom);
-	SafeRelease(m_pRendererCom);
+	//SafeRelease(m_pRendererCom);
 }

@@ -93,7 +93,7 @@ HRESULT CRenderer::InitializePrototype()
 		return E_FAIL;
 
 
-#ifdef _DEBUG
+
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Diffuse", 0.f, 0.f, 200.f, 200.f)))
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Normal", 0.f, 200.f, 200.f, 200.f)))
@@ -109,7 +109,6 @@ HRESULT CRenderer::InitializePrototype()
 	//	return E_FAIL;
 	//if (FAILED(m_pTargetManager->Ready_DebugBuffer("Target_Shadow1", 0.f, 800.f, 200.f, 200.f)))
 	//	return E_FAIL;
-#endif // _DEBUG
 
 	m_pTargetManager->Initialize(m_pDeviceContext);
 

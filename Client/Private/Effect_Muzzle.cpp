@@ -196,9 +196,9 @@ void CEffect_Muzzle::Free()
 {
 	__super::Free();
 
-	SafeRelease(m_pTransformCom);
-	SafeRelease(m_pTextureCom);
-	SafeRelease(m_pTextureGreyCom);
-	SafeRelease(m_pVIBufferCom);
-	SafeRelease(m_pRendererCom);
+	//SafeRelease(m_pTransformCom);
+	//SafeRelease(m_pTextureCom);
+	//SafeRelease(m_pTextureGreyCom);
+	//SafeRelease(m_pVIBufferCom);
+	//SafeRelease(m_pRendererCom);
 }

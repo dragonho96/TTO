@@ -121,6 +121,11 @@ void CEmptyUI::SetPosition(_float x, _float y)
 	m_pRectTransformCom->SetPosition(x, y);
 }
 
+void CEmptyUI::SetClientPosition(_float x, _float y)
+{
+	m_pRectTransformCom->SetClientPosition(x, y);
+}
+
 void CEmptyUI::LinkTranformWithParent()
 {
 	if (m_pParent || dynamic_cast<CEmptyUI*>(m_pParent))

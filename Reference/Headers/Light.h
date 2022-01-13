@@ -29,8 +29,11 @@ public:
 	_vector GetDirection();
 	_float	GetAngle();
 	ID3D11ShaderResourceView* GetShaderResourceView();
-
 	string GetTargetName() { return m_targetName; };
+
+public:
+	void	SetRange(_float range) { m_LightDesc.fLightRange = range; }
+
 
 private:
 	//ID3D11Device*					m_pDevice = nullptr;

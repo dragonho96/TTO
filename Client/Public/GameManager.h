@@ -16,13 +16,25 @@ public:
 	void Update(_double TimeDelta);
 
 public:
+	void Shake_Rifle();
+	void Shake_Grenade();
+
 	void SwitchCamera(CAMERA type);
 	CAMERA GetCurrentCamera() { return m_eCurCamera; }
+
 private:
 	vector<CCamera*>	m_Camera;
 	CAMERA				m_eCurCamera = CAMERA::FOLLOW;
 	CVIBuffer_RectUI*	m_pSceneMask = nullptr;
 	_float				m_fMastAlpha = 0.f;
+
+public:
+	class CEmptyUI*		m_pCrosshair = nullptr;
+
+public:
+	void SetShootingSightUI(_bool result, _vector hitPos = {}, _vector cursorPos = {});
+private:
+	class CSightIndicator*	m_pSightIndicator = nullptr;
 
 public:
 	void PlayMuzzleEffect();

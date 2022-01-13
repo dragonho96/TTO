@@ -67,7 +67,7 @@ void CGrenade::Update(_double deltaTime)
 		m_pTransform->SetPxMatrix(pxMat);
 
 		m_TimeExplosion += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
-		ADDLOG(("m_TimeExplosion : " + to_string(m_TimeExplosion)).c_str());
+		//ADDLOG(("m_TimeExplosion : " + to_string(m_TimeExplosion)).c_str());
 		if (m_TimeExplosion >= 4.5f)
 			Explode();
 	}
@@ -88,7 +88,7 @@ void CGrenade::OnThrow(_vector dir, _float forcePower)
 	memcpy(&forceDir, &dir, sizeof(PxVec3));
 	// forceDir *= forcePower;
 	
-	ADDLOG(("m_ThrowingDir: " + to_string(XMVectorGetX(dir)) + ", " + to_string(XMVectorGetY(dir)) + ", " + to_string(XMVectorGetZ(dir))).c_str());
+	//ADDLOG(("m_ThrowingDir: " + to_string(XMVectorGetX(dir)) + ", " + to_string(XMVectorGetY(dir)) + ", " + to_string(XMVectorGetZ(dir))).c_str());
 
 	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
 	m_pCollider->GetRigidActor()->is<PxRigidDynamic>()->addForce(forceDir, PxForceMode::eIMPULSE);
@@ -125,7 +125,7 @@ void CGrenade::Explode()
 				{
 					CEnemy* enemy = static_cast<CEnemy*>(hit.getAnyHit(i).actor->userData);
 					PxTransform enemyPos = hit.getAnyHit(i).actor->getGlobalPose();
-					ADDLOG(("Pos : " + to_string(enemyPos.p.x) + ", " + to_string(enemyPos.p.z)).c_str());
+					//ADDLOG(("Pos : " + to_string(enemyPos.p.x) + ", " + to_string(enemyPos.p.z)).c_str());
 
 					enemy->GetDamage(vecPosition);
 				}

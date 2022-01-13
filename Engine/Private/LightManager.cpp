@@ -38,6 +38,18 @@ HRESULT CLightManager::AddLight(CLight * pLight)
 	return S_OK;
 }
 
+HRESULT CLightManager::RemoveLight(CLight * pLight)
+{
+	for (auto& iter = m_Lights.begin(); iter != m_Lights.end();)
+	{
+		if ((*iter) == pLight)
+			iter = m_Lights.erase(iter);
+		else
+			++iter;
+	}
+	return S_OK;
+}
+
 HRESULT CLightManager::SortLight()
 {
 	m_RenderLights.clear();

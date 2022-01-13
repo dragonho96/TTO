@@ -128,8 +128,7 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 HRESULT CScene_Test::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CPlayer::Create(nullptr));
-	m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
-
+	// m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
 	// Get Enemy number and create enemy scripts
 
 	list<class CGameObject*> listEnemy = CEngine::GetInstance()->GetGameObjectInLayer(0, "Enemy");

@@ -214,6 +214,7 @@
     <ClInclude Include="..\Public\Scene_Lobby.h" />
     <ClInclude Include="..\Public\Scene_Logo.h" />
     <ClInclude Include="..\Public\Scene_Test.h" />
+    <ClInclude Include="..\Public\SightIndicator.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\WalkState.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\Private\Scene_Lobby.cpp" />
     <ClCompile Include="..\Private\Scene_Logo.cpp" />
     <ClCompile Include="..\Private\Scene_Test.cpp" />
+    <ClCompile Include="..\Private\SightIndicator.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\WalkState.cpp" />
@@ -295,6 +297,7 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_Fire.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Fresnel.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_GrenadeTrajectory.fx" />
+    <FxCompile Include="..\..\Assets\Shader\Shader_Line.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Mesh.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_PointInstance.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect.fx" />

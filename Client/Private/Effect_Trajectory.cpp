@@ -97,6 +97,9 @@ HRESULT CEffect_Trajectory::Render(_uint iPassIndex)
 	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	// m_pVIBufferCom->GetShader()->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(pEngine->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_vCamPosition", &CEngine::GetInstance()->GetCamPosition(), sizeof(_vector));
+	
+	_float thickness = 0.03f;
+	m_pShader->SetUp_ValueOnShader("g_fThickness", &thickness, sizeof(_float));
 
 	if (FAILED(m_pShader->SetUp_TextureOnShader("g_DiffuseTexture", m_pTextureCom)))
 		return E_FAIL;
@@ -171,8 +174,8 @@ void CEffect_Trajectory::Free()
 {
 	__super::Free();
 
-	SafeRelease(m_pTransformCom);
-	SafeRelease(m_pTextureCom);
-	SafeRelease(m_pVIBufferCom);
-	SafeRelease(m_pRendererCom);
+	//SafeRelease(m_pTransformCom);
+	//SafeRelease(m_pTextureCom);
+	//SafeRelease(m_pVIBufferCom);
+	//SafeRelease(m_pRendererCom);
 }

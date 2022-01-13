@@ -19,7 +19,7 @@
 
 USING(Tool)
 
-static string strScene = "../../Assets/Scenes/Effect.yaml";
+static string strScene = "../../Assets/Scenes/ModelTest.yaml";
 
 CToolManager::CToolManager()
 	: m_pEngine(CEngine::GetInstance())

@@ -149,7 +149,6 @@ HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pDeviceContext)
 }
 
 
-#ifdef _DEBUG
 HRESULT CTargetManager::Ready_DebugBuffer(string pTargetTag, _float fX, _float fY, _float fWidth, _float fHeight)
 {
 	CRenderTarget*	pRenderTarget = Find_RenderTarget(pTargetTag);
@@ -177,7 +176,6 @@ ID3D11ShaderResourceView * CTargetManager::GetShaderResourceView(string pTargetT
 
 	return nullptr;
 }
-#endif // _DEBUG
 
 CRenderTarget * CTargetManager::Find_RenderTarget(string pRenderTagetTag)
 {

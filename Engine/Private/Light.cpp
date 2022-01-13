@@ -185,6 +185,7 @@ CComponent * CLight::Clone(void * pArg)
 
 void CLight::Free()
 {
+	CLightManager::GetInstance()->RemoveLight(this);
 	SafeRelease(m_pVIBuffer);
 	//SafeRelease(m_pDeviceContext);
 	//SafeRelease(m_pDevice);

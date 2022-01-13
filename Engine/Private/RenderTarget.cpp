@@ -63,7 +63,7 @@ HRESULT CRenderTarget::Clear()
 
 	return S_OK;
 }
-#ifdef _DEBUG
+
 
 HRESULT CRenderTarget::Ready_DebugBuffer(_float fX, _float fY, _float fWidth, _float fHeight)
 {
@@ -83,7 +83,6 @@ HRESULT CRenderTarget::Render_DebugBuffer()
 	return S_OK;
 }
 
-#endif // _DEBUG
 CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iWidth, _uint iHeight, DXGI_FORMAT Format, _float4 vClearColor)
 {
 	CRenderTarget*	pInstance = new CRenderTarget(pDevice, pDeviceContext);

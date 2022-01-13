@@ -28,6 +28,7 @@ public:
 public:
 	void SetRectTransform(CRectTransform::RECTTRANSFORMDESC _desc);
 	void SetPosition(_float x, _float y);
+	void SetClientPosition(_float x, _float y);
 	virtual void LinkTranformWithParent();
 
 public:

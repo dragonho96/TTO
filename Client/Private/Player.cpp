@@ -52,9 +52,11 @@ HRESULT CPlayer::Initialize()
 		m_pController->getActor()->userData = this;
 	}
 
-	m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
-	m_pGrenadeTrajectory->SetActive(false);
+	//m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
+	//m_pGrenadeTrajectory->SetActive(false);
 
+
+	
 	// EquipmentPool 에 meshcontainer 등록
 	AssignMeshContainter();
 	FindBones();
@@ -67,6 +69,16 @@ HRESULT CPlayer::Initialize()
 	m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
+
+	m_pRifleLight = CEngine::GetInstance()->SpawnPrefab("RifleLight");
+	m_pRifleLightTransform = dynamic_cast<CTransform*>(m_pRifleLight->GetComponent("Com_Transform"));
+
+	m_pMuzzleLight = CEngine::GetInstance()->SpawnPrefab("RifleMuzzleLight");
+	m_pMuzzleLightTransform = dynamic_cast<CTransform*>(m_pMuzzleLight->GetComponent("Com_Transform"));
+	m_pMuzzleLightCom = dynamic_cast<CLight*>(m_pMuzzleLight->GetComponent("Com_Light"));
+	m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
+
+	// Setting Non-Looping Animation
 	m_pModel->SetAnimSeperate(true);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::EQUIP_RIFLE, false);
 	m_pModel->SetAnimationLoop((_uint)CStateMachine::ANIM_UPPER::UNEQUIP_RIFLE, false);
@@ -168,8 +180,6 @@ void CPlayer::Update(_double deltaTime)
 		if (XMVectorGetY(XMVector3Cross(playerLook, movingDir)) < 0)
 			m_angleBetweenCamPlayer *= -1;
 
-
-
 		TimeRaycast += CEngine::GetInstance()->ComputeDeltaTime("Raycast");
 		if (TimeRaycast > 0.01f)
 		{
@@ -186,6 +196,7 @@ void CPlayer::Update(_double deltaTime)
 			// filterData.data.word1 = CPxManager::GROUP2;
 			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 100.f, hit, filterData))
 			{
+				// Player를 제외한 actor
 				if (hit.block.actor->userData != this)
 				{
 					PxU32 distance = hit.block.distance;
@@ -193,48 +204,26 @@ void CPlayer::Update(_double deltaTime)
 					// PxU32 faceIndex = hit.getTouch(0).faceIndex;
 					PxVec3 hitPos = hit.block.position;
 					PxVec3 hitNormal = hit.block.normal;
-					if (hit.block.actor->userData)
-						int i = 0;
-
-					if (CEngine::GetInstance()->IsMouseDown(0))
-					{
-						CGameManager::GetInstance()->PlayMuzzleEffect();
-
-						_vector impactPos = { hitPos.x, hitPos.y, hitPos.z };
-						_vector impactNormal = { hitNormal.x, hitNormal.y, hitNormal.z };
-						CGameManager::GetInstance()->PlayImpactSmokeEffect(impactPos, impactNormal);
-
-						ADDLOG(("Hit Distance: " + to_string(distance)).c_str());
-						ADDLOG(("FaceIndex: " + to_string(faceIndex)).c_str());
-						string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-						string logStr = "" + to_string(hitNormal.x) + " " + to_string(hitNormal.y) + " " + to_string(hitNormal.z);
-						ADDLOG(("Hit Pos: " + logPos).c_str());
-						ADDLOG(("Hit Normal: " + logStr).c_str());
-						IScriptObject* hitObject = static_cast<IScriptObject*>(hit.block.actor->userData);
-						if (dynamic_cast<CEnemy*>(hitObject))
-							dynamic_cast<CEnemy*>(hitObject)->GetDamage(m_pTransform->GetState(CTransform::STATE_POSITION));
-
-					}
 
 					m_cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
 
-
-					m_targetUpperRotation.x = GetXAxisAngle(m_cursorHitPos);
-					m_targetUpperRotation.y = GetYAxisAngle(m_cursorHitPos);
-
-					_float	fFollowSpeed = deltaTime * 15.f;
-					m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
-					m_curUpperRotation.y = Lerp(m_curUpperRotation.y, m_targetUpperRotation.y, fFollowSpeed);
-
-					m_pModel->SetUpperRotationAngle(m_curUpperRotation);
-
-					// Rotating Body
-					fFollowSpeed = deltaTime * 8.f;
-					m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
-					m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
 				}
 			}
+
+			RaycastRifleToHitPos();
 		}
+
+		RotateBody(deltaTime);
+
+		if (CEngine::GetInstance()->IsMousePressed(0))
+			Shot(deltaTime);
+
+		if (m_pWeaponInHand == m_pPrimaryWeapon)
+		{
+			UpdateRifleLightTransform();
+			UpdateRifleMuzzleLightRange(deltaTime);
+		}
+
 		if (CEngine::GetInstance()->IsKeyPressed('O'))
 			CheckEnemyInSight();
 	}
@@ -295,6 +284,37 @@ void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
 	}
 }
 
+void CPlayer::UpdateRifleLightTransform()
+{
+	CTransform* pWeaponTransform = dynamic_cast<CTransform*>(m_pPrimaryWeapon->GetComponent("Com_Transform"));
+	m_pRifleLightTransform->SetMatrix(pWeaponTransform->GetMatrix());
+
+	_vector up = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_UP));
+	_vector right = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_RIGHT));
+	_vector offsetPosition = up * 0.5f + right * -0.07f;
+	_vector vPosition = pWeaponTransform->GetState(CTransform::STATE_POSITION);
+	vPosition += offsetPosition;
+	m_pRifleLightTransform->SetState(CTransform::STATE_POSITION, vPosition);
+
+	_matrix mat = m_pRifleLightTransform->GetWorldMatrix();
+	_matrix matRotationX = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	_matrix matRotationZ = XMMatrixRotationZ(XMConvertToRadians(90.f));
+	// _matrix matRotation = XMMatrixRotationAxis(_vector{1.f, 0.f, 0.f}, XMConvertToRadians(-90.f));
+	_matrix newMat = matRotationX * mat;
+	newMat = matRotationZ * newMat;
+	m_pRifleLightTransform->SetMatrix(newMat);
+	m_pMuzzleLightTransform->SetMatrix(newMat);
+	m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
+}
+
+void CPlayer::UpdateRifleMuzzleLightRange(_double deltaTime)
+{
+	_double fLerpSpeed = deltaTime * 30.f;
+	m_fCurMuzzleLightRange = Lerp(m_fCurMuzzleLightRange, m_fMuzzleLightRange, fLerpSpeed);
+	if (m_fCurMuzzleLightRange >= 2.5f)
+		m_fMuzzleLightRange = 0.1f;
+}
+
 void CPlayer::EquipWeapon(EQUIPMENT eType)
 {
 	if (eType == EQUIPMENT::PRIMARY)
@@ -330,6 +350,46 @@ void CPlayer::ChangeGear(EQUIPMENT eType, _uint iIndex)
 	equipmentPool->GetEquipment(eType, iIndex)->mesh->SetActive(true);
 }
 
+void CPlayer::RotateBody(_double deltaTime)
+{
+	m_targetUpperRotation.x = GetXAxisAngle(m_cursorHitPos);
+	m_targetUpperRotation.y = GetYAxisAngle(m_cursorHitPos);
+
+	_float	fFollowSpeed = deltaTime * 15.f;
+	m_curUpperRotation.x = Lerp(m_curUpperRotation.x, m_targetUpperRotation.x, fFollowSpeed);
+	m_curUpperRotation.y = Lerp(m_curUpperRotation.y, m_targetUpperRotation.y, fFollowSpeed);
+
+	m_pModel->SetUpperRotationAngle(m_curUpperRotation);
+
+	// Rotating Body
+	fFollowSpeed = deltaTime * 8.f;
+	m_curBodyRotation = Lerp(m_curBodyRotation, m_targetBodyRotation, fFollowSpeed);
+	m_pTransform->SetUpRotation(_vector{ 0, 1, 0, 0 }, m_curBodyRotation);
+}
+
+void CPlayer::Shot(_double deltaTime)
+{
+	static const _double fShotDelay = 0.1;
+
+	if (m_ShotTime >= fShotDelay)
+	{
+		// hitPos = m_rifleHitPos
+		CGameManager::GetInstance()->PlayMuzzleEffect();
+		CGameManager::GetInstance()->PlayImpactSmokeEffect(m_rifleHitPos, m_rifleHitNormal);
+
+		IScriptObject* hitObject = static_cast<IScriptObject*>(m_pHitActor->userData);
+		if (dynamic_cast<CEnemy*>(hitObject))
+			dynamic_cast<CEnemy*>(hitObject)->GetDamage(m_pTransform->GetState(CTransform::STATE_POSITION));
+
+		CGameManager::GetInstance()->Shake_Rifle();
+
+		m_ShotTime = 0.0f;
+		m_fMuzzleLightRange = 3.f;
+	}
+
+	m_ShotTime += deltaTime;
+}
+
 void CPlayer::ThrowGrenade()
 {
 	if (m_pGrenadeInHand)
@@ -344,14 +404,15 @@ void CPlayer::SetGrenadeTrajectory(_bool result)
 {
 	if (!result)
 	{
-		m_pGrenadeTrajectory->SetActive(false);
+		if (m_pGrenadeTrajectory)
+			m_pGrenadeTrajectory->SetActive(false);
 		return;
 	}
 
 	if (nullptr == m_pGrenadeInHand)
 		return;
-
-	m_pGrenadeTrajectory->SetActive(true);
+	if (m_pGrenadeTrajectory)
+		m_pGrenadeTrajectory->SetActive(true);
 	_vector pos = XMVectorSetW(m_pTransform->GetState(CTransform::STATE_POSITION), 0.f);
 	_float length = XMVectorGetX(XMVector3Length(m_cursorHitPos - pos));
 	_float time = log10(length + 1);
@@ -394,7 +455,9 @@ void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity, _floa
 		_vector pos = CalculatePosInTime(origin, initialVelocity, (time / (_float)lineSegment) * (i + 1));
 		listPoints.push_back(pos);
 	}
-	dynamic_cast<CEffect_Trajectory*>(m_pGrenadeTrajectory)->SetPoints(listPoints);
+
+	if (m_pGrenadeTrajectory)
+		dynamic_cast<CEffect_Trajectory*>(m_pGrenadeTrajectory)->SetPoints(listPoints);
 
 	// auto iter = listPoints.begin();
 	// _vector first = listPoints.front();
@@ -430,8 +493,13 @@ _float CPlayer::GetXAxisAngle(_vector hitPos)
 
 	_vector hitposDir;
 	// mySpinePos-> hitpos
-	if (m_pGrenadeTrajectory->IsActive())
-		hitposDir = XMVectorSetW(m_ThrowingVelocity, 0.f);
+	if (m_pGrenadeTrajectory)
+	{
+		if (m_pGrenadeTrajectory->IsActive())
+			hitposDir = XMVectorSetW(m_ThrowingVelocity, 0.f);
+		else
+			hitposDir = XMVectorSubtract(hitPos, mySpinePos);
+	}
 	else
 		hitposDir = XMVectorSubtract(hitPos, mySpinePos);
 
@@ -565,6 +633,54 @@ void CPlayer::CheckEnemyInSight()
 				else
 					enemy->SetVisibility(VISIBILITY::VISIBLE);
 			}
+		}
+	}
+}
+
+void CPlayer::RaycastRifleToHitPos()
+{
+	_vector origin;
+	_vector dir;
+	_float range;
+
+	// TODO: 총 위치로 바꾸기
+	_matrix spineMat = m_pSpineBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+	_vector mySpineTempA, mySpineTempB;
+	XMMatrixDecompose(&mySpineTempA, &mySpineTempB, &origin, spineMat);
+	origin = XMVectorSetW(origin, 0);
+	dir = XMVector3Normalize(m_cursorHitPos - origin);
+	range = XMVectorGetX(XMVector3Length(m_cursorHitPos - origin));
+
+	PxRaycastBuffer hit;
+	PxQueryFilterData filterData;
+	filterData.data.word1 = CPxManager::GROUP3;
+	if (CEngine::GetInstance()->Raycast(origin, dir, range, hit, filterData))
+	{
+		PxU32 distance = hit.block.distance;
+		PxU32 faceIndex = hit.block.faceIndex;
+		PxVec3 hitPos = hit.block.position;
+		PxVec3 hitNormal = hit.block.normal;
+
+		memcpy(&m_rifleHitPos, &hitPos, sizeof(PxVec3));
+		m_rifleHitPos = XMVectorSetW(m_rifleHitPos, 1.f);
+		memcpy(&m_rifleHitNormal, &hitNormal, sizeof(PxVec3));
+		m_rifleHitPos = XMVectorSetW(m_rifleHitPos, 0.f);
+
+		PxVec3 cursorPos = { XMVectorGetX(m_cursorHitPos), XMVectorGetY(m_cursorHitPos), XMVectorGetZ(m_cursorHitPos) };
+
+		if ((hitPos - cursorPos).normalize() < 0.5f)
+			CGameManager::GetInstance()->SetShootingSightUI(false);
+		else
+			CGameManager::GetInstance()->SetShootingSightUI(true, m_rifleHitPos, m_cursorHitPos);
+
+		m_pHitActor = hit.block.actor;
+
+		if (CEngine::GetInstance()->IsMouseDown(0))
+		{
+			//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+			//ADDLOG(("Hit Pos: " + logPos).c_str());
+			//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
+			//ADDLOG(("Cursor Pos: " + logPos).c_str());
 		}
 	}
 }

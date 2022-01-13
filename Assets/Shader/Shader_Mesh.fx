@@ -134,6 +134,106 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vProjPos = Out.vPosition;
+    Out.vTexUV = In.vTexUV;
+    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.vNormal = normalize(Out.vNormal);
+
+    Out.lightViewPosition0 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightViewMatrix0);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightProjMatrix0);
+
+    Out.lightViewPosition1 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightViewMatrix1);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightProjMatrix1);
+
+    Out.lightViewPosition2 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightViewMatrix2);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightProjMatrix2);
+
+    Out.lightViewPosition3 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightViewMatrix3);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightProjMatrix3);
+
+    Out.lightViewPosition4 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightViewMatrix4);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightProjMatrix4);
+
+    Out.lightViewPosition5 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightViewMatrix5);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightProjMatrix5);
+
+    float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightPos0 = lightPosition0.xyz - worldPosition.xyz;
+    Out.lightPos1 = lightPosition1.xyz - worldPosition.xyz;
+    Out.lightPos2 = lightPosition2.xyz - worldPosition.xyz;
+    Out.lightPos3 = lightPosition3.xyz - worldPosition.xyz;
+    Out.lightPos4 = lightPosition4.xyz - worldPosition.xyz;
+    Out.lightPos5 = lightPosition5.xyz - worldPosition.xyz;
+    return Out;
+}
+
+VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH(VS_IN In)
+{
+    VS_OUT_LIGHT_DEPTH Out = (VS_OUT_LIGHT_DEPTH) 0;
+
+    matrix matLightWV, matLightWVP;
+
+    matLightWV = mul(g_WorldMatrix, g_LightViewMatrix0);
+    matLightWVP = mul(matLightWV, g_LightProjMatrix0);
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matLightWVP);
+
+    Out.vLightDepthPosition = Out.vPosition;
+    Out.vTexUV = In.vTexUV;
+    return Out;
+}
+
+VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH_ANIM(VS_IN In)
+{
+    VS_OUT_LIGHT_DEPTH Out = (VS_OUT_LIGHT_DEPTH) 0;
+
+    matrix matLightWV, matLightWVP;
+
+    matLightWV = mul(g_WorldMatrix, g_LightViewMatrix0);
+    matLightWVP = mul(matLightWV, g_LightProjMatrix0);
+
+    matrix BoneMatrix = g_BoneMatrices.BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    Out.vPosition = mul(vPosition, matLightWVP);
+    Out.vLightDepthPosition = Out.vPosition;
+    Out.vTexUV = In.vTexUV;
+    return Out;
+}
+
+
+
+
+
+VS_OUT VS_MAIN_ANIM(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    matrix BoneMatrix = g_BoneMatrices.BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+
+   
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    Out.vPosition = mul(vPosition, matWVP);
+
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vTexUV = In.vTexUV;
+    Out.vProjPos = Out.vPosition;
 
 
     Out.lightViewPosition0 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
@@ -161,63 +261,15 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightProjMatrix5);
     Out.vTexUV = In.vTexUV;
 
-    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    Out.vNormal = normalize(Out.vNormal);
+
 
     float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-    
-    // Out.lightPos0 = normalize(lightPosition0.xyz - worldPosition.xyz);
-    // Out.lightPos1 = normalize(lightPosition1.xyz - worldPosition.xyz);
     Out.lightPos0 = lightPosition0.xyz - worldPosition.xyz;
     Out.lightPos1 = lightPosition1.xyz - worldPosition.xyz;
     Out.lightPos2 = lightPosition2.xyz - worldPosition.xyz;
     Out.lightPos3 = lightPosition3.xyz - worldPosition.xyz;
     Out.lightPos4 = lightPosition4.xyz - worldPosition.xyz;
     Out.lightPos5 = lightPosition5.xyz - worldPosition.xyz;
-    return Out;
-}
-
-VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH(VS_IN In)
-{
-    VS_OUT_LIGHT_DEPTH Out = (VS_OUT_LIGHT_DEPTH) 0;
-
-    matrix matLightWV, matLightWVP;
-
-    matLightWV = mul(g_WorldMatrix, g_LightViewMatrix0);
-    matLightWVP = mul(matLightWV, g_LightProjMatrix0);
-    Out.vPosition = mul(vector(In.vPosition, 1.f), matLightWVP);
-
-    Out.vLightDepthPosition = Out.vPosition;
-    Out.vTexUV = In.vTexUV;
-    return Out;
-}
-
-VS_OUT VS_MAIN_ANIM(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-
-    matrix matWV, matWVP;
-
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    matrix BoneMatrix = g_BoneMatrices.BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
-		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
-		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
-
-   
-    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
-    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
-
-
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
-    Out.vTexUV = In.vTexUV;
-    Out.vProjPos = Out.vPosition;
-
-    // vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    // Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
 
     return Out;
 }
@@ -238,13 +290,46 @@ VS_OUT VS_MAIN_ANIM_RAGDOLL(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-   //  Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
     Out.vNormal = mul(vNormal, g_WorldMatrix);
     Out.vTexUV = In.vTexUV;
     Out.vProjPos = Out.vPosition;
 
-    //vector vWorldNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
-    //Out.fShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vWorldNormal)));
+
+    
+    Out.lightViewPosition0 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightViewMatrix0);
+    Out.lightViewPosition0 = mul(Out.lightViewPosition0, g_LightProjMatrix0);
+
+    Out.lightViewPosition1 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightViewMatrix1);
+    Out.lightViewPosition1 = mul(Out.lightViewPosition1, g_LightProjMatrix1);
+
+    Out.lightViewPosition2 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightViewMatrix2);
+    Out.lightViewPosition2 = mul(Out.lightViewPosition2, g_LightProjMatrix2);
+
+    Out.lightViewPosition3 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightViewMatrix3);
+    Out.lightViewPosition3 = mul(Out.lightViewPosition3, g_LightProjMatrix3);
+
+    Out.lightViewPosition4 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightViewMatrix4);
+    Out.lightViewPosition4 = mul(Out.lightViewPosition4, g_LightProjMatrix4);
+
+    Out.lightViewPosition5 = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightViewMatrix5);
+    Out.lightViewPosition5 = mul(Out.lightViewPosition5, g_LightProjMatrix5);
+    Out.vTexUV = In.vTexUV;
+
+
+
+    float4 worldPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.lightPos0 = lightPosition0.xyz - worldPosition.xyz;
+    Out.lightPos1 = lightPosition1.xyz - worldPosition.xyz;
+    Out.lightPos2 = lightPosition2.xyz - worldPosition.xyz;
+    Out.lightPos3 = lightPosition3.xyz - worldPosition.xyz;
+    Out.lightPos4 = lightPosition4.xyz - worldPosition.xyz;
+    Out.lightPos5 = lightPosition5.xyz - worldPosition.xyz;
 
     return Out;
 }
@@ -360,6 +445,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 
     diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
+    bias = 0.01f;
 
     projectTexCoord.x = In.lightViewPosition1.x / In.lightViewPosition1.w / 2.f + 0.5f;
     projectTexCoord.y = -In.lightViewPosition1.y / In.lightViewPosition1.w / 2.f + 0.5f;
@@ -504,8 +590,6 @@ PS_OUT PS_MAIN(PS_IN In)
     // 빛과 텍스처 색상을 결합합니다.
     color = color * textureColor;
     Out.vDiffuse = color;
-
-
     Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.w / 300.f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
     return Out;
@@ -593,6 +677,17 @@ technique11 DefaultDevice
         SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN_LIGHT_DEPTH();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DEPTH();
+    }
+
+    pass LightDepthAnim
+    {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_LIGHT_DEPTH_ANIM();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DEPTH();
     }

@@ -122,7 +122,7 @@ HRESULT CVIBuffer_Line::Render(_uint iPassIndex)
 
 	m_pShader->SetUp_ValueOnShader("g_PointWorldPosition", m_pointPosition, sizeof(_vector) * 128);
 
-	__super::Render();
+	__super::Render(iPassIndex);
 	//_uint		iOffset = 0;
 
 	//m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, m_pVB.GetAddressOf(), &m_iStride, &iOffset);

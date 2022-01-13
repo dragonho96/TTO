@@ -16,6 +16,7 @@ public:
 public:
 	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const LIGHTDESC& LightDesc);
 	HRESULT AddLight(class CLight* pLight);
+	HRESULT RemoveLight(class CLight* pLight);
 	HRESULT SortLight();
 	HRESULT Render_Lights();
 	HRESULT Render_DebugBuffer();

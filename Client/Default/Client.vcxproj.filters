@@ -151,6 +151,7 @@
     <ClInclude Include="..\Public\Effect_Muzzle.h">
       <Filter>02.GameObjects\Effect\Muzzle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SightIndicator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -288,6 +289,7 @@
     <ClCompile Include="..\Private\Effect_Muzzle.cpp">
       <Filter>02.GameObjects\Effect\Muzzle</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SightIndicator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -442,6 +444,9 @@
     <Filter Include="02.GameObjects\Effect\Muzzle">
       <UniqueIdentifier>{fb583a28-8aad-44b5-b78a-0c927a02976c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\SightIndicator">
+      <UniqueIdentifier>{ed98f0a0-e4fc-490c-979f-229cd6b8deb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -488,6 +493,9 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect_Viewport.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Line.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

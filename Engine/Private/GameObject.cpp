@@ -233,6 +233,8 @@ HRESULT CGameObject::RemoveComponent(string pComponentTag)
 
 void CGameObject::Free()
 {
+	
+
 	for (auto& Pair : m_Components)
 		SafeRelease(Pair.second);
 

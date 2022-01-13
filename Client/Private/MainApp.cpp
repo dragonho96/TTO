@@ -18,6 +18,8 @@
 #include "Effect_ImpactSmoke.h"
 #include "Effect_Explosion.h"
 #include "Effect_Muzzle.h"
+
+#include "SightIndicator.h"
 #include "Equipment.h"
 
 #include "Log.h"
@@ -71,7 +73,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	Client::SCENE eScene = SCENE_EFFECT;
+	Client::SCENE eScene = SCENE_TEST;
 
 	if (eScene == SCENE_TEST)
 	{
@@ -283,7 +285,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	// For.Prototype_Renderer
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Renderer", m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-	// SafeAddRef(m_pRenderer);
+	SafeAddRef(m_pRenderer);
 
 	/* Transform */
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Transform", CTransform::Create(m_pDevice, m_pDeviceContext))))
@@ -321,6 +323,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 20))))
 		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line_Single", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 2))))
+		return E_FAIL;
 	
 	/* Collider*/
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_BoxCollider", CBoxCollider::Create(m_pDevice, m_pDeviceContext))))
@@ -354,8 +358,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	
 	/* Effects */
-	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect", CEffect::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	//if (FAILED(m_pEngine->AddPrototype("GameObject_Effect", CEffect::Create(m_pDevice, m_pDeviceContext))))
+	//	return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Fire", CEffect_Fire::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Smoke", CEffect_Smoke::Create(m_pDevice, m_pDeviceContext))))
@@ -369,6 +373,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Explosion", CEffect_Explosion::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Effect_Muzzle", CEffect_Muzzle::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_SightIndicator", CSightIndicator::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	/* Camera */

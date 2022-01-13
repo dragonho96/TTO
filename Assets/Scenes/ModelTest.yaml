@@ -1,28 +1,70 @@
 Scene: Untitled
 GameObjects:
-  - Name: Sphere
-    UUID: 9967862885829788330
+  - Name: Terrain
+    UUID: 2014090639884182056
     Active: true
-    Layer: Sphere
+    Layer: Terrain
     Type: Object
-    RenderGroup: 2
     Com_Transform:
-      Translation: [0, 1.41669273, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
+  - Name: Building
+    UUID: 3121640791145820857
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [5.11316156, 0.362733543, 8.78027058]
+      Rotation: [179.999893, 44.2965202, 179.999878]
+      Scale: [0.999963641, 1, 0.999963641]
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Sphere\
-      MeshFileName: Sphere.fbx
-      ShaderPath: ..\..\Assets\Shader\Shader_Fresnel.fx
-      HasCollider: false
+      MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
+      MeshFileName: ContainerHouse.fbx
+      HasCollider: true
+  - Name: Directional
+    UUID: 9377362180243712151
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [-11.8940735, 13.1201744, -12.9010572]
+      Rotation: [19.9999924, 10, 0]
+      Scale: [0.999998033, 0.999990582, 0.999990642]
+    Com_Light:
+      Type: 0
+      Range: 10
+      Angle: 20
+      Diffuse: [1, 1, 1, 1]
+      Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
+      Specular: [1, 1, 1, 1]
+  - Name: Spot
+    UUID: 6319315845979601370
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [13.7123184, 7.52110672, 2.79229975]
+      Rotation: [90, -0, 0]
+      Scale: [0.999816716, 0.999999881, 0.999999881]
+    Com_Light:
+      Type: 2
+      Range: 10
+      Angle: 24.2000008
+      Diffuse: [1, 1, 1, 1]
+      Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
+      Specular: [1, 1, 1, 1]
   - Name: Player
-    UUID: 10776407504068666600
+    UUID: 18243543196699355933
     Active: true
     Layer: Player
     Type: Object
-    RenderGroup: 1
     Com_Transform:
-      Translation: [12.3405237, 2.00000119, 5.05167866]
+      Translation: [12.3405237, 1.14081883, 5.05167866]
       Rotation: [0, -0, 0]
       Scale: [0.999975502, 0.999995291, 0.999975502]
     Com_Collider:
@@ -39,65 +81,16 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: PlayerFinal.fbx
       HasCollider: false
-  - Name: Wall
-    UUID: 9683079154794310973
+  - Name: Sidewalk
+    UUID: 6629502824289806233
     Active: true
-    Layer: Default
+    Layer: Sidewalk
     Type: Object
     Com_Transform:
-      Translation: [19.2117252, 0.180094242, 7.06867409]
-      Rotation: [0, -87.4419174, 0]
-      Scale: [0.999999881, 1, 0.999999881]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Buildings\WallCastle\
-      MeshFileName: WallCastle.fbx
-      HasCollider: true
-  - Name: Building
-    UUID: 5421662392459739464
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [5.11316156, 0.362733543, 8.78027058]
-      Rotation: [179.999893, 44.2965202, 179.999878]
-      Scale: [0.999963641, 1, 0.999963641]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
-      MeshFileName: ContainerHouse.fbx
-      HasCollider: true
-  - Name: Terrain
-    UUID: 17695790923272776425
-    Active: true
-    Layer: Terrain
-    Type: Object
-    Com_Transform:
-      Translation: [0, 0, 0]
+      Translation: [-13.5209103, 0, 69.8070602]
       Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
-  - Name: Enemy1
-    UUID: 275437264038788754
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [14.7151566, 2.24291325, 13.605917]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1, 0]
-      Type: Capsule
-      Radius: 0.300000012
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
+      Scale: [26.3999996, 1, 11.6999998]
     Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: Enemy.fbx
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
       HasCollider: false
