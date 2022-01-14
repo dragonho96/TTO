@@ -10,6 +10,8 @@
 #include "Effect_Explosion.h"
 
 #include "Camera_Fly.h"
+#include "Enemy.h"
+
 
 USING(Client)
 
@@ -55,9 +57,9 @@ HRESULT CScene_Effect::Initialize()
 
 	//CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Fire", "Fire");
 	//CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Smoke", "Smoke");
-	m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion");
+	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion");
 	// m_pEffect = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Muzzle", "Muzzle");
-	CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
+	// CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact");
 	//m_pEffect= CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke");
 
 	return S_OK;
@@ -67,8 +69,8 @@ _uint CScene_Effect::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
 
-	if (m_pEngine->IsMouseDown(0))
-		dynamic_cast<CEffect_Explosion*>(m_pEffect)->Play(_vector{ 1, 1, 0 });
+	//if (m_pEngine->IsMouseDown(0))
+	//	dynamic_cast<CEffect_Explosion*>(m_pEffect)->Play(_vector{ 1, 1, 0 });
 
 	return _uint();
 }
@@ -118,7 +120,9 @@ HRESULT CScene_Effect::ReadyLayerEffect(string pLayerTag)
 HRESULT CScene_Effect::ReadyScript()
 {
 	m_pEngine->AddScriptObject(CTerrain::Create(nullptr));
-
+	list<class CGameObject*> listEnemy = CEngine::GetInstance()->GetGameObjectInLayer(0, "Enemy");
+	for (auto& iter : listEnemy)
+		m_pEngine->AddScriptObject(CEnemy::Create(iter));
 	// m_pEngine->AddScriptObject(CEquipButtonManager::GetInstance());
 	return S_OK;
 }

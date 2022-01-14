@@ -81,6 +81,9 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 	if (collider)
 		dynamic_cast<CCollider*>(collider)->LateUpdate(TimeDelta);
 
+	if (GetName() == "Player")
+		m_pRendererCom->AddRenderGroup(CRenderer::RENDER_EXTRA, this);
+
 	return m_pRendererCom->AddRenderGroup(m_eRenderGroup, this);
 }
 
@@ -113,7 +116,9 @@ HRESULT CEmptyGameObject::Render(_uint iPassIndex)
 			// TODO: Handle passIndex
 			pModel->Render(i, iPassIndex);
 		}
+
 	}
+
 
 	if (buffer && modelCom)
 		int i = 0;

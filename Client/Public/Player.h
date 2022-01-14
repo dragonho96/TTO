@@ -31,9 +31,9 @@ public:
 	virtual void GetDamage(_vector sourceLocation) {}
 public:
 	void UpdateWeaponTransform();
-	void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
-	void UpdateRifleLightTransform();
-	void UpdateRifleMuzzleLightRange(_double deltaTime);
+	// void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
+	virtual void UpdateRifleLightTransform(CGameObject* pWeapon) override;
+	// void UpdateRifleMuzzleLightRange(_double deltaTime);
 
 	void EquipWeapon(EQUIPMENT eType);
 	void UnEquipWeapon(EQUIPMENT eType);
@@ -43,7 +43,7 @@ public:
 	void	RotateBody(_double deltaTime);
 
 public:
-	void	Shot(_double deltaTime);
+	virtual void	Shot(_double deltaTime);
 	void	ThrowGrenade();
 
 	void	SetGrenadeTrajectory(_bool result);
@@ -67,11 +67,7 @@ private:
 
 	CGameObject*			m_pRifleLight = nullptr;
 	CTransform*				m_pRifleLightTransform = nullptr;
-	CGameObject*			m_pMuzzleLight = nullptr;
-	CTransform*				m_pMuzzleLightTransform = nullptr;
-	CLight*					m_pMuzzleLightCom = nullptr;
-	_float					m_fMuzzleLightRange = 0.f;
-	_float					m_fCurMuzzleLightRange = 0.1f;
+
 
 	class CEquipment*		m_pEquipment = nullptr;
 	CGameObject*	m_pWeaponInHand = nullptr;
@@ -107,7 +103,6 @@ private:
 	_vector					m_rifleHitNormal = { 0, 0, 0, 0 };
 	PxRigidActor*			m_pHitActor = nullptr;
 
-	_double					m_ShotTime = 0.0;
 	_double					TimeRaycast = 0.0;
 	_double					TimeCheckEnemyInSight = 0.0;
 };

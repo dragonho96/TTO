@@ -77,21 +77,30 @@ void CGrid::SetUpGrid()
 {
 	m_Nodes.resize(m_Desc.iSizeX * m_Desc.iSizeZ);
 
+	const PxU32 bufferSize = 256;
+	PxOverlapHit hitBuffer[bufferSize];
+	PxOverlapBuffer hit(hitBuffer, bufferSize);
+	PxQueryFilterData filterData;
+	filterData.data.word2 = CPxManager::GROUP2;
+	_float  fHalfExtent = m_Desc.iSizeInterval / 2.f;
+	PxBoxGeometry overlapBox = PxBoxGeometry(fHalfExtent, 10.f, fHalfExtent);  // [in] shape to test for overlaps
+
 	for (int i = 0; i < m_Desc.iSizeX; ++i)
 	{
 		for (int j = 0; j < m_Desc.iSizeZ; ++j)
 		{
 			int index = i * m_Desc.iSizeZ + j;
-			_float3 position = { j * m_Desc.iSizeInterval, 2.0f, i * m_Desc.iSizeInterval };
+			_float3 position = { j * m_Desc.iSizeInterval, 3.f, i * m_Desc.iSizeInterval };
 			m_Nodes[index] = dynamic_cast<CNode*>(m_pEngine->AddGameObject(0, "GameObject_Node", "LAYER_NODE"));
 			m_Nodes[index]->SetPosition(position, i, j);
 
-			PxRaycastBuffer hit;
-			PxQueryFilterData filterData;
-			// filterData.data.word0 = CPxManager::GROUP1;
-			filterData.data.word1 = CPxManager::GROUP3;
-			if (CEngine::GetInstance()->Raycast(XMLoadFloat3(&position), _vector{ 0, -1, 0 }, 20.f, hit, filterData))
+			PxTransform pxPosition;    // [in] initial shape pose (at distance=0)
+			pxPosition.q = PxIdentity;
+			memcpy(&pxPosition.p, &position, sizeof(_float3));
+			// first check if enemy is in the range
+			if (CEngine::GetInstance()->GetScene()->overlap(overlapBox, PxTransform(pxPosition), hit, filterData))
 			{
+				// if (hit.block.actor->userData == nullptr)
 				m_Nodes[index]->SetWalkable(false);
 			}
 			else

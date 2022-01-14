@@ -147,7 +147,7 @@ void CCamera_Follow::Shake_Rifle()
 	_float y = generator();
 	_float z = generator();
 
-	ADDLOG((to_string(x) + ", " + to_string(y) + ", " + to_string(z)).c_str());
+	// ADDLOG((to_string(x) + ", " + to_string(y) + ", " + to_string(z)).c_str());
 
 	m_ShakeOffset = XMVectorSetX(m_ShakeOffset, x);
 	m_ShakeOffset = XMVectorSetY(m_ShakeOffset, y);

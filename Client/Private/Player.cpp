@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize()
 	//m_pGrenadeTrajectory->SetActive(false);
 
 
-	
+
 	// EquipmentPool 에 meshcontainer 등록
 	AssignMeshContainter();
 	FindBones();
@@ -206,11 +206,12 @@ void CPlayer::Update(_double deltaTime)
 					PxVec3 hitNormal = hit.block.normal;
 
 					m_cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
-
+					//ADDLOG(("m_cursorHitPos: " + to_string(XMVectorGetX(m_cursorHitPos)) + ", " + to_string(XMVectorGetY(m_cursorHitPos)) + ", " + to_string(XMVectorGetZ(m_cursorHitPos))).c_str());
 				}
 			}
 
 			RaycastRifleToHitPos();
+			CheckEnemyInSight();
 		}
 
 		RotateBody(deltaTime);
@@ -220,12 +221,11 @@ void CPlayer::Update(_double deltaTime)
 
 		if (m_pWeaponInHand == m_pPrimaryWeapon)
 		{
-			UpdateRifleLightTransform();
+			UpdateRifleLightTransform(m_pPrimaryWeapon);
 			UpdateRifleMuzzleLightRange(deltaTime);
 		}
 
-		if (CEngine::GetInstance()->IsKeyPressed('O'))
-			CheckEnemyInSight();
+
 	}
 
 	m_pLowerState->HandleInput(&m_pLowerState, *this);
@@ -267,53 +267,58 @@ void CPlayer::UpdateWeaponTransform()
 	SetObjectTransform(m_pTool, m_pToolBone);
 }
 
-void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
+void CPlayer::UpdateRifleLightTransform(CGameObject * pWeapon)
 {
-	if (pObj)
-	{
-		_float4x4 pos;
-		_matrix matPos;
-
-		if (m_pModel->IsSimulatingRagdoll())
-			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix();
-		else
-			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
-		XMStoreFloat4x4(&pos, matPos);
-
-		dynamic_cast<CTransform*>(pObj->GetComponent("Com_Transform"))->SetMatrix(pos);
-	}
+	__super::UpdateRifleLightTransform(pWeapon);
+	m_pRifleLightTransform->SetMatrix(m_pMuzzleLightTransform->GetMatrix());
 }
 
-void CPlayer::UpdateRifleLightTransform()
-{
-	CTransform* pWeaponTransform = dynamic_cast<CTransform*>(m_pPrimaryWeapon->GetComponent("Com_Transform"));
-	m_pRifleLightTransform->SetMatrix(pWeaponTransform->GetMatrix());
+//void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
+//{
+//	if (pObj)
+//	{
+//		_float4x4 pos;
+//		_matrix matPos;
+//
+//		if (m_pModel->IsSimulatingRagdoll())
+//			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix();
+//		else
+//			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+//		XMStoreFloat4x4(&pos, matPos);
+//
+//		dynamic_cast<CTransform*>(pObj->GetComponent("Com_Transform"))->SetMatrix(pos);
+//	}
+//}
 
-	_vector up = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_UP));
-	_vector right = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_RIGHT));
-	_vector offsetPosition = up * 0.5f + right * -0.07f;
-	_vector vPosition = pWeaponTransform->GetState(CTransform::STATE_POSITION);
-	vPosition += offsetPosition;
-	m_pRifleLightTransform->SetState(CTransform::STATE_POSITION, vPosition);
+//void CPlayer::UpdateRifleLightTransform()
+//{
+//	CTransform* pWeaponTransform = dynamic_cast<CTransform*>(m_pPrimaryWeapon->GetComponent("Com_Transform"));
+//	m_pRifleLightTransform->SetMatrix(pWeaponTransform->GetMatrix());
+//
+//	_vector up = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_UP));
+//	_vector right = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_RIGHT));
+//	_vector offsetPosition = up * 0.5f + right * -0.07f;
+//	_vector vPosition = pWeaponTransform->GetState(CTransform::STATE_POSITION);
+//	vPosition += offsetPosition;
+//	m_pRifleLightTransform->SetState(CTransform::STATE_POSITION, vPosition);
+//
+//	_matrix mat = m_pRifleLightTransform->GetWorldMatrix();
+//	_matrix matRotationX = XMMatrixRotationX(XMConvertToRadians(-90.f));
+//	_matrix matRotationZ = XMMatrixRotationZ(XMConvertToRadians(90.f));
+//	// _matrix matRotation = XMMatrixRotationAxis(_vector{1.f, 0.f, 0.f}, XMConvertToRadians(-90.f));
+//	_matrix newMat = matRotationX * mat;
+//	newMat = matRotationZ * newMat;
+//	m_pRifleLightTransform->SetMatrix(newMat);
+//	m_pMuzzleLightTransform->SetMatrix(newMat);
+//}
 
-	_matrix mat = m_pRifleLightTransform->GetWorldMatrix();
-	_matrix matRotationX = XMMatrixRotationX(XMConvertToRadians(-90.f));
-	_matrix matRotationZ = XMMatrixRotationZ(XMConvertToRadians(90.f));
-	// _matrix matRotation = XMMatrixRotationAxis(_vector{1.f, 0.f, 0.f}, XMConvertToRadians(-90.f));
-	_matrix newMat = matRotationX * mat;
-	newMat = matRotationZ * newMat;
-	m_pRifleLightTransform->SetMatrix(newMat);
-	m_pMuzzleLightTransform->SetMatrix(newMat);
-	m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
-}
-
-void CPlayer::UpdateRifleMuzzleLightRange(_double deltaTime)
-{
-	_double fLerpSpeed = deltaTime * 30.f;
-	m_fCurMuzzleLightRange = Lerp(m_fCurMuzzleLightRange, m_fMuzzleLightRange, fLerpSpeed);
-	if (m_fCurMuzzleLightRange >= 2.5f)
-		m_fMuzzleLightRange = 0.1f;
-}
+//void CPlayer::UpdateRifleMuzzleLightRange(_double deltaTime)
+//{
+//	_double fLerpSpeed = deltaTime * 30.f;
+//	m_fCurMuzzleLightRange = Lerp(m_fCurMuzzleLightRange, m_fMuzzleLightRange, fLerpSpeed);
+//	if (m_fCurMuzzleLightRange >= 2.5f)
+//		m_fMuzzleLightRange = 0.1f;
+//}
 
 void CPlayer::EquipWeapon(EQUIPMENT eType)
 {
@@ -600,13 +605,9 @@ void CPlayer::CheckEnemyInSight()
 	_vector vecPosition = m_pTransform->GetState(CTransform::STATE_POSITION);
 	position.q = PxIdentity;
 	memcpy(&position.p, &vecPosition, sizeof(_float3));
+
 	PxQueryFilterData fd;
-	////fd.flags = PxQueryFlag::eSTATIC;
-	// fd.data.word0 = CPxManager::GROUP1;
 	fd.data.word1 = CPxManager::GROUP4;
-	//fd.flags = PxQueryFlag::eANY_HIT;
-	// bool status = CEngine::GetInstance()->GetScene()->overlap(overlapShape, shapePose, hit, fd);
-	// bool status = CEngine::GetInstance()->GetScene()->overlap(PxBoxGeometry(10.f, 10, 10), PxTransform(shapePose), hit, fd);
 
 	// first check if enemy is in the range
 	if (CEngine::GetInstance()->GetScene()->overlap(overlapShape, PxTransform(position), hit, fd))
@@ -616,19 +617,16 @@ void CPlayer::CheckEnemyInSight()
 			// filter out player
 			if (hit.getAnyHit(i).actor->userData != this)
 			{
-				// ADDLOG(("Pos : " + to_string(enemyPos.p.x) + ", " + to_string(enemyPos.p.z)).c_str());
-
-
 				// check if there is obstacle between player and enemy
 				CEnemy* enemy = static_cast<CEnemy*>(hit.getAnyHit(i).actor->userData);
 				PxTransform enemyPos = hit.getAnyHit(i).actor->getGlobalPose();
 				PxTransform controllerPos = m_pController->getActor()->getGlobalPose();
 				PxVec3 rayDir = (enemyPos.p - controllerPos.p).getNormalized();
+				_float range = (enemyPos.p - controllerPos.p).magnitude();
 				PxRaycastBuffer rayHit;
 				PxQueryFilterData filterData;
-				// filterData.data.word0 = CPxManager::GROUP1;
 				filterData.data.word1 = CPxManager::GROUP3;
-				if (CEngine::GetInstance()->Raycast(controllerPos.p, rayDir, sightRange, rayHit, filterData))
+				if (CEngine::GetInstance()->Raycast(controllerPos.p, rayDir, range, rayHit, filterData))
 					enemy->SetVisibility(VISIBILITY::INVISIBLE);
 				else
 					enemy->SetVisibility(VISIBILITY::VISIBLE);
@@ -649,11 +647,14 @@ void CPlayer::RaycastRifleToHitPos()
 	XMMatrixDecompose(&mySpineTempA, &mySpineTempB, &origin, spineMat);
 	origin = XMVectorSetW(origin, 0);
 	dir = XMVector3Normalize(m_cursorHitPos - origin);
-	range = XMVectorGetX(XMVector3Length(m_cursorHitPos - origin));
+	if (XMVectorGetY(m_cursorHitPos) != 0.f)
+		int i = 0;
+	range = XMVectorGetX(XMVector3Length(m_cursorHitPos - origin)) + 1.f;
 
 	PxRaycastBuffer hit;
 	PxQueryFilterData filterData;
 	filterData.data.word1 = CPxManager::GROUP3;
+	filterData.data.word2 = CPxManager::GROUP3;
 	if (CEngine::GetInstance()->Raycast(origin, dir, range, hit, filterData))
 	{
 		PxU32 distance = hit.block.distance;
@@ -675,13 +676,11 @@ void CPlayer::RaycastRifleToHitPos()
 
 		m_pHitActor = hit.block.actor;
 
-		if (CEngine::GetInstance()->IsMouseDown(0))
-		{
-			//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-			//ADDLOG(("Hit Pos: " + logPos).c_str());
-			//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
-			//ADDLOG(("Cursor Pos: " + logPos).c_str());
-		}
+
+			string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+			ADDLOG(("Hit Pos: " + logPos).c_str());
+			logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
+			ADDLOG(("Cursor Pos: " + logPos).c_str());
 	}
 }
 

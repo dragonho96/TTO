@@ -1,5 +1,6 @@
 ﻿#include "..\public\Model.h"
 #include "MeshContainer.h"
+#include "ModelManager.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "Engine.h"
@@ -267,19 +268,32 @@ HRESULT CModel::Bind_Buffers(_uint iPassIndex)
 	m_pShader->SetUp_ValueOnShader("g_WorldMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->GetMatrix())), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ViewMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_VIEW)), sizeof(_matrix));
 	m_pShader->SetUp_ValueOnShader("g_ProjMatrix", &XMMatrixTranspose(CEngine::GetInstance()->GetTransform(CPipeline::D3DTS_PROJ)), sizeof(_matrix));
+	m_pShader->SetUp_ValueOnShader("g_fDissolve", &m_fDissolve, sizeof(_float));
+	m_pShader->SetUp_TextureOnShader("g_DissolveTexture", CModelManager::GetInstance()->GetDissoveTex());
 
 	if (iPassIndex != 4)
 	{
-		_uint iNumLight = CLightManager::GetInstance()->GetNumRenderLights();
-		for (int i = 0; i < iNumLight; ++i)
+		if (iPassIndex == 3)
 		{
-			m_pShader->SetUp_ValueOnShader(("g_LightViewMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(i)), sizeof(_matrix));
-			m_pShader->SetUp_ValueOnShader(("g_LightProjMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(i)), sizeof(_matrix));
-			m_pShader->SetUp_ValueOnShader(("lightPosition" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetPosition(i), sizeof(_float3));
-			m_pShader->SetUp_ValueOnShader(("lightDir" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetDirection(i), sizeof(_float3));
+			ID3D11ShaderResourceView*	pDepthSRV = CTargetManager::GetInstance()->GetShaderResourceView("Target_Depth");
+			if (nullptr == pDepthSRV)
+				return E_FAIL;
 
-			_float fAngle = CLightManager::GetInstance()->GetAngle(i);
-			m_pShader->SetUp_ValueOnShader(("lightAngle" + to_string(i)).c_str(), &fAngle, sizeof(_float));
+			m_pShader->SetUp_TextureOnShader("g_DepthTexture", pDepthSRV);
+		}
+		else
+		{
+			_uint iNumLight = CLightManager::GetInstance()->GetNumRenderLights();
+			for (int i = 0; i < iNumLight; ++i)
+			{
+				m_pShader->SetUp_ValueOnShader(("g_LightViewMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetViewMatrix(i)), sizeof(_matrix));
+				m_pShader->SetUp_ValueOnShader(("g_LightProjMatrix" + to_string(i)).c_str(), &XMMatrixTranspose(CLightManager::GetInstance()->GetProjMatrix(i)), sizeof(_matrix));
+				m_pShader->SetUp_ValueOnShader(("lightPosition" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetPosition(i), sizeof(_float3));
+				m_pShader->SetUp_ValueOnShader(("lightDir" + to_string(i)).c_str(), &CLightManager::GetInstance()->GetDirection(i), sizeof(_float3));
+
+				_float fAngle = CLightManager::GetInstance()->GetAngle(i);
+				m_pShader->SetUp_ValueOnShader(("lightAngle" + to_string(i)).c_str(), &fAngle, sizeof(_float));
+			}
 		}
 	}
 	else
@@ -328,7 +342,7 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 			{
 				if (m_bSimulateRagdoll)
 					iPassIndex = 6;
-				else
+				else if (iPassIndex != 3)
 					iPassIndex = 5;
 			}
 			// Normal mesh
@@ -362,23 +376,7 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 			if (pShadowSRV)
 				m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(i)).c_str(), pShadowSRV);
 		}
-		//CTargetManager*		pTargetManager = GET_INSTANCE(CTargetManager);
-		//_uint iLightIndex = 0;
 
-		//string targetName = "Target_Shadow" + to_string(iLightIndex);
-
-		//ID3D11ShaderResourceView*	pShadowSRV = pTargetManager->GetShaderResourceView(targetName);
-		//if (nullptr == pShadowSRV)
-		//	return E_FAIL;
-		//m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(iLightIndex)).c_str(), pShadowSRV);
-
-		//iLightIndex++;
-		//targetName = "Target_Shadow" + to_string(iLightIndex);
-		//pShadowSRV = pTargetManager->GetShaderResourceView(targetName);
-		//if (nullptr == pShadowSRV)
-		//	return E_FAIL;
-		//m_pShader->SetUp_TextureOnShader(("depthMapTexture" + to_string(iLightIndex)).c_str(), pShadowSRV);
-		//RELEASE_INSTANCE(CTargetManager);
 	}
 
 	m_pShader->SetInputLayout(iPassIndex);
@@ -1278,6 +1276,8 @@ void CModel::CreatePxMesh()
 	PxFilterData filterData;
 	filterData.word0 = CPxManager::GROUP1;
 	filterData.word1 = CPxManager::GROUP3;
+	filterData.word2 = CPxManager::GROUP2;
+
 	shape->setQueryFilterData(filterData);
 
 	m_pRigidActor->userData = nullptr;

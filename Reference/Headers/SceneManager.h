@@ -23,7 +23,6 @@ public:
 
 private:
 	CScene*				m_pCurrentScene = nullptr;
-
 public:
 	virtual void Free() override;
 };

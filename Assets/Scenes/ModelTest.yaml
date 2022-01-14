@@ -1,12 +1,12 @@
 Scene: Untitled
 GameObjects:
   - Name: Terrain
-    UUID: 2014090639884182056
+    UUID: 16750138518104144415
     Active: true
     Layer: Terrain
     Type: Object
     Com_Transform:
-      Translation: [0, 0, 0]
+      Translation: [0, -5, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_VIBuffer:
@@ -14,7 +14,7 @@ GameObjects:
       HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
       TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Building
-    UUID: 3121640791145820857
+    UUID: 16401844940552583321
     Active: true
     Layer: Default
     Type: Object
@@ -27,7 +27,7 @@ GameObjects:
       MeshFileName: ContainerHouse.fbx
       HasCollider: true
   - Name: Directional
-    UUID: 9377362180243712151
+    UUID: 14101465972534168585
     Active: true
     Layer: Default
     Type: Object
@@ -43,14 +43,14 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: Spot
-    UUID: 6319315845979601370
+    UUID: 1017389125865417045
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [13.7123184, 7.52110672, 2.79229975]
       Rotation: [90, -0, 0]
-      Scale: [0.999816716, 0.999999881, 0.999999881]
+      Scale: [0.999816597, 0.999999881, 0.999999881]
     Com_Light:
       Type: 2
       Range: 10
@@ -58,8 +58,43 @@ GameObjects:
       Diffuse: [1, 1, 1, 1]
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
+  - Name: Sidewalk
+    UUID: 8323659033999126151
+    Active: true
+    Layer: Sidewalk
+    Type: Object
+    Com_Transform:
+      Translation: [7.59796953, 0.429088354, 16.4247074]
+      Rotation: [0, 44.7999954, 0]
+      Scale: [0.999998987, 1, 0.999998987]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
+      HasCollider: true
+  - Name: Enemy
+    UUID: 4819896767940478572
+    Active: true
+    Layer: Enemy
+    Type: Object
+    Com_Transform:
+      Translation: [17.2927475, 2, 12.4243116]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Center: [0, 1.10000002, 0]
+      Type: Capsule
+      Radius: 0.400000006
+      Height: 1
+      RigidBody:
+        Enabled: true
+        Kinematic: false
+        CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Enemy\
+      MeshFileName: EnemyWithAnim3.fbx
+      HasCollider: false
   - Name: Player
-    UUID: 18243543196699355933
+    UUID: 14391456481045787602
     Active: true
     Layer: Player
     Type: Object
@@ -82,15 +117,38 @@ GameObjects:
       MeshFileName: PlayerFinal.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 6629502824289806233
+    UUID: 11456759325507682508
     Active: true
     Layer: Sidewalk
     Type: Object
     Com_Transform:
-      Translation: [-13.5209103, 0, 69.8070602]
+      Translation: [-13.5209103, -1, 69.8070602]
       Rotation: [0, -0, 0]
       Scale: [26.3999996, 1, 11.6999998]
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\SideWalk\
       MeshFileName: Sidewalk.fbx
+      HasCollider: false
+  - Name: Enemy
+    UUID: 4819896767940478512
+    Active: true
+    Layer: Enemy
+    Type: Object
+    Com_Transform:
+      Translation: [17.2927475, 2, 4.4243116]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Collider:
+      Center: [0, 1.10000002, 0]
+      Type: Capsule
+      Radius: 0.400000006
+      Height: 1
+      RigidBody:
+        Enabled: true
+        Gravity: true
+        Kinematic: false
+        CharacterController: true
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Enemy\
+      MeshFileName: EnemyWithAnim3.fbx
       HasCollider: false

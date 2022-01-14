@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual _uint Update(_double TimeDelta);
 	virtual _uint LateUpdate(_double TimeDelta);
-	virtual HRESULT Render();
+	virtual HRESULT Render(_uint iPassIndex = 0) ;
 private:
 	HRESULT SetUpComponents();
 
@@ -37,8 +37,8 @@ public:
 		m_bWalkable = _walkable;
 	}
 	void SetColor(_float4 color) {
-		// m_VIBuffer->SetColor(color);
-		m_VIBuffer->SetColor({0, 0, 0, 0});
+		m_VIBuffer->SetColor(color);
+		// m_VIBuffer->SetColor({0, 0, 0, 0.f});
 	}
 	const _float3 GetPosition() { return m_vPosition; }
 	_bool	IsWalkable() { return m_bWalkable; }

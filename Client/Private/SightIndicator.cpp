@@ -126,13 +126,11 @@ void CSightIndicator::SetPoints(_bool active, list<_vector> points)
 		vUIHitPos = XMVectorSetY(vUIHitPos, (1.f - (XMVectorGetY(vUIHitPos) + 1) * 0.5f) * screenSize.y);
 
 		// ADDLOG((to_string(XMVectorGetX(vUIHitPos)) + ", " + to_string(XMVectorGetY(vUIHitPos))).c_str());
-
 		dynamic_cast<CEmptyUI*>(m_pNoSightCross)->SetClientPosition(XMVectorGetX(vUIHitPos), XMVectorGetY(vUIHitPos));
-
 
 		// Eye UI
 		_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
-		dynamic_cast<CEmptyUI*>(m_pNoSightEye)->SetClientPosition(mousePos.x, mousePos.y);
+		dynamic_cast<CEmptyUI*>(m_pNoSightEye)->SetClientPosition(mousePos.x + 30.f, mousePos.y + 30.f);
 	}
 	else
 	{
@@ -140,8 +138,6 @@ void CSightIndicator::SetPoints(_bool active, list<_vector> points)
 		m_pNoSightCross->SetActive(false);
 		m_pNoSightEye->SetActive(false);
 	}
-
-
 }
 
 HRESULT CSightIndicator::SetUp_Components()

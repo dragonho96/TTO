@@ -85,8 +85,8 @@ public:
 	string GetMeshFilePath() { return m_pMeshFilePath; }
 	string GetMeshFileName() { return m_pMeshFileName; }
 	string GetShaderFilePath() { return m_pShaderFilePath; }
-
 	CShader*	GetShader() { return m_pShader.get(); }
+	void	SetDissolve(_float value) { m_fDissolve = value; }
 
 private:
 	const aiScene*		m_pScene = nullptr;
@@ -136,10 +136,12 @@ protected:
 	class CTransform*				m_pTransform = nullptr;
 
 protected:
-	string m_pMeshFilePath = "";
-	string m_pMeshFileName = "";
-	string m_pShaderFilePath = "";
-	CTexture* m_pTextureCube;
+	string			m_pMeshFilePath = "";
+	string			m_pMeshFileName = "";
+	string			m_pShaderFilePath = "";
+	CTexture*		m_pTextureCube;
+	_float			m_fDissolve = 0.f;
+
 private:
 	PxVec3*				m_pxVertices = nullptr;
 	PxU32*				m_pxIndices = nullptr;

@@ -49,13 +49,13 @@ _uint CNode::LateUpdate(_double TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
-	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_PRIORITY, this);
+	return m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHA, this);
 }
 
-HRESULT CNode::Render()
+HRESULT CNode::Render(_uint iPassIndex)
 {
-	if (m_VIBuffer)
-		m_VIBuffer->Render();
+	//if (m_VIBuffer)
+	//	m_VIBuffer->Render();
 
 	return S_OK;
 }

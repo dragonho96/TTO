@@ -45,6 +45,10 @@ cbuffer LightBuffer
     float lightAngle5;
 };
 
+cbuffer Dissolve
+{
+    float g_fDissolve;
+};
 struct MeshBoneMatrices
 {
     matrix BoneMatrices[512];
@@ -53,7 +57,8 @@ struct MeshBoneMatrices
 MeshBoneMatrices g_BoneMatrices;
 
 Texture2D g_DiffuseTexture;
-
+Texture2D g_DissolveTexture;
+Texture2D g_DepthTexture;
 Texture2D depthMapTexture0;
 Texture2D depthMapTexture1;
 Texture2D depthMapTexture2;
@@ -208,6 +213,26 @@ VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH_ANIM(VS_IN In)
     return Out;
 }
 
+
+VS_OUT_LIGHT_DEPTH VS_MAIN_LIGHT_DEPTH_ANIM_RAGDOLL(VS_IN In)
+{
+    VS_OUT_LIGHT_DEPTH Out = (VS_OUT_LIGHT_DEPTH) 0;
+
+    matrix BoneMatrix = g_BoneMatrices.BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices.BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+
+    matrix matLightWV, matLightWVP;
+
+    matLightWV = mul(BoneMatrix, g_LightViewMatrix0);
+    matLightWVP = mul(matLightWV, g_LightProjMatrix0);
+
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matLightWVP);
+    Out.vLightDepthPosition = Out.vPosition;
+    Out.vTexUV = In.vTexUV;
+    return Out;
+}
 
 
 
@@ -401,7 +426,7 @@ PS_OUT PS_MAIN(PS_IN In)
     bias = 0.0001f;
 
     color = vector(0.1f, 0.1f, 0.1f, 1.f);
-    diffuseColor = vector(0.1f, 0.1f, 0.1f, 1.f);
+    diffuseColor = vector(0.5f, 0.5f, 0.5f, 1.f);
     lightDir = -(-1.f, -1.f, -1.f);
 
     
@@ -586,12 +611,23 @@ PS_OUT PS_MAIN(PS_IN In)
     color = saturate(color);
         // 이 텍스처 좌표 위치에서 샘플러를 사용하여 텍스처에서 픽셀 색상을 샘플링합니다.
     textureColor = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
- 
+    float4 dissolveColor = g_DissolveTexture.Sample(g_DiffuseSampler, In.vTexUV);
     // 빛과 텍스처 색상을 결합합니다.
     color = color * textureColor;
+
+    if (dissolveColor.r < g_fDissolve)
+    {
+        if (dissolveColor.r > g_fDissolve - 0.2f && g_fDissolve != 1.f)    // Edge부분 체크
+            color = float4(1.f, 0.f, 0.f, 0.8f);
+        else
+            color.a = 0.0f;     // 확실히 없어질 곳
+    }
+
+
     Out.vDiffuse = color;
     Out.vNormal = vector(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.w / 300.f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
+
     return Out;
 }
 
@@ -612,16 +648,29 @@ PS_OUT_LIGHT_DEPTH PS_MAIN_LIGHT_DEPTH(PS_IN_LIGHT_DEPTH In)
 
     //if (prevDepth != 0.f && prevDepth < In.vLightDepthPosition.z / In.vLightDepthPosition.w)
     //    discard;
-
-    Out.vLightDepth = vector(In.vLightDepthPosition.z / In.vLightDepthPosition.w,0.f, 0.f, 0.f);
-
+    float4 textureColor = g_DiffuseTexture.Sample(g_DiffuseSampler, In.vTexUV);
+    if (textureColor.a < 0.8f || g_fDissolve > 0.1f)
+        Out.vLightDepth = vector(1.f, 0.f, 0.f, 0.f);
+    else
+        Out.vLightDepth = vector(In.vLightDepthPosition.z / In.vLightDepthPosition.w, 0.f, 0.f, 0.f);
     return Out;
 }
 PS_OUT_BEHIND_WALL PS_MAIN_WALL(PS_IN In)
 {
     PS_OUT_BEHIND_WALL Out = (PS_OUT_BEHIND_WALL) 0;
 
-    Out.vDiffuse = vector(1.f, 0.5f, 0.f, 1.f);
+    float2 projectTexCoord;
+    projectTexCoord.x = In.vProjPos.x / In.vProjPos.w / 2.f + 0.5f;
+    projectTexCoord.y = -In.vProjPos.y / In.vProjPos.w / 2.f + 0.5f;
+
+    float depthValue = g_DepthTexture.Sample(g_SamplerClamp, projectTexCoord).y;
+    float camDapthValue = In.vProjPos.z / In.vProjPos.w;
+
+    if (camDapthValue > depthValue + 0.0012f)
+        Out.vDiffuse = vector(1.f, 0.5f, 0.f, 1.f);
+    else
+        discard;
+
     return Out;
 }
 
@@ -642,7 +691,7 @@ technique11 DefaultDevice
     {
         SetRasterizerState(Rasterizer_Solid);
         SetDepthStencilState(DepthStecil_Default, 0);
-        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN_ANIM();
         GeometryShader = NULL;
@@ -652,7 +701,7 @@ technique11 DefaultDevice
     {
         SetRasterizerState(Rasterizer_Solid);
         SetDepthStencilState(DepthStecil_Default, 0);
-        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN_ANIM_RAGDOLL();
         GeometryShader = NULL;
@@ -662,7 +711,7 @@ technique11 DefaultDevice
     {
         SetRasterizerState(Rasterizer_Solid);
         SetDepthStencilState(DepthStecil_NotZTest, 0);
-        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN_ANIM();
         GeometryShader = NULL;
@@ -691,4 +740,17 @@ technique11 DefaultDevice
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DEPTH();
     }
+
+    pass LightDepthRagdoll
+    {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_Default, 0);
+        SetBlendState(Blend_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_LIGHT_DEPTH_ANIM_RAGDOLL();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DEPTH();
+    }
+
+
 }

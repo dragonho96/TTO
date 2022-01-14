@@ -9,9 +9,11 @@
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HWND	g_hWnd;
+int			g_eCurScene;
+HWND		g_hWnd;
 BOOL		g_First = false;
 BOOL		g_Done = false;
+
 HINSTANCE g_hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name

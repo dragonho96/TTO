@@ -17,6 +17,20 @@ public:
 	virtual void Free();
 public:
 	virtual void GetDamage(_vector sourceLocation) = 0;
+	virtual void Shot(_double deltaTime) = 0;
+	virtual void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
+	virtual void UpdateRifleMuzzleLightRange(_double deltaTime);
+	virtual void UpdateRifleLightTransform(CGameObject* pWeapon);
+
+protected:
+	CGameObject*			m_pMuzzleLight = nullptr;
+	CTransform*				m_pMuzzleLightTransform = nullptr;
+	CLight*					m_pMuzzleLightCom = nullptr;
+	_float					m_fMuzzleLightRange = 0.f;
+	_float					m_fCurMuzzleLightRange = 0.1f;
+
+protected:
+	_double					m_ShotTime = 0.0;
 
 protected:
 	CGameObject*	m_pGameObject = nullptr;

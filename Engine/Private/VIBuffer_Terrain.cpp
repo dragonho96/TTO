@@ -326,6 +326,7 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 
 	m_pTerrainActor = CEngine::GetInstance()->GetPhysics()->createRigidStatic(PxTransform(PxIdentity));
 	m_pTerrainActor->setActorFlag(PxActorFlag::eVISUALIZATION, TRUE);
+	m_pTerrainActor->userData = this;
 
 	const double i255 = 1.0 / 255.0;
 	const PxReal heightScale = 20.f;
@@ -364,9 +365,9 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	PxFilterData filterData;
 	filterData.word0 = CPxManager::GROUP1;
 	filterData.word1 = CPxManager::GROUP2 | CPxManager::GROUP3;
-	
-	shape->setQueryFilterData(filterData);
+	filterData.word2 = CPxManager::GROUP1;
 
+	shape->setQueryFilterData(filterData);
 
 	CEngine::GetInstance()->AddActor(m_pTerrainActor);
 	delete[] hfSamples;

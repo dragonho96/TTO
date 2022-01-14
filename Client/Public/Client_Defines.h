@@ -4,11 +4,12 @@ static const unsigned int g_iWinCX = 1920;
 static const unsigned int g_iWinCY = 1080;
 
 
-
+extern int	g_eCurScene;
 extern HWND		g_hWnd;
 extern BOOL		g_Done;
 namespace Client {}
 using namespace Client;
+
 #include "Engine.h"
 
 #include "Client_Enum.h"

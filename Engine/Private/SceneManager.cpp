@@ -18,7 +18,7 @@ HRESULT CSceneManager::SetUpCurrentScene(CScene * pCurrentScene)
 		return E_FAIL;
 
 	m_pCurrentScene = pCurrentScene;
-
+	
 	return S_OK;
 }
 

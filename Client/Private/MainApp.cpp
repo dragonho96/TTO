@@ -24,6 +24,9 @@
 
 #include "Log.h"
 
+
+
+
 CMainApp::CMainApp()
 	: m_pEngine(CEngine::GetInstance())
 {
@@ -73,16 +76,16 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	Client::SCENE eScene = SCENE_TEST;
+	g_eCurScene = SCENE_TEST;
 
-	if (eScene == SCENE_TEST)
+	if (g_eCurScene == SCENE_TEST)
 	{
 		m_pEngine->DeserializePrefab();
 		if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))
 			return E_FAIL;
 	}
 
-	if (FAILED(OpenScene(eScene)))
+	if (FAILED(OpenScene((SCENE)g_eCurScene)))
 		return E_FAIL;
 
 	ImGuiInitialize();

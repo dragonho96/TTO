@@ -162,6 +162,9 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
+	if (FAILED(Render_Extra()))
+		return E_FAIL;
+
 	if (FAILED(RenderAlpha()))
 		return E_FAIL;
 
@@ -361,6 +364,21 @@ HRESULT CRenderer::Render_Blend()
 	m_pVIBuffer->Render(4);
 
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_Extra()
+{
+	for (auto& pGameObject : m_RenderGroups[RENDER_EXTRA])
+	{
+		if (nullptr != pGameObject)
+		{
+			if (FAILED(pGameObject->Render(3)))
+				return E_FAIL;
+
+			SafeRelease(pGameObject);
+		}
+	}
+	m_RenderGroups[RENDER_EXTRA].clear();
 }
 
 HRESULT CRenderer::RenderAlpha()

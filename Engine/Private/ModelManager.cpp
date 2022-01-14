@@ -5,6 +5,7 @@ IMPLEMENT_SINGLETON(CModelManager)
 
 CModelManager::CModelManager()
 {
+
 }
 
 void CModelManager::Free()
@@ -14,10 +15,21 @@ void CModelManager::Free()
 		SafeRelease(model.second);
 
 	m_mapModel.clear();
+
+	SafeRelease(m_pDissolveTex);
 }
 
 CComponent* CModelManager::CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
 {
+	if (nullptr == m_pDissolveTex)
+	{
+		m_pDissolveTex = CTexture::Create(CEngine::GetInstance()->GetDevice(),
+			CEngine::GetInstance()->GetDeviceContext(),
+			CTexture::TYPE_TGA,
+			"..\\..\\Assets\\Textures\\Dissolve\\Dissolve.tga");
+	}
+
+
 	ID3D11Device * pDevice = CEngine::GetInstance()->GetDevice();
 	ID3D11DeviceContext * pDeviceContext = CEngine::GetInstance()->GetDeviceContext();
 
