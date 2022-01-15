@@ -379,6 +379,8 @@ HRESULT CRenderer::Render_Extra()
 		}
 	}
 	m_RenderGroups[RENDER_EXTRA].clear();
+
+	return S_OK;
 }
 
 HRESULT CRenderer::RenderAlpha()

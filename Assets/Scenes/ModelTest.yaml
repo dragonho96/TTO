@@ -58,41 +58,6 @@ GameObjects:
       Diffuse: [1, 1, 1, 1]
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
-  - Name: Sidewalk
-    UUID: 8323659033999126151
-    Active: true
-    Layer: Sidewalk
-    Type: Object
-    Com_Transform:
-      Translation: [7.59796953, 0.429088354, 16.4247074]
-      Rotation: [0, 44.7999954, 0]
-      Scale: [0.999998987, 1, 0.999998987]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
-      MeshFileName: Sidewalk.fbx
-      HasCollider: true
-  - Name: Enemy
-    UUID: 4819896767940478572
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [17.2927475, 2, 12.4243116]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.10000002, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyWithAnim3.fbx
-      HasCollider: false
   - Name: Player
     UUID: 14391456481045787602
     Active: true
@@ -114,7 +79,7 @@ GameObjects:
         CharacterController: true
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Player\
-      MeshFileName: PlayerFinal.fbx
+      MeshFileName: PlayerFinal1.fbx
       HasCollider: false
   - Name: Sidewalk
     UUID: 11456759325507682508
@@ -128,27 +93,4 @@ GameObjects:
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\SideWalk\
       MeshFileName: Sidewalk.fbx
-      HasCollider: false
-  - Name: Enemy
-    UUID: 4819896767940478512
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [17.2927475, 2, 4.4243116]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.10000002, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyWithAnim3.fbx
       HasCollider: false

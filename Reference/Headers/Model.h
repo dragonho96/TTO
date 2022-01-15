@@ -16,6 +16,15 @@ public:
 		BONEDESC*		pParentBone;
 		BONEDESC*		pChildBone;
 	}RAGDOLLBONEDESC;
+	typedef struct tagUpperBlendDesc
+	{
+		_uint	iAnimX;
+		_float	fRatioX;
+		_uint	iAnimY;
+		_float	fRatioY;
+
+		_uint	iCornerBlendIdx;
+	}UPPERBLENDDESC;
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CModel(const CModel& rhs);
@@ -28,7 +37,7 @@ public:
 public:
 	_fmatrix Get_BoneMatrix(const char* pBoneName);
 public:
-	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType);
+	HRESULT SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType, _bool bUpperBlend = false, UPPERBLENDDESC desc = {});
 	HRESULT Play_Animation(_double TimeDelta);
 	HRESULT Blend_Animation(_double TimeDelta);
 	_bool	IsLowerFinished() { return m_bFinished_Lower; }
@@ -118,6 +127,8 @@ private:
 	_float									m_fBlendDuration = 0.2f;
 	_float									m_fBlendTime = 0.0f;
 	_float									m_fBlendTime_Upper = 0.0f;
+	_bool									m_bUpperBlending = false;
+	UPPERBLENDDESC							m_UpperBlendDesc = {};
 	vector<class CChannel*>					m_vecPrevChannels;
 private:
 	//ComRef<ID3D11Buffer>			m_pVB = nullptr;

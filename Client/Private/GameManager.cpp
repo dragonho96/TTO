@@ -38,7 +38,7 @@ HRESULT CGameManager::Initialize()
 	m_Camera[(size_t)CAMERA::FLY]->SetRolling(false);
 
 	// m_pMuzzleEffect = dynamic_cast<CEffect_Muzzle*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Muzzle", "Muzzle"));
-	m_pImpactSmokeEffect = dynamic_cast<CEffect_ImpactSmoke*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke"));
+	// m_pImpactSmokeEffect = dynamic_cast<CEffect_ImpactSmoke*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke"));
 	// m_pImpactEffect = dynamic_cast<CEffect_Impact*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact"));
 	// m_pExplosion = dynamic_cast<CEffect_Explosion*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion"));
 	return S_OK;

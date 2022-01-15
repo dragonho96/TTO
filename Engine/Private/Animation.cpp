@@ -110,6 +110,9 @@ _bool CAnimation::Update_TransformationMatrices(_double TimeDelta)
 }
 HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 {
+	if (ratio >= 1.f)
+		ratio = 1.f;
+
 	_vector		vSourScale, vDestScale;
 	_vector		vSourRotation, vDestRotation;
 	_vector		vSourPosition, vDestPosition;
@@ -124,14 +127,6 @@ HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 
 		_uint		iCurCurrentKeyFrame = (*curIter)->Get_CurrentKeyFrame();
 		_uint		iPrevCurrentKeyFrame = (*prevIter)->Get_CurrentKeyFrame();
-
-		//_float		fRatio = (_float)(m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /
-		//	(_float)(KeyFrames[iCurrentKeyFrame + 1]->Time - KeyFrames[iCurrentKeyFrame]->Time);
-
-		//vSourScale = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vScale);
-		//vSourRotation = XMLoadFloat4(&prevKeyFrames[iPrevCurrentKeyFrame]->vRotation);
-		//vSourPosition = XMLoadFloat3(&prevKeyFrames[iPrevCurrentKeyFrame]->vPosition);
-		//vSourPosition = XMVectorSetW(vSourPosition, 1.f);
 
 		_matrix prevMat = (*prevIter)->Get_TransformationMatrix();
 
@@ -153,72 +148,87 @@ HRESULT CAnimation::Blend_Animation(CAnimation * prevAnim, _float ratio)
 		(*curIter)->Set_TransformationMatrix(TransformationMatrix);
 	}
 
-	//for (auto& pAnimChannel : m_Channels)
-	//{
-	//	vector<KEYFRAMEDESC*>	KeyFrames = pAnimChannel->Get_KeyFrames();
+	return S_OK;
+}
+HRESULT CAnimation::Blend_Animation(list<_matrix> prevAnimMatrix, _float ratio)
+{
+	if (ratio >= 1.f)
+		ratio = 1.f;
 
-	//	KEYFRAMEDESC*		pFirst = KeyFrames.front();
-	//	KEYFRAMEDESC*		pLast = KeyFrames.back();
+	_vector		vSourScale, vDestScale;
+	_vector		vSourRotation, vDestRotation;
+	_vector		vSourPosition, vDestPosition;
+	_vector		vScale, vRotation, vPosition;
 
-	//	_vector			vScale, vRotation, vPosition;
+	auto curIter = m_Channels.begin();
+	auto prevIter = prevAnimMatrix.begin();
+	for (; curIter != m_Channels.end() && prevIter != prevAnimMatrix.end(); ++curIter, ++prevIter)
+	{
+		vector<KEYFRAMEDESC*>	curKeyFrames = (*curIter)->Get_KeyFrames();
 
-	//	vScale = XMVectorZero();
-	//	vRotation = XMVectorZero();
-	//	vPosition = XMVectorZero();
+		_uint		iCurCurrentKeyFrame = (*curIter)->Get_CurrentKeyFrame();
 
-	//	_uint		iCurrentKeyFrame = pAnimChannel->Get_CurrentKeyFrame();
-	//	_float		fRatio = 0.f;
+		_matrix prevMat = (*prevIter);
 
-	//	if (m_isFinished)
-	//	{
-	//		iCurrentKeyFrame = 0;
-	//		pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
-	//	}
+		XMMatrixDecompose(&vSourScale, &vSourRotation, &vSourPosition, prevMat);
+		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
 
-	//	if (m_CurrrentTime <= pFirst->Time)
-	//	{
-	//		vScale = XMLoadFloat3(&pFirst->vScale);
-	//		vRotation = XMLoadFloat4(&pFirst->vRotation);
-	//		vPosition = XMLoadFloat3(&pFirst->vPosition);
-	//		vPosition = XMVectorSetW(vPosition, 1.f);
-	//	}
-	//	else if (m_CurrrentTime > pLast->Time)
-	//	{
-	//		vScale = XMLoadFloat3(&pLast->vScale);
-	//		vRotation = XMLoadFloat4(&pLast->vRotation);
-	//		vPosition = XMLoadFloat3(&pLast->vPosition);
-	//		vPosition = XMVectorSetW(vPosition, 1.f);
-	//	}
-	//	else
-	//	{
-	//		if (m_CurrrentTime > KeyFrames[iCurrentKeyFrame + 1]->Time)
-	//			pAnimChannel->Set_CurrentKeyFrame(++iCurrentKeyFrame);
+		vDestScale = XMLoadFloat3(&curKeyFrames[iCurCurrentKeyFrame]->vScale);
+		vDestRotation = XMLoadFloat4(&curKeyFrames[iCurCurrentKeyFrame]->vRotation);
+		vDestPosition = XMLoadFloat3(&curKeyFrames[iCurCurrentKeyFrame]->vPosition);
+		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
 
+		vScale = XMVectorLerp(vSourScale, vDestScale, ratio);
+		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, ratio);
+		vPosition = XMVectorLerp(vSourPosition, vDestPosition, ratio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
 
-	//		_float		fRatio = (_float)(m_CurrrentTime - KeyFrames[iCurrentKeyFrame]->Time) /
-	//			(_float)(KeyFrames[iCurrentKeyFrame + 1]->Time - KeyFrames[iCurrentKeyFrame]->Time);
+		_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
-	//		vSourScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vScale);
-	//		vSourRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame]->vRotation);
-	//		vSourPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vPosition);
-	//		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
-
-	//		vDestScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vScale);
-	//		vDestRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame + 1]->vRotation);
-	//		vDestPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vPosition);
-	//		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
-
-	//		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
-	//		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
-	//		vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
-	//		vPosition = XMVectorSetW(vPosition, 1.f);
-	//	}
-	//	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
-
-	//	pAnimChannel->Set_TransformationMatrix(TransformationMatrix);
-	//}
+		(*curIter)->Set_TransformationMatrix(TransformationMatrix);
+	}
 
 	return S_OK;
+}
+list<_matrix> CAnimation::Get_Blend_Animation_Matrix(CAnimation * prevAnim, _float ratio)
+{
+	list<_matrix> out;
+
+	_vector		vSourScale, vDestScale;
+	_vector		vSourRotation, vDestRotation;
+	_vector		vSourPosition, vDestPosition;
+	_vector		vScale, vRotation, vPosition;
+
+	auto curIter = m_Channels.begin();
+	auto prevIter = prevAnim->m_Channels.begin();
+	for (; curIter != m_Channels.end() && prevIter != prevAnim->m_Channels.end(); ++curIter, ++prevIter)
+	{
+		vector<KEYFRAMEDESC*>	curKeyFrames = (*curIter)->Get_KeyFrames();
+		vector<KEYFRAMEDESC*>	prevKeyFrames = (*prevIter)->Get_KeyFrames();
+
+		_uint		iCurCurrentKeyFrame = (*curIter)->Get_CurrentKeyFrame();
+		_uint		iPrevCurrentKeyFrame = (*prevIter)->Get_CurrentKeyFrame();
+
+		_matrix prevMat = (*prevIter)->Get_TransformationMatrix();
+
+		XMMatrixDecompose(&vSourScale, &vSourRotation, &vSourPosition, prevMat);
+		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
+
+		vDestScale = XMLoadFloat3(&curKeyFrames[iCurCurrentKeyFrame]->vScale);
+		vDestRotation = XMLoadFloat4(&curKeyFrames[iCurCurrentKeyFrame]->vRotation);
+		vDestPosition = XMLoadFloat3(&curKeyFrames[iCurCurrentKeyFrame]->vPosition);
+		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
+
+		vScale = XMVectorLerp(vSourScale, vDestScale, ratio);
+		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, ratio);
+		vPosition = XMVectorLerp(vSourPosition, vDestPosition, ratio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+		out.emplace_back(TransformationMatrix);
+	}
+
+	return out;
 }
 HRESULT CAnimation::ResetCurrentTime()
 {

@@ -520,6 +520,7 @@ _float CPlayer::GetXAxisAngle(_vector hitPos)
 	if (XMConvertToRadians(90) > rightVecAngle)
 		xAxisAngle *= -1;
 
+	//ADDLOG(to_string(XMConvertToDegrees( xAxisAngle)).c_str());
 	return xAxisAngle;
 }
 
@@ -677,10 +678,10 @@ void CPlayer::RaycastRifleToHitPos()
 		m_pHitActor = hit.block.actor;
 
 
-			string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-			ADDLOG(("Hit Pos: " + logPos).c_str());
-			logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
-			ADDLOG(("Cursor Pos: " + logPos).c_str());
+			//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+			//ADDLOG(("Hit Pos: " + logPos).c_str());
+			//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
+			//ADDLOG(("Cursor Pos: " + logPos).c_str());
 	}
 }
 

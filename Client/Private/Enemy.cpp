@@ -252,6 +252,7 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		m_pCollider->ReleaseController();
 		m_pController = nullptr;
 		m_pModel->SetRagdollSimulate(true);
+		m_pWeapon->SetDead();
 
 		_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
 		_vector damageDir = XMVector3Normalize(position - sourceLocation);

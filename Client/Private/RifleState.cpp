@@ -29,7 +29,46 @@ void CRifleState::HandleInput(CStateMachine ** pState, CPlayer& pPlayer)
 	if (m_bEquipping || m_bUnEquipping)
 		return;
 
-	pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::IDLE_RIFLE, ANIM_TYPE::UPPER);
+	// 각도에 따라 달라지는 anim
+	CModel::UPPERBLENDDESC desc;
+
+
+	// Up Down
+	_float yDegree = XMConvertToDegrees(pPlayer.m_targetUpperRotation.x);
+	// Right Left
+	_float xDegree = XMConvertToDegrees(pPlayer.m_targetUpperRotation.y);
+	ADDLOG((to_string(yDegree)+",  " + to_string(xDegree)).c_str());
+
+	// + looking down, - looking up
+	if (yDegree < 0.f)
+		desc.iAnimY = (_uint)ANIM_UPPER::AIM_FU;
+	else
+		desc.iAnimY = (_uint)ANIM_UPPER::AIM_FD;
+	desc.fRatioY = abs(yDegree) / 90.f;
+
+	if (xDegree < 0.f)
+		desc.iAnimX = (_uint)ANIM_UPPER::AIM_L;
+	else
+		desc.iAnimX = (_uint)ANIM_UPPER::AIM_R;
+	desc.fRatioX = abs(xDegree) / 90.f;
+
+	if (desc.iAnimY == (_uint)ANIM_UPPER::AIM_FU)
+	{
+		if (desc.iAnimX == (_uint)ANIM_UPPER::AIM_L)
+			desc.iCornerBlendIdx = (_uint)ANIM_UPPER::AIM_LU;
+		else
+			desc.iCornerBlendIdx = (_uint)ANIM_UPPER::AIM_RU;
+	}
+	else
+	{
+		if (desc.iAnimX == (_uint)ANIM_UPPER::AIM_L)
+			desc.iCornerBlendIdx = (_uint)ANIM_UPPER::AIM_LD;
+		else
+			desc.iCornerBlendIdx = (_uint)ANIM_UPPER::AIM_RD;
+	}
+	//desc.fRatioX = 0.f;
+
+	pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::IDLE_RIFLE, ANIM_TYPE::UPPER, true, desc);
 }
 
 void CRifleState::Update(CStateMachine ** pState, CPlayer& pPlayer)

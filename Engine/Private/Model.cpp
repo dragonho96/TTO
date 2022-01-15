@@ -731,6 +731,23 @@ HRESULT CModel::Blend_Animation(_double TimeDelta)
 		if (m_fBlendTime_Upper >= m_fBlendDuration)
 			m_iPrevAnimationIndex_Upper = m_iAnimationIndex_Upper;
 	}
+	
+	// if Uppder Aim Blend
+	if (m_bUpperBlending)
+	{
+		// 1. 위 아래 Anim
+		m_Animations[m_UpperBlendDesc.iAnimY]->Blend_Animation(m_Animations[m_iAnimationIndex_Upper], m_UpperBlendDesc.fRatioY);
+		//m_Animations[m_UpperBlendDesc.iAnimX]->Blend_Animation(m_Animations[m_iAnimationIndex_Upper], m_UpperBlendDesc.fRatioX);
+		//m_Animations[m_UpperBlendDesc.iAnimY]->Blend_Animation(m_Animations[m_UpperBlendDesc.iAnimX], m_UpperBlendDesc.fRatioY);
+	}
+
+	/*
+	m_Animations[Up, left down right]
+	m_Animations[Up, left down right]
+	요거 두개를 동일하게 blend
+	*/
+
+
 
 	return S_OK;
 }
@@ -814,10 +831,15 @@ HRESULT CModel::SetUp_AnimationInfo()
 	return S_OK;
 }
 
-HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType)
+HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType, _bool bUpperBlend, UPPERBLENDDESC desc)
 {
 	if (iAnimationIndex >= m_Animations.size())
 		return E_FAIL;
+
+	m_bUpperBlending = bUpperBlend;
+	if (m_bUpperBlending)
+		m_UpperBlendDesc = desc;
+
 
 	if (eType == ANIM_TYPE::LOWER || eType == ANIM_TYPE::NONE)
 	{
@@ -845,6 +867,7 @@ HRESULT CModel::SetUp_AnimationIndex(_uint iAnimationIndex, ANIM_TYPE eType)
 
 		m_bFinished_Upper = false;
 	}
+
 
 	return S_OK;
 }
@@ -880,7 +903,11 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 			else if (pHierarchyNodes->Get_Type() == ANIM_TYPE::LOWER)
 				type = ANIM_TYPE::LOWER;
 
-			pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
+			if (m_bUpperBlending)
+				//pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_UpperBlendDesc.iAnimY, type, { m_upperRotationAngle.x / 2.f, m_upperRotationAngle.y / 2.f });
+				pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_UpperBlendDesc.iAnimY, type, {0, m_upperRotationAngle.y});
+			else
+				pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
 		}
 	}
 
