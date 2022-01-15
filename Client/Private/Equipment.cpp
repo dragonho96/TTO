@@ -93,7 +93,14 @@ list<pair<BASEEQUIPDESC*, EQUIPMENT>> CEquipment::ClearMyInventory(GEAR type)
 			for (auto& col : row)
 			{
 				if (col)
-					output.emplace_back(col, col->type);
+				{
+					auto iter = find_if(output.begin(), output.end(), [&](pair<BASEEQUIPDESC*, EQUIPMENT> child) {
+						return child.first == col;
+					});
+
+					if (iter == output.end())
+						output.emplace_back(col, col->type);
+				}
 			}
 		}
 		innerVec.clear();

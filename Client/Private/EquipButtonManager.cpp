@@ -109,10 +109,6 @@ void CEquipButtonManager::Update(_double deltaTime)
 		{
 			if (dynamic_cast<CEmptyUI*>(m_vecItemSelectButton[i])->IsHovered())
 			{
-				if (i == 1)
-				{
-					int isdf = 0;
-				}
 				SetItemSelectDesc("HoverBar", m_eCurItemSelectType, i);
 				if (CEngine::GetInstance()->IsMouseDown(0))
 				{
@@ -128,7 +124,17 @@ void CEquipButtonManager::Update(_double deltaTime)
 						return;
 					}
 				}
+				// SET WHITE
+				SetButtonColor(m_vecItemSelectButton[i], _float4{ 1.f, 1.f, 1.f, 1.f });
 			}
+			else
+			{
+				// SET GREY
+				SetButtonColor(m_vecItemSelectButton[i], _float4{ 0.5f, 0.5f, 0.5f, 1.f });
+			}
+
+			if (m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i) == m_pPlayerEquipment->m_Equipments[(size_t)m_eCurItemSelectType])
+				SetButtonColor(m_vecItemSelectButton[i], _float4{ 0.9f, 0.5f, 0.0f, 1.f });
 		}
 	}
 
@@ -160,6 +166,11 @@ void CEquipButtonManager::Update(_double deltaTime)
 			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
 				CEngine::GetInstance()->IsMouseDown(0))
 				OpenItemSelectWindow(EQUIPMENT(i));
+
+			if (i == (size_t)m_eCurItemSelectType && m_bOpenItemSelectWindow)
+				SetButtonColor(m_vecButtons[i], _float4{ 0.9f, 0.5f, 0.0f, 1.f });
+			else
+				SetButtonColor(m_vecButtons[i], _float4{ 1.f, 1.f, 1.f, 1.f });
 		}
 	}
 
@@ -290,6 +301,36 @@ void CEquipButtonManager::SetButtonText(CGameObject * button, BASEEQUIPDESC* des
 			{
 				CComponent* viBuffer = obj->GetComponent("Com_VIBuffer");
 				dynamic_cast<CVIBuffer_RectUI*>(viBuffer)->UpdateTexture(desc->texturePath);
+			}
+		}
+	}
+}
+
+void CEquipButtonManager::SetButtonColor(CGameObject * button, _float4 color)
+{
+	list<CGameObject*> children = button->GetChildren();
+	for (auto& obj : children)
+	{
+		if (obj->GetComponent("Com_Text"))
+		{
+			CComponent* textCom = obj->GetComponent("Com_Text");
+			if (textCom)
+			{
+				CText* text = dynamic_cast<CText*>(textCom);
+				if (obj->GetName() == "Name")
+					text->SetColor(color);
+				else if (obj->GetName() == "Cost")
+					text->SetColor(color);
+				else if (obj->GetName() == "Weight")
+					text->SetColor(color);
+			}
+		}
+		else if (obj->GetComponent("Com_VIBuffer"))
+		{
+			if (obj->GetName() == "Image")
+			{
+				CComponent* viBuffer = obj->GetComponent("Com_VIBuffer");
+				dynamic_cast<CVIBuffer_RectUI*>(viBuffer)->SetColor(color);
 			}
 		}
 	}

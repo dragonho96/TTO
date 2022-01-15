@@ -76,9 +76,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	g_eCurScene = SCENE_TEST;
+	g_eCurScene = SCENE_LOBBY;
 
-	if (g_eCurScene == SCENE_TEST)
+	if (g_eCurScene == SCENE_TEST || g_eCurScene == SCENE_LOBBY)
 	{
 		m_pEngine->DeserializePrefab();
 		if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_Equipment", CEquipment::Create(m_pDevice, m_pDeviceContext))))

@@ -640,6 +640,10 @@ void CInspector::DrawRectTransform()
 
 		_int& order = dynamic_cast<CEmptyUI*>(g_pObjFocused)->GetSortingOrder();
 		ImGui::DragInt("Sortring Order", &order, 0.1f, 0, 10);
+
+		_int& render = dynamic_cast<CEmptyUI*>(g_pObjFocused)->GetRenderIndex();
+		ImGui::DragInt("Rendering Order", &render, 0.1f, 0, 10);
+
 		ImGui::TreePop();
 	}
 

@@ -62,8 +62,17 @@ float4 PS_MAIN(PS_IN input) : SV_TARGET
 {
     float4 color = Map.Sample(Sampler, input.vTexUV);
     clip(color.a < 0.1f ? -1 : 1);
+
     // color += vColor;
     return color;
+}
+
+float4 PS_MAIN_COLOR(PS_IN input) : SV_TARGET
+{
+    float4 color = Map.Sample(Sampler, input.vTexUV);
+    clip(color.a < 0.1f ? -1 : 1);
+
+    return vColor;
 }
 
 float4 PS_DEFAULT(PS_IN input) : SV_TARGET
@@ -93,5 +102,16 @@ technique11		DefaultDevice
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass ImageColor
+    {
+        SetRasterizerState(Rasterizer_Solid);
+        SetDepthStencilState(DepthStecil_NotZTestWrite, 0);
+        SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_COLOR();
     }
 }

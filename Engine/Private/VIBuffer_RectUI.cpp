@@ -123,10 +123,13 @@ HRESULT CVIBuffer_RectUI::Render(_uint iPassIndex)
 	if (m_pTexture)
 	{
 		m_pShader->SetUp_TextureOnShader("Map", m_pTexture);
-		m_pShader->Render(1);
+		if (iPassIndex == 2)
+			m_pShader->Render(2);
+		else
+			m_pShader->Render(1);
 	}
 	else
-		m_pShader->Render(iPassIndex);
+		m_pShader->Render(0);
 
 
 	if (m_IBSubResourceData.pSysMem)

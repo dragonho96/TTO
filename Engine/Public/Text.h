@@ -21,6 +21,7 @@ public:
 public:
 	void SetTextInfo(string text, _float layerDepth = 0.f, _float4 color = { 1.f, 1.f, 1.f, 1.f }, _float2 scale = { 1.f, 1.f });
 	void SetString(string text) { m_strText = text; }
+	void SetColor(_float4 _color) { m_vColor = _color; }
 
 public:
 	string& GetText() { return m_strText; }

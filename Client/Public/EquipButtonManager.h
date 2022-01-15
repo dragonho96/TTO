@@ -21,6 +21,7 @@ public:
 
 public:
 	void SetButtonText(CGameObject* button, BASEEQUIPDESC* desc);
+	void SetButtonColor(CGameObject* button, _float4 color);
 	void SetInventorySlot(GEAR type);
 	void ClearInventorySlot(GEAR type);
 

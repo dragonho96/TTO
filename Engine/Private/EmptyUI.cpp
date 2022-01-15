@@ -102,7 +102,7 @@ HRESULT CEmptyUI::Render(_uint iPassIndex)
 {
 	CComponent* buffer = GetComponent("Com_VIBuffer");
 	if (buffer)
-		dynamic_cast<CVIBuffer*>(buffer)->Render();
+		dynamic_cast<CVIBuffer*>(buffer)->Render(m_iRenderIndex);
 
 	CComponent* text = GetComponent("Com_Text");
 	if (text)

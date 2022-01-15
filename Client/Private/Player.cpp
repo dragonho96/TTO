@@ -55,8 +55,6 @@ HRESULT CPlayer::Initialize()
 	//m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 	//m_pGrenadeTrajectory->SetActive(false);
 
-
-
 	// EquipmentPool 에 meshcontainer 등록
 	AssignMeshContainter();
 	FindBones();
@@ -69,14 +67,16 @@ HRESULT CPlayer::Initialize()
 	m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
 	m_pWeaponInHand = m_pPrimaryWeapon;
 
+	if (g_eCurScene == SCENE_TEST)
+	{
+		m_pRifleLight = CEngine::GetInstance()->SpawnPrefab("RifleLight");
+		m_pRifleLightTransform = dynamic_cast<CTransform*>(m_pRifleLight->GetComponent("Com_Transform"));
 
-	m_pRifleLight = CEngine::GetInstance()->SpawnPrefab("RifleLight");
-	m_pRifleLightTransform = dynamic_cast<CTransform*>(m_pRifleLight->GetComponent("Com_Transform"));
-
-	m_pMuzzleLight = CEngine::GetInstance()->SpawnPrefab("RifleMuzzleLight");
-	m_pMuzzleLightTransform = dynamic_cast<CTransform*>(m_pMuzzleLight->GetComponent("Com_Transform"));
-	m_pMuzzleLightCom = dynamic_cast<CLight*>(m_pMuzzleLight->GetComponent("Com_Light"));
-	m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
+		m_pMuzzleLight = CEngine::GetInstance()->SpawnPrefab("RifleMuzzleLight");
+		m_pMuzzleLightTransform = dynamic_cast<CTransform*>(m_pMuzzleLight->GetComponent("Com_Transform"));
+		m_pMuzzleLightCom = dynamic_cast<CLight*>(m_pMuzzleLight->GetComponent("Com_Light"));
+		m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
+	}
 
 	// Setting Non-Looping Animation
 	m_pModel->SetAnimSeperate(true);
@@ -104,11 +104,14 @@ HRESULT CPlayer::Initialize()
 	m_pCameraTransform = dynamic_cast<CTransform*>(m_pCam->GetComponent("Com_Transform"));
 
 
-	if (FAILED(CEngine::GetInstance()->AddTimers("Raycast")))
-		return FALSE;
+	if (g_eCurScene == SCENE_TEST)
+	{
+		if (FAILED(CEngine::GetInstance()->AddTimers("Raycast")))
+			return FALSE;
 
-	if (FAILED(CEngine::GetInstance()->AddTimers("CheckEnemyInSight")))
-		return FALSE;
+		if (FAILED(CEngine::GetInstance()->AddTimers("CheckEnemyInSight")))
+			return FALSE;
+	}
 
 
 	return S_OK;
@@ -122,7 +125,8 @@ void CPlayer::Update(_double deltaTime)
 
 	static bool startRagdoll = false;
 
-	if (m_pController && CGameManager::GetInstance()->GetCurrentCamera() == CGameManager::CAMERA::FOLLOW)
+	if (m_pController && CGameManager::GetInstance()->GetCurrentCamera() == CGameManager::CAMERA::FOLLOW
+		&& g_eCurScene == SCENE_TEST)
 	{
 		// Look Vector
 		//m_pTransform->RotateAxis(m_pTransform->GetState(CTransform::STATE_UP), 0.001f);
@@ -258,6 +262,16 @@ void CPlayer::LapteUpdate(_double deltaTime)
 
 void CPlayer::UpdateWeaponTransform()
 {
+	if (g_eCurScene == SCENE_LOBBY)
+	{
+		m_pPrimaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::PRIMARY)->model;
+		m_pSecondaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::SECONDARY)->model;
+		m_pGrenade = m_pEquipment->GetCurrentEquipment(EQUIPMENT::GRENADE)->model;
+		m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
+		
+		m_pWeaponInHand = m_pPrimaryWeapon;
+	}
+
 	if (m_pWeaponInHand != m_pPrimaryWeapon)
 		SetObjectTransform(m_pPrimaryWeapon, m_pSlingBone);
 
@@ -272,53 +286,6 @@ void CPlayer::UpdateRifleLightTransform(CGameObject * pWeapon)
 	__super::UpdateRifleLightTransform(pWeapon);
 	m_pRifleLightTransform->SetMatrix(m_pMuzzleLightTransform->GetMatrix());
 }
-
-//void CPlayer::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
-//{
-//	if (pObj)
-//	{
-//		_float4x4 pos;
-//		_matrix matPos;
-//
-//		if (m_pModel->IsSimulatingRagdoll())
-//			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix();
-//		else
-//			matPos = pBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
-//		XMStoreFloat4x4(&pos, matPos);
-//
-//		dynamic_cast<CTransform*>(pObj->GetComponent("Com_Transform"))->SetMatrix(pos);
-//	}
-//}
-
-//void CPlayer::UpdateRifleLightTransform()
-//{
-//	CTransform* pWeaponTransform = dynamic_cast<CTransform*>(m_pPrimaryWeapon->GetComponent("Com_Transform"));
-//	m_pRifleLightTransform->SetMatrix(pWeaponTransform->GetMatrix());
-//
-//	_vector up = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_UP));
-//	_vector right = XMVector3Normalize(pWeaponTransform->GetState(CTransform::STATE_RIGHT));
-//	_vector offsetPosition = up * 0.5f + right * -0.07f;
-//	_vector vPosition = pWeaponTransform->GetState(CTransform::STATE_POSITION);
-//	vPosition += offsetPosition;
-//	m_pRifleLightTransform->SetState(CTransform::STATE_POSITION, vPosition);
-//
-//	_matrix mat = m_pRifleLightTransform->GetWorldMatrix();
-//	_matrix matRotationX = XMMatrixRotationX(XMConvertToRadians(-90.f));
-//	_matrix matRotationZ = XMMatrixRotationZ(XMConvertToRadians(90.f));
-//	// _matrix matRotation = XMMatrixRotationAxis(_vector{1.f, 0.f, 0.f}, XMConvertToRadians(-90.f));
-//	_matrix newMat = matRotationX * mat;
-//	newMat = matRotationZ * newMat;
-//	m_pRifleLightTransform->SetMatrix(newMat);
-//	m_pMuzzleLightTransform->SetMatrix(newMat);
-//}
-
-//void CPlayer::UpdateRifleMuzzleLightRange(_double deltaTime)
-//{
-//	_double fLerpSpeed = deltaTime * 30.f;
-//	m_fCurMuzzleLightRange = Lerp(m_fCurMuzzleLightRange, m_fMuzzleLightRange, fLerpSpeed);
-//	if (m_fCurMuzzleLightRange >= 2.5f)
-//		m_fMuzzleLightRange = 0.1f;
-//}
 
 void CPlayer::EquipWeapon(EQUIPMENT eType)
 {
@@ -678,10 +645,10 @@ void CPlayer::RaycastRifleToHitPos()
 		m_pHitActor = hit.block.actor;
 
 
-			//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-			//ADDLOG(("Hit Pos: " + logPos).c_str());
-			//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
-			//ADDLOG(("Cursor Pos: " + logPos).c_str());
+		//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
+		//ADDLOG(("Hit Pos: " + logPos).c_str());
+		//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
+		//ADDLOG(("Cursor Pos: " + logPos).c_str());
 	}
 }
 

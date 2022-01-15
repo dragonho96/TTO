@@ -299,6 +299,7 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 
 	out << YAML::Key << "Type" << YAML::Value << "UI";
 	out << YAML::Key << "SortingOrder" << YAML::Value << dynamic_cast<CEmptyUI*>(obj)->GetSortingOrder();
+	out << YAML::Key << "RenderIndex" << YAML::Value << dynamic_cast<CEmptyUI*>(obj)->GetRenderIndex();
 
 	if (obj->GetComponent("Com_Transform"))
 	{
@@ -380,6 +381,12 @@ CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj, _bool bSpawn)
 
 	auto sortingOrder = obj["SortingOrder"].as<_int>();
 	dynamic_cast<CEmptyUI*>(deserializedObject)->SetSortingOrder(sortingOrder);
+
+	if (obj["RenderIndex"])
+	{
+		auto renderIndex = obj["RenderIndex"].as<_int>();
+		dynamic_cast<CEmptyUI*>(deserializedObject)->SetRenderIndex(renderIndex);
+	}
 
 	auto transformCom = obj["Com_Transform"];
 	if (transformCom)

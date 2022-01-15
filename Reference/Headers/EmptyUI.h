@@ -40,6 +40,9 @@ public:
 	_int& GetSortingOrder() { return m_iSortingOrder; }
 	void SetSortingOrder(_int order) { m_iSortingOrder = order; }
 
+	_int& GetRenderIndex() { return m_iRenderIndex; }
+	void SetRenderIndex(_int idx) { m_iRenderIndex = idx; }
+
 protected:
 	_bool m_bHover = false;
 	_bool m_bSelect = false;
@@ -51,7 +54,7 @@ private:
 private:
 	CRectTransform*		m_pRectTransformCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
-
+	_int				m_iRenderIndex = 0;
 };
 
 END

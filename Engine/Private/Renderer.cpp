@@ -174,14 +174,13 @@ HRESULT CRenderer::DrawRenderGroup()
 	if (FAILED(RenderText()))
 		return E_FAIL;
 
-	//if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
-	//{
-		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
-			return E_FAIL;
-		if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
-			return E_FAIL;
-	//}
-	CLightManager::GetInstance()->Render_DebugBuffer();
+
+	//if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_Deferred")))
+	//	return E_FAIL;
+	//if (FAILED(m_pTargetManager->Render_DebugBuffers("MRT_LightAcc")))
+	//	return E_FAIL;
+
+	//CLightManager::GetInstance()->Render_DebugBuffer();
 
 	if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
 	{
