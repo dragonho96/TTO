@@ -100,12 +100,12 @@ GameObjects:
       - 17984762815910856734
       - 16864335864421968479
   - Name: Terrain
-    UUID: 17260803735756518252
+    UUID: 17687665146469170171
     Active: true
     Layer: Terrain
     Type: Object
     Com_Transform:
-      Translation: [0, -5, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_VIBuffer:
@@ -230,7 +230,7 @@ GameObjects:
     SortingOrder: 2
     RenderIndex: 0
     Com_Transform:
-      Position: [1004.20465, 294.62262]
+      Position: [1004.20465, 295]
       Size: [300, 246]
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Textures\Buttons\ItemSelectWindow.png
@@ -681,28 +681,15 @@ GameObjects:
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
       Color: [0, 0, 0, 1]
-  - Name: Building
-    UUID: 10675929340085427044
-    Active: true
-    Layer: Default
-    Type: Object
-    Com_Transform:
-      Translation: [5.11316156, 0.362733543, 8.78027058]
-      Rotation: [179.999893, 44.2965202, 179.999878]
-      Scale: [0.999963641, 1, 0.999963641]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Buildings\ContainerHouse\
-      MeshFileName: ContainerHouse.fbx
-      HasCollider: true
   - Name: Directional
-    UUID: 9608391746769789161
+    UUID: 15135863788310065176
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [-11.8940735, 13.1201744, -12.9010572]
-      Rotation: [19.9999924, 10, 0]
-      Scale: [0.999998033, 0.999990582, 0.999990642]
+      Translation: [-33.1582985, 33.6908417, -25.163765]
+      Rotation: [92.6001511, -0, 0]
+      Scale: [0.999997675, 0.999991894, 0.999993443]
     Com_Light:
       Type: 0
       Range: 10
@@ -711,14 +698,14 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: Spot
-    UUID: 11287827550767656227
+    UUID: 12801383131419299013
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [13.7123184, 7.52110672, 2.79229975]
-      Rotation: [90, -0, 0]
-      Scale: [0.999815941, 0.999999881, 0.999999881]
+      Translation: [13.4534683, 10.9907398, 6.40511608]
+      Rotation: [110.315933, -0, 0]
+      Scale: [0.999770105, 0.999999464, 0.999999464]
     Com_Light:
       Type: 2
       Range: 10
@@ -799,7 +786,7 @@ GameObjects:
       Position: [360.245972, 132.648895]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: headgear
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -889,7 +876,7 @@ GameObjects:
       Position: [360.245972, 221.298126]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: torso
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -979,7 +966,7 @@ GameObjects:
       Position: [360.245972, 311.298126]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: legs
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1069,7 +1056,7 @@ GameObjects:
       Position: [360.245972, 401.298126]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: vest
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1159,7 +1146,7 @@ GameObjects:
       Position: [360.245972, 551.298157]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: backpack
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1250,7 +1237,7 @@ GameObjects:
       Position: [127.142883, 151.161987]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: primary weapon
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1369,7 +1356,7 @@ GameObjects:
       Position: [127.142883, 270.188477]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: secondary weapon
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1460,7 +1447,7 @@ GameObjects:
       Position: [127.142883, 390.188477]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: grenade
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1551,7 +1538,7 @@ GameObjects:
       Position: [127.142883, 510.188477]
       Size: [100, 20]
     Com_Text:
-      Text: type
+      Text: equipment
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1652,17 +1639,180 @@ GameObjects:
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
       Color: [0, 0, 0, 1]
+  - Name: RoundTable
+    UUID: 16553291165277224542
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [13.5214987, 0.207865477, 2.48116302]
+      Rotation: [0, -0, 0]
+      Scale: [10, 10, 10]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\RoundTable\
+      MeshFileName: RoundTable.fbx
+      HasCollider: false
+  - Name: Sandback
+    UUID: 16943785483388481022
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [16.5495892, 5.44626093, 2.53958845]
+      Rotation: [6.83268356, 34.7731171, -3.60540915]
+      Scale: [0.999999821, 0.999998868, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
+      MeshFileName: Sandbacks.fbx
+      HasCollider: false
+  - Name: Sandback
+    UUID: 6204559564773260984
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [14.0750732, 5.43916035, 2.88178873]
+      Rotation: [-0.0999995768, -26.3999748, 0]
+      Scale: [0.999999762, 0.99995774, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
+      MeshFileName: Sandbacks.fbx
+      HasCollider: false
+  - Name: Sandback
+    UUID: 14574993550348383220
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [12.7536554, 5.4712472, 0.799488664]
+      Rotation: [179.999893, -86.6060867, -179.999893]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
+      MeshFileName: Sandbacks.fbx
+      HasCollider: false
+  - Name: Pallete
+    UUID: 7837935027558784094
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [10.4031, 5.41699362, 3.03060484]
+      Rotation: [0, -13.9999981, 0]
+      Scale: [0.999999762, 1, 0.999999762]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Pallete\
+      MeshFileName: Pallete.fbx
+      HasCollider: false
+  - Name: WeaponBox
+    UUID: 1331464326548750937
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [11.2267799, 5.86695957, 2.28962731]
+      Rotation: [0, 23.4899387, 0]
+      Scale: [0.999999583, 1, 0.999999583]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\WeaponBox\
+      MeshFileName: WeaponBoxB.fbx
+      HasCollider: false
+  - Name: Weaponbox
+    UUID: 1642275524953491385
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [11.2528582, 5.41599655, 2.20540857]
+      Rotation: [0, -17.2000008, 0]
+      Scale: [0.999999285, 1, 0.999999285]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\WeaponBox\
+      MeshFileName: WeaponBoxC.fbx
+      HasCollider: false
+  - Name: CamPos_Primary
+    UUID: 15145896401002252888
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [14.4799995, 6.5999999, 5.80000019]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Secondary
+    UUID: 17394937643745263198
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [14.3000002, 6, 4.5]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Headgear
+    UUID: 7580951087935622301
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6400003, 6.69999981, 5.75]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos
+    UUID: 190768500207833304
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Torso
+    UUID: 8596580313186967593
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6199999, 6.53000021, 6.07000017]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Legs
+    UUID: 13132565532661175770
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6999998, 5.69999981, 6]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Backpack
+    UUID: 9260909921597964320
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [12.8199997, 7, 3.79999995]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Tool
+    UUID: 13186682042581099422
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [12.8699999, 6.26999998, 4]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
   - Name: Player
-    UUID: 16772344120129412333
+    UUID: 3176038304776535730
     Active: true
     Layer: Player
     Type: Object
     Com_Transform:
-      Translation: [12.3405237, 1.14081883, 5.05167866]
+      Translation: [13.2277231, 5.9000001, 5.00792599]
       Rotation: [0, -0, 0]
       Scale: [0.999975502, 0.999995291, 0.999975502]
     Com_Collider:
-      Center: [0, 1, 0]
+      Center: [0, 0.5, 0]
       Type: Capsule
       Radius: 0.150000006
       Height: 1
@@ -1676,12 +1826,12 @@ GameObjects:
       MeshFileName: PlayerFinal1.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 16784837375119534058
+    UUID: 7585357753882515025
     Active: true
     Layer: Sidewalk
     Type: Object
     Com_Transform:
-      Translation: [-13.5209103, -1, 69.8070602]
+      Translation: [-13.5209103, -0.682118893, 69.8070602]
       Rotation: [0, -0, 0]
       Scale: [26.3999996, 1, 11.6999998]
     Com_Model:

@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Camera_Fly.h"
 #include "EquipButtonManager.h"
+#include "GameManager.h"
 
 #pragma region SCRIPTOBJECT
 #include "EquipmentPool.h"
@@ -52,12 +53,16 @@ HRESULT CScene_Lobby::Initialize()
 	if (FAILED(ReadyScript()))
 		return E_FAIL;
 
+	m_pGameManager = CGameManager::GetInstance();
+	m_pGameManager->Initialize();
+
 	return S_OK;
 }
 
 _uint CScene_Lobby::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
+	m_pGameManager->Update(TimeDelta);
 
 	return _uint();
 }
@@ -80,7 +85,7 @@ HRESULT CScene_Lobby::ReadyLayerCamera(string pLayerTag)
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
-	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Camera_Fly", pLayerTag, &CameraDesc))
+	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Camera_Lobby", pLayerTag, &CameraDesc))
 		return E_FAIL;
 
 	return S_OK;

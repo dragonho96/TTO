@@ -46,6 +46,17 @@ private:
 	class CEffect_ImpactSmoke* m_pImpactSmokeEffect = nullptr;
 	class CEffect_Impact* m_pImpactEffect = nullptr;
 	class CEffect_Explosion* m_pExplosion = nullptr;
+
+
+
+/* LOBBY */
+public:
+	void RegisterPlayer(class CPlayer* pPlayer) { m_pPlayer = pPlayer; }
+	void ChangeCameraPos(EQUIPMENT eType);
+private:
+	vector<CTransform*>				m_CamPos;
+	class CCamera_Lobby*			m_CamLobby =nullptr;
+	class CPlayer*					m_pPlayer = nullptr;
 public:
 	virtual void Free() override;
 };

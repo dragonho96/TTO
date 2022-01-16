@@ -59,6 +59,7 @@ public:
 
 	void AssignMeshContainter();
 	void FindBones();
+	_vector GetBonePos(EQUIPMENT eType);
 private:
 	CTransform*				m_pCameraTransform = nullptr;
 	CGameObject*			m_pGrenadeTrajectory = nullptr;
@@ -70,17 +71,18 @@ private:
 
 
 	class CEquipment*		m_pEquipment = nullptr;
-	CGameObject*	m_pWeaponInHand = nullptr;
-	CGameObject*	m_pPrimaryWeapon = nullptr;
-	CGameObject*	m_pSecondaryWeapon = nullptr;
-	CGameObject*	m_pGrenade = nullptr;
-	CGameObject*	m_pTool = nullptr;
-	BONEDESC*		m_pHandBone = nullptr;
-	BONEDESC*		m_pRThighBone = nullptr;
-	BONEDESC*		m_pGrenadeBone = nullptr;
-	BONEDESC*		m_pToolBone = nullptr;
-	BONEDESC*		m_pSpineBone = nullptr;
-	BONEDESC*		m_pSlingBone = nullptr;
+	CGameObject*			m_pWeaponInHand = nullptr;
+	CGameObject*			m_pPrimaryWeapon = nullptr;
+	CGameObject*			m_pSecondaryWeapon = nullptr;
+	CGameObject*			m_pGrenade = nullptr;
+	CGameObject*			m_pTool = nullptr;
+	BONEDESC*				m_pHandBone = nullptr;
+	BONEDESC*				m_pRThighBone = nullptr;
+	BONEDESC*				m_pGrenadeBone = nullptr;
+	BONEDESC*				m_pToolBone = nullptr;
+	BONEDESC*				m_pSpineBone = nullptr;
+	BONEDESC*				m_pSlingBone = nullptr;
+	BONEDESC*				m_pHeadBone = nullptr;
 
 	class CStateMachine*	m_pLowerState = nullptr;
 	class CStateMachine*	m_pUpperState = nullptr;

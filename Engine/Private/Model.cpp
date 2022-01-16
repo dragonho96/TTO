@@ -354,19 +354,27 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 		else
 		{
 			if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_TOOL)
-				iPassIndex = 4;
+			{
+				if (0 < m_Animations.size())
+					iPassIndex = 5;
+				else
+					iPassIndex = 4;
+			}
 		}
 	}
 	// m_pShader->Render(iPassIndex);
 
 	if (iPassIndex == 0)
 	{
-		if (0 < m_Animations.size())
+		if (CEngine::GetInstance()->GetCurrentUsage() == CEngine::USAGE::USAGE_CLIENT)
 		{
-			if (m_bSimulateRagdoll)
-				iPassIndex = 2;
-			else
-				iPassIndex = 1;
+			if (0 < m_Animations.size())
+			{
+				if (m_bSimulateRagdoll)
+					iPassIndex = 2;
+				else
+					iPassIndex = 1;
+			}
 		}
 
 		_uint iNumLights = CLightManager::GetInstance()->GetNumRenderLights();

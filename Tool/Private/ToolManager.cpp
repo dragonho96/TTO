@@ -250,7 +250,6 @@ void CToolManager::CreateWindows()
 
 	pWindow = new CHierarchy();
 	m_pEngine->AddWindow("Hierarchy", pWindow);
-
 }
 
 void CToolManager::AddLog(const char * log)

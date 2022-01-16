@@ -2,7 +2,7 @@
 #include "..\Public\EquipButtonManager.h"
 #include "EmptyUI.h"
 #include "EquipmentPool.h"
-
+#include "GameManager.h"
 #include <algorithm>
 
 USING(Client)
@@ -118,7 +118,8 @@ void CEquipButtonManager::Update(_double deltaTime)
 					{
 						// player equipment를 바꾼다
 						// slot 을 clear하고 바뀐것으로 다시 생성한다
-						ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
+
+						// ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
 						m_bOpenItemSelectWindow = false;
 						m_pItemSelectWindow->SetActive(false);
 						return;
@@ -165,7 +166,10 @@ void CEquipButtonManager::Update(_double deltaTime)
 		{
 			if (dynamic_cast<CEmptyUI*>(m_vecButtons[i])->IsHovered() &&
 				CEngine::GetInstance()->IsMouseDown(0))
+			{
 				OpenItemSelectWindow(EQUIPMENT(i));
+				CGameManager::GetInstance()->ChangeCameraPos(EQUIPMENT(i));
+			}
 
 			if (i == (size_t)m_eCurItemSelectType && m_bOpenItemSelectWindow)
 				SetButtonColor(m_vecButtons[i], _float4{ 0.9f, 0.5f, 0.0f, 1.f });
@@ -534,6 +538,18 @@ void CEquipButtonManager::RemoveItemImage(list<_uint4> itemToRemove, _bool bStor
 
 void CEquipButtonManager::OpenItemSelectWindow(EQUIPMENT type)
 {
+	// 위치 변경
+	CRectTransform* buttonTransform = dynamic_cast<CRectTransform*>(m_vecButtons[(size_t)type]->GetComponent("Com_Transform"));
+	CRectTransform::RECTTRANSFORMDESC buttonDesc = buttonTransform->GetTransformDesc();
+	// get rightmost pos
+	_float2 startPos = { buttonDesc.posX + (buttonDesc.sizeX / 2.f), buttonDesc.posY - (buttonDesc.sizeY / 2.f) };
+	startPos.x += (buttonDesc.sizeX / 25.f); // Adding Space between slots
+
+	CRectTransform* windowTransform = dynamic_cast<CRectTransform*>(m_pItemSelectWindow->GetComponent("Com_Transform"));
+	windowTransform->SetPosition(startPos.x, startPos.y);
+	m_pItemSelectWindow->SetActive(true);
+
+
 	m_bOpenItemSelectWindow = true;
 	m_eCurItemSelectType = type;
 	CEquipmentPool* pEquipmentPool = CEquipmentPool::GetInstance();
@@ -547,16 +563,6 @@ void CEquipButtonManager::OpenItemSelectWindow(EQUIPMENT type)
 		if (m_pPlayerEquipment->m_Equipments[(size_t)type]->name == equipment->name)
 			SetItemSelectDesc("EquipBar",type, i);
 	}
-	// 위치 변경
-	CRectTransform* buttonTransform = dynamic_cast<CRectTransform*>(m_vecButtons[(size_t)type]->GetComponent("Com_Transform"));
-	CRectTransform::RECTTRANSFORMDESC buttonDesc = buttonTransform->GetTransformDesc();
-	// get rightmost pos
-	_float2 startPos = { buttonDesc.posX + (buttonDesc.sizeX / 2.f), buttonDesc.posY - (buttonDesc.sizeY / 2.f) };
-	startPos.x += (buttonDesc.sizeX / 25.f); // Adding Space between slots
-
-	CRectTransform* windowTransform = dynamic_cast<CRectTransform*>(m_pItemSelectWindow->GetComponent("Com_Transform"));
-	windowTransform->SetPosition(startPos.x, startPos.y);
-	m_pItemSelectWindow->SetActive(true);
 }
 
 void CEquipButtonManager::SetItemSelectDesc(string barName, EQUIPMENT type, _uint idx)
@@ -624,8 +630,6 @@ void CEquipButtonManager::SetItemSelectDesc(string barName, EQUIPMENT type, _uin
 		for (int i = 0; i < m_vecParameter.size(); ++i)
 			m_vecParameter[i]->SetActive(false);
 	}
-
-
 }
 
 void CEquipButtonManager::SetParameters(string barName, _float curWidthRatio, _float hoverWidthRatio, _uint idx)

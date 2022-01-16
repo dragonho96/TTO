@@ -19,6 +19,7 @@ public:
 	virtual void GetDamage(_vector sourceLocation) = 0;
 	virtual void Shot(_double deltaTime) = 0;
 	virtual void SetObjectTransform(CGameObject* pObj, BONEDESC* pBone);
+	virtual _vector GetBonePosition(BONEDESC* pBone);
 	virtual void UpdateRifleMuzzleLightRange(_double deltaTime);
 	virtual void UpdateRifleLightTransform(CGameObject* pWeapon);
 

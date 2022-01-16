@@ -37,7 +37,6 @@ void CRifleState::HandleInput(CStateMachine ** pState, CPlayer& pPlayer)
 	_float yDegree = XMConvertToDegrees(pPlayer.m_targetUpperRotation.x);
 	// Right Left
 	_float xDegree = XMConvertToDegrees(pPlayer.m_targetUpperRotation.y);
-	ADDLOG((to_string(yDegree)+",  " + to_string(xDegree)).c_str());
 
 	// + looking down, - looking up
 	if (yDegree < 0.f)

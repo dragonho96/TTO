@@ -41,7 +41,6 @@ _uint CCamera_Tool::Update(_double TimeDelta)
 
 	if (GetActiveWindow() == g_hWnd)
 	{
-
 		if (m_pEngine->IsKeyPressed('W'))
 		{
 			m_pTransformCom->GoStraight(TimeDelta * 2.f);
@@ -83,8 +82,8 @@ _uint CCamera_Tool::Update(_double TimeDelta)
 		if (m_pEngine->GetMouseMoveValue().z < 0)
 			m_pTransformCom->GoBackWard(TimeDelta * 3.f);
 	}
-
-
+	_vector pos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	ADDLOG((to_string(XMVectorGetX(pos)) + ", " + to_string(XMVectorGetY(pos)) + ", " + to_string(XMVectorGetZ(pos))).c_str());
 
 	return __super::Update(TimeDelta);
 }

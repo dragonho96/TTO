@@ -10,6 +10,7 @@
 
 #include "Camera_Fly.h"
 #include "Camera_Follow.h"
+#include "Camera_Lobby.h"
 #include "Effect.h"
 #include "Effect_Fire.h"
 #include "Effect_Smoke.h"
@@ -383,8 +384,9 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	/* Camera */
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Fly", CCamera_Fly::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
-
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Follow", CCamera_Follow::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Lobby", CCamera_Lobby::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
 	

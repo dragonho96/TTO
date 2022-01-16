@@ -20,6 +20,8 @@ public:
 private:
 	HRESULT ReadyLayerCamera(string pLayerTag);
 	HRESULT ReadyScript();
+private:
+	class CGameManager*		m_pGameManager = nullptr;
 };
 
 END

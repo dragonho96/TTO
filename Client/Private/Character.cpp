@@ -38,6 +38,15 @@ void CCharacter::SetObjectTransform(CGameObject * pObj, BONEDESC * pBone)
 	}
 }
 
+_vector CCharacter::GetBonePosition(BONEDESC * pBone)
+{
+	_vector s, r, t;
+	_matrix mat = pBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
+	XMMatrixDecompose(&s, &r, &t, mat);
+
+	return t;
+}
+
 void CCharacter::UpdateRifleMuzzleLightRange(_double deltaTime)
 {
 	_double fLerpSpeed = deltaTime * 30.f;

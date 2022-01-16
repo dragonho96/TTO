@@ -7,7 +7,7 @@ IMPLEMENT_SINGLETON(CEquipmentPool)
 CEquipmentPool::CEquipmentPool()
 {
 	SetUpEquipmentPool();
-	SetUpModel();
+	// SetUpModel();
 }
 
 void CEquipmentPool::Free()

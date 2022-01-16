@@ -114,6 +114,7 @@ HRESULT CPlayer::Initialize()
 	}
 
 
+	CGameManager::GetInstance()->RegisterPlayer(this);
 	return S_OK;
 }
 
@@ -168,9 +169,9 @@ void CPlayer::Update(_double deltaTime)
 		PxVec3 pxDir;
 		memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 		// GRAVITY
-		m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 		m_pController->move(pxDir, 0.001f, deltaTime, PxControllerFilters{});
-
+		if (g_eCurScene != SCENE_LOBBY)
+			m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 
 		// Get angle between CameraLook and PlayerLook
 		_vector playerLook = m_pTransform->GetState(CTransform::STATE_LOOK);
@@ -720,6 +721,52 @@ void CPlayer::FindBones()
 	m_pToolBone = m_pModel->Find_Bone("slot_gadget");
 	m_pSpineBone = m_pModel->Find_Bone("spine_02");
 	m_pSlingBone = m_pModel->Find_Bone("sling");
+	m_pHeadBone = m_pModel->Find_Bone("sling");
+}
+
+_vector CPlayer::GetBonePos(EQUIPMENT eType)
+{
+	_vector out = {0.f, };
+	BONEDESC* bone = nullptr;
+	switch (eType)
+	{
+	case Client::EQUIPMENT::PRIMARY:
+		bone = m_pHandBone;
+		break;
+	case Client::EQUIPMENT::SECONDARY:
+		bone = m_pRThighBone;
+		break;
+	case Client::EQUIPMENT::GRENADE:
+		bone = m_pGrenadeBone;
+		break;
+	case Client::EQUIPMENT::TOOL:
+		bone = m_pToolBone;
+		break;
+	case Client::EQUIPMENT::HEADGEAR:
+		bone = m_pHeadBone;
+		break;
+	case Client::EQUIPMENT::TORSO:
+		bone = m_pSlingBone;
+		break;
+	case Client::EQUIPMENT::LEGS:
+		bone = m_pRThighBone;
+		break;
+	case Client::EQUIPMENT::VEST:
+		bone = m_pSlingBone;
+		break;
+	case Client::EQUIPMENT::BACKPACK:
+		bone = m_pSpineBone;
+		break;
+	case Client::EQUIPMENT::NONE:
+		break;
+	default:
+		break;
+	}
+
+	if (bone)
+		out = GetBonePosition(bone);
+
+	return out;
 }
 
 void CPlayer::Render()

@@ -420,7 +420,9 @@
     <ClInclude Include="..\Public\VIBuffer_Rect_Viewport.h">
       <Filter>01.Utility\03.Components\VIBuffer\RectViewport</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_LineInstance.h" />
+    <ClInclude Include="..\Public\VIBuffer_LineInstance.h">
+      <Filter>01.Utility\03.Components\VIBuffer\LineInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -612,6 +614,8 @@
     <ClCompile Include="..\Private\VIBuffer_Rect_Viewport.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\RectViewport</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_LineInstance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_LineInstance.cpp">
+      <Filter>01.Utility\03.Components\VIBuffer\LineInstance</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

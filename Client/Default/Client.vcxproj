@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Fly.h" />
     <ClInclude Include="..\Public\Camera_Follow.h" />
+    <ClInclude Include="..\Public\Camera_Lobby.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Fly.cpp" />
     <ClCompile Include="..\Private\Camera_Follow.cpp" />
+    <ClCompile Include="..\Private\Camera_Lobby.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\CrouchState.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
