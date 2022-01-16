@@ -45,13 +45,15 @@ HRESULT CGameManager::Initialize()
 					m_CamPos[(size_t)EQUIPMENT::PRIMARY] = dynamic_cast<CTransform*>(child->GetComponent("Com_Transform"));
 				else if (child->GetName().find("Secondary") != std::string::npos)
 					m_CamPos[(size_t)EQUIPMENT::SECONDARY] = dynamic_cast<CTransform*>(child->GetComponent("Com_Transform"));
+				else if (child->GetName().find("OG") != std::string::npos)
+					m_CamPos[(size_t)EQUIPMENT::PRIMARYMAG] = dynamic_cast<CTransform*>(child->GetComponent("Com_Transform"));
 			}
 		}
 		m_CamPos[(size_t)EQUIPMENT::VEST] = m_CamPos[(size_t)EQUIPMENT::TORSO];
 		m_CamPos[(size_t)EQUIPMENT::GRENADE] = m_CamPos[(size_t)EQUIPMENT::TORSO];
 
 
-		ChangeCameraPos(EQUIPMENT::HEADGEAR);
+		ChangeCameraPos(EQUIPMENT::PRIMARYMAG);
 	}
 	else
 	{

@@ -1,50 +1,5 @@
 Scene: Untitled
 GameObjects:
-  - Name: Weight
-    UUID: 1159453446327318583
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 4
-    RenderIndex: 0
-    Com_Transform:
-      Position: [889.351074, 336.561493]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.400000006, 0.400000006]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 3488741111903446007
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 4
-    RenderIndex: 0
-    Com_Transform:
-      Position: [890.849854, 256.838684]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.400000006, 0.400000006]
-      LayerDepth: 0
-  - Name: Weight
-    UUID: 12782937878656165500
-    Active: true
-    Layer: Weight
-    Type: UI
-    SortingOrder: 4
-    RenderIndex: 0
-    Com_Transform:
-      Position: [890.751343, 416.284424]
-      Size: [60, 20]
-    Com_Text:
-      Text: Weight
-      Color: [1, 1, 1, 1]
-      Scale: [0.400000006, 0.400000006]
-      LayerDepth: 0
   - Name: ItemSelectButton1
     UUID: 12395590112999480506
     Active: true
@@ -99,19 +54,123 @@ GameObjects:
       - 12782937878656165500
       - 17984762815910856734
       - 16864335864421968479
-  - Name: Terrain
-    UUID: 17687665146469170171
+  - Name: Weight
+    UUID: 1159453446327318583
     Active: true
-    Layer: Terrain
+    Layer: Weight
+    Type: UI
+    SortingOrder: 4
+    RenderIndex: 0
+    Com_Transform:
+      Position: [889.351074, 336.561493]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 3488741111903446007
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 4
+    RenderIndex: 0
+    Com_Transform:
+      Position: [890.849854, 256.838684]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: Weight
+    UUID: 12782937878656165500
+    Active: true
+    Layer: Weight
+    Type: UI
+    SortingOrder: 4
+    RenderIndex: 0
+    Com_Transform:
+      Position: [890.751343, 416.284424]
+      Size: [60, 20]
+    Com_Text:
+      Text: Weight
+      Color: [1, 1, 1, 1]
+      Scale: [0.400000006, 0.400000006]
+      LayerDepth: 0
+  - Name: CamPos_Primary
+    UUID: 16916092918496622623
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [14.4799995, 6.5999999, 5.80000019]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Secondary
+    UUID: 17089308895286073553
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [14.3000002, 6, 4.5]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Headgear
+    UUID: 695166137330207805
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6400003, 6.69999981, 5.75]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos
+    UUID: 13131264805618155674
+    Active: true
+    Layer: CamPos
     Type: Object
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
+  - Name: CamPos_Torso
+    UUID: 11951766016774774638
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6199999, 6.53000021, 6.07000017]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Legs
+    UUID: 16370170936333002976
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [13.6999998, 5.69999981, 6]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Backpack
+    UUID: 17287223673186891722
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [12.8199997, 7, 3.79999995]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: CamPos_Tool
+    UUID: 1137546082233382674
+    Active: true
+    Layer: CamPos
+    Type: Object
+    Com_Transform:
+      Translation: [12.8699999, 6.26999998, 4]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
   - Name: Name
     UUID: 11958503899241948692
     Active: true
@@ -682,7 +741,7 @@ GameObjects:
       TexturePath: ..\..\Assets\Textures\Buttons\CloseButton.png
       Color: [0, 0, 0, 1]
   - Name: Directional
-    UUID: 15135863788310065176
+    UUID: 3941645252098536763
     Active: true
     Layer: Default
     Type: Object
@@ -698,7 +757,7 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: Spot
-    UUID: 12801383131419299013
+    UUID: 4796173197952143700
     Active: true
     Layer: Default
     Type: Object
@@ -1640,7 +1699,7 @@ GameObjects:
       TexturePath: ..\..\Assets\Textures\Buttons\AddItemArrow.png
       Color: [0, 0, 0, 1]
   - Name: RoundTable
-    UUID: 16553291165277224542
+    UUID: 6845415926186593047
     Active: true
     Layer: Default
     Type: Object
@@ -1653,7 +1712,7 @@ GameObjects:
       MeshFileName: RoundTable.fbx
       HasCollider: false
   - Name: Sandback
-    UUID: 16943785483388481022
+    UUID: 7050451514789493599
     Active: true
     Layer: Default
     Type: Object
@@ -1666,20 +1725,20 @@ GameObjects:
       MeshFileName: Sandbacks.fbx
       HasCollider: false
   - Name: Sandback
-    UUID: 6204559564773260984
+    UUID: 2004756079194227659
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [14.0750732, 5.43916035, 2.88178873]
       Rotation: [-0.0999995768, -26.3999748, 0]
-      Scale: [0.999999762, 0.99995774, 1]
+      Scale: [0.999999762, 0.999957681, 1]
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
       MeshFileName: Sandbacks.fbx
       HasCollider: false
   - Name: Sandback
-    UUID: 14574993550348383220
+    UUID: 10744166471291084657
     Active: true
     Layer: Default
     Type: Object
@@ -1692,7 +1751,7 @@ GameObjects:
       MeshFileName: Sandbacks.fbx
       HasCollider: false
   - Name: Pallete
-    UUID: 7837935027558784094
+    UUID: 10551820188621423218
     Active: true
     Layer: Default
     Type: Object
@@ -1705,7 +1764,7 @@ GameObjects:
       MeshFileName: Pallete.fbx
       HasCollider: false
   - Name: WeaponBox
-    UUID: 1331464326548750937
+    UUID: 10691019546176959828
     Active: true
     Layer: Default
     Type: Object
@@ -1718,7 +1777,7 @@ GameObjects:
       MeshFileName: WeaponBoxB.fbx
       HasCollider: false
   - Name: Weaponbox
-    UUID: 1642275524953491385
+    UUID: 2257921188556993716
     Active: true
     Layer: Default
     Type: Object
@@ -1730,80 +1789,30 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\WeaponBox\
       MeshFileName: WeaponBoxC.fbx
       HasCollider: false
-  - Name: CamPos_Primary
-    UUID: 15145896401002252888
+  - Name: CamPos_OG
+    UUID: 15894096479763058094
     Active: true
     Layer: CamPos
     Type: Object
     Com_Transform:
-      Translation: [14.4799995, 6.5999999, 5.80000019]
+      Translation: [14, 6.3, 9]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-  - Name: CamPos_Secondary
-    UUID: 17394937643745263198
+  - Name: Terrain
+    UUID: 15875645183534271655
     Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [14.3000002, 6, 4.5]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-  - Name: CamPos_Headgear
-    UUID: 7580951087935622301
-    Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [13.6400003, 6.69999981, 5.75]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-  - Name: CamPos
-    UUID: 190768500207833304
-    Active: true
-    Layer: CamPos
+    Layer: Terrain
     Type: Object
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-  - Name: CamPos_Torso
-    UUID: 8596580313186967593
-    Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [13.6199999, 6.53000021, 6.07000017]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-  - Name: CamPos_Legs
-    UUID: 13132565532661175770
-    Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [13.6999998, 5.69999981, 6]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-  - Name: CamPos_Backpack
-    UUID: 9260909921597964320
-    Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [12.8199997, 7, 3.79999995]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-  - Name: CamPos_Tool
-    UUID: 13186682042581099422
-    Active: true
-    Layer: CamPos
-    Type: Object
-    Com_Transform:
-      Translation: [12.8699999, 6.26999998, 4]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
   - Name: Player
-    UUID: 3176038304776535730
+    UUID: 6963766969073662576
     Active: true
     Layer: Player
     Type: Object
@@ -1826,7 +1835,7 @@ GameObjects:
       MeshFileName: PlayerFinal1.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 7585357753882515025
+    UUID: 2654739354047647589
     Active: true
     Layer: Sidewalk
     Type: Object

@@ -733,6 +733,9 @@ _vector CPlayer::GetBonePos(EQUIPMENT eType)
 	case Client::EQUIPMENT::PRIMARY:
 		bone = m_pHandBone;
 		break;
+	case Client::EQUIPMENT::PRIMARYMAG:
+		bone = m_pSpineBone;
+		break;
 	case Client::EQUIPMENT::SECONDARY:
 		bone = m_pRThighBone;
 		break;

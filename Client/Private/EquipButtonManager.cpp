@@ -138,6 +138,11 @@ void CEquipButtonManager::Update(_double deltaTime)
 				SetButtonColor(m_vecItemSelectButton[i], _float4{ 0.9f, 0.5f, 0.0f, 1.f });
 		}
 	}
+	else
+	{
+		CGameManager::GetInstance()->ChangeCameraPos(EQUIPMENT::PRIMARYMAG);
+	}
+
 
 	/* Add Item*/
 	if (dynamic_cast<CEmptyUI*>(m_pItemWindowCloseButton)->IsHovered() &&
