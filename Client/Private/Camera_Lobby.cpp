@@ -74,6 +74,8 @@ HRESULT CCamera_Lobby::SetUp_Components()
 
 void CCamera_Lobby::SetTarget(_vector vPos, _vector vTargetPos)
 {
+	if (isnan(m_vTargetPos.m128_f32[0]))
+		return;
 	m_vPos = vPos;
 	m_vTargetPos = vTargetPos;
 }

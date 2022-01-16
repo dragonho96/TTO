@@ -12,6 +12,7 @@
 #pragma endregion
 
 USING(Client)
+static _bool isTesting = true;
 
 CScene_Lobby::CScene_Lobby(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
 	: CScene(pDevice, pDeviceContext, iSceneIndex)
@@ -42,19 +43,29 @@ HRESULT CScene_Lobby::Initialize()
 	__super::Initialize();
 	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
 
-	CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
-	RELEASE_INSTANCE(CEquipmentPool);
+	if (!isTesting)
+	{
+		CEquipmentPool* pEquipmentPool = GET_INSTANCE(CEquipmentPool);
+		RELEASE_INSTANCE(CEquipmentPool);
+	}
 
-	m_pEngine->DeserializeScene("../../Assets/Scenes/Scene_Lobby.yaml");
+	if (isTesting)
+		m_pEngine->DeserializeScene("../../Assets/Scenes/test.yaml");
+	else
+		m_pEngine->DeserializeScene("../../Assets/Scenes/Scene_Lobby.yaml");
 
 	if (FAILED(ReadyLayerCamera("LAYER_CAMERA")))
 		return E_FAIL;
 
-	if (FAILED(ReadyScript()))
-		return E_FAIL;
+	if (!isTesting)
+	{
+		if (FAILED(ReadyScript()))
+			return E_FAIL;
 
-	m_pGameManager = CGameManager::GetInstance();
-	m_pGameManager->Initialize();
+		m_pGameManager = CGameManager::GetInstance();
+		m_pGameManager->Initialize();
+	}
+
 
 	return S_OK;
 }
@@ -62,7 +73,10 @@ HRESULT CScene_Lobby::Initialize()
 _uint CScene_Lobby::Update(_double TimeDelta)
 {
 	__super::Update(TimeDelta);
-	m_pGameManager->Update(TimeDelta);
+	if (!isTesting)
+	{
+		m_pGameManager->Update(TimeDelta);
+	}
 
 	return _uint();
 }
@@ -81,8 +95,8 @@ HRESULT CScene_Lobby::ReadyLayerCamera(string pLayerTag)
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera::CAMERADESC));
 
-	CameraDesc.vEye = _float3(0.f, 1.f, -5.f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vEye = _float3(13.f, 6.f, 8.f);
+	CameraDesc.vAt = _float3(13.f, 6.f, 5.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Camera_Lobby", pLayerTag, &CameraDesc))

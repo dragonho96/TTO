@@ -116,7 +116,7 @@ public:
 	HRESULT AddPrototype(_uint iSceneIndex, string pPrototypeTag, class CComponent* pPrototype);
 	class CComponent* CloneComponent(_uint iSceneIndex, string pPrototypeTag, void* pArg = nullptr);
 	void ClearComponentManager(_uint iSceneIndex);
-	CComponent* CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg = nullptr);
+	void CloneModel(CGameObject* pObj, string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg = nullptr);
 #pragma endregion
 
 #pragma region LIGHT

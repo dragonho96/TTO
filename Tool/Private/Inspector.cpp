@@ -109,8 +109,7 @@ void CInspector::UpdateGameObject()
 
 		if (ImGui::MenuItem("Model"))
 		{
-			CComponent* pModel = CEngine::GetInstance()->CloneModel("", "", "", false, g_pObjFocused->GetComponent("Com_Transform"));
-			g_pObjFocused->AddModelComponent(0, pModel);
+			CEngine::GetInstance()->CloneModel(g_pObjFocused, "", "", "", false, g_pObjFocused->GetComponent("Com_Transform"));
 		}
 
 		ImGui::Separator();
@@ -569,9 +568,7 @@ void CInspector::DrawModel()
 						{
 							strcat_s(szTextureFileName, szExt);
 							g_pObjFocused->RemoveComponent("Com_Model");
-							CComponent* pModel = CEngine::GetInstance()->CloneModel(szDir, szTextureFileName, "", false, g_pObjFocused->GetComponent("Com_Transform"));
-							g_pObjFocused->AddModelComponent(0, pModel);
-
+							CEngine::GetInstance()->CloneModel(g_pObjFocused, szDir, szTextureFileName, "", false, g_pObjFocused->GetComponent("Com_Transform"));
 						}
 					}
 					ImGui::EndDragDropTarget();

@@ -455,9 +455,9 @@ void CEngine::ClearComponentManager(_uint iSceneIndex)
 	m_pComponentManager->Clear(iSceneIndex);
 }
 
-CComponent * CEngine::CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
+void CEngine::CloneModel(CGameObject* pObj, string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
 {
-	return m_pModelManager->CloneModel(pMeshFilePath, pMeshFileName, pShaderFilePath, meshCollider, pArg);
+	m_pModelManager->CloneModel(pObj, pMeshFilePath, pMeshFileName, pShaderFilePath, meshCollider, pArg);
 }
 
 const LIGHTDESC * CEngine::GetLightDesc(_uint iIndex) const

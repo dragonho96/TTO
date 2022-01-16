@@ -22,10 +22,12 @@ public:
 
 	CGameObject* DeserializeUI(YAML::Node& obj, _bool bSpawn = false);
 	CGameObject* DeserializeObject(YAML::Node& obj, _bool bSpawn = false);
+
 private:
 	CEngine*				m_pEngine = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+
 };
 
 END

@@ -1,5 +1,7 @@
 #include "..\Public\SceneSerializer.h"
 #include "Engine.h"
+#include "ModelManager.h"
+
 #include "EmptyGameObject.h"
 #include "EmptyUI.h"
 #include "Layer.h"
@@ -18,6 +20,7 @@
 #pragma endregion
 
 static string prefabPath = "../../Assets/Prefabs/";
+
 
 CSceneSerializer::CSceneSerializer()
 	: m_pEngine(CEngine::GetInstance())
@@ -94,11 +97,12 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 	string SceneName = data["Scene"].as<string>();
 
 	auto gameObjects = data["GameObjects"];
+
 	if (gameObjects)
 	{
 		for (auto obj : gameObjects)
 		{
-			CGameObject* deserializedObject = nullptr;
+			 CGameObject* deserializedObject = nullptr;
 
 			if (obj["Type"].as<string>() == "UI")
 				deserializedObject = DeserializeUI(obj);
@@ -106,6 +110,9 @@ bool CSceneSerializer::Deserialize(const string & filePath)
 				deserializedObject = DeserializeObject(obj);
 		}
 	}
+
+	CModelManager::GetInstance()->WaitThreads();
+
 	if (gameObjects)
 	{
 		for (auto obj : gameObjects)
@@ -363,7 +370,6 @@ void CSceneSerializer::SerializeUI(YAML::Emitter & out, CGameObject * obj)
 
 }
 
-
 CGameObject* CSceneSerializer::DeserializeUI(YAML::Node& obj, _bool bSpawn)
 {
 	uint64_t uuid = 0;
@@ -579,12 +585,17 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 		string meshFilePath = modelCom["MeshFilePath"].as<string>();
 		string meshFileName = modelCom["MeshFileName"].as<string>();
 		string shaderFilePath = "";
-		if (modelCom["ShaderPath"])
+
+		auto shaderPath = modelCom["ShaderPath"];
+		if (shaderPath)
 			shaderFilePath = modelCom["ShaderPath"].as<string>();
 		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
-		CComponent* pModel = m_pEngine->CloneModel(meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
-		deserializedObject->AddModelComponent(0, pModel);
+		m_pEngine->CloneModel(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+		// CModelManager::GetInstance()->CloneModelThread(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+
+		//CComponent* pModel = m_pEngine->CloneModel( meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+		//deserializedObject->AddModelComponent(0, pModel);
 	}
 
 	auto lightCom = obj["Com_Light"];
@@ -679,7 +690,7 @@ void CSceneSerializer::SerializePrefab(CGameObject * obj)
 void CSceneSerializer::DeserializePrefab()
 {
 	// get all file name in directory
-	
+
 	for (auto& iter : FILESYSTEM::directory_iterator(prefabPath))
 	{
 		FILESYSTEM::path filePath = iter.path();
@@ -688,7 +699,7 @@ void CSceneSerializer::DeserializePrefab()
 
 		string strFilePath = iter.path().string();
 		string fileName = iter.path().stem().string();
-		
+
 		std::ifstream stream(strFilePath);
 		std::stringstream strStream;
 		strStream << stream.rdbuf();

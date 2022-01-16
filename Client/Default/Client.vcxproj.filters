@@ -154,7 +154,9 @@
     <ClInclude Include="..\Public\SightIndicator.h">
       <Filter>02.GameObjects\Effect\SightIndicator</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Lobby.h" />
+    <ClInclude Include="..\Public\Camera_Lobby.h">
+      <Filter>02.GameObjects\Camera\Camera_Lobby</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -295,7 +297,9 @@
     <ClCompile Include="..\Private\SightIndicator.cpp">
       <Filter>02.GameObjects\Effect\SightIndicator</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Lobby.cpp" />
+    <ClCompile Include="..\Private\Camera_Lobby.cpp">
+      <Filter>02.GameObjects\Camera\Camera_Lobby</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

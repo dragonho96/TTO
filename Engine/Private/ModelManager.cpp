@@ -2,10 +2,32 @@
 #include "Engine.h"
 
 IMPLEMENT_SINGLETON(CModelManager)
+static int iCurNumThread = 0;
+
+unsigned int APIENTRY ThreadCloneModel(void* pArg)
+{
+	CModelManager::MODELLOADDESC* desc = (CModelManager::MODELLOADDESC*)pArg;
+
+	EnterCriticalSection(&desc->cs);
+
+	++iCurNumThread;
+
+	CModelManager::GetInstance()->CloneModelThread(
+		desc->pObj, desc->pMeshFilePath, desc->pMeshFileName, desc->pShaderFilePath,
+		desc->bMeshCollider, desc->pArg);
+
+	LeaveCriticalSection(&desc->cs);
+
+	SafeDelete(desc);
+	--iCurNumThread;
+
+
+	return 0;
+}
 
 CModelManager::CModelManager()
 {
-
+	InitializeCriticalSection(&m_CS);
 }
 
 void CModelManager::Free()
@@ -17,9 +39,24 @@ void CModelManager::Free()
 	m_mapModel.clear();
 
 	SafeRelease(m_pDissolveTex);
+
+	DeleteCriticalSection(&m_CS);
+
 }
 
-CComponent* CModelManager::CloneModel(string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
+void CModelManager::CloneModel(CGameObject* pObj, string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void* pArg)
+{
+	while (10 < iCurNumThread)
+		Sleep(100);
+	
+	// 같은 이름은 같은 key를 가지고 들어간다
+	string fullPath = pMeshFilePath + pMeshFileName;
+
+	MODELLOADDESC* desc = new MODELLOADDESC(pObj, pMeshFilePath, pMeshFileName, pShaderFilePath, meshCollider, pArg, m_CS);
+	thread_handles.emplace((HANDLE)_beginthreadex(nullptr, 0, ThreadCloneModel, desc, 0, nullptr));
+}
+
+void CModelManager::CloneModelThread(CGameObject* pObj, string pMeshFilePath, string pMeshFileName, string pShaderFilePath, _bool meshCollider, void * pArg)
 {
 	if (nullptr == m_pDissolveTex)
 	{
@@ -29,7 +66,7 @@ CComponent* CModelManager::CloneModel(string pMeshFilePath, string pMeshFileName
 			"..\\..\\Assets\\Textures\\Dissolve\\Dissolve.tga");
 	}
 
-
+	
 	ID3D11Device * pDevice = CEngine::GetInstance()->GetDevice();
 	ID3D11DeviceContext * pDeviceContext = CEngine::GetInstance()->GetDeviceContext();
 
@@ -41,8 +78,43 @@ CComponent* CModelManager::CloneModel(string pMeshFilePath, string pMeshFileName
 		pModel->SetMeshCollider(meshCollider);
 		pModel->CreateBuffer(pMeshFilePath, pMeshFileName, pShaderFilePath);
 		m_mapModel.emplace(fullPath, pModel);
+
+		//auto& iter = find(m_CurCloningObj.begin(), m_CurCloningObj.end(), fullPath);
+		//if (iter != m_CurCloningObj.end())
+		//	m_CurCloningObj.erase(iter);
 	}
 
 	// return cloned object
-	return m_mapModel[fullPath]->Clone(pArg);
+	pObj->AddModelComponent(0, m_mapModel[fullPath]->Clone(pArg));
+}
+
+void CModelManager::WaitThreads()
+{
+	while (!thread_handles.empty())
+	{
+		set<HANDLE> threads_left;
+		for (set<HANDLE>::iterator cur_thread = thread_handles.begin(), last = thread_handles.end();
+			cur_thread != last; ++cur_thread)
+		{
+			DWORD rc = WaitForSingleObject(*cur_thread, INFINITE);
+			if (rc == WAIT_OBJECT_0)
+			{
+				CloseHandle(*cur_thread);
+
+			}
+			else if (rc == WAIT_TIMEOUT)
+			{
+				threads_left.emplace(*cur_thread);
+			}
+			else
+			{
+				CloseHandle(*cur_thread);
+			}
+		}
+		swap(threads_left, thread_handles);
+		threads_left.clear();
+	}
+
+	thread_handles;
+	int i = 0;
 }

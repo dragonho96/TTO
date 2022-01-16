@@ -1,2 +1,44 @@
-Scene: Scene_Lobby
+Scene: Untitled
 GameObjects:
+  - Name: Sidewalk
+    UUID: 10753432863375507481
+    Active: true
+    Layer: Sidewalk
+    Type: Object
+    Com_Transform:
+      Translation: [-13.5209103, -1, 69.8070602]
+      Rotation: [0, -0, 0]
+      Scale: [26.3999996, 1, 11.6999998]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
+      HasCollider: false
+  - Name: Sidewalk
+    UUID: 8508633405200111995
+    Active: true
+    Layer: Sidewalk
+    Type: Object
+    Com_Transform:
+      Translation: [-13.5209103, -1, 69.8070602]
+      Rotation: [0, -0, 0]
+      Scale: [26.3999996, 1, 11.6999998]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
+      HasCollider: false
+  - Name: Directional
+    UUID: 11925280544537399170
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [-33.1582985, 33.6908417, -25.163765]
+      Rotation: [92.6001511, -0, 0]
+      Scale: [0.999997675, 0.999991894, 0.999993443]
+    Com_Light:
+      Type: 0
+      Range: 10
+      Angle: 20
+      Diffuse: [1, 1, 1, 1]
+      Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
+      Specular: [1, 1, 1, 1]
