@@ -60,6 +60,15 @@ _uint CEffect_Trajectory::LateUpdate(_double TimeDelta)
 	if (0 > __super::LateUpdate(TimeDelta))
 		return -1;
 
+	if (!IsActive())
+	{
+		m_pSphere->SetActive(false);
+		return S_OK;
+	}
+	else
+		m_pSphere->SetActive(true);
+
+
 	m_pVIBufferCom->Update(TimeDelta);
 	
 

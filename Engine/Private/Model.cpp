@@ -332,6 +332,7 @@ HRESULT CModel::Render(_uint iMaterialIndex, _uint iPassIndex)
 	if (m_pMeshFileName.length() == 0 || m_pMeshFileName.length() == 0)
 		return S_OK;
 
+
 	// 0이 아닌값이라면 lightDepth render
 	if (iPassIndex != 0)
 	{

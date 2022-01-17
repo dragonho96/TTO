@@ -591,7 +591,11 @@ CGameObject* CSceneSerializer::DeserializeObject(YAML::Node & obj, _bool bSpawn)
 			shaderFilePath = modelCom["ShaderPath"].as<string>();
 		_bool hasCollider = modelCom["HasCollider"].as<_bool>();
 
-		m_pEngine->CloneModel(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+		if (!bSpawn)
+			m_pEngine->CloneModel(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+		else
+			CModelManager::GetInstance()->CloneModelThread(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
+
 		// CModelManager::GetInstance()->CloneModelThread(deserializedObject, meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));
 
 		//CComponent* pModel = m_pEngine->CloneModel( meshFilePath, meshFileName, shaderFilePath, hasCollider, deserializedObject->GetComponent("Com_Transform"));

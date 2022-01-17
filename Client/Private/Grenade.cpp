@@ -62,14 +62,17 @@ void CGrenade::Update(_double deltaTime)
 	}
 	else
 	{
-		PxTransform pxGrenadeTransform = m_pCollider->GetRigidActor()->getGlobalPose();
-		PxMat44 pxMat(pxGrenadeTransform);
-		m_pTransform->SetPxMatrix(pxMat);
+		if (m_pCollider->GetRigidActor()->is<PxRigidDynamic>())
+		{
+			PxTransform pxGrenadeTransform = m_pCollider->GetRigidActor()->getGlobalPose();
+			PxMat44 pxMat(pxGrenadeTransform);
+			m_pTransform->SetPxMatrix(pxMat);
 
-		m_TimeExplosion += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
-		//ADDLOG(("m_TimeExplosion : " + to_string(m_TimeExplosion)).c_str());
-		if (m_TimeExplosion >= 4.5f)
-			Explode();
+			m_TimeExplosion += CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
+			//ADDLOG(("m_TimeExplosion : " + to_string(m_TimeExplosion)).c_str());
+			if (m_TimeExplosion >= 4.5f)
+				Explode();
+		}
 	}
 
 }

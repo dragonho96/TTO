@@ -8,6 +8,8 @@
 #include "Scene_Lobby.h"
 #include "Scene_Effect.h"
 
+#include "Sky.h"
+
 #include "Camera_Fly.h"
 #include "Camera_Follow.h"
 #include "Camera_Lobby.h"
@@ -77,7 +79,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(ReadyPrototypeComponent()))
 		return E_FAIL;
 
-	g_eCurScene = SCENE_LOBBY;
+	g_eCurScene = SCENE_TEST;
 
 	if (g_eCurScene == SCENE_TEST || g_eCurScene == SCENE_LOBBY)
 	{
@@ -310,6 +312,11 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Rect", CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Cube", CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Sky.fx"))))
+		return E_FAIL;
+
+
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_RectInstance.fx", 10))))
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_RectInstance_Fire", CVIBuffer_RectInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Fire.fx", 6))))
@@ -324,6 +331,7 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 		return E_FAIL;
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_PointInstance_Impact", CVIBuffer_PointInstance::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_PointInstance.fx", 50))))
 		return E_FAIL;
+
 
 	if (FAILED(m_pEngine->AddPrototype(SCENE_STATIC, "Prototype_VIBuffer_Line", CVIBuffer_Line::Create(m_pDevice, m_pDeviceContext, "../../Assets/Shader/Shader_Line.fx", 20))))
 		return E_FAIL;
@@ -389,6 +397,8 @@ HRESULT CMainApp::ReadyPrototypeComponent()
 	if (FAILED(m_pEngine->AddPrototype("GameObject_Camera_Lobby", CCamera_Lobby::Create(m_pDevice, m_pDeviceContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pEngine->AddPrototype("GameObject_Sky", CSky::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
 	
 
 	return S_OK;

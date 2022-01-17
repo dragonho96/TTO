@@ -12,7 +12,7 @@
 #pragma endregion
 
 USING(Client)
-static _bool isTesting = true;
+static _bool isTesting = false;
 
 CScene_Lobby::CScene_Lobby(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSceneIndex)
 	: CScene(pDevice, pDeviceContext, iSceneIndex)
@@ -41,7 +41,7 @@ void CScene_Lobby::Free()
 HRESULT CScene_Lobby::Initialize()
 {
 	__super::Initialize();
-	//m_pEngine->PlaySoundW("CrashMan.mp3", CHANNELID::DIALOGUE);
+	m_pEngine->PlaySoundW("MUS_SP_Main_Menu_Loop.ogg", CHANNELID::BGM);
 
 	if (!isTesting)
 	{
@@ -100,6 +100,9 @@ HRESULT CScene_Lobby::ReadyLayerCamera(string pLayerTag)
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Camera_Lobby", pLayerTag, &CameraDesc))
+		return E_FAIL;
+
+	if (nullptr == m_pEngine->AddGameObject(0, "GameObject_Sky", "Sky"))
 		return E_FAIL;
 
 	return S_OK;

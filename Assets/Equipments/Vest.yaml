@@ -2,7 +2,7 @@ EquipmentType: Vest
 Equipments:
   - Name: 6SH92
     Texture: ..\..\Assets\Textures\Vests\6SH92.tga
-    Background: THIS IS 6SH92
+    Background: light-weight soviet designed vest with limited capacity but minimal impact on mobility.
     Weight: 0.66
     Inventory:
       - [2, 3, 2]
@@ -11,7 +11,7 @@ Equipments:
     Dexterity: 44
   - Name: ALICE VEST
     Texture: ..\..\Assets\Textures\Vests\AliceVest.tga
-    Background: it is ALICE VEST
+    Background: all-purpos lightweight individual carrying equipment vest.
     Weight: 0.35
     Inventory:
       - [1, 1, 4]
@@ -20,7 +20,7 @@ Equipments:
     Dexterity: 56
   - Name: STRAP
     Texture: ..\..\Assets\Textures\Vests\Strap.tga
-    Background: it is STRAP
+    Background: Tactical load bearing vest first used by us army.
     Weight: 0.35
     Inventory:
       - [1, 1, 1]

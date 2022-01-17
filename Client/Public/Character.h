@@ -27,8 +27,8 @@ protected:
 	CGameObject*			m_pMuzzleLight = nullptr;
 	CTransform*				m_pMuzzleLightTransform = nullptr;
 	CLight*					m_pMuzzleLightCom = nullptr;
-	_float					m_fMuzzleLightRange = 0.f;
-	_float					m_fCurMuzzleLightRange = 0.1f;
+	_float					m_fMuzzleLightRange = 1.f;
+	_float					m_fCurMuzzleLightRange = 1.f;
 
 protected:
 	_double					m_ShotTime = 0.0;

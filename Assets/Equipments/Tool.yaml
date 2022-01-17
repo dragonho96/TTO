@@ -2,19 +2,19 @@ EquipmentType: Tool
 Equipments:
   - Name: MEDKIT
     Texture: ..\..\Assets\Textures\Tools\Medkit.tga
-    Background: it is MEDKIT
+    Background: the ifak includes a tourniquet and others.
     Weight: 1.5
     Cost: 3
     SlotSize: [2, 2]
   - Name: CLAYMORE
     Texture: ..\..\Assets\Textures\Tools\Claymore.tga
-    Background: it is CLAYMORE
+    Background: A motion triggered directional anti personnel mine.
     Weight: 3.0
     Cost: 3
     SlotSize: [2, 2]
   - Name: WIRECUTTERS
     Texture: ..\..\Assets\Textures\Tools\WireCutters.tga
-    Background: it is WIRECUTTERS
+    Background: Metal cutters. for cutting metal.
     Weight: 3.0
     Cost: 3
     SlotSize: [2, 4]

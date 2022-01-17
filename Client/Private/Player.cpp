@@ -52,6 +52,14 @@ HRESULT CPlayer::Initialize()
 		m_pController->getActor()->userData = this;
 	}
 
+	// Get UI Image
+	CGameObject* pUI_Primary = CEngine::GetInstance()->GetGameObjectInLayer(0, "UI_Primary").front();
+	m_pUI_Primary = dynamic_cast<CVIBuffer_RectUI*>(pUI_Primary->GetComponent("Com_VIBuffer"));
+	CGameObject* pUI_Grenade = CEngine::GetInstance()->GetGameObjectInLayer(0, "UI_Grenade").front();
+	m_pUI_Grenade = dynamic_cast<CVIBuffer_RectUI*>(pUI_Grenade->GetComponent("Com_VIBuffer"));
+	m_pUI_Primary->SetColor(_float4{ 1.f, 0.5f, 0.f, 1.f });
+	m_pUI_Grenade->SetColor(_float4{ 1.f, 1.f, 1.f, 1.f });
+
 	//m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
 	//m_pGrenadeTrajectory->SetActive(false);
 
@@ -108,7 +116,6 @@ HRESULT CPlayer::Initialize()
 	{
 		if (FAILED(CEngine::GetInstance()->AddTimers("Raycast")))
 			return FALSE;
-
 		if (FAILED(CEngine::GetInstance()->AddTimers("CheckEnemyInSight")))
 			return FALSE;
 	}
@@ -216,7 +223,13 @@ void CPlayer::Update(_double deltaTime)
 			}
 
 			RaycastRifleToHitPos();
+		}
+
+		TimeCheckEnemyInSight += CEngine::GetInstance()->ComputeDeltaTime("CheckEnemyInSight");
+		if (TimeCheckEnemyInSight > 1.f)
+		{
 			CheckEnemyInSight();
+			TimeCheckEnemyInSight = 0.f;
 		}
 
 		RotateBody(deltaTime);

@@ -14,6 +14,7 @@
 #include "VIBuffer_LineBox.h"
 #include "VIBuffer_LineCapsule.h"
 #include "VIBuffer_LineSphere.h"
+#include "VIBuffer_Cube.h"
 
 #include "BoxCollider.h"
 #include "CapsuleCollider.h"

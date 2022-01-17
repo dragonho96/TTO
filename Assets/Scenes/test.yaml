@@ -1,7 +1,7 @@
 Scene: Untitled
 GameObjects:
   - Name: Sidewalk
-    UUID: 10753432863375507481
+    UUID: 1043812045970095972
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -14,7 +14,33 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 8508633405200111995
+    UUID: 17158159551078209862
+    Active: true
+    Layer: Sidewalk
+    Type: Object
+    Com_Transform:
+      Translation: [-13.5209103, -1, 69.8070602]
+      Rotation: [0, -0, 0]
+      Scale: [26.3999996, 1, 11.6999998]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
+      HasCollider: false
+  - Name: Sidewalk
+    UUID: 8768082877756783588
+    Active: true
+    Layer: Sidewalk
+    Type: Object
+    Com_Transform:
+      Translation: [-13.5209103, -1, 69.8070602]
+      Rotation: [0, -0, 0]
+      Scale: [26.3999996, 1, 11.6999998]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
+      MeshFileName: Sidewalk.fbx
+      HasCollider: false
+  - Name: Sidewalk
+    UUID: 7593246735268176327
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -27,7 +53,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Directional
-    UUID: 11925280544537399170
+    UUID: 15868246711326352586
     Active: true
     Layer: Default
     Type: Object

@@ -154,7 +154,7 @@ void CGraphicDevice::Render()
 void CGraphicDevice::RenderClient()
 {
 	// TODO: Call OMSetRenderTargets for ImGui
-	float ClearColor[4] = { 0.3f, 0.125f, 0.3f, 1.0f };
+	float ClearColor[4] = { 0.f, 0.f, 0.f, 1.0f };
 	m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferRTV.GetAddressOf(), m_pDepthStencilRTV.Get());
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilRTV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);

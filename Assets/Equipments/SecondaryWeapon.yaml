@@ -2,7 +2,7 @@ EquipmentType: SecondaryWeapon
 Equipments:
   - Name: G18
     Texture: ..\..\Assets\Textures\Weapons\G18.tga
-    Background: This is G18
+    Background: A single-action fully automatic 9mm pistol.
     Weight: 2.0
     Cost: 3
     Rpm: 99
@@ -12,7 +12,7 @@ Equipments:
     Handling: 90
   - Name: M9
     Texture: ..\..\Assets\Textures\Weapons\M9.tga
-    Background: This is M9
+    Background: steady and reliable the m9 became the pistol of choice for the us military.
     Weight: 1.0
     Cost: 2
     Rpm: 20
@@ -22,7 +22,7 @@ Equipments:
     Handling: 97
   - Name: M1911
     Texture: ..\..\Assets\Textures\Weapons\M1911.tga
-    Background: This is M1911
+    Background: This semi-automatic 45 was standard issue in the us military for 74 years.
     Weight: 2.5
     Cost: 3
     Rpm: 18

@@ -24,6 +24,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
 	, m_iNumVerticesPerPrimitive(rhs.m_iNumVerticesPerPrimitive)
+	, m_shaderPath(rhs.m_shaderPath)
 {
 	//SafeAddRef(m_pIB);
 	//SafeAddRef(m_pVB);

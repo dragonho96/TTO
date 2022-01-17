@@ -2,7 +2,7 @@ EquipmentType: Legs
 Equipments:
   - Name: BDU PANTS
     Texture: ..\..\Assets\Textures\Legs\BDU_Pants.tga
-    Background: THIS IS BDU PANTS
+    Background: battle dress uniform pants.
     Weight: 0.66
     Inventory:
       - [1, 1, 1]
@@ -11,7 +11,7 @@ Equipments:
     Dexterity: 90
   - Name: BDU PANTS TUCKED
     Texture: ..\..\Assets\Textures\Legs\BDU_Pants_Tucked.tga
-    Background: it is BDU PANTS TUCKED
+    Background: battle dress uniform pants.
     Weight: 0.35
     Inventory:
       - [1, 1, 2]
@@ -20,7 +20,7 @@ Equipments:
     Dexterity: 86
   - Name: WZ2010
     Texture: ..\..\Assets\Textures\Legs\WZ2010.tga
-    Background: it is BDU PANTS WZ2010
+    Background: this style of uniform was first introduced in the us in the 1980s.
     Weight: 0.35
     Inventory:
       - [1, 1, 2]

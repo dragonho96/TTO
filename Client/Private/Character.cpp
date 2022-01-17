@@ -52,7 +52,7 @@ void CCharacter::UpdateRifleMuzzleLightRange(_double deltaTime)
 	_double fLerpSpeed = deltaTime * 30.f;
 	m_fCurMuzzleLightRange = Lerp(m_fCurMuzzleLightRange, m_fMuzzleLightRange, fLerpSpeed);
 	if (m_fCurMuzzleLightRange >= 2.5f)
-		m_fMuzzleLightRange = 0.1f;
+		m_fMuzzleLightRange = 1.f;
 
 	m_pMuzzleLightCom->SetRange(m_fCurMuzzleLightRange);
 }

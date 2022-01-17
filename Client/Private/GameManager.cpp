@@ -54,6 +54,8 @@ HRESULT CGameManager::Initialize()
 
 
 		ChangeCameraPos(EQUIPMENT::PRIMARYMAG);
+
+		m_pCursor = dynamic_cast<CEmptyUI*>(CEngine::GetInstance()->SpawnPrefab("LobbyCursor"));
 	}
 	else
 	{
@@ -90,7 +92,8 @@ void CGameManager::Update(_double TimeDelta)
 {
 	if (g_eCurScene == SCENE_LOBBY)
 	{
-
+		_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
+		m_pCursor->SetClientPosition(mousePos.x, mousePos.y);
 	}
 	else
 	{

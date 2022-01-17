@@ -30,6 +30,7 @@ private:
 
 public:
 	class CEmptyUI*		m_pCrosshair = nullptr;
+	class CEmptyUI*		m_pCursor = nullptr;
 
 public:
 	void SetShootingSightUI(_bool result, _vector hitPos = {}, _vector cursorPos = {});

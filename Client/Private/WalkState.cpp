@@ -18,7 +18,7 @@ void CWalkState::Update(CStateMachine** pState, CPlayer& pPlayer)
 void CWalkState::Enter(CStateMachine** pState, CPlayer& pPlayer)
 {
 	m_bTurnning = false;
-	pPlayer.m_fSpeedFactor = 45.f;
+	pPlayer.m_fSpeedFactor = 70.f;
 	SwitchAnim(pState, pPlayer);
 }
 

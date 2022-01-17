@@ -2,7 +2,7 @@ EquipmentType: Torso
 Equipments:
   - Name: BDU Jacket
     Texture: ..\..\Assets\Textures\Torsos\BDU_Jacket.tga
-    Background: THIS IS BDU Jacket
+    Background: battle dress uniform jacket
     Weight: 0.66
     Inventory:
       - [1, 1, 4]
@@ -10,7 +10,7 @@ Equipments:
     Dexterity: 75
   - Name: CS95 Jacket
     Texture: ..\..\Assets\Textures\Torsos\CS95_Jacket.tga
-    Background: it is CS95 Jacket
+    Background: british military combat system 95 jacket.
     Weight: 0.35
     Inventory:
       - [1, 1, 2]
@@ -18,7 +18,7 @@ Equipments:
     Dexterity: 83
   - Name: T-Shirt
     Texture: ..\..\Assets\Textures\Torsos\TShirt.tga
-    Background: it is T-SHART
+    Background: A T-shirt. keeping it nice and simple.
     Weight: 0.35
     Mobility: 100
     Dexterity: 40

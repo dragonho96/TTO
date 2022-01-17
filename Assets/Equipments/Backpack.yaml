@@ -2,7 +2,7 @@ EquipmentType: Backpack
 Equipments:
   - Name: ROC
     Texture: ..\..\Assets\Textures\Backpacks\ROC.tga
-    Background: it is ROC
+    Background: backpack used by british paratroopers.
     Weight: 1.25
     Inventory:
       - [4, 4, 1]
@@ -10,7 +10,7 @@ Equipments:
     Dexterity: 98
   - Name: ALICE BACKPACK
     Texture: ..\..\Assets\Textures\Backpacks\AliceBackpack.tga
-    Background: it is ALICE BACKPACK
+    Background: aint nobody gonna weigh you down.
     Weight: 2.72
     Inventory:
       - [5, 4, 1]
@@ -18,7 +18,7 @@ Equipments:
     Dexterity: 68
   - Name: PATROL PACK
     Texture: ..\..\Assets\Textures\Backpacks\PatrolPack.tga
-    Background: it is PATROL PACK
+    Background: A smaller backpack used by british armed forces to provide increased carry capacity.
     Weight: 1.75
     Inventory:
       - [3, 4, 1]

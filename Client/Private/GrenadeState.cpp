@@ -72,5 +72,7 @@ void CGrenadeState::Enter(CStateMachine ** pState, CPlayer& pPlayer)
 	pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_UPPER::EQUIP_GRENADE, ANIM_TYPE::UPPER);
 	m_bEquipping = true;
 	m_bUnEquipping = false;
-	m_bThrowing = false;
+	m_bThrowing = false; 
+	pPlayer.m_pUI_Grenade->SetColor(_float4{ 1.f, 0.5f, 0.f, 1.f });
+	pPlayer.m_pUI_Primary->SetColor(_float4{ 1.f, 1.f, 1.f, 1.f });
 }

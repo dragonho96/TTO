@@ -157,6 +157,9 @@
     <ClInclude Include="..\Public\Camera_Lobby.h">
       <Filter>02.GameObjects\Camera\Camera_Lobby</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>02.GameObjects\Sky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -299,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Lobby.cpp">
       <Filter>02.GameObjects\Camera\Camera_Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sky.cpp">
+      <Filter>02.GameObjects\Sky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -460,6 +466,9 @@
     <Filter Include="02.GameObjects\Camera\Camera_Lobby">
       <UniqueIdentifier>{d4b3e46f-6cc1-4545-a0f0-c15754bf84c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Sky">
+      <UniqueIdentifier>{4944569c-eee3-4b19-ac73-6349ecbd35a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -509,6 +518,9 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\Shader_Line.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\Shader_Sky.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

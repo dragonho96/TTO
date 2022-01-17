@@ -17,7 +17,7 @@ void CRunState::Update(CStateMachine ** pState, CPlayer& pPlayer)
 void CRunState::Enter(CStateMachine ** pState, CPlayer& pPlayer)
 {
 	// pPlayer.m_fSpeedFactor = 30.f;
-	pPlayer.m_fSpeedFactor = 15.f;
+	pPlayer.m_fSpeedFactor = 50.f;
 	CheckAnim(pState, pPlayer);
 }
 

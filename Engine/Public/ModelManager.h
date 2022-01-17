@@ -46,7 +46,7 @@ private:
 
 
 	set<HANDLE>				thread_handles;
-	list<string>			m_CurCloningObj;
+	unordered_map<string, _bool>			m_CurCloningObj;
 	CRITICAL_SECTION		m_CS;
 	unordered_map<string, CRITICAL_SECTION> m_keys;
 };

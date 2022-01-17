@@ -81,8 +81,9 @@ _uint CEmptyGameObject::LateUpdate(_double TimeDelta)
 	if (collider)
 		dynamic_cast<CCollider*>(collider)->LateUpdate(TimeDelta);
 
-	//if (GetName() == "Player")
-	//	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_EXTRA, this);
+
+	if (GetName() == "Player")
+		m_pRendererCom->AddRenderGroup(CRenderer::RENDER_EXTRA, this);
 
 	return m_pRendererCom->AddRenderGroup(m_eRenderGroup, this);
 }

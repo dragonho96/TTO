@@ -160,12 +160,12 @@ void CEnemy::Move(_double deltaTime)
 	if (distance < 5.f)
 	{
 		m_eCurAnim = ANIM_ENEMY::WALK;
-		m_fSpeedFactor = 40.f;
+		m_fSpeedFactor = 80.f;
 	}
 	else if (distance < 10.f)
 	{
 		m_eCurAnim = ANIM_ENEMY::RUN;
-		m_fSpeedFactor = 20.f;
+		m_fSpeedFactor = 60.f;
 	}
 	else
 		m_eCurAnim = ANIM_ENEMY::IDLE;
@@ -258,7 +258,7 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		_vector damageDir = XMVector3Normalize(position - sourceLocation);
 		PxVec3 pxDamageDir;
 		memcpy(&pxDamageDir, &damageDir, sizeof(PxVec3));
-		_float fDamagePower = XMVectorGetX(XMVector4Length(position - sourceLocation)) * 500.f;
+		_float fDamagePower = /*XMVectorGetX(XMVector4Length(position - sourceLocation)) * */100.f;
 		//m_pModel->GetRagdollRb("body")->addForce(pxDamageDir.getNormalized(), PxForceMode::eIMPULSE);
 		m_pModel->GetRagdollRb("body")->addForce(pxDamageDir * fDamagePower, PxForceMode::eIMPULSE);
 		ADDLOG(("Hit Damage: " + to_string(fDamagePower)).c_str());

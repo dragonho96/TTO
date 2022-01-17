@@ -211,6 +211,9 @@
     <Filter Include="01.Utility\03.Components\VIBuffer\LineInstance">
       <UniqueIdentifier>{b14476d1-7019-432a-8016-36397d935367}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\VIBuffer\Cube">
+      <UniqueIdentifier>{0555e5ba-116b-4bbf-858d-b5acdf49c821}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -423,6 +426,7 @@
     <ClInclude Include="..\Public\VIBuffer_LineInstance.h">
       <Filter>01.Utility\03.Components\VIBuffer\LineInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -617,5 +621,6 @@
     <ClCompile Include="..\Private\VIBuffer_LineInstance.cpp">
       <Filter>01.Utility\03.Components\VIBuffer\LineInstance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
   </ItemGroup>
 </Project>

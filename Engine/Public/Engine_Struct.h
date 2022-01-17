@@ -4,6 +4,12 @@ namespace Engine
 {
 	enum class ANIM_TYPE { LOWER, UPPER, NONE };
 
+	typedef struct tagVertex_TextureCubeUV
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vTexUV;
+	}VTXCUBETEX;
+
 	typedef struct tagVertex_LinePoint
 	{
 		XMFLOAT3		vPosition;

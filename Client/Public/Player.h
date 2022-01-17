@@ -107,6 +107,9 @@ private:
 
 	_double					TimeRaycast = 0.0;
 	_double					TimeCheckEnemyInSight = 0.0;
+
+	CVIBuffer_RectUI*		m_pUI_Primary = nullptr;
+	CVIBuffer_RectUI*		m_pUI_Grenade = nullptr;
 };
 
 END

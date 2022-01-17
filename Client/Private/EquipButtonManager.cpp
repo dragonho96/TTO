@@ -119,11 +119,13 @@ void CEquipButtonManager::Update(_double deltaTime)
 						// player equipment를 바꾼다
 						// slot 을 clear하고 바뀐것으로 다시 생성한다
 
-						// ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
-						m_bOpenItemSelectWindow = false;
-						m_pItemSelectWindow->SetActive(false);
+						ChangeEquipment(m_eCurItemSelectType, m_pEquipmentPool->GetEquipment(m_eCurItemSelectType, i));
+						// m_bOpenItemSelectWindow = false;
+						// m_pItemSelectWindow->SetActive(false);
 						return;
 					}
+					CEngine::GetInstance()->StopSound(CHANNELID::UI);
+					CEngine::GetInstance()->PlaySoundW("ui_tick.ogg", CHANNELID::UI);
 				}
 				// SET WHITE
 				SetButtonColor(m_vecItemSelectButton[i], _float4{ 1.f, 1.f, 1.f, 1.f });
@@ -150,6 +152,8 @@ void CEquipButtonManager::Update(_double deltaTime)
 	{
 		m_bOpenItemSelectWindow = false;
 		m_pItemSelectWindow->SetActive(false);
+		CEngine::GetInstance()->StopSound(CHANNELID::UI);
+		CEngine::GetInstance()->PlaySoundW("ui_tick.ogg", CHANNELID::UI);
 	}
 
 	for (int i = 0; i < m_vecAddItemButtons.size(); ++i)
@@ -160,6 +164,8 @@ void CEquipButtonManager::Update(_double deltaTime)
 				CEngine::GetInstance()->IsMouseDown(0))
 			{
 				AddItem(m_pPlayerEquipment->m_Equipments[i], EQUIPMENT(i));
+				CEngine::GetInstance()->StopSound(CHANNELID::UI);
+				CEngine::GetInstance()->PlaySoundW("ui_tick.ogg", CHANNELID::UI);
 				return;
 			}
 		}
@@ -269,6 +275,13 @@ void CEquipButtonManager::Update(_double deltaTime)
 	}
 
 	FindHoveredSlot();
+
+	//if (CEngine::GetInstance()->IsMouseDown(0))
+	//{
+	//	CEngine::GetInstance()->StopSound(CHANNELID::UI);
+	//	CEngine::GetInstance()->PlaySoundW("ui_tick.ogg", CHANNELID::UI);
+	//}
+
 	return;
 }
 
@@ -294,7 +307,12 @@ void CEquipButtonManager::SetButtonText(CGameObject * button, BASEEQUIPDESC* des
 				if (obj->GetName() == "Name")
 					text->SetString(desc->name);
 				else if (obj->GetName() == "Cost")
-					text->SetString("Cost " + to_string(desc->cost));
+				{
+					if (desc->cost <= 0 || desc->cost > 20)
+						text->SetString("");
+					else
+						text->SetString("Cost " + to_string(desc->cost));
+				}
 				else if (obj->GetName() == "Weight")
 				{
 					string str = to_string(desc->weight);

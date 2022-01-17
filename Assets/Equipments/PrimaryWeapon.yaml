@@ -2,7 +2,7 @@ EquipmentType: PrimaryWeapon
 Equipments:
   - Name: AKM
     Texture: ..\..\Assets\Textures\Weapons\AKM.tga
-    Background: This is AKM
+    Background: Compact bullpup smg developed in belguim to act as a personal defense weapon for nato forces.
     Weight: 2.0
     Cost: 3
     Rpm: 90
@@ -12,7 +12,7 @@ Equipments:
     Handling: 40
   - Name: MP5
     Texture: ..\..\Assets\Textures\Weapons\MP5.tga
-    Background: This is MP5
+    Background: Variant of the german designed universale maschinenpistole
     Weight: 1.0
     Cost: 2
     Rpm: 68
@@ -22,7 +22,7 @@ Equipments:
     Handling: 90
   - Name: M24
     Texture: ..\..\Assets\Textures\Weapons\M24.tga
-    Background: This is M24
+    Background: A bolt action sniper rifle that's been in use by the us army.
     Weight: 5.0
     Cost: 6
     Rpm: 18

@@ -2,19 +2,19 @@ EquipmentType: Headgear
 Equipments:
   - Name: CAP
     Texture: ..\..\Assets\Textures\Headgears\Cap.tga
-    Background: THIS IS BASEBALL CAP
+    Background: soft cap with a hard brim. great for keeping the sun out of your eyes.
     Weight: 0.66
     Mobility: 95
     Dexterity: 95
   - Name: Mk6Helmet
     Texture: ..\..\Assets\Textures\Headgears\Mk6Helmet.tga
-    Background: it is Mk6Helmet
+    Background: steel helmet developed for the british armed forces.
     Weight: 0.35
     Mobility: 91
     Dexterity: 99
   - Name: Balaclava
     Texture: ..\..\Assets\Textures\Headgears\Balaclava.tga
-    Background: it is Balaclava
+    Background: for when you want to hide your identity but still be able to shush people.
     Weight: 0.35
     Mobility: 94
     Dexterity: 97

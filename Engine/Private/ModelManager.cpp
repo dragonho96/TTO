@@ -49,8 +49,25 @@ void CModelManager::CloneModel(CGameObject* pObj, string pMeshFilePath, string p
 	while (10 < iCurNumThread)
 		Sleep(100);
 	
-	// 같은 이름은 같은 key를 가지고 들어간다
 	string fullPath = pMeshFilePath + pMeshFileName;
+	auto& iter = m_CurCloningObj.find(fullPath);
+	if (iter != m_CurCloningObj.end())
+	{
+		while(iter->second == true)
+			Sleep(100);
+	}
+	else
+		m_CurCloningObj.emplace(fullPath, true);
+
+	//if (m_CurCloningObj.find(fullPath) != m_CurCloningObj.end())
+	//{
+	//	while (iter->second != true)
+	//		Sleep(1000);
+	//}
+	//else
+	//{
+	//	m_CurCloningObj.emplace(fullPath, true);
+	//}
 
 	MODELLOADDESC* desc = new MODELLOADDESC(pObj, pMeshFilePath, pMeshFileName, pShaderFilePath, meshCollider, pArg, m_CS);
 	thread_handles.emplace((HANDLE)_beginthreadex(nullptr, 0, ThreadCloneModel, desc, 0, nullptr));
@@ -79,9 +96,9 @@ void CModelManager::CloneModelThread(CGameObject* pObj, string pMeshFilePath, st
 		pModel->CreateBuffer(pMeshFilePath, pMeshFileName, pShaderFilePath);
 		m_mapModel.emplace(fullPath, pModel);
 
-		//auto& iter = find(m_CurCloningObj.begin(), m_CurCloningObj.end(), fullPath);
-		//if (iter != m_CurCloningObj.end())
-		//	m_CurCloningObj.erase(iter);
+		auto& iter = m_CurCloningObj.find(fullPath);
+		if (iter != m_CurCloningObj.end())
+			iter->second = false;
 	}
 
 	// return cloned object

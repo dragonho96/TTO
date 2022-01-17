@@ -216,6 +216,7 @@
     <ClInclude Include="..\Public\Scene_Logo.h" />
     <ClInclude Include="..\Public\Scene_Test.h" />
     <ClInclude Include="..\Public\SightIndicator.h" />
+    <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\WalkState.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Private\Scene_Logo.cpp" />
     <ClCompile Include="..\Private\Scene_Test.cpp" />
     <ClCompile Include="..\Private\SightIndicator.cpp" />
+    <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\WalkState.cpp" />
@@ -306,6 +308,7 @@
     <FxCompile Include="..\..\Assets\Shader\Shader_RectImage.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_RectInstance.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Rect_Viewport.fx" />
+    <FxCompile Include="..\..\Assets\Shader\Shader_Sky.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Smoke.fx" />
     <FxCompile Include="..\..\Assets\Shader\Shader_Terrain.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>

@@ -1356,7 +1356,7 @@ GameObjects:
       Position: [127.142883, 270.188477]
       Size: [100, 20]
     Com_Text:
-      Text: secondary weapon
+      Text: secondary
       Color: [1, 1, 1, 1]
       Scale: [0.400000006, 0.400000006]
       LayerDepth: 0
@@ -1833,17 +1833,4 @@ GameObjects:
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\Player\
       MeshFileName: PlayerFinal1.fbx
-      HasCollider: false
-  - Name: Sidewalk
-    UUID: 15937528693505993060
-    Active: true
-    Layer: Sidewalk
-    Type: Object
-    Com_Transform:
-      Translation: [-13.5209103, -0.682118893, 69.8070602]
-      Rotation: [0, -0, 0]
-      Scale: [26.3999996, 1, 11.6999998]
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\SideWalk\
-      MeshFileName: Sidewalk.fbx
       HasCollider: false
