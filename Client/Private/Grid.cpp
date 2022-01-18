@@ -90,7 +90,7 @@ void CGrid::SetUpGrid()
 		for (int j = 0; j < m_Desc.iSizeZ; ++j)
 		{
 			int index = i * m_Desc.iSizeZ + j;
-			_float3 position = { j * m_Desc.iSizeInterval, 3.f, i * m_Desc.iSizeInterval };
+			_float3 position = { j * m_Desc.iSizeInterval, 0.2f, i * m_Desc.iSizeInterval };
 			m_Nodes[index] = dynamic_cast<CNode*>(m_pEngine->AddGameObject(0, "GameObject_Node", "LAYER_NODE"));
 			m_Nodes[index]->SetPosition(position, i, j);
 
@@ -159,9 +159,9 @@ void CGrid::ResetColor()
 	for (auto node : m_Nodes)
 	{
 		if (node->IsWalkable())
-			node->SetColor(_float4{ 1.f, 1.f, 0.f, 1.f });
+			node->SetColor(_float4{ 1.f, 1.f, 0.f, 0.2f });
 		else
-			node->SetColor(_float4{ 1.f, 0.f, 0.f, 1.f });
+			node->SetColor(_float4{ 1.f, 0.f, 0.f, 0.2f });
 	}
 }
 

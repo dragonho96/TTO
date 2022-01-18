@@ -37,6 +37,7 @@ private:
 
 	_float		angle = 0.f;
 	_float		targetAngle = 0.f;
+	_float		m_fFollowLength = 15.f;
 
 	_vector		m_ShakeOffset = { 0.f, 0.f, 0.f };
 	_vector		m_CurShakeOffset = { 0.f, 0.f, 0.f };

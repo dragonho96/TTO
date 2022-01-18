@@ -64,6 +64,16 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 	// Q || E 누르면 m_pTargetLook을 회전시긴다
 	if (GetActiveWindow() == g_hWnd && m_bRolling)
 	{
+		if (m_pEngine->GetMouseMoveValue().z > 0)
+			m_fFollowLength -= (TimeDelta * 3.f);
+		if (m_pEngine->GetMouseMoveValue().z < 0)
+			m_fFollowLength += (TimeDelta * 3.f);
+
+		if (m_fFollowLength < 3.f)
+			m_fFollowLength = 3.f;
+		else if (m_fFollowLength > 15.f)
+			m_fFollowLength = 15.f;
+
 
 		float speed = 8.f;
 		if (m_pEngine->IsKeyPressed('Q'))
@@ -71,13 +81,13 @@ _uint CCamera_Follow::Update(_double TimeDelta)
 		else if (m_pEngine->IsKeyPressed('E'))
 			targetAngle += XMConvertToRadians(45.f) * TimeDelta * speed;
 
-		_float	fFollowSpeed = TimeDelta * 15.f;
+		_float	fFollowSpeed = TimeDelta * 6.f;
 
 		angle = Lerp(angle, targetAngle, fFollowSpeed);
 
 		_vector vTargetPos = m_pTargetTransform->GetState(CTransform::STATE_POSITION);
 
-		_vector vInvTargetLook = _vector{ 0, 0, 1 } *-15.f;
+		_vector vInvTargetLook = _vector{ 0, 0, 1 } *-m_fFollowLength;
 
 		// Right-Axis Rotation
 		XMMATRIX matRot;

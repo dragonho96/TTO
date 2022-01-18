@@ -60,8 +60,8 @@ HRESULT CPlayer::Initialize()
 	m_pUI_Primary->SetColor(_float4{ 1.f, 0.5f, 0.f, 1.f });
 	m_pUI_Grenade->SetColor(_float4{ 1.f, 1.f, 1.f, 1.f });
 
-	//m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
-	//m_pGrenadeTrajectory->SetActive(false);
+	m_pGrenadeTrajectory = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Trajectory", "Trajectory");
+	m_pGrenadeTrajectory->SetActive(false);
 
 	// EquipmentPool 에 meshcontainer 등록
 	AssignMeshContainter();
@@ -133,7 +133,7 @@ void CPlayer::Update(_double deltaTime)
 
 	static bool startRagdoll = false;
 
-	if (m_pController && CGameManager::GetInstance()->GetCurrentCamera() == CGameManager::CAMERA::FOLLOW
+	if (m_pController/* && CGameManager::GetInstance()->GetCurrentCamera() == CGameManager::CAMERA::FOLLOW*/
 		&& g_eCurScene == SCENE_TEST)
 	{
 		// Look Vector
@@ -176,7 +176,15 @@ void CPlayer::Update(_double deltaTime)
 		PxVec3 pxDir;
 		memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 		// GRAVITY
-		m_pController->move(pxDir, 0.001f, deltaTime, PxControllerFilters{});
+		// m_pController->move(pxDir, 0.001f, deltaTime, PxControllerFilters{});
+		static bool moving = true;
+		if (CEngine::GetInstance()->IsKeyDown('T'))
+			moving = false;
+
+		if (moving)
+			m_pController->move(pxDir, 0.001f, deltaTime, PxControllerFilters{});
+		//else
+		//	m_pController->move(PxVec3{ 0, 0, 0 }, 0.001f, deltaTime, PxControllerFilters{});
 		if (g_eCurScene != SCENE_LOBBY)
 			m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 
@@ -577,7 +585,7 @@ _vector CPlayer::GetPickingDir()
 
 void CPlayer::CheckEnemyInSight()
 {
-	static const _float sightRange = 15.f;
+	static const _float sightRange = 20.f;
 	const PxU32 bufferSize = 256;
 
 	PxOverlapHit hitBuffer[bufferSize];

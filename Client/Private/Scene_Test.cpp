@@ -114,7 +114,7 @@ HRESULT CScene_Test::ReadyLayerGrid(string pLayerTag)
 {
 	CEngine*		pEngine = GET_INSTANCE(CEngine);
 
-	CGrid::GRIDDESC desc = { 20, 20, 1.2f };
+	CGrid::GRIDDESC desc = { 60, 60, 1.2f };
 
 
 	if (nullptr == pEngine->AddGameObject(0, "GameObject_Grid", pLayerTag, &desc))

@@ -388,7 +388,6 @@ HRESULT CRenderer::RenderAlpha()
 	{
 		if (nullptr != pGameObject)
 		{
-
 			if (FAILED(pGameObject->Render()))
 				return E_FAIL;
 

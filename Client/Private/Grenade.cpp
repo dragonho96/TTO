@@ -135,8 +135,9 @@ void CGrenade::Explode()
 			}
 		}
 	}
-	//CGameManager::GetInstance()->PlayImpactEffect(vecPosition);
-	//CGameManager::GetInstance()->PlayExplosion(vecPosition);
+	CGameManager::GetInstance()->PlayImpactEffect(vecPosition);
+	CGameManager::GetInstance()->PlayExplosion(vecPosition);
+	CGameManager::GetInstance()->Shake_Grenade();
 	CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
 	SetDead();
 }

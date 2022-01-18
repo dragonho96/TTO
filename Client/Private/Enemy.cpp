@@ -82,7 +82,6 @@ HRESULT CEnemy::Initialize()
 		list<class CGameObject*> objList = CEngine::GetInstance()->GetGameObjectInLayer(0, "Player");
 		m_pTargetTransform = dynamic_cast<CTransform*>(objList.front()->GetComponent("Com_Transform"));
 
-
 		m_Timer = "Timer_PathFinding" + to_string(m_pGameObject->GetUUID());
 		CEngine::GetInstance()->AddTimers(m_Timer);
 	}
@@ -100,7 +99,11 @@ void CEnemy::Update(_double deltaTime)
 
 		if (m_pController)
 		{
+			// m_pModel->SetUp_AnimationIndex((size_t)ANIM_ENEMY::IDLE, ANIM_TYPE::NONE);
+			// m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
+
 			Move(deltaTime);
+
 			SetObjectTransform(m_pWeapon, m_pHandBone);
 			UpdateRifleMuzzleLightRange(deltaTime);
 			UpdateRifleLightTransform(m_pWeapon);
@@ -209,17 +212,14 @@ void CEnemy::FollowPlayer(_double deltaTime)
 		m_velocity = myPos - pathPos;
 	}
 
-
 	m_pTransform->LookAtForLandObject(m_pTargetTransform->GetState(CTransform::STATE_POSITION));
 	m_velocity = XMVector4Normalize(m_velocity);
 	m_velocity /= m_fSpeedFactor;
 	m_curVelocity = XMVectorLerp(m_curVelocity, m_velocity, deltaTime * 20.f);
 
-
 	PxVec3 pxDir;
 	memcpy(&pxDir, &m_curVelocity, sizeof(PxVec3));
 	m_pController->move(pxDir, 0.f, deltaTime, PxControllerFilters{});
-
 
 	if (m_eCurAnim == CEnemy::ANIM_ENEMY::WALK)
 		Shot(deltaTime);
@@ -258,7 +258,7 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		_vector damageDir = XMVector3Normalize(position - sourceLocation);
 		PxVec3 pxDamageDir;
 		memcpy(&pxDamageDir, &damageDir, sizeof(PxVec3));
-		_float fDamagePower = /*XMVectorGetX(XMVector4Length(position - sourceLocation)) * */100.f;
+		_float fDamagePower = /*XMVectorGetX(XMVector4Length(position - sourceLocation)) * */300.f;
 		//m_pModel->GetRagdollRb("body")->addForce(pxDamageDir.getNormalized(), PxForceMode::eIMPULSE);
 		m_pModel->GetRagdollRb("body")->addForce(pxDamageDir * fDamagePower, PxForceMode::eIMPULSE);
 		ADDLOG(("Hit Damage: " + to_string(fDamagePower)).c_str());
@@ -291,7 +291,6 @@ void CEnemy::Dissolve()
 		}
 		m_fDissolveCutoff = 1.f;
 	}
-
 }
 
 

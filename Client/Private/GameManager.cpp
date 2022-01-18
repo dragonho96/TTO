@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\GameManager.h"
 #include "Player.h"
+#include "Effect_Fire.h"
 #include "Effect_Muzzle.h"
 #include "Effect_Impact.h"
 #include "Effect_ImpactSmoke.h"
@@ -66,24 +67,36 @@ HRESULT CGameManager::Initialize()
 		m_pSightIndicator = dynamic_cast<CSightIndicator*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_SightIndicator", "SightIndicator"));
 		m_pSightIndicator->SetActive(false);
 
-		m_pCrosshair = dynamic_cast<CEmptyUI*>(CEngine::GetInstance()->SpawnPrefab("Crosshair"));
+		//m_pCrosshair = dynamic_cast<CEmptyUI*>(CEngine::GetInstance()->SpawnPrefab("Crosshair"));
 
-		list<class CGameObject*> list = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
-		if (list.size() <= 0)
+		list<class CGameObject*> camera = CEngine::GetInstance()->GetGameObjectInLayer(0, "LAYER_CAMERA");
+		if (camera.size() <= 0)
 			return E_FAIL;
 
-		m_Camera.resize(list.size());
-		m_Camera[(size_t)CAMERA::FOLLOW] = dynamic_cast<CCamera*>(list.front());
-		m_Camera[(size_t)CAMERA::FLY] = dynamic_cast<CCamera*>(list.back());
+		m_Camera.resize(camera.size());
+		m_Camera[(size_t)CAMERA::FOLLOW] = dynamic_cast<CCamera*>(camera.front());
+		m_Camera[(size_t)CAMERA::FLY] = dynamic_cast<CCamera*>(camera.back());
 
 		// SwitchCamera(CAMERA::FLY);
 		m_Camera[(size_t)CAMERA::FOLLOW]->SetRolling(true);
 		m_Camera[(size_t)CAMERA::FLY]->SetRolling(false);
 
+
+		list<CGameObject*> barrel = CEngine::GetInstance()->GetGameObjectInLayer(0, "Barrel");
+		if (barrel.size() >= 1)
+		{
+			CGameObject* fireA = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Fire", "Fire");
+			//CGameObject* fireB = CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Fire", "Fire");
+			CTransform* barrelATransform = dynamic_cast<CTransform*>(barrel.front()->GetComponent("Com_Transform"));
+			//CTransform* barrelBTransform = dynamic_cast<CTransform*>(barrel.back()->GetComponent("Com_Transform"));
+			dynamic_cast<CEffect_Fire*>(fireA)->SetPosition(barrelATransform->GetState(CTransform::STATE_POSITION));
+			//dynamic_cast<CEffect_Fire*>(fireB)->SetPosition(barrelBTransform->GetState(CTransform::STATE_POSITION));
+		}
+
 		// m_pMuzzleEffect = dynamic_cast<CEffect_Muzzle*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Muzzle", "Muzzle"));
 		// m_pImpactSmokeEffect = dynamic_cast<CEffect_ImpactSmoke*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke"));
-		// m_pImpactEffect = dynamic_cast<CEffect_Impact*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact"));
-		// m_pExplosion = dynamic_cast<CEffect_Explosion*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion"));
+		m_pImpactEffect = dynamic_cast<CEffect_Impact*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact"));
+		m_pExplosion = dynamic_cast<CEffect_Explosion*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion"));
 	}
 	return S_OK;
 }
@@ -104,8 +117,8 @@ void CGameManager::Update(_double TimeDelta)
 			else
 				SwitchCamera(CAMERA::FLY);
 		}
-		_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
-		m_pCrosshair->SetClientPosition(mousePos.x, mousePos.y);
+		//_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
+		//m_pCrosshair->SetClientPosition(mousePos.x, mousePos.y);
 	}
 	//if (m_fMastAlpha >= 0)
 	//{

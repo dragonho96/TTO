@@ -40,6 +40,8 @@ HRESULT CEffect_Trajectory::Initialize(void * pArg)
 		m_pSphereShader = model->GetShader();
 	}
 
+	m_pCrosshair = dynamic_cast<CEmptyUI*>(CEngine::GetInstance()->SpawnPrefab("Crosshair"));
+
 
 	return S_OK;
 }
@@ -63,10 +65,17 @@ _uint CEffect_Trajectory::LateUpdate(_double TimeDelta)
 	if (!IsActive())
 	{
 		m_pSphere->SetActive(false);
+
+		_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
+		m_pCrosshair->SetActive(true);
+		m_pCrosshair->SetClientPosition(mousePos.x, mousePos.y);
 		return S_OK;
 	}
 	else
+	{
 		m_pSphere->SetActive(true);
+		m_pCrosshair->SetActive(false);
+	}
 
 
 	m_pVIBufferCom->Update(TimeDelta);
@@ -81,7 +90,7 @@ _uint CEffect_Trajectory::LateUpdate(_double TimeDelta)
 		factor = 1.f;
 	fPower += TimeDelta * 3.f * factor;
 		_vector camPos = CEngine::GetInstance()->GetCamPosition();
-	_vector color = _vector{ 1, 0, 0, 0 };
+	_vector color = _vector{ 0, 1.f, 0, 0 };
 
 	m_pSphereShader->SetUp_ValueOnShader("g_vCamPosition", &camPos, sizeof(_vector));
 	m_pSphereShader->SetUp_ValueOnShader("vColor", &color, sizeof(_vector));
@@ -147,7 +156,7 @@ HRESULT CEffect_Trajectory::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Textures/Trajectory/Trajectory.png");
+	m_pTextureCom = CTexture::Create(m_pDevice, m_pDeviceContext, CTexture::TYPE_WIC, "../../Assets/Textures/Trajectory/Trajectory2.png");
 
 
 	return S_OK;

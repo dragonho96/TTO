@@ -687,8 +687,18 @@ void CSceneSerializer::SerializePrefab(CGameObject * obj)
 	out << YAML::EndSeq;
 	out << YAML::EndMap;
 
-	std::ofstream fout(prefabPath + obj->GetName() + ".prefab");
+	string filePath = prefabPath + obj->GetName() + ".prefab";
+
+	std::ofstream fout(filePath);
 	fout << out.c_str();
+
+	//std::ifstream stream(filePath);
+	//std::stringstream strStream;
+	//strStream << stream.rdbuf();
+
+	//YAML::Node data = YAML::Load(strStream.str());
+
+	//m_pEngine->AddPrefab(obj->GetName(), data);
 }
 
 void CSceneSerializer::DeserializePrefab()

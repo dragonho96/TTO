@@ -37,6 +37,9 @@ private:
 	CTransform*					m_pSphereTransform = nullptr;
 	CShader*					m_pSphereShader = nullptr;
 
+	CEmptyUI	*				m_pCrosshair = nullptr;
+
+
 
 private:
 	HRESULT SetUp_Components();

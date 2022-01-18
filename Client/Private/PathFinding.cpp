@@ -206,7 +206,7 @@ list<_vector> CPathFinding::RetracePath(CNode * startNode, CNode * endNode)
 
 	for (auto& node : path)
 	{
-		node->SetColor(_float4{ 0.f, 1.f, 0.f, 1.f });
+		node->SetColor(_float4{ 0.f, 1.f, 0.f, 0.2f });
 		pathPosition.emplace_back(XMLoadFloat3(&node->GetPosition()));
 	}
 

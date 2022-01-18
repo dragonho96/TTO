@@ -26,6 +26,9 @@ public:
 	virtual _uint LateUpdate(_double TimeDelta) override;
 	virtual HRESULT Render(_uint iPassIndex) override;
 
+public:
+	void SetPosition(_vector vPos);
+
 private:
 	CTexture*					m_pTextureCom = nullptr;
 	CTexture*					m_pTextureGreyCom = nullptr;

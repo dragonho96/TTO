@@ -53,9 +53,9 @@ _uint CEffect_Fire::Update(_double TimeDelta)
 		// 역행렬 만들기.
 		_matrix matBill = XMLoadFloat4x4(&f44Bill);
 		matBill = XMMatrixInverse(nullptr, matBill);
-
-		memcpy(&instanceMatrices[i]->vRight, &(matBill.r[0] * 5.f), sizeof(_float4));
-		memcpy(&instanceMatrices[i]->vUp, &(matBill.r[1] * 5.f), sizeof(_float4));
+		_float fSize = 1.5f;
+		memcpy(&instanceMatrices[i]->vRight, &(matBill.r[0] * fSize), sizeof(_float4));
+		memcpy(&instanceMatrices[i]->vUp, &(matBill.r[1] * fSize), sizeof(_float4));
 		memcpy(&instanceMatrices[i]->vLook, &matBill.r[2], sizeof(_float4));
 
 		instanceMatrices[i]->iStartFrame += 36 * TimeDelta;
@@ -106,6 +106,17 @@ HRESULT CEffect_Fire::Render(_uint iPassIndex)
 	RELEASE_INSTANCE(CEngine);
 
 	return S_OK;
+}
+
+void CEffect_Fire::SetPosition(_vector vPos)
+{
+	_float fOffsetY = 1.5f;
+	vector<VTXMATRIX*> instanceMatrices = m_pVIBufferCom->GetInstanceMatrices();
+	for (int i = 0; i < instanceMatrices.size(); ++i)
+	{
+		memcpy(&instanceMatrices[i]->vPosition, &XMVectorSetW(vPos, 1.f), sizeof(_vector));
+		instanceMatrices[i]->vPosition.y += fOffsetY;
+	}
 }
 
 HRESULT CEffect_Fire::SetUp_Components()

@@ -423,10 +423,10 @@ PS_OUT PS_MAIN(PS_IN In)
     float4 textureColor;
     float3 lightDir;
 
-    bias = 0.0001f;
+    bias = 0.00001f;
 
     color = vector(0.1f, 0.1f, 0.1f, 1.f);
-    diffuseColor = vector(0.5f, 0.5f, 0.5f, 1.f);
+    diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
     lightDir = -(-1.f, -1.f, -1.f);
 
     
@@ -470,7 +470,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 
     diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
-    bias = 0.01f;
+    bias = 0.001f;
 
     projectTexCoord.x = In.lightViewPosition1.x / In.lightViewPosition1.w / 2.f + 0.5f;
     projectTexCoord.y = -In.lightViewPosition1.y / In.lightViewPosition1.w / 2.f + 0.5f;

@@ -174,8 +174,8 @@ HRESULT CVIBuffer_Terrain::CreateBuffer(void ** pVertices)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
-			// float height = 0.f;
+			// float height = (pPixel[iIndex] & 0x000000ff) / fHeightScale;
+			float height = -1.f;
 			((VTXNORTEX*)*pVertices)[iIndex].vPosition = _float3((float)j, height, (float)i);
 			((VTXNORTEX*)*pVertices)[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			((VTXNORTEX*)*pVertices)[iIndex].vTexUV = _float2(j / (m_iNumVerticesX - 1.f), 1.f - i / (m_iNumVerticesZ - 1.f));
@@ -356,7 +356,7 @@ void CVIBuffer_Terrain::CreateHeightField(void ** pVertices)
 	PxHeightField* heightField = CEngine::GetInstance()->GetCooking()->createHeightField(terrainDesc, CEngine::GetInstance()->GetPhysics()->getPhysicsInsertionCallback());
 	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), (1/20.f), 1, 1);
 	PxTransform localPose;
-	localPose.p = PxVec3(0, 0, 0);         // heightfield is at world (0,minHeight,0)
+	localPose.p = PxVec3(0, 0.3f, 0);         // heightfield is at world (0,minHeight,0)
 	localPose.q = PxQuat(PxIdentity);
 	PxMaterial* mat = CEngine::GetInstance()->GetPhysics()->createMaterial(0.5f, 0.5f, 0.1f);
 	PxShape* shape = PxRigidActorExt::createExclusiveShape(*m_pTerrainActor, hfGeom, *mat);

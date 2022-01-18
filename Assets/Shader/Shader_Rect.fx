@@ -60,7 +60,7 @@ technique11		DefaultDevice
 	pass DefaultPass
 	{
         SetRasterizerState(Rasterizer_Solid);
-        SetDepthStencilState(DepthStecil_NotZWrite, 0);
+        SetDepthStencilState(DepthStecil_Default, 0);
         SetBlendState(Blend_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
