@@ -1,4 +1,3 @@
-# XCOM2
 
 ### imgui[docking-experimental]:x64-windows
 ### physx:x64-windows
