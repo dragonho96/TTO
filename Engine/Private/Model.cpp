@@ -704,10 +704,6 @@ BONEDESC * CModel::Find_Bone(string pBoneName)
 
 HRESULT CModel::Play_Animation(_double TimeDelta)
 {
-	//_float	fFollowSpeed = TimeDelta * 15.f;
-	//m_curUpperRotationAngle.x = Lerp(m_curUpperRotationAngle.x, m_upperRotationAngle.x, fFollowSpeed);
-	//m_curUpperRotationAngle.y = Lerp(m_curUpperRotationAngle.y, m_upperRotationAngle.y, fFollowSpeed);
-	//
 	if (m_bSimulateRagdoll)
 		Update_CombinedTransformationMatrix_Ragdoll();
 	else
@@ -718,7 +714,6 @@ HRESULT CModel::Play_Animation(_double TimeDelta)
 
 HRESULT CModel::Blend_Animation(_double TimeDelta)
 {
-	// Upper꺼 Lower꺼 각각 해줘야한다
 	// Lower
 	m_bFinished_Lower = m_Animations[m_iAnimationIndex]->Update_TransformationMatrices(TimeDelta);
 	if (m_iAnimationIndex != m_iPrevAnimationIndex)
@@ -746,18 +741,7 @@ HRESULT CModel::Blend_Animation(_double TimeDelta)
 	{
 		// 1. 위 아래 Anim
 		m_Animations[m_UpperBlendDesc.iAnimY]->Blend_Animation(m_Animations[m_iAnimationIndex_Upper], m_UpperBlendDesc.fRatioY);
-		//m_Animations[m_UpperBlendDesc.iAnimX]->Blend_Animation(m_Animations[m_iAnimationIndex_Upper], m_UpperBlendDesc.fRatioX);
-		//m_Animations[m_UpperBlendDesc.iAnimY]->Blend_Animation(m_Animations[m_UpperBlendDesc.iAnimX], m_UpperBlendDesc.fRatioY);
 	}
-
-	/*
-	m_Animations[Up, left down right]
-	m_Animations[Up, left down right]
-	요거 두개를 동일하게 blend
-	*/
-
-
-
 	return S_OK;
 }
 
@@ -913,7 +897,6 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 				type = ANIM_TYPE::LOWER;
 
 			if (m_bUpperBlending)
-				//pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_UpperBlendDesc.iAnimY, type, { m_upperRotationAngle.x / 2.f, m_upperRotationAngle.y / 2.f });
 				pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_UpperBlendDesc.iAnimY, type, {0, m_upperRotationAngle.y});
 			else
 				pHierarchyNodes->Update_CombinedTransformationMatrix(m_iAnimationIndex, m_iAnimationIndex_Upper, type, m_upperRotationAngle);
@@ -966,21 +949,7 @@ CMeshContainer * CModel::GetMeshContainerByName(string name)
 
 void CModel::SetRagdollBoneDesc(BONEDESC* desc)
 {
-	//auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
-	//{
-	//	return !strcmp(pNode->Get_Name(), desc->pName);
-	//});
-
-	//if (iter == m_HierarchyNodes.end())
-	//	return;
-
 	string name = desc->pName;
-	//if (name == "pelvis" ||
-	//	name == "upperarm_l" || name == "lowerarm_l" || name == "hand_l" ||
-	//	name == "thigh_l" || name == "calf_l" || name == "foot_l" ||
-	//	name == "upperarm_r" || name == "lowerarm_r" || name == "hand_r" ||
-	//	name == "thigh_r" || name == "calf_r" || name == "foot_r" ||
-	//	name == "neck_01" || name == "head")
 	if (name == "pelvis" ||
 		name == "upperarm_l" || name == "lowerarm_l" || name == "hand_l" ||
 		name == "upperarm_r" || name == "lowerarm_r" || name == "hand_r" ||
@@ -1022,8 +991,8 @@ HRESULT CModel::CreateRagdollRbs()
 	CreateCapsuleRb(upperarm_r, lowerarm_r, "upperarm_r");
 	CreateCapsuleRb(lowerarm_r, hand_r, "lowerarm_r");
 	CreateCapsuleRb(pelvis, neck_01, "body");
-
 	CreateSphereRb(head, "head");
+
 
 	CreateD6Joint("thigh_l", "calf_l", "calf_l");
 	CreateD6Joint("thigh_r", "calf_r", "calf_r");
@@ -1033,12 +1002,7 @@ HRESULT CModel::CreateRagdollRbs()
 	CreateD6Joint("body", "upperarm_r", "upperarm_r");
 	CreateD6Joint("upperarm_l", "lowerarm_l", "lowerarm_l");
 	CreateD6Joint("upperarm_r", "lowerarm_r", "lowerarm_r");
-
 	CreateD6Joint("body", "head", "head");
-
-
-	//for (auto& rb : m_RagdollRbs)
-	//	rb.second->pRb->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, !m_bSimulateRagdoll);
 
 	return S_OK;
 }
@@ -1080,26 +1044,7 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	_float half_height = abs(len_minus_2r / 2.f);
 
 	PxShape* shape = CEngine::GetInstance()->GetPhysics()->createShape(PxCapsuleGeometry(radius, half_height), *CEngine::GetInstance()->GetMaterial());
-	// shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-
-	//PxFilterData filterData;
-	////filterData.word0 = CPxManager::FilterGroup::eCC; // word0 = own ID
-	////filterData.word1 = CPxManager::FilterGroup::eRAGDOLL; // word0 = own ID
-	//filterData.word0 = CPxManager::GROUP1;
-	//filterData.word1 = CPxManager::GROUP2;
-	//shape->setSimulationFilterData(filterData);
-	//shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
-
-	//PxFilterData filterData;
-	//filterData.word0 = CPxManager::GROUP1;
-	//filterData.word1 = CPxManager::GROUP2;
-	//shape->setQueryFilterData(filterData);
-
 	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, false);
-
-	//_vector newRotation = XMVector3InverseRotate(_vector{ 0, 0, 1}, rotation);
-	////shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
-
 
 	PxTransform transform;
 	memcpy(&transform.p, &midPos, sizeof(_float3));
@@ -1108,7 +1053,6 @@ void CModel::CreateCapsuleRb(BONEDESC * parent, BONEDESC * child, string name)
 	body->setMass(10.f);
 	body->attachShape(*shape);
 	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-	// body->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
 
 	CEngine::GetInstance()->AddActor(body);
 
@@ -1207,8 +1151,6 @@ void CModel::ConfigD6Joint(physx::PxReal swing0, physx::PxReal swing1, physx::Px
 void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
 {
 	PxTransform transform;
-	// XMMATRIX matParent = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pParentBone->OffsetMatrix), ragdollBoneDesc->pParentBone->pHierarchyNode->Get_CombinedTransformationMatrix());
-	// XMMATRIX matChild = XMMatrixMultiply(XMLoadFloat4x4(&ragdollBoneDesc->pChildBone->OffsetMatrix), ragdollBoneDesc->pChildBone->pHierarchyNode->Get_CombinedTransformationMatrix());
 	_vector scale, rotation, pos;
 	_float4x4 newParentFloat4x4;
 	_vector pVec, cVec;
@@ -1234,7 +1176,6 @@ void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
 		memcpy(&transform.q, &rotation, sizeof(_float4));
 		ragdollBoneDesc->pRb->setGlobalPose(transform, false);
 		ragdollBoneDesc->pRb->setKinematicTarget(transform);
-		// ragdollBoneDesc->pRb->putToSleep();
 	}
 	else
 	{
@@ -1242,7 +1183,6 @@ void CModel::SetRagdollRbTransform(RAGDOLLBONEDESC * ragdollBoneDesc)
 		memcpy(&transform.q, &rotation, sizeof(_float4));
 		ragdollBoneDesc->pRb->setGlobalPose(transform, false);
 		ragdollBoneDesc->pRb->setKinematicTarget(transform);
-		// ragdollBoneDesc->pRb->putToSleep();
 	}
 }
 
@@ -1257,12 +1197,6 @@ void CModel::SetRagdollSimulate(_bool result)
 		rb.second->pRb->setLinearVelocity(PxVec3(PxZero));
 		rb.second->pRb->setAngularVelocity(PxVec3(PxZero));
 	}
-	//if (m_bSimulateRagdoll)
-	//{
-	//	PxShape* shape = nullptr;
-	//	rb.second->pRb->getShapes(&shape, 1);
-	//	// shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-	//}
 
 	for (auto& rb : m_RagdollRbs)
 	{

@@ -100,18 +100,10 @@ void CGrid::SetUpGrid()
 			// first check if enemy is in the range
 			if (CEngine::GetInstance()->GetScene()->overlap(overlapBox, PxTransform(pxPosition), hit, filterData))
 			{
-				// if (hit.block.actor->userData == nullptr)
 				m_Nodes[index]->SetWalkable(false);
 			}
 			else
 				m_Nodes[index]->SetWalkable(true);
-
-			//bool status = scene->raycast(origin, unitDir, maxDistance, hit);
-			//if (status)
-			//	m_Nodes[index]->SetWalkable(false);
-			//else
-			//	m_Nodes[index]->SetWalkable(true);
-
 		}
 	}
 	ResetColor();
@@ -138,10 +130,12 @@ list<CNode*> CGrid::GetNeighbours(CNode * node)
 			{
 				if (m_Nodes[checkX * m_Desc.iSizeZ + checkZ]->IsWalkable())
 				{
+					// 벽 사이로 통과 X
 					if (!m_Nodes[curNodeX * m_Desc.iSizeZ + checkZ]->IsWalkable() &&
 						!m_Nodes[checkX * m_Desc.iSizeZ + curNodeZ]->IsWalkable())
 						continue;
 
+					// 수직수평 장애물 이동 불가
 					if (!m_Nodes[curNodeX * m_Desc.iSizeZ + checkZ]->IsWalkable() ||
 						!m_Nodes[checkX * m_Desc.iSizeZ + curNodeZ]->IsWalkable())
 						continue;

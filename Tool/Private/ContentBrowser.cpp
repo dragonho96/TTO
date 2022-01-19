@@ -26,7 +26,6 @@ void CContentBrowser::Initialize()
 
 void CContentBrowser::SetContentHierarchy(FILESYSTEM::path curPath)
 {
-
 	if (!FILESYSTEM::is_directory(curPath) || curPath.empty())
 		return;
 

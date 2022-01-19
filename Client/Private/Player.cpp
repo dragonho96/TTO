@@ -206,27 +206,18 @@ void CPlayer::Update(_double deltaTime)
 			TimeRaycast = 0.0;
 			_vector vRayDir = GetPickingDir();
 			_vector vCamPos = m_pCameraTransform->GetState(CTransform::STATE_POSITION);
-
-			//const PxU32 bufferSize = 256;
-			//PxRaycastHit hitBuffer[bufferSize];
-			//PxRaycastBuffer hit(hitBuffer, bufferSize);
 			PxRaycastBuffer hit;
 			PxQueryFilterData filterData;
 			filterData.data.word0 = CPxManager::GROUP1;
-			// filterData.data.word1 = CPxManager::GROUP2;
 			if (CEngine::GetInstance()->Raycast(vCamPos, vRayDir, 100.f, hit, filterData))
 			{
 				// Player를 제외한 actor
 				if (hit.block.actor->userData != this)
 				{
-					PxU32 distance = hit.block.distance;
-					PxU32 faceIndex = hit.block.faceIndex;
-					// PxU32 faceIndex = hit.getTouch(0).faceIndex;
 					PxVec3 hitPos = hit.block.position;
 					PxVec3 hitNormal = hit.block.normal;
 
 					m_cursorHitPos = { hitPos.x, hitPos.y, hitPos.z, 0 };
-					//ADDLOG(("m_cursorHitPos: " + to_string(XMVectorGetX(m_cursorHitPos)) + ", " + to_string(XMVectorGetY(m_cursorHitPos)) + ", " + to_string(XMVectorGetZ(m_cursorHitPos))).c_str());
 				}
 			}
 
@@ -431,11 +422,6 @@ void CPlayer::SetGrenadeTrajectory(_bool result)
 	m_ThrowingVelocity *= Vxz;
 	m_ThrowingVelocity = XMVectorSetY(m_ThrowingVelocity, Vy);
 
-	if (CEngine::GetInstance()->IsKeyDown('H'))
-	{
-		//ADDLOG(("" + to_string(length)).c_str());
-	}
-
 	// Calucate Pos In Time
 	VisualizeTrajectory(origin, m_ThrowingVelocity, time);
 }
@@ -452,13 +438,6 @@ void CPlayer::VisualizeTrajectory(_vector origin, _vector initialVelocity, _floa
 
 	if (m_pGrenadeTrajectory)
 		dynamic_cast<CEffect_Trajectory*>(m_pGrenadeTrajectory)->SetPoints(listPoints);
-
-	// auto iter = listPoints.begin();
-	// _vector first = listPoints.front();
-	// listPoints.pop_front();
-	// _vector second = listPoints.front();
-	// m_ThrowingDir = second - first;
-	// ADDLOG(("m_ThrowingDir: " + to_string(XMVectorGetX(m_ThrowingDir)) + ", " + to_string(XMVectorGetY(m_ThrowingDir)) + ", " + to_string(XMVectorGetZ(m_ThrowingDir))).c_str());
 }
 
 _vector CPlayer::CalculatePosInTime(_vector origin, _vector initialVelocity, _float time)
@@ -631,7 +610,6 @@ void CPlayer::RaycastRifleToHitPos()
 	_vector dir;
 	_float range;
 
-	// TODO: 총 위치로 바꾸기
 	_matrix spineMat = m_pSpineBone->pHierarchyNode->Get_CombinedTransformationMatrix() * m_pTransform->GetWorldMatrix();
 	_vector mySpineTempA, mySpineTempB;
 	XMMatrixDecompose(&mySpineTempA, &mySpineTempB, &origin, spineMat);
@@ -665,12 +643,6 @@ void CPlayer::RaycastRifleToHitPos()
 			CGameManager::GetInstance()->SetShootingSightUI(true, m_rifleHitPos, m_cursorHitPos);
 
 		m_pHitActor = hit.block.actor;
-
-
-		//string logPos = "" + to_string(hitPos.x) + " " + to_string(hitPos.y) + " " + to_string(hitPos.z);
-		//ADDLOG(("Hit Pos: " + logPos).c_str());
-		//logPos = "" + to_string(cursorPos.x) + " " + to_string(cursorPos.y) + " " + to_string(cursorPos.z);
-		//ADDLOG(("Cursor Pos: " + logPos).c_str());
 	}
 }
 

@@ -691,14 +691,6 @@ void CSceneSerializer::SerializePrefab(CGameObject * obj)
 
 	std::ofstream fout(filePath);
 	fout << out.c_str();
-
-	//std::ifstream stream(filePath);
-	//std::stringstream strStream;
-	//strStream << stream.rdbuf();
-
-	//YAML::Node data = YAML::Load(strStream.str());
-
-	//m_pEngine->AddPrefab(obj->GetName(), data);
 }
 
 void CSceneSerializer::DeserializePrefab()
@@ -768,25 +760,5 @@ CGameObject * CSceneSerializer::SpawnPrefab(YAML::Node data)
 			}
 		}
 	}
-
-	//if (gameObjects)
-	//{
-	//	for (auto obj : gameObjects)
-	//	{
-	//		auto children = obj["Children"];
-	//		if (children)
-	//		{
-	//			CGameObject* parent = m_pEngine->FindGameObjectWithUUID(obj["UUID"].as<uint64_t>());
-	//			int seqSize = children.size();
-	//			for (int i = 0; i < children.size(); ++i)
-	//			{
-	//				uint64_t uuid = children[i].as<uint64_t>();
-	//				CGameObject* child = nullptr;
-	//				if (child = m_pEngine->FindGameObjectWithUUID(uuid))
-	//					parent->AddChild(child);
-	//			}
-	//		}
-	//	}
-	//}
 	return deserializedObject;
 }

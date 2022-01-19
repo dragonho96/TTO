@@ -443,7 +443,6 @@ PS_OUT PS_MAIN(PS_IN In)
         if (lightDepthValue < depthValue)
         {
             // 이 픽셀의 빛의 양을 계산합니다.
-            //lightIntensity = saturate(dot(In.vNormal, In.lightPos0));
             lightIntensity = saturate(dot(In.vNormal, lightDir));
  
             if (lightIntensity > 0.0f)

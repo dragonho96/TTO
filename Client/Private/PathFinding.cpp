@@ -78,18 +78,11 @@ list<_vector> CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 
 	openSet.clear();
 	closedSet.clear();
-
 	openSet.emplace_back(startNode);
-	// make_heap(openSet.begin(), openSet.end());
 
 	while (openSet.size() > 0)
 	{
-		//pop_heap(openSet.begin(), openSet.end());
-		//CNode* currentNode = openSet.back();
-		//openSet.pop_back();
-
 		CNode* currentNode = openSet.front();
-		//openSet.pop_front();
 		auto iter = openSet.begin(); ++iter;
 		for (iter; iter != openSet.end(); ++iter)
 		{
@@ -109,34 +102,17 @@ list<_vector> CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 		if (currentNode == targetNode)
 		{
 			_double timeElapsed = CEngine::GetInstance()->ComputeDeltaTime("Timer_PathFinding");
-			// ADDLOG(to_string(timeElapsed).c_str());
-
 			return RetracePath(startNode, targetNode);
 		}
 
 		_int curNodeX = currentNode->GetGridX();
 		_int curNodeZ = currentNode->GetGridZ();
 
-		//for (_int x = -1; x <= 1; x++)
-		//{
-		//	for (_int z = -1; z <= 1; z++)
-		//	{
-		//		if (x == 0 && z == 0)
-		//			continue;
-
-		//		_int checkX = curNodeX + x;
-		//		_int checkZ = curNodeZ + z;
-
-		//		AddOpenSet(checkX, checkZ, currentNode, targetNode);
-		//	}
-		//}
-
-
 		list<CNode*> neighbours = m_pGrid->GetNeighbours(currentNode);
 		for (auto& neighbour : neighbours)
 		{
 			auto findList = std::find(closedSet.begin(), closedSet.end(), neighbour);
-			if (findList != closedSet.end()/* || !neighbour->IsWalkable()*/)
+			if (findList != closedSet.end())
 				continue;
 
 			_int newMovementCostToNeighbour = currentNode->GetGCost() + GetMoveCost(currentNode, neighbour);
@@ -148,12 +124,12 @@ list<_vector> CPathFinding::FindPath(_float3 startPos, _float3 targetPos)
 				neighbour->SetParent(currentNode);
 
 				openSet.push_back(neighbour);
-				// push_heap(openSet.begin(), openSet.end());
 			}
 		}
 	}
 	return list<_vector>();
 }
+
 _bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode* pTargetNode)
 {
 	CNode* node = m_pGrid->GetNode(checkX, checkZ);
@@ -185,7 +161,6 @@ _bool CPathFinding::AddOpenSet(_int checkX, _int checkZ, CNode* pCurNode, CNode*
 			node->SetParent(pCurNode);
 
 			openSet.push_back(node);
-			// push_heap(openSet.begin(), openSet.end());
 		}
 	}
 	return _bool();

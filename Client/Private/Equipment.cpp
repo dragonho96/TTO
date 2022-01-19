@@ -70,7 +70,6 @@ void CEquipment::SetMyInventory(GEAR type)
 			colVecItem.reserve(slot.x);
 			for (int j = 0; j < slot.x; ++j)
 			{
-				// innerVecItem[i * slot.x + j] = nullptr;
 				colVecItem.emplace_back(nullptr);
 			}
 			rowVecItem.emplace_back(colVecItem);
