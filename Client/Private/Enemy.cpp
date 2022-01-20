@@ -84,7 +84,10 @@ HRESULT CEnemy::Initialize()
 
 		m_Timer = "Timer_PathFinding" + to_string(m_pGameObject->GetUUID());
 		CEngine::GetInstance()->AddTimers(m_Timer);
+
 	}
+
+	m_eCurAnim = ANIM_ENEMY::IDLE;
 
 	return S_OK;
 }
@@ -160,24 +163,24 @@ void CEnemy::Move(_double deltaTime)
 
 	_float distance = XMVectorGetX(XMVector3Length(playerPosition - myPosition));
 
-	if (distance < 5.f)
+	if (distance < 7.f)
 	{
 		m_eCurAnim = ANIM_ENEMY::WALK;
 		m_fSpeedFactor = 80.f;
 	}
-	else if (distance < 10.f)
+	else if (distance < 40.f)
 	{
 		m_eCurAnim = ANIM_ENEMY::RUN;
-		m_fSpeedFactor = 60.f;
+		m_fSpeedFactor = 50.f;
 	}
 	else
 		m_eCurAnim = ANIM_ENEMY::IDLE;
 
 
-	m_pModel->SetUp_AnimationIndex((size_t)m_eCurAnim, ANIM_TYPE::NONE);
 	if (m_eCurAnim != ANIM_ENEMY::IDLE)
 		FollowPlayer(deltaTime);
 
+	m_pModel->SetUp_AnimationIndex((size_t)m_eCurAnim, ANIM_TYPE::NONE);
 	// Gravity
 	m_pController->move(PxVec3(0, -1.f, 0), 0.f, deltaTime, PxControllerFilters{});
 }
@@ -194,7 +197,10 @@ void CEnemy::FindPath()
 void CEnemy::FollowPlayer(_double deltaTime)
 {
 	if (m_pathPosition.empty() || nullptr == m_pController)
+	{
+		m_eCurAnim = ANIM_ENEMY::IDLE;
 		return;
+	}
 
 	// Look PositionÀÌ path·Î
 	_vector myPos = m_pTransform->GetState(CTransform::STATE_POSITION);
@@ -253,6 +259,7 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		m_pController = nullptr;
 		m_pModel->SetRagdollSimulate(true);
 		m_pWeapon->SetDead();
+		m_pMuzzleLight->SetDead();
 
 		_vector position = m_pTransform->GetState(CTransform::STATE_POSITION);
 		_vector damageDir = XMVector3Normalize(position - sourceLocation);
@@ -266,6 +273,12 @@ void CEnemy::GetDamage(_vector sourceLocation)
 		string logStr = "" + to_string(pxDamageDir.x) + " " + to_string(pxDamageDir.y) + " " + to_string(pxDamageDir.z);
 		ADDLOG(("Hit Dir: " + logStr).c_str());
 	}
+}
+
+void CEnemy::SetInitialPosition(_vector position)
+{
+	PxExtendedVec3 pos = {XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
+	m_pController->setPosition(pos);
 }
 
 void CEnemy::Dissolve()

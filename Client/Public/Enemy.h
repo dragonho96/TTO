@@ -23,6 +23,7 @@ public:
 	virtual void Shot(_double deltaTime);
 	virtual void GetDamage(_vector sourceLocation);
 public:
+	void SetInitialPosition(_vector position);
 	void Dissolve();
 
 public:

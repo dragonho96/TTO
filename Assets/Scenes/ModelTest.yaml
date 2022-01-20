@@ -1,7 +1,182 @@
 Scene: Untitled
 GameObjects:
+  - Name: Terrain
+    UUID: 1443101675111897338
+    Active: true
+    Layer: Terrain
+    Type: Object
+    Com_Transform:
+      Translation: [0, -5, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_VIBuffer:
+      Type: Terrain
+      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
+      TexturePath: ../../Assets/Texture/Height.bmp
+  - Name: EnemySpawn
+    UUID: 18059595978689754417
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [26.189312, 1.00000024, 18.2328224]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 15200095895287368886
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [30.0658054, 1.00000107, 3.39714265]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 11178462327875958501
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [17.6306553, -0.0521002561, 20.307785]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 11826395437161475003
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [21.0271969, 1.31264985, 2.76592779]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 91634495755284621
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [43.0952377, 1.57750571, 9.27523613]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 15550628849986161538
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [20.7283936, 1.07078683, 16.328577]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 18162836039102425759
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [17.8997078, 1.17559266, 7.54499674]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 645588664971800850
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [37.4812546, 1.17878544, 26.602005]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 17514976291770677675
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [45.1541862, 1.49425268, 16.0677452]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 12589032550613057864
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [55.1649017, 1.73901367, 11.8815842]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 13605695017069424965
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [60.3527527, 1.69610739, 19.4371262]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 16916444501762330970
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [39.337368, 1.07553434, 34.3412209]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 9613569923666650739
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [20.5546169, 0.715338707, 36.5217857]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 9453653000823223923
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [21.4265137, 0.566622555, 45.8982239]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 13282263511278448283
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [50.5750351, 1.14008224, 41.6844711]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 14707986026748905062
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [44.3754387, 0.877071619, 50.6610603]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 15462084988196402635
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [34.7014999, 0.734031022, 49.3506165]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+  - Name: EnemySpawn
+    UUID: 10140794584971974797
+    Active: true
+    Layer: EnemySpawn
+    Type: Object
+    Com_Transform:
+      Translation: [25.9209442, 0.561496854, 50.6080475]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
   - Name: Building
-    UUID: 12123527924590244750
+    UUID: 1723275194477378010
     Active: true
     Layer: Default
     Type: Object
@@ -14,7 +189,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Directional
-    UUID: 15021500928895976701
+    UUID: 14049882657917436147
     Active: true
     Layer: Default
     Type: Object
@@ -30,14 +205,14 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: Spot
-    UUID: 14284991659770259570
+    UUID: 18375136503132467039
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [40.0653267, 8.2604599, 22.3279037]
       Rotation: [90, -0, 0]
-      Scale: [0.994833291, 0.999999881, 0.999999881]
+      Scale: [0.994833171, 0.999999881, 0.999999881]
     Com_Light:
       Type: 2
       Range: 10
@@ -46,7 +221,7 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: UAZ
-    UUID: 4355028952049942207
+    UUID: 5830480678577303007
     Active: true
     Layer: Default
     Type: Object
@@ -59,7 +234,7 @@ GameObjects:
       MeshFileName: UAZ.fbx
       HasCollider: true
   - Name: sidewalk
-    UUID: 15039183931777972770
+    UUID: 4241975845588847307
     Active: true
     Layer: Default
     Type: Object
@@ -72,7 +247,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: powerpole
-    UUID: 11913431928286804651
+    UUID: 394225214733731827
     Active: true
     Layer: Default
     Type: Object
@@ -184,7 +359,7 @@ GameObjects:
       Scale: [0.300000012, 0.300000012]
       LayerDepth: 0
   - Name: FenceWall
-    UUID: 3858074998188613296
+    UUID: 15529816660986735533
     Active: true
     Layer: Default
     Type: Object
@@ -197,7 +372,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: Busstop
-    UUID: 17505322312518552251
+    UUID: 3734783515746409526
     Active: true
     Layer: Default
     Type: Object
@@ -210,7 +385,7 @@ GameObjects:
       MeshFileName: Busstop.fbx
       HasCollider: true
   - Name: Barrel
-    UUID: 6740200718828511272
+    UUID: 17059842610295369556
     Active: true
     Layer: Default
     Type: Object
@@ -223,12 +398,12 @@ GameObjects:
       MeshFileName: Barrel.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 11654344053653999332
+    UUID: 4185571106934471816
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [15.4631052, -0.724406064, 0.230647892]
+      Translation: [59.6089516, -0.724406064, 8.70271969]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Model:
@@ -236,7 +411,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: HalfBarrier
-    UUID: 12937909832318860985
+    UUID: 219960635852968970
     Active: true
     Layer: Default
     Type: Object
@@ -249,7 +424,7 @@ GameObjects:
       MeshFileName: Barrier_half.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 8336511265923223127
+    UUID: 8139964019401710494
     Active: true
     Layer: Default
     Type: Object
@@ -262,7 +437,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: Container
-    UUID: 5644633717703879758
+    UUID: 15217506098953045347
     Active: true
     Layer: Default
     Type: Object
@@ -275,7 +450,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Container1
-    UUID: 15402628747715519409
+    UUID: 11546218201410760930
     Active: true
     Layer: Default
     Type: Object
@@ -288,7 +463,7 @@ GameObjects:
       MeshFileName: Container1.fbx
       HasCollider: true
   - Name: Container2
-    UUID: 14280386502669170074
+    UUID: 5200377449227919621
     Active: true
     Layer: Default
     Type: Object
@@ -301,7 +476,7 @@ GameObjects:
       MeshFileName: Container2.fbx
       HasCollider: true
   - Name: Container3
-    UUID: 11320321305489025826
+    UUID: 425512109312997440
     Active: true
     Layer: Default
     Type: Object
@@ -314,7 +489,7 @@ GameObjects:
       MeshFileName: Container3.fbx
       HasCollider: true
   - Name: WeaponBox
-    UUID: 7204333912107855311
+    UUID: 14689637081040642527
     Active: true
     Layer: Default
     Type: Object
@@ -327,7 +502,7 @@ GameObjects:
       MeshFileName: WeaponBoxC.fbx
       HasCollider: true
   - Name: Sandbags
-    UUID: 2841049624968141799
+    UUID: 4785286304845437193
     Active: true
     Layer: Default
     Type: Object
@@ -340,7 +515,7 @@ GameObjects:
       MeshFileName: Sandbacks.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 15107217235192051997
+    UUID: 12632735538492187103
     Active: true
     Layer: Default
     Type: Object
@@ -353,7 +528,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 17656867285056143063
+    UUID: 1377073392052810258
     Active: true
     Layer: Default
     Type: Object
@@ -366,7 +541,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 7259517685047373663
+    UUID: 9477697687564335497
     Active: true
     Layer: Default
     Type: Object
@@ -379,7 +554,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: UAZ
-    UUID: 15800893059242914676
+    UUID: 28181096438036432
     Active: true
     Layer: Default
     Type: Object
@@ -392,7 +567,7 @@ GameObjects:
       MeshFileName: UAZ.fbx
       HasCollider: true
   - Name: FenceWall
-    UUID: 15364420237978818126
+    UUID: 5921598567530725154
     Active: true
     Layer: Default
     Type: Object
@@ -405,7 +580,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: FenceWall
-    UUID: 8179505185908887460
+    UUID: 5987639190946825743
     Active: true
     Layer: Default
     Type: Object
@@ -418,7 +593,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: FenceWall
-    UUID: 12989963024077397236
+    UUID: 15133566271623429012
     Active: true
     Layer: Default
     Type: Object
@@ -431,7 +606,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: Container
-    UUID: 16816446187482749085
+    UUID: 15753326320275399649
     Active: true
     Layer: Default
     Type: Object
@@ -444,7 +619,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Container
-    UUID: 7965034811575916169
+    UUID: 1399221460846278664
     Active: true
     Layer: Default
     Type: Object
@@ -457,7 +632,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 6139886639956965482
+    UUID: 6491131001270544358
     Active: true
     Layer: Default
     Type: Object
@@ -470,7 +645,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 6228305479539272097
+    UUID: 11802132337996005206
     Active: true
     Layer: Default
     Type: Object
@@ -483,7 +658,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: FenceWall
-    UUID: 15336033791028166127
+    UUID: 10756579362119779967
     Active: true
     Layer: Default
     Type: Object
@@ -496,7 +671,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: FenceWall
-    UUID: 3532931535472355607
+    UUID: 13837089623640747316
     Active: true
     Layer: Default
     Type: Object
@@ -509,7 +684,7 @@ GameObjects:
       MeshFileName: FenceWall.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 7053734283068724848
+    UUID: 3850485555784164538
     Active: true
     Layer: Default
     Type: Object
@@ -522,7 +697,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 10898221958020531434
+    UUID: 5969115680239162795
     Active: true
     Layer: Default
     Type: Object
@@ -535,20 +710,20 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 3541402815170086334
+    UUID: 9040693720904524763
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [37.0615005, -0.539745331, 4.46554232]
       Rotation: [1.00438595, -5.4519043, 0.887086272]
-      Scale: [0.999993563, 0.999112308, 0.999999881]
+      Scale: [0.999993563, 0.99911207, 0.999999881]
     Com_Model:
       MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: WeaponBox
-    UUID: 12541283906385199962
+    UUID: 11257601014238759808
     Active: true
     Layer: Default
     Type: Object
@@ -561,7 +736,7 @@ GameObjects:
       MeshFileName: WeaponBoxC.fbx
       HasCollider: true
   - Name: UAZ
-    UUID: 11542811065191218786
+    UUID: 1454136861530701516
     Active: true
     Layer: Default
     Type: Object
@@ -574,7 +749,7 @@ GameObjects:
       MeshFileName: UAZ.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 10851173290226327588
+    UUID: 11264737544948732146
     Active: true
     Layer: Default
     Type: Object
@@ -587,7 +762,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 12554813470958918503
+    UUID: 14532153485074564541
     Active: true
     Layer: Default
     Type: Object
@@ -600,7 +775,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Sandbags
-    UUID: 16025205659831830887
+    UUID: 12360408186992662412
     Active: true
     Layer: Default
     Type: Object
@@ -613,7 +788,7 @@ GameObjects:
       MeshFileName: Sandbacks.fbx
       HasCollider: true
   - Name: Sandbags
-    UUID: 1016761099697259969
+    UUID: 616640903394037229
     Active: true
     Layer: Default
     Type: Object
@@ -626,7 +801,7 @@ GameObjects:
       MeshFileName: Sandbacks.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 7223627973393375404
+    UUID: 10099781237112631135
     Active: true
     Layer: Default
     Type: Object
@@ -639,7 +814,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: CementBag
-    UUID: 10737187115417554998
+    UUID: 2979367470629129183
     Active: true
     Layer: Default
     Type: Object
@@ -652,7 +827,7 @@ GameObjects:
       MeshFileName: Cementbag.fbx
       HasCollider: true
   - Name: Container
-    UUID: 9397422876838391706
+    UUID: 3918059491993275237
     Active: true
     Layer: Default
     Type: Object
@@ -665,7 +840,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: powerpole
-    UUID: 13177546601964928863
+    UUID: 3109541057806139379
     Active: true
     Layer: Default
     Type: Object
@@ -678,7 +853,7 @@ GameObjects:
       MeshFileName: Powerpole.fbx
       HasCollider: true
   - Name: powerpole
-    UUID: 4207388983835523284
+    UUID: 13269939314984343462
     Active: true
     Layer: Default
     Type: Object
@@ -691,14 +866,14 @@ GameObjects:
       MeshFileName: Powerpole.fbx
       HasCollider: true
   - Name: Spot
-    UUID: 8652328583169769088
+    UUID: 16065949739847355441
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [23.7115517, 8.2604599, 7.74290562]
       Rotation: [90, -0, 0]
-      Scale: [0.995201707, 0.999999881, 0.999999881]
+      Scale: [0.995201588, 0.999999881, 0.999999881]
     Com_Light:
       Type: 2
       Range: 10
@@ -707,14 +882,14 @@ GameObjects:
       Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
       Specular: [1, 1, 1, 1]
   - Name: Spot
-    UUID: 1636980291770704611
+    UUID: 11178611015975620805
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
       Translation: [52.4598122, 8.20958519, 29.4390812]
       Rotation: [90, -0, 0]
-      Scale: [0.993558049, 0.999967039, 0.999999881]
+      Scale: [0.99355793, 0.999967039, 0.999999881]
     Com_Light:
       Type: 2
       Range: 10
@@ -723,7 +898,7 @@ GameObjects:
       Ambient: [1, 1, 1, 1]
       Specular: [1, 1, 1, 1]
   - Name: Barrier
-    UUID: 12838405233919277985
+    UUID: 14881538151149731584
     Active: true
     Layer: Default
     Type: Object
@@ -736,7 +911,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Barrier
-    UUID: 11604781886929451110
+    UUID: 262451188647587964
     Active: true
     Layer: Default
     Type: Object
@@ -749,7 +924,7 @@ GameObjects:
       MeshFileName: Barrier.fbx
       HasCollider: true
   - Name: Pallete
-    UUID: 18115746519549298567
+    UUID: 16929525824608559016
     Active: true
     Layer: Default
     Type: Object
@@ -762,7 +937,7 @@ GameObjects:
       MeshFileName: Pallete.fbx
       HasCollider: true
   - Name: Container
-    UUID: 14187686396249667711
+    UUID: 16061404123376924754
     Active: true
     Layer: Default
     Type: Object
@@ -775,7 +950,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Container
-    UUID: 15601023373111932676
+    UUID: 1427149002728806837
     Active: true
     Layer: Default
     Type: Object
@@ -788,7 +963,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Container3
-    UUID: 685602207520143155
+    UUID: 10994419403844692086
     Active: true
     Layer: Default
     Type: Object
@@ -801,7 +976,7 @@ GameObjects:
       MeshFileName: Container3.fbx
       HasCollider: true
   - Name: Container
-    UUID: 8394576094245566568
+    UUID: 2254308353333715059
     Active: true
     Layer: Default
     Type: Object
@@ -814,7 +989,7 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: Container
-    UUID: 14853901045290086279
+    UUID: 740233446875730357
     Active: true
     Layer: Default
     Type: Object
@@ -827,12 +1002,12 @@ GameObjects:
       MeshFileName: Container.fbx
       HasCollider: true
   - Name: FirePointLight
-    UUID: 16706271240825150639
+    UUID: 12216158774680503186
     Active: true
     Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [33.6214447, 0.307213783, 6.87687778]
+      Translation: [39.0065117, 0.307214111, 34.8427544]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Light:
@@ -842,26 +1017,497 @@ GameObjects:
       Diffuse: [1, 0.304347813, 0, 1]
       Ambient: [1, 0.434782624, 0, 1]
       Specular: [1, 1, 1, 1]
-  - Name: Terrain
-    UUID: 7236697298730556491
+  - Name: Container3
+    UUID: 15424307726685865874
     Active: true
-    Layer: Terrain
+    Layer: Default
     Type: Object
     Com_Transform:
-      Translation: [0, -5, 0]
+      Translation: [15.8405418, -0.654770434, 27.7988415]
+      Rotation: [0, 32.6107826, 0]
+      Scale: [1.00000012, 1, 1.00000012]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Containers\
+      MeshFileName: Container3.fbx
+      HasCollider: true
+  - Name: Container
+    UUID: 6849359823615420488
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [21.2717133, -0.640078902, 28.7878399]
+      Rotation: [0, 45.943779, 0]
+      Scale: [0.99999994, 1, 0.99999994]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Containers\
+      MeshFileName: Container.fbx
+      HasCollider: true
+  - Name: Container
+    UUID: 17924855463881293119
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [21.4059067, 1.68021762, 28.3069229]
+      Rotation: [1.08404791, 22.7317829, 1.40146494]
+      Scale: [0.999999821, 1, 0.999999583]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Containers\
+      MeshFileName: Container.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 10112726176762307472
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [15.4631052, -0.60223341, 0.427898347]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-    Com_VIBuffer:
-      Type: Terrain
-      HeightMapPath: ..\..\Assets\Textures\HeightMaps\PlaneHeightMap.bmp
-      TexturePath: ../../Assets/Texture/Height.bmp
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 7248253812054956703
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [63.7606087, -0.791802943, 8.61267471]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 14476945487787928325
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [68.0309601, -0.567222357, 9.00859737]
+      Rotation: [1.05742419, -18.989399, 0.638431489]
+      Scale: [1, 0.999900401, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 5123439550496216918
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [71.1318588, -0.42843172, 11.6360025]
+      Rotation: [1.70512497, -54.0956955, -0.398769408]
+      Scale: [1, 0.999997616, 0.999999285]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 15259093643392220531
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [73.3029785, -0.213502735, 15.0762815]
+      Rotation: [1.85240734, -57.3283577, -0.576957226]
+      Scale: [0.999999881, 0.999900401, 0.999997854]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 5841807775851968613
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [74.8575058, -0.48310411, 18.5928173]
+      Rotation: [21.9399452, -87.3230591, -20.935812]
+      Scale: [1, 1, 0.999998569]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 3387954663590790587
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [73.9786453, -0.496188074, 23.2185497]
+      Rotation: [176.832092, -71.5882492, -176.011459]
+      Scale: [0.999828219, 0.999842584, 0.999540865]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 14746545337816568227
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [72.0293427, -0.499373674, 27.7781639]
+      Rotation: [177.584793, -65.534668, -176.818787]
+      Scale: [0.999997616, 1.00000036, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 13473939278136728741
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [68.3221893, -0.425279289, 32.703476]
+      Rotation: [178.508057, -47.8719139, -177.910934]
+      Scale: [0.999994576, 0.999886632, 0.999999881]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 10064693723031381587
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [63.5191422, -0.74008292, 36.1775055]
+      Rotation: [178.787903, -34.3442841, -178.333054]
+      Scale: [0.999996543, 1.00000012, 0.999999762]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 5629678384990088972
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [58.9571419, -0.626899958, 39.9027252]
+      Rotation: [178.696472, -39.8369446, -178.182022]
+      Scale: [0.999994457, 0.999677181, 1.00000036]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 10639737048008632489
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [56.0342407, -0.501622796, 43.87883]
+      Rotation: [176.951279, -70.8302155, -176.137161]
+      Scale: [0.999998331, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 8916796293002397296
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [54.8615036, -0.793419063, 48.3145752]
+      Rotation: [175.785721, -76.2615204, -174.923355]
+      Scale: [0.999998569, 1.00000024, 1.00000107]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 9168840081872028564
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [52.0808029, -0.495952666, 51.6430054]
+      Rotation: [1.17552602, 31.7273445, 1.60078108]
+      Scale: [1, 0.999676764, 0.999999821]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 11858908643293685096
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [46.6842995, -0.694685221, 53.1094055]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 14178228870951527228
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [41.8389893, -0.626819611, 53.0848389]
+      Rotation: [1.0027771, 4.38129997, 1.0591557]
+      Scale: [1, 1, 1.00000131]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 13634664567100285141
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [36.5286255, -0.71151787, 53.1123238]
+      Rotation: [1.04636681, 17.1515522, 1.29115224]
+      Scale: [1, 1, 0.99999994]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 13961866651154800921
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [31.3943348, -0.689850867, 53.3876152]
+      Rotation: [1.02647913, -13.0807323, 0.750187516]
+      Scale: [0.999998808, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 4166913279052277806
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [26.129921, -0.577630579, 53.4131775]
+      Rotation: [1.01357222, 9.4433136, 1.14885819]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 7116007638016068380
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [21.0226898, -0.728099406, 52.7865486]
+      Rotation: [1.02450693, 12.5961847, 1.20598888]
+      Scale: [0.999998748, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: Barrier
+    UUID: 15324727082088212332
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [16.0890827, -0.556085348, 52.0434532]
+      Rotation: [1.0286839, -13.5981302, 0.740658283]
+      Scale: [0.999954402, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Barriers\
+      MeshFileName: Barrier.fbx
+      HasCollider: true
+  - Name: FenceWall
+    UUID: 2751948451548106121
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [13.4287863, -0.974122941, 37.6973343]
+      Rotation: [0, 85.9680176, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\FenceWall\
+      MeshFileName: FenceWall.fbx
+      HasCollider: true
+  - Name: FenceWall
+    UUID: 11933604173596161151
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [13.1467361, -1.04358578, 42.3158684]
+      Rotation: [49.4563026, 88.6840286, 50.4315338]
+      Scale: [1.00000012, 0.99954015, 0.99999994]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\FenceWall\
+      MeshFileName: FenceWall.fbx
+      HasCollider: true
+  - Name: FenceWall
+    UUID: 3679066450637969876
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [13.5488644, -0.949924052, 46.941761]
+      Rotation: [-171.225586, 74.7765961, -172.00293]
+      Scale: [0.999864936, 0.999997735, 0.999999225]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\FenceWall\
+      MeshFileName: FenceWall.fbx
+      HasCollider: true
+  - Name: WeaponBox
+    UUID: 15163601109318869688
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [38.8920937, -0.76990521, 34.1070213]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\WeaponBox\
+      MeshFileName: WeaponBoxC.fbx
+      HasCollider: true
+  - Name: WeaponBox
+    UUID: 7077760347767305719
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [37.7419815, -0.301713228, 34.284359]
+      Rotation: [1.74427116, 40.1226578, 27.7024288]
+      Scale: [0.999999881, 0.999999702, 0.999999583]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\WeaponBox\
+      MeshFileName: WeaponBoxC.fbx
+      HasCollider: true
+  - Name: powerpole
+    UUID: 17744163917417421462
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [32.0748177, -0.420072854, 44.5026855]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Powerpole\
+      MeshFileName: Powerpole.fbx
+      HasCollider: true
+  - Name: Spot
+    UUID: 16276569739750296496
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [31.5241585, 8.29612064, 43.0724907]
+      Rotation: [90, -0, 0]
+      Scale: [0.994673789, 0.999999881, 0.999999881]
+    Com_Light:
+      Type: 2
+      Range: 10
+      Angle: 24.2000008
+      Diffuse: [1, 1, 1, 1]
+      Ambient: [0.400000006, 0.400000006, 0.400000006, 1]
+      Specular: [1, 1, 1, 1]
+  - Name: UAZ
+    UUID: 9705957446221906439
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [30.7869244, -0.767606378, 46.0438232]
+      Rotation: [0, -37.5106201, 0]
+      Scale: [0.999999881, 1, 0.999999881]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\vehicles\UAZ\
+      MeshFileName: UAZ.fbx
+      HasCollider: true
+  - Name: Sandbags
+    UUID: 18097975870882553553
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [31.4073143, -0.651452661, 43.7314148]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
+      MeshFileName: Sandbacks.fbx
+      HasCollider: true
+  - Name: Sandbags
+    UUID: 11404411766843080964
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [33.6613998, -0.896120906, 44.9904594]
+      Rotation: [2.69640732, -68.2273941, -1.52178597]
+      Scale: [0.999999344, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\Sandbacks\
+      MeshFileName: Sandbacks.fbx
+      HasCollider: true
+  - Name: CementBag
+    UUID: 14628853908323988634
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [31.9490147, -0.875209928, 42.8383827]
+      Rotation: [-179.996109, -81.6833038, 179.998322]
+      Scale: [0.999997139, 1, 0.999997139]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Cementbag\
+      MeshFileName: Cementbag.fbx
+      HasCollider: true
+  - Name: Container
+    UUID: 9429615606175722126
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [46.6641846, -0.561513782, 45.601841]
+      Rotation: [0.999999642, 0.999999642, 0.999999642]
+      Scale: [1, 1, 1]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Containers\
+      MeshFileName: Container.fbx
+      HasCollider: true
+  - Name: Container
+    UUID: 9380736602265268329
+    Active: true
+    Layer: Default
+    Type: Object
+    Com_Transform:
+      Translation: [44.0562172, 0.84098959, 45.723381]
+      Rotation: [38.8419876, -79.1922379, -4.26299]
+      Scale: [0.999998271, 0.999993503, 0.99998349]
+    Com_Model:
+      MeshFilePath: ..\..\Assets\Meshes\StreetProps\Containers\
+      MeshFileName: Container.fbx
+      HasCollider: true
   - Name: Barrel1
-    UUID: 16603007952336027690
+    UUID: 16230086836042565378
     Active: true
     Layer: Barrel
     Type: Object
     Com_Transform:
-      Translation: [33.3365097, -0.537887275, 7.09153318]
+      Translation: [38.8392601, -0.537888229, 35.0690498]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     Com_Model:
@@ -869,7 +1515,7 @@ GameObjects:
       MeshFileName: Barrel2.fbx
       HasCollider: true
   - Name: Player
-    UUID: 8495421113374312074
+    UUID: 3615551468850125228
     Active: true
     Layer: Player
     Type: Object
@@ -892,10 +1538,11 @@ GameObjects:
       MeshFileName: PlayerFinal1.fbx
       HasCollider: false
   - Name: Sphere
-    UUID: 9742507360184707261
+    UUID: 12063736567859258478
     Active: true
     Layer: Sphere
     Type: Object
+    RenderGroup: 3
     Com_Transform:
       Translation: [0, 0, 0]
       Rotation: [0, -0, 0]
@@ -904,8 +1551,9 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\Sphere\
       MeshFileName: Sphere.fbx
       HasCollider: false
+      ShaderPath: ..\..\Assets\Shader\Shader_Fresnel.fx
   - Name: Sidewalk
-    UUID: 2102407460875309010
+    UUID: 9515447786929289319
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -918,7 +1566,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 2931728145961830874
+    UUID: 7274548064942461097
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -931,7 +1579,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 13623769386803156177
+    UUID: 2865139715874274103
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -944,7 +1592,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 16966521152290122164
+    UUID: 1630116510796089937
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -957,7 +1605,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 7236770115746915098
+    UUID: 8432764811770448531
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -970,7 +1618,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 13618758437960075924
+    UUID: 4402957163999426244
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -983,7 +1631,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 6947494618629767383
+    UUID: 8744805291258062227
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -996,7 +1644,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 8337780569956108
+    UUID: 17816847299221149440
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1009,7 +1657,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 5028007498652463856
+    UUID: 14752016467169938494
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1022,7 +1670,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 4440818762122827321
+    UUID: 11625409570948278887
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1035,7 +1683,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 9214773802161093939
+    UUID: 8118112198422123212
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1048,7 +1696,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 6397364701622192382
+    UUID: 17825694906595586815
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1061,7 +1709,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 12873961547095384889
+    UUID: 16907816338828671623
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1074,7 +1722,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 5272431950114816905
+    UUID: 9585200684208767686
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1087,7 +1735,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 1801140924623055786
+    UUID: 3976053157091451421
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1100,7 +1748,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 7436657045968334799
+    UUID: 12964498748166845835
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1113,7 +1761,7 @@ GameObjects:
       MeshFileName: Sidewalk.fbx
       HasCollider: false
   - Name: Sidewalk
-    UUID: 4329722821998852286
+    UUID: 16340083256523284071
     Active: true
     Layer: Sidewalk
     Type: Object
@@ -1125,19 +1773,6 @@ GameObjects:
       MeshFilePath: ..\..\Assets\Meshes\SideWalk\
       MeshFileName: Sidewalk.fbx
       HasCollider: false
-  - Name: UI_Grenade
-    UUID: 9108913135720351889
-    Active: true
-    Layer: UI_Grenade
-    Type: UI
-    SortingOrder: 1
-    RenderIndex: 2
-    Com_Transform:
-      Position: [694.826294, 640]
-      Size: [30, 30]
-    Com_VIBuffer:
-      TexturePath: ..\..\Assets\Textures\Grenades\Frag.tga
-      Color: [0, 0, 0, 1]
   - Name: UI_Primary
     UUID: 10960352895238332552
     Active: true
@@ -1151,95 +1786,16 @@ GameObjects:
     Com_VIBuffer:
       TexturePath: ..\..\Assets\Textures\Weapons\AKM.tga
       Color: [0, 0, 0, 1]
-  - Name: Enemy
-    UUID: 11312090219627004214
+  - Name: UI_Grenade
+    UUID: 9108913135720351889
     Active: true
-    Layer: Enemy
-    Type: Object
+    Layer: UI_Grenade
+    Type: UI
+    SortingOrder: 1
+    RenderIndex: 2
     Com_Transform:
-      Translation: [38.9602585, 1.08628321, 24.2599545]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.29999995, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyFinal.fbx
-      HasCollider: false
-  - Name: Enemy
-    UUID: 15379163332610488196
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [43.1795311, 1.08628488, 12.8584003]
-      Rotation: [0, -0, 0]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.29999995, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyFinal.fbx
-      HasCollider: false
-  - Name: Enemy
-    UUID: 11092340052387296922
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [19.6876469, 0.210790411, 7.26783752]
-      Rotation: [0.999999642, 0.999999642, 0.999999642]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.29999995, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyFinal.fbx
-      HasCollider: false
-  - Name: Enemy
-    UUID: 14460683284481938332
-    Active: true
-    Layer: Enemy
-    Type: Object
-    Com_Transform:
-      Translation: [19.6290054, 0.917665362, 24.0208416]
-      Rotation: [0.999999642, 0.999999642, 0.999999642]
-      Scale: [1, 1, 1]
-    Com_Collider:
-      Center: [0, 1.29999995, 0]
-      Type: Capsule
-      Radius: 0.400000006
-      Height: 1
-      RigidBody:
-        Enabled: true
-        Gravity: true
-        Kinematic: false
-        CharacterController: true
-    Com_Model:
-      MeshFilePath: ..\..\Assets\Meshes\Enemy\
-      MeshFileName: EnemyFinal.fbx
-      HasCollider: false
+      Position: [694.826294, 640]
+      Size: [30, 30]
+    Com_VIBuffer:
+      TexturePath: ..\..\Assets\Textures\Grenades\Frag.tga
+      Color: [0, 0, 0, 1]

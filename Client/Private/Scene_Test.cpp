@@ -66,6 +66,14 @@ HRESULT CScene_Test::Initialize()
 	m_pGameManager = CGameManager::GetInstance();
 	m_pGameManager->Initialize();
 
+	CEngine::GetInstance()->StopSound(CHANNELID::PLAYER_LOWER);
+	CEngine::GetInstance()->PlaySoundW("Walk.ogg", CHANNELID::PLAYER_LOWER);
+	CEngine::GetInstance()->StopSound(CHANNELID::PLAYER_UPPER);
+	CEngine::GetInstance()->PlaySoundW("GrenadePin.mp3", CHANNELID::PLAYER_UPPER);
+	CEngine::GetInstance()->StopSound(CHANNELID::EFFECT);
+	CEngine::GetInstance()->PlaySoundW("GrenadeExplosion.ogg", CHANNELID::EFFECT);
+
+	CEngine::GetInstance()->PlayBGM("Background.ogg");
 	return S_OK;
 }
 

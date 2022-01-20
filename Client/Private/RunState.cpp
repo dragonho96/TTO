@@ -17,7 +17,7 @@ void CRunState::Update(CStateMachine ** pState, CPlayer& pPlayer)
 void CRunState::Enter(CStateMachine ** pState, CPlayer& pPlayer)
 {
 	// pPlayer.m_fSpeedFactor = 30.f;
-	pPlayer.m_fSpeedFactor = 50.f;
+	pPlayer.m_fSpeedFactor = 40.f;
 	CheckAnim(pState, pPlayer);
 }
 
@@ -47,6 +47,12 @@ void CRunState::CheckAnim(CStateMachine ** pState, CPlayer& pPlayer)
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_L, ANIM_TYPE::LOWER);
 	else if (movingAngle > -67.5f && movingAngle <= -22.5f)		  
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::RUN_FL, ANIM_TYPE::LOWER);
+
+	if (pPlayer.m_pModel->GetCurrentKeyFrame(ANIM_TYPE::LOWER) == 8)
+	{
+		// CEngine::GetInstance()->StopSound(CHANNELID::PLAYER_LOWER);
+		CEngine::GetInstance()->PlaySoundW("Walk.ogg", CHANNELID::PLAYER_LOWER);
+	}
 
 	if (CEngine::GetInstance()->IsKeyDown('C'))
 	{

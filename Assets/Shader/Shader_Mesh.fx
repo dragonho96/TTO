@@ -426,7 +426,7 @@ PS_OUT PS_MAIN(PS_IN In)
     bias = 0.00001f;
 
     color = vector(0.1f, 0.1f, 0.1f, 1.f);
-    diffuseColor = vector(1.f, 1.f, 1.f, 1.f);
+    diffuseColor = vector(0.4f, 0.4f, 0.4f, 1.f);
     lightDir = -(-1.f, -1.f, -1.f);
 
     

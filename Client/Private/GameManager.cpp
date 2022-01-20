@@ -9,9 +9,22 @@
 #include "Camera_Follow.h"
 #include "Camera_Lobby.h"
 #include "SightIndicator.h"
+#include "Enemy.h"
 
 USING(Client)
 IMPLEMENT_SINGLETON(CGameManager)
+
+unsigned int APIENTRY ThreadSpawnEnemy(void* pArg)
+{
+	EnterCriticalSection(&CGameManager::GetInstance()->Get_CS());
+
+	_int* index = (_int*)pArg;
+	CGameManager::GetInstance()->SpawnEnemy_Thread(*index);
+
+	LeaveCriticalSection(&CGameManager::GetInstance()->Get_CS());
+
+	return 0;
+}
 
 CGameManager::CGameManager()
 {
@@ -97,6 +110,12 @@ HRESULT CGameManager::Initialize()
 		// m_pImpactSmokeEffect = dynamic_cast<CEffect_ImpactSmoke*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_ImpactSmoke", "ImpactSmoke"));
 		m_pImpactEffect = dynamic_cast<CEffect_Impact*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Impact", "Impact"));
 		m_pExplosion = dynamic_cast<CEffect_Explosion*>(CEngine::GetInstance()->AddGameObject(0, "GameObject_Effect_Explosion", "Explosion"));
+
+
+		m_EnemySpawn = CEngine::GetInstance()->GetGameObjectInLayer(0, "EnemySpawn");
+		CEngine::GetInstance()->AddTimers("Timer_EnemySpawn");
+
+		InitializeCriticalSection(&m_CS);
 	}
 	return S_OK;
 }
@@ -117,6 +136,7 @@ void CGameManager::Update(_double TimeDelta)
 			else
 				SwitchCamera(CAMERA::FLY);
 		}
+		SpawnEnemy();
 		//_float3 mousePos = CEngine::GetInstance()->GetMousePosition();
 		//m_pCrosshair->SetClientPosition(mousePos.x, mousePos.y);
 	}
@@ -125,6 +145,59 @@ void CGameManager::Update(_double TimeDelta)
 	//	m_fMastAlpha -= TimeDelta;
 	//	m_pSceneMask->SetColor(_float4(0, 0, 0, m_fMastAlpha));
 	//}
+}
+
+void CGameManager::SpawnEnemy()
+{
+	static _bool startSpawning = false;
+	if (CEngine::GetInstance()->IsKeyDown('Z'))
+	{
+		if (startSpawning)
+			startSpawning = false;
+		else
+			startSpawning = true;
+	}
+
+
+	if (startSpawning)
+	{
+		m_dSpawnTime += CEngine::GetInstance()->ComputeDeltaTime("Timer_EnemySpawn");
+		if (m_dSpawnTime > 3.f)
+		{
+			_int spawnSize = (_int)m_EnemySpawn.size();
+			mt19937 engine(rand());
+			uniform_int_distribution<_int> distribution(0, spawnSize - 1);
+			auto generator = bind(distribution, engine);
+			_int index = generator();
+
+			m_hThread = (HANDLE)_beginthreadex(nullptr, 0, ThreadSpawnEnemy, &index, 0, nullptr);
+
+			if (0 == m_hThread)
+				return;
+
+			m_dSpawnTime = 0.0;
+		}
+	}
+}
+
+void CGameManager::SpawnEnemy_Thread(_int index)
+{
+	_int spawnSize = (_int)m_EnemySpawn.size();
+	//mt19937 engine(rand());
+	//uniform_int_distribution<_int> distribution(0, spawnSize);
+	//auto generator = bind(distribution, engine);
+	//_int index = generator() - 1;
+	auto iter = m_EnemySpawn.begin();
+	advance(iter, index);
+
+	ADDLOG(("spawnSize: " + to_string(spawnSize)).c_str());
+	ADDLOG(("index: " + to_string(index)).c_str());
+
+	CGameObject* pEnemy = CEngine::GetInstance()->SpawnPrefab("Enemy");
+	IScriptObject* scriptEnemy = CEngine::GetInstance()->AddScriptObject(CEnemy::Create(pEnemy));
+	_vector spawnPosition = dynamic_cast<CTransform*>((*iter)->GetComponent("Com_Transform"))->GetState(CTransform::STATE_POSITION);
+	dynamic_cast<CEnemy*>(scriptEnemy)->SetInitialPosition(spawnPosition);
+	// dynamic_cast<CTransform*>(pEnemy->GetComponent("Com_Transform"))->SetState(CTransform::STATE_POSITION, spawnPosition);
 }
 
 void CGameManager::Shake_Rifle()
@@ -199,4 +272,9 @@ void CGameManager::ChangeCameraPos(EQUIPMENT eType)
 
 void CGameManager::Free()
 {
+	WaitForSingleObject(m_hThread, INFINITE);
+
+	DeleteCriticalSection(&m_CS);
+
+	DeleteObject(m_hThread);
 }

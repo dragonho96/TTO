@@ -16,9 +16,19 @@ public:
 	void Update(_double TimeDelta);
 
 public:
+	void SpawnEnemy();
+	void SpawnEnemy_Thread(_int index);
+	CRITICAL_SECTION Get_CS() { return m_CS; }
+
+private:
+	list<CGameObject*>	m_EnemySpawn;
+	_double				m_dSpawnTime;
+	CRITICAL_SECTION	m_CS;
+	HANDLE				m_hThread = 0;
+
+public:
 	void Shake_Rifle();
 	void Shake_Grenade();
-
 	void SwitchCamera(CAMERA type);
 	CAMERA GetCurrentCamera() { return m_eCurCamera; }
 

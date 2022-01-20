@@ -15,6 +15,7 @@ private:
 	_bool	m_bEquipping = false;
 	_bool	m_bUnEquipping = false;
 	_bool	m_bThrowing = false;
+	_bool	m_bPinned = false;
 };
 
 END

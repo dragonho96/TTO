@@ -237,10 +237,11 @@ void CPlayer::Update(_double deltaTime)
 			Shot(deltaTime);
 
 		if (m_pWeaponInHand == m_pPrimaryWeapon)
-		{
-			UpdateRifleLightTransform(m_pPrimaryWeapon);
 			UpdateRifleMuzzleLightRange(deltaTime);
-		}
+
+
+		UpdateRifleLightTransform(m_pPrimaryWeapon);
+
 
 
 	}
@@ -281,7 +282,7 @@ void CPlayer::UpdateWeaponTransform()
 		m_pSecondaryWeapon = m_pEquipment->GetCurrentEquipment(EQUIPMENT::SECONDARY)->model;
 		m_pGrenade = m_pEquipment->GetCurrentEquipment(EQUIPMENT::GRENADE)->model;
 		m_pTool = m_pEquipment->GetCurrentEquipment(EQUIPMENT::TOOL)->model;
-		
+
 		m_pWeaponInHand = m_pPrimaryWeapon;
 	}
 
@@ -370,6 +371,9 @@ void CPlayer::Shot(_double deltaTime)
 
 		m_ShotTime = 0.0f;
 		m_fMuzzleLightRange = 3.f;
+
+		CEngine::GetInstance()->StopSound(CHANNELID::PLAYER_UPPER);
+		CEngine::GetInstance()->PlaySoundW("Shot.ogg", CHANNELID::PLAYER_UPPER);
 	}
 
 	m_ShotTime += deltaTime;
@@ -719,7 +723,7 @@ void CPlayer::FindBones()
 
 _vector CPlayer::GetBonePos(EQUIPMENT eType)
 {
-	_vector out = {0.f, };
+	_vector out = { 0.f, };
 	BONEDESC* bone = nullptr;
 	switch (eType)
 	{

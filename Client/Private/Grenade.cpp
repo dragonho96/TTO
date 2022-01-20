@@ -102,7 +102,7 @@ void CGrenade::OnThrow(_vector dir, _float forcePower)
 
 void CGrenade::Explode()
 {
-	static const _float sightRange = 15.f;
+	static const _float sightRange = 5.f;
 	const PxU32 bufferSize = 256;
 
 	PxOverlapHit hitBuffer[bufferSize];
@@ -139,5 +139,8 @@ void CGrenade::Explode()
 	CGameManager::GetInstance()->PlayExplosion(vecPosition);
 	CGameManager::GetInstance()->Shake_Grenade();
 	CEngine::GetInstance()->ComputeDeltaTime(m_Timer);
+
+	CEngine::GetInstance()->StopSound(CHANNELID::EFFECT);
+	CEngine::GetInstance()->PlaySoundW("GrenadeExplosion.ogg", CHANNELID::EFFECT);
 	SetDead();
 }

@@ -65,6 +65,12 @@ void CWalkState::SwitchAnim(CStateMachine** pState, CPlayer& pPlayer)
 	else if (movingAngle > -67.5f && movingAngle <= -22.5f)
 		pPlayer.m_pModel->SetUp_AnimationIndex((_uint)ANIM_LOWER::WALK_FL, ANIM_TYPE::LOWER);
 
+	if (pPlayer.m_pModel->GetCurrentKeyFrame(ANIM_TYPE::LOWER) == 8)
+	{
+		// CEngine::GetInstance()->StopSound(CHANNELID::PLAYER_LOWER);
+		CEngine::GetInstance()->PlaySoundW("Run.ogg", CHANNELID::PLAYER_LOWER);
+	}
+
 	if (CEngine::GetInstance()->IsKeyDown(VK_LSHIFT))
 	{
 		*pState = CStateMachine::run;
